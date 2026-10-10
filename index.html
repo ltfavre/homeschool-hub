@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Homeschool Hub</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">FAMILY HOMESCHOOL</p>
+      <h1>Homeschool Hub</h1>
+    </div>
+    <button id="refreshBtn" class="secondary">Refresh</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p id="todayLabel" class="eyebrow"></p>
+        <h2>Today's learning, in one place.</h2>
+        <p class="muted">Lessons, assignments, resources, and progress for both students.</p>
+      </div>
+      <div class="stats">
+        <div><strong id="lessonCount">0</strong><span>Lessons today</span></div>
+        <div><strong id="assignmentCount">0</strong><span>Assignments due</span></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <div class="card-head">
+          <div><p class="eyebrow">TODAY</p><h3>Lessons</h3></div>
+          <button id="addLessonBtn">+ Add lesson</button>
+        </div>
+        <div id="lessons" class="list empty">No lessons loaded yet.</div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div><p class="eyebrow">DUE</p><h3>Assignments</h3></div>
+          <button id="addAssignmentBtn">+ Add assignment</button>
+        </div>
+        <div id="assignments" class="list empty">No assignments loaded yet.</div>
+      </article>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <div><p class="eyebrow">COMING NEXT</p><h3>7-day calendar</h3></div>
+      </div>
+      <div id="week" class="week"></div>
+    </section>
+  </main>
+
+  <dialog id="entryDialog">
+    <form method="dialog" id="entryForm">
+      <div class="dialog-head">
+        <h3 id="dialogTitle">Add lesson</h3>
+        <button value="cancel" class="icon secondary" aria-label="Close">×</button>
+      </div>
+
+      <input type="hidden" id="entryType" value="lesson">
+      <label>Student<select id="student" required></select></label>
+      <label>Subject<select id="subject" required></select></label>
+      <label>Title<input id="title" required></label>
+      <label>Date<input id="date" type="date" required></label>
+      <label>Instructions<textarea id="instructions" rows="4"></textarea></label>
+      <label>Resource link<input id="resourceUrl" type="url" placeholder="https://..."></label>
+
+      <div class="dialog-actions">
+        <button value="cancel" class="secondary">Cancel</button>
+        <button id="saveBtn" value="default">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

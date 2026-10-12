@@ -1,0 +1,9 @@
+{
+  // Local development only. Production bindings are managed in the Cloudflare Pages dashboard.
+  "name": "homeschool-hub",
+  "compatibility_date": "2026-10-08",
+  "pages_build_output_dir": "./public",
+  "d1_databases": [
+    { "binding": "DB", "database_name": "homeschool-hub-db", "database_id": "local-dev-placeholder" }
+  ]
+}

@@ -107,6 +107,12 @@ export default {
         return json({ ok: true, id: result.meta.last_row_id }, 201);
       }
 
+      const del = url.pathname.match(/^\/api\/(lessons|assignments)\/(\d+)$/);
+      if (del && request.method === "DELETE") {
+        const result = await env.DB.prepare(`DELETE FROM ${del[1]} WHERE id=?`).bind(Number(del[2])).run();
+        return json({ ok: true, deleted: result.meta.changes });
+      }
+
       return json({ error: "Not found" }, 404);
     } catch (error) {
       return json({ error: error.message || "Server error" }, 500);

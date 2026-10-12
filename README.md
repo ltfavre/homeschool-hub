@@ -27,41 +27,17 @@ npm run dev
 
 Wrangler will print the local URL.
 
-## Deploy to Cloudflare
+## Deploy to Cloudflare (Pages)
 
-This starter uses the current Cloudflare Workers Static Assets approach rather than an older Workers Sites setup.
+This app deploys as a **Cloudflare Pages** project. `public/` is the build output directory; `public/_worker.js` is the Pages "advanced mode" worker that serves the `/api/*` D1 endpoints and passes everything else to the static assets. There is intentionally no root `wrangler.jsonc` (a Workers config is invalid for Pages and breaks `npx wrangler deploy`); bindings are managed in the dashboard. `wrangler.dev.jsonc` is used only for local development.
 
-Project layout: the Worker lives in `src/index.js` and static assets live in `public/` (only that folder is served). `schema.sql` and config stay at the repo root.
+1. Create the D1 database: `npx wrangler d1 create homeschool-hub-db`.
+2. Initialize the schema: paste `schema.sql` into the D1 database Console in the dashboard (or run `npx wrangler d1 execute homeschool-hub-db --remote --file=./schema.sql` with a config containing the `database_id`). Subjects are seeded by `schema.sql`.
+3. In Workers & Pages, create/connect the Pages project to this GitHub repo with **build command empty** and **build output directory `public`**. Do not use `npx wrangler deploy` as the command.
+4. In the Pages project: Settings > Bindings > add a D1 database binding named `DB` pointing to `homeschool-hub-db` (for Production and Preview), then redeploy. Without this, `/api/*` returns errors.
+5. Protect the site with **Cloudflare Access** (Zero Trust > Access > Applications), covering the whole site including the `/api/*` write endpoints. There is no authentication yet, so anyone with the URL could otherwise write data.
 
-### Checklist
-
-1. Push this project to a GitHub repository.
-2. Create the D1 database:
-
-```bash
-npx wrangler d1 create homeschool-hub-db
-```
-
-3. `wrangler.jsonc` intentionally omits `database_id` so Cloudflare can auto-provision the `DB` binding. If it is not auto-provisioned (or deploy complains), add the `database_id` printed above to the `d1_databases` entry:
-
-```jsonc
-{ "binding": "DB", "database_name": "homeschool-hub-db", "database_id": "<your-id>" }
-```
-
-4. Initialize the production schema:
-
-```bash
-npm install
-npm run db:init:remote
-```
-
-5. In the Cloudflare dashboard go to **Workers & Pages > Create > Import repository**, pick the repo, leave the build command empty, and set the deploy command to `npx wrangler deploy`.
-6. Verify locally with `npx wrangler deploy --dry-run`.
-7. **Protect the site with Cloudflare Access** (Zero Trust > Access > Applications), covering the whole site including the `POST /api/*` endpoints. There is no authentication yet, so anyone with the URL could otherwise write data.
-
-**Use a Workers project, not Pages.** This app is a Worker (`main` + `assets` in `wrangler.jsonc`). A Cloudflare *Pages* project (shown as the "Cloudflare Pages" check on GitHub) rejects this config and fails immediately. Delete that Pages project and import the repo via Workers & Pages > Create > Workers > Import a repository.
-
-If the dashboard creates the D1 binding instead, keep it named `DB`.
+Local: `npm install && npm run db:init:local && npm run dev`.
 
 ## Current API
 
@@ -71,6 +47,8 @@ If the dashboard creates the D1 binding instead, keep it named `DB`.
 - `POST /api/lessons`
 - `GET /api/assignments?start=YYYY-MM-DD&end=YYYY-MM-DD`
 - `POST /api/assignments`
+- `DELETE /api/lessons/:id`
+- `DELETE /api/assignments/:id`
 
 ## Planned next steps
 

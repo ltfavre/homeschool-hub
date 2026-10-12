@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
-    "db:init:local": "wrangler d1 execute homeschool-hub-db --local --file=./schema.sql",
-    "db:init:remote": "wrangler d1 execute homeschool-hub-db --remote --file=./schema.sql"
+    "dev": "wrangler pages dev public --d1 DB=local-dev-placeholder",
+    "deploy": "wrangler pages deploy public --project-name homeschool-hub",
+    "db:init:local": "wrangler d1 execute homeschool-hub-db -c wrangler.dev.jsonc --local --file=./schema.sql"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

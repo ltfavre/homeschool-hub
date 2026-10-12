@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Import Lessons · Homeschool Hub</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">FAMILY HOMESCHOOL</p>
+      <h1>Import Lessons</h1>
+    </div>
+    <a class="button-link secondary-link" href="/">← Dashboard</a>
+  </header>
+
+  <main class="import-main">
+    <section class="hero import-hero">
+      <div>
+        <p class="eyebrow">BULK IMPORT</p>
+        <h2>Upload lessons and assignments.</h2>
+        <p class="muted">CSV or JSON · preview first · validate before writing to D1.</p>
+      </div>
+    </section>
+
+    <section class="card import-card">
+      <div class="step-header">
+        <span class="step-number">1</span>
+        <div>
+          <h3>Choose a file</h3>
+          <p class="muted">Use the lesson-import CSV or JSON format.</p>
+        </div>
+      </div>
+
+      <div id="dropZone" class="drop-zone" tabindex="0">
+        <strong>Drop CSV or JSON here</strong>
+        <span>or click to browse</span>
+        <input id="fileInput" type="file" accept=".csv,.json,text/csv,application/json" hidden>
+      </div>
+
+      <div id="fileMeta" class="file-meta hidden"></div>
+    </section>
+
+    <section class="card import-card">
+      <div class="step-header">
+        <span class="step-number">2</span>
+        <div>
+          <h3>Import settings</h3>
+          <p class="muted">Your secret is used only for this request and is never written into GitHub.</p>
+        </div>
+      </div>
+
+      <div class="settings-grid">
+        <label>
+          Import token
+          <input id="tokenInput" type="password" autocomplete="off" placeholder="Paste IMPORT_TOKEN">
+        </label>
+
+        <label>
+          Default source
+          <input id="sourceInput" value="Education.com" placeholder="Education.com">
+        </label>
+      </div>
+
+      <label class="checkbox-row">
+        <input id="rememberToken" type="checkbox">
+        Remember token only for this browser tab
+      </label>
+    </section>
+
+    <section class="card import-card">
+      <div class="step-header">
+        <span class="step-number">3</span>
+        <div>
+          <h3>Preview</h3>
+          <p class="muted">Nothing is written until you click Import.</p>
+        </div>
+      </div>
+
+      <div id="summaryCards" class="summary-cards"></div>
+
+      <div class="table-wrap">
+        <table id="previewTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Type</th>
+              <th>Student</th>
+              <th>Subject</th>
+              <th>Title</th>
+              <th>Date</th>
+              <th>External ID</th>
+            </tr>
+          </thead>
+          <tbody id="previewBody">
+            <tr><td colspan="7" class="empty-cell">Choose a file to preview records.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="import-actions">
+        <button id="validateBtn" class="secondary" disabled>Validate only</button>
+        <button id="importBtn" disabled>Import to Homeschool Hub</button>
+      </div>
+    </section>
+
+    <section id="resultCard" class="card import-card hidden">
+      <div class="step-header">
+        <span class="step-number">✓</span>
+        <div>
+          <h3 id="resultTitle">Import result</h3>
+          <p id="resultSubtitle" class="muted"></p>
+        </div>
+      </div>
+
+      <div id="resultSummary" class="summary-cards"></div>
+      <div id="resultErrors"></div>
+    </section>
+  </main>
+
+  <script type="module" src="/import.js"></script>
+</body>
+</html>

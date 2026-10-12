@@ -59,6 +59,8 @@ npm run db:init:remote
 6. Verify locally with `npx wrangler deploy --dry-run`.
 7. **Protect the site with Cloudflare Access** (Zero Trust > Access > Applications), covering the whole site including the `POST /api/*` endpoints. There is no authentication yet, so anyone with the URL could otherwise write data.
 
+**Use a Workers project, not Pages.** This app is a Worker (`main` + `assets` in `wrangler.jsonc`). A Cloudflare *Pages* project (shown as the "Cloudflare Pages" check on GitHub) rejects this config and fails immediately. Delete that Pages project and import the repo via Workers & Pages > Create > Workers > Import a repository.
+
 If the dashboard creates the D1 binding instead, keep it named `DB`.
 
 ## Current API

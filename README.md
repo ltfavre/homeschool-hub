@@ -31,18 +31,37 @@ Wrangler will print the local URL.
 
 This starter uses the current Cloudflare Workers Static Assets approach rather than an older Workers Sites setup.
 
-1. Create a GitHub repository (suggested name: `homeschool-hub`).
-2. Push this project to the repo.
-3. In Cloudflare, create/import a Worker project from that GitHub repository.
-4. Cloudflare can provision the D1 binding from `wrangler.jsonc`.
-5. After the first deployment, initialize the production database:
+Project layout: the Worker lives in `src/index.js` and static assets live in `public/` (only that folder is served). `schema.sql` and config stay at the repo root.
+
+### Checklist
+
+1. Push this project to a GitHub repository.
+2. Create the D1 database:
+
+```bash
+npx wrangler d1 create homeschool-hub-db
+```
+
+3. `wrangler.jsonc` intentionally omits `database_id` so Cloudflare can auto-provision the `DB` binding. If it is not auto-provisioned (or deploy complains), add the `database_id` printed above to the `d1_databases` entry:
+
+```jsonc
+{ "binding": "DB", "database_name": "homeschool-hub-db", "database_id": "<your-id>" }
+```
+
+4. Initialize the production schema:
 
 ```bash
 npm install
 npm run db:init:remote
 ```
 
-If Cloudflare writes a D1 resource ID into the dashboard instead of the repository, keep the dashboard binding named `DB`.
+5. In the Cloudflare dashboard go to **Workers & Pages > Create > Import repository**, pick the repo, leave the build command empty, and set the deploy command to `npx wrangler deploy`.
+6. Verify locally with `npx wrangler deploy --dry-run`.
+7. **Protect the site with Cloudflare Access** (Zero Trust > Access > Applications), covering the whole site including the `POST /api/*` endpoints. There is no authentication yet, so anyone with the URL could otherwise write data.
+
+**Use a Workers project, not Pages.** This app is a Worker (`main` + `assets` in `wrangler.jsonc`). A Cloudflare *Pages* project (shown as the "Cloudflare Pages" check on GitHub) rejects this config and fails immediately. Delete that Pages project and import the repo via Workers & Pages > Create > Workers > Import a repository.
+
+If the dashboard creates the D1 binding instead, keep it named `DB`.
 
 ## Current API
 

@@ -17,11 +17,25 @@ async function api(path, options={}) {
   return res.json();
 }
 
+const escapeHtml = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => (
+  {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]
+));
+
+function safeUrl(value) {
+  try {
+    const u = new URL(String(value));
+    return u.protocol === "http:" || u.protocol === "https:" ? u.href : null;
+  } catch {
+    return null;
+  }
+}
+
 function itemMarkup(x, dateKey) {
-  const link = x.resource_url ? `<a href="${x.resource_url}" target="_blank" rel="noopener">Resource</a>` : "";
+  const url = x.resource_url ? safeUrl(x.resource_url) : null;
+  const link = url ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Resource</a>` : "";
   return `<div class="item">
-    <div class="item-top"><strong>${x.title}</strong><span class="pill">${x.subject_name}</span></div>
-    <div class="meta">${x.student_name} · ${x[dateKey]} ${link ? "· " + link : ""}</div>
+    <div class="item-top"><strong>${escapeHtml(x.title)}</strong><span class="pill">${escapeHtml(x.subject_name)}</span></div>
+    <div class="meta">${escapeHtml(x.student_name)} · ${escapeHtml(x[dateKey])} ${link ? "· " + link : ""}</div>
   </div>`;
 }
 
@@ -48,8 +62,8 @@ async function load() {
     ? todaysAssignments.map(x => itemMarkup(x,"due_date")).join("")
     : `<div class="empty">No assignments due today.</div>`;
 
-  $("#student").innerHTML = bootstrap.students.map(x => `<option value="${x.id}">${x.name} — Grade ${x.grade}</option>`).join("");
-  $("#subject").innerHTML = bootstrap.subjects.map(x => `<option value="${x.id}">${x.name}</option>`).join("");
+  $("#student").innerHTML = bootstrap.students.map(x => `<option value="${escapeHtml(x.id)}">${escapeHtml(x.name)} — Grade ${escapeHtml(x.grade)}</option>`).join("");
+  $("#subject").innerHTML = bootstrap.subjects.map(x => `<option value="${escapeHtml(x.id)}">${escapeHtml(x.name)}</option>`).join("");
 
   $("#week").innerHTML = Array.from({length:7}, (_,i) => {
     const d = new Date(today); d.setDate(d.getDate()+i);
@@ -58,8 +72,8 @@ async function load() {
     const dayAssignments = assignments.filter(x=>x.due_date===key);
     return `<div class="day">
       <strong>${fmt(d,{weekday:"short",month:"numeric",day:"numeric"})}</strong>
-      ${dayLessons.map(x=>`<span class="dot">${x.student_name}: ${x.title}</span>`).join("")}
-      ${dayAssignments.map(x=>`<span class="dot">Due: ${x.title}</span>`).join("")}
+      ${dayLessons.map(x=>`<span class="dot">${escapeHtml(x.student_name)}: ${escapeHtml(x.title)}</span>`).join("")}
+      ${dayAssignments.map(x=>`<span class="dot">Due: ${escapeHtml(x.title)}</span>`).join("")}
     </div>`;
   }).join("");
 }
@@ -71,6 +85,7 @@ function openDialog(type) {
   $("#title").value = "";
   $("#instructions").value = "";
   $("#resourceUrl").value = "";
+  $("#formError")?.remove();
   $("#entryDialog").showModal();
 }
 
@@ -78,29 +93,50 @@ $("#addLessonBtn").onclick = () => openDialog("lesson");
 $("#addAssignmentBtn").onclick = () => openDialog("assignment");
 $("#refreshBtn").onclick = load;
 
+function showFormError(message) {
+  $("#formError")?.remove();
+  const el = document.createElement("p");
+  el.id = "formError";
+  el.setAttribute("role", "alert");
+  el.style.color = "#b00020";
+  el.textContent = message;
+  $("#entryForm").appendChild(el);
+}
+
 $("#entryForm").addEventListener("submit", async (e) => {
   const submitter = e.submitter;
   if (submitter?.value === "cancel") return;
   e.preventDefault();
 
   const type = $("#entryType").value;
+  $("#formError")?.remove();
+  const resourceUrl = $("#resourceUrl").value.trim();
+  if (resourceUrl && !safeUrl(resourceUrl)) {
+    showFormError("Resource URL must start with http:// or https://");
+    return;
+  }
   const payload = {
     student_id: Number($("#student").value),
     subject_id: Number($("#subject").value),
     title: $("#title").value,
     instructions: $("#instructions").value || null,
-    resource_url: $("#resourceUrl").value || null
+    resource_url: resourceUrl ? safeUrl(resourceUrl) : null
   };
 
   if (type === "lesson") payload.lesson_date = $("#date").value;
   else payload.due_date = $("#date").value;
 
-  await api(`/api/${type === "lesson" ? "lessons" : "assignments"}`, {
-    method:"POST",
-    body:JSON.stringify(payload)
-  });
-  $("#entryDialog").close();
-  await load();
+  try {
+    await api(`/api/${type === "lesson" ? "lessons" : "assignments"}`, {
+      method:"POST",
+      body:JSON.stringify(payload)
+    });
+    $("#entryDialog").close();
+    await load();
+  } catch (err) {
+    console.error(err);
+    showFormError(err.message || "Something went wrong.");
+  }
 });
 
 load().catch(err => {

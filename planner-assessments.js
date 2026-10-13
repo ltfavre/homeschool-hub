@@ -1,0 +1,8 @@
+window.PlannerAssessments=(()=>{
+ let index;
+ const el=(t,s='',c='')=>{const n=document.createElement(t);n.textContent=s;n.className=c;return n};
+ function link(text,url){const a=el('a',text,'planner-link');a.href=url;a.target='_blank';a.rel='noopener';return a}
+ async function load(){try{const r=await fetch('/assessment-index.json?v=assessments-v1');if(!r.ok)throw Error('Assessment list unavailable');index=await r.json();const section=document.getElementById('assessmentDownloads');for(const grade of ['4','7']){const group=el('div','','assessment-links');group.append(el('strong','Grade '+grade+' full-year books'),link('Student assessment book PDF',index.bundles[grade].student),link('Teacher answer-key book PDF',index.bundles[grade].key));section.append(group)}}catch(e){console.error(e)}}
+ function render(p,w,box){const panel=el('section','','assessment-panel');panel.append(el('p','PRINTABLE ASSESSMENT','eyebrow'));const e=index?.assessments.find(e=>e.grade===p.grade&&e.module===p.module&&e.week===w.number);if(!e){panel.append(el('p','Assessment downloads could not load. Refresh to try again.'));box.append(panel);return}panel.append(el('h3',e.title),el('p','Scheduled: '+e.date+(w.number===4?' · Covers all four module weeks and all five subjects.':' · Math + ELA + alternating science/social studies + Spanish.')));const links=el('div','','assessment-links');links.append(link('Print / download student PDF',e.student),link('Teacher answer key PDF',e.key),link('Print the scheduled day packet','/daily-print.html?date='+e.date+'&grade='+p.grade));panel.append(links,el('p','Student papers and teacher keys are separate. Open-response scoring and Spanish speaking rubrics are in the key.','muted'));box.append(panel)}
+ return {load,render};
+})();

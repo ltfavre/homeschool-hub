@@ -9,8 +9,10 @@ function renderPlan(){
  const p=selected(),w=p.weeks[+$('weekSelect').value-1],box=$('plan');box.replaceChildren(el('h3',p.title));
  box.append(el('p','Module mastery targets','eyebrow'));
  const targets=el('div','','targets');p.targets.forEach((t,i)=>{const a=el('article','');a.append(el('h4',['Math','ELA','Science','Social Studies','Spanish'][i]),el('p',t));targets.append(a)});box.append(targets,el('p','Standards: '+p.standards),el('h3','Week '+w.number+' · '+fmt(w.start)),el('p',w.goals));
+ window.PlannerAssessments.render(p,w,box);
  window.PlannerResources.render(p,w,box);
  const daily=el('div','','daily');w.days.forEach((t,i)=>{const a=el('article','');a.append(el('h4',['Monday','Tuesday','Wednesday','Thursday','Friday'][i]+' · '+fmt(addDays(w.start,i))));
+ const printDay=el('a','Print this day');printDay.href='/daily-print.html?date='+addDays(w.start,i)+'&grade='+p.grade;printDay.target='_blank';a.append(printDay);
  t.split(/(?=Math:|ELA:|Sci:|SS:|Sp:)/).filter(Boolean).forEach(s=>a.append(el('p',s)));daily.append(a)});box.append(daily);
  const link=el('a','View original module pages in PDF');link.href='/downloads/Homeschool_Teacher_Planner_2026-2027_Grades_4_7.pdf#page='+p.page;box.append(link);
 }
@@ -19,13 +21,13 @@ function renderCalendar(){
  const grid=el('div','','calendar');['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].forEach(t=>grid.append(el('strong',t)));for(let i=0;i<offset;i++)grid.append(el('div',''));
  for(let day=1;day<=count;day++){
   const s=month+'-'+String(day).padStart(2,'0'),cell=el('div','','day');cell.append(el('strong',String(day)));const b=breaks.find(b=>s>=b[0]&&s<=b[1]);
-  if(b){cell.classList.add('break');cell.append(el('span',b[2]))}else for(const p of data.plans.filter(p=>p.grade===4)){const w=p.weeks.find(w=>s>=w.start&&s<=w.assessment);if(w){cell.append(el('span','M'+p.module+' · W'+w.number));if(s===w.assessment){cell.classList.add('test');cell.append(el('span',w.number===4?'MODULE TEST':'QUIZ'))}}}
+  if(b){cell.classList.add('break');cell.append(el('span',b[2]))}else for(const p of data.plans.filter(p=>p.grade===4)){const w=p.weeks.find(w=>s>=w.start&&s<=w.assessment);if(w){cell.append(el('span','M'+p.module+' · W'+w.number));if(s===w.assessment){cell.classList.add('test');cell.append(el('span',w.number===4?'MODULE TEST':'QUIZ'))}const printDay=el('a','Print day');printDay.href='/daily-print.html?date='+s+'&grade=both';printDay.target='_blank';printDay.setAttribute('aria-label','Print lesson packet for '+fmt(s));cell.append(printDay)}}
   grid.append(cell);
  }$('calendarGrid').replaceChildren(grid);$('breaks').textContent=breaks.filter(b=>b[0].slice(0,7)<=month&&b[1].slice(0,7)>=month).map(b=>b[2]+': '+fmt(b[0])+' – '+fmt(b[1])).join(' · ');
 }
 async function init(){try{
  const r=await fetch('/planner-data.json?v=start-20261012');if(!r.ok)throw Error('Planner unavailable');data=await r.json();breaks=data.calendar.breaks; $('yearDates').textContent=fmt(data.calendar.start)+' – '+fmt(data.calendar.end)+' · 9 modules · 36 instructional weeks';
- await window.PlannerResources.load();
+ await Promise.all([window.PlannerResources.load(),window.PlannerAssessments.load()]);
  data.plans.filter(p=>p.grade===4).forEach(p=>$('module').add(new Option('Module '+p.module+' · '+p.title.split('Module '+p.module+': ')[1].split(' | ')[0],p.module)));
  for(let i=1;i<=4;i++)$('weekSelect').add(new Option('Week '+i,i));
  const firstMonth=new Date(data.calendar.start+'T12:00:00'),lastMonth=data.calendar.end.slice(0,7); for(let d=new Date(firstMonth.getFullYear(),firstMonth.getMonth(),1);;d.setMonth(d.getMonth()+1)){const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');if(key>lastMonth)break;$('month').add(new Option(d.toLocaleDateString('en-US',{month:'long',year:'numeric'}),key))}

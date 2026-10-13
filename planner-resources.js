@@ -26,9 +26,9 @@ window.PlannerResources=(()=>{
   const mapping=library.weeks[`${p.grade}-${p.module}-${w.number}`];
   panel.append(node('p','Choose a day to see how the resources support its tasks. Linked collections require selecting the matching exercise or chapter; those are labeled. Education.com printables open in your account.','muted'));
   const toolbar=node('div','','resource-toolbar'),label=node('label','Day'),select=node('select');select.id='resourceDay';select.setAttribute('aria-label','Resource day');dayNames.forEach((d,i)=>{const opt=node('option',`${d} · ${dayPurposes[i]}`);opt.value=i;select.append(opt)});label.append(select);
-  const print=node('button','Print weekly resources + response sheets','secondary');print.type='button';print.addEventListener('click',()=>window.print());toolbar.append(label,print);panel.append(toolbar);
+  const print=node('button','Print weekly resources + response sheets','secondary');print.type='button';print.addEventListener('click',()=>window.print());const dayLink=node('a','Print this day’s lesson + materials','planner-link');dayLink.target='_blank';toolbar.append(label,print,dayLink);panel.append(toolbar);
   const cards=node('div','','resource-cards');panel.append(cards);
-  function show(){cards.replaceChildren();const index=+select.value;
+  function show(){cards.replaceChildren();const index=+select.value;const dayDate=new Date(w.start+'T12:00:00Z');dayDate.setUTCDate(dayDate.getUTCDate()+index);dayLink.href='/daily-print.html?date='+dayDate.toISOString().slice(0,10)+'&grade='+p.grade;
    if(index===4)cards.append(node('p',w.number===4?'Comprehensive module assessment: cover all four weeks and five subjects. Linked practice is optional review; it does not replace the comprehensive assessment.':'Weekly quiz day: use this week’s goals and the planner’s assessment blueprint. Linked worksheets and practice can support review.','assessment-resource-note'));
    for(const [key,s]of Object.entries(mapping)){
     const card=node('article','','resource-card');card.append(node('p',subjects[key].toUpperCase(),'eyebrow'),node('h4',s.topic),node('p',dailyActions[key][index],'resource-direction'));

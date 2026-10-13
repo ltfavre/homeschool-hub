@@ -23,7 +23,7 @@ function renderCalendar(){
  }$('calendarGrid').replaceChildren(grid);$('breaks').textContent=breaks.filter(b=>b[0].slice(0,7)<=month&&b[1].slice(0,7)>=month).map(b=>b[2]+': '+fmt(b[0])+' – '+fmt(b[1])).join(' · ');
 }
 async function init(){try{
- const r=await fetch('/planner-data.json');if(!r.ok)throw Error('Planner unavailable');data=await r.json();breaks=data.calendar.breaks; $('yearDates').textContent=fmt(data.calendar.start)+' – '+fmt(data.calendar.end)+' · 9 modules · 36 instructional weeks';
+ const r=await fetch('/planner-data.json?v=start-20261012');if(!r.ok)throw Error('Planner unavailable');data=await r.json();breaks=data.calendar.breaks; $('yearDates').textContent=fmt(data.calendar.start)+' – '+fmt(data.calendar.end)+' · 9 modules · 36 instructional weeks';
  data.plans.filter(p=>p.grade===4).forEach(p=>$('module').add(new Option('Module '+p.module+' · '+p.title.split('Module '+p.module+': ')[1].split(' | ')[0],p.module)));
  for(let i=1;i<=4;i++)$('weekSelect').add(new Option('Week '+i,i));
  const firstMonth=new Date(data.calendar.start+'T12:00:00'),lastMonth=data.calendar.end.slice(0,7); for(let d=new Date(firstMonth.getFullYear(),firstMonth.getMonth(),1);;d.setMonth(d.getMonth()+1)){const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');if(key>lastMonth)break;$('month').add(new Option(d.toLocaleDateString('en-US',{month:'long',year:'numeric'}),key))}

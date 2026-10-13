@@ -1,0 +1,43 @@
+window.PlannerResources=(()=>{
+ let library,loadError;
+ const subjects={math:'Math',ela:'ELA',science:'Science',social:'Social Studies',spanish:'Spanish'};
+ const dayNames=['Monday','Tuesday','Wednesday','Thursday','Friday'];
+ const dayPurposes=['Introduce & model','Practice & investigate','Apply & explain','Revise & demonstrate','Assess & reflect'];
+ const node=(tag,text='',cls='')=>{const n=document.createElement(tag);n.textContent=text;n.className=cls;return n};
+ const dailyActions={
+ math:['Watch one matching worked example, pause to predict the next step, and solve three examples together.','Complete 8–12 matching worksheet or Khan practice items. Show calculations and check one with a model.','Solve two problems in a real-life context for this topic. Explain why your operation, model, or rule works.','Return to errors from Tuesday. Correct two, explain the mistakes, and complete four mixed-review items.','Use the planner’s weekly quiz or module assessment. Save the score and one corrected problem.'],
+ ela:['Read a short passage or view a matching grammar lesson. Identify the week’s skill in three examples.','Complete the matching grammar/reading worksheet or prewriting organizer. Mark evidence in the passage.','Write a response applying this week’s skill. Grade 4: one focused paragraph. Grade 7: a developed paragraph with specific evidence.','Revise the draft for this week’s goal. Check conventions; read aloud and explain one purposeful change.','Use the ELA quiz/assessment blueprint. Keep the reading response, edited writing, and spelling corrections.'],
+ science:['Use the linked reading, video, or simulation to introduce the concept. Sketch a model and write one investigable question.','Use the source’s student activity sheet, safe model, or simulation. Record what changed and what you observed.','Collect or revisit evidence. Make a labeled table, diagram, or graph; describe a pattern.','Write a claim, give evidence, and explain how the evidence supports the claim. Include one limitation or improvement.','Use the science assessment blueprint and review the week’s model, data, and explanation.'],
+ social:['Read the relevant source or selected reader chapter. Locate the place and period on a map or timeline; record three terms.','Complete a map, compare/contrast organizer, or source-analysis sheet using the week’s topic.','Compare two places, groups, sources, or institutions relevant to the topic. Support two observations with source details.','Create the planner’s short response or project. Include a map/timeline and a source note.','Use the social-studies assessment blueprint and retain the map, source notes, and final response.'],
+ spanish:['Listen to a matching pronunciation/audio lesson when provided, then introduce 6–10 words or phrases for this week’s topic.','Use the printable worksheet for matching, labeling, or sentence practice. Grade 4: selected items with a word bank. Grade 7: full suitable exercise.','Read or listen to the matching dialogue or reading, or have the teacher model the worksheet phrases. Answer and ask three questions.','Grade 4: perform a 4-line dialogue or give a short description. Grade 7: present 6–8 original sentences or a longer dialogue.','Give the planner’s 5–10 minute oral/written check: vocabulary plus a short exchange or description.']};
+ function link(r){const a=node('a',r.title);a.href=r.url;a.target='_blank';a.rel='noopener noreferrer';return a}
+ function linksFor(ids,container,topic){const ul=node('ul','','resource-links');for(const id of ids){const r=library.resources[id],li=node('li');li.append(link(r),node('div',`${r.provider} · ${r.kind}`,'resource-meta'),node('div',r.access,'resource-access'));if(topic&&/collection|downloads/i.test(r.kind))li.append(node('p','Select the exercise, section, or activity for: '+topic+'.','resource-note'));if(r.note)li.append(node('p',r.note,'resource-note'));ul.append(li)}container.append(ul)}
+ function printSheet(p,w,mapping){
+  const sheet=node('section','','resource-print-sheet');sheet.append(node('h2',`Grade ${p.grade} · Module ${p.module} · Week ${w.number}`),node('p',`${w.start} through ${w.assessment} · Weekly resource and response sheet`),node('p','Student: _______________________  Teacher: _______________________'));
+  for(const [key,s] of Object.entries(mapping)){const part=node('article','','print-subject');part.append(node('h3',subjects[key]+': '+s.topic));linksFor(s.resources,part,s.topic);const ul=node('ul');dailyActions[key].forEach((a,i)=>ul.append(node('li',dayNames[i]+': '+a)));part.append(ul);
+   const prompts={math:['Worked example with all steps:','A model or explanation of my method:','An error I corrected and why:'],ela:['Title / author / source:','My claim, central idea, or grammar example:','Text evidence or sentences I revised:'],science:['Question / prediction:','Labeled model, data, or observations:','Claim + evidence + reasoning:'],social:['Place, period, and source:','Map / timeline / comparison:','My conclusion and two supporting details:'],spanish:['New words / phrases with meanings:','Three original questions or sentences:','My dialogue / presentation notes:']};
+   prompts[key].forEach(t=>part.append(node('p',t),node('div','_______________________________________________________________\n_______________________________________________________________','response-lines')));sheet.append(part)}
+  sheet.append(node('p','Teacher review: Check accuracy against the linked answer key or source. Look for a clear explanation, supporting evidence, and corrections. These original response prompts are not publisher answer keys.'));
+  return sheet;
+ }
+ function render(p,w,box){
+  const panel=node('section','','resource-panel');panel.id='learningResources';panel.append(node('p','MATERIALS FOR THIS WEEK','eyebrow'),node('h3','Resources for the daily activities'));
+  if(!library){panel.append(node('p','Resource links could not load. Refresh to try again; the lesson plan and PDF are still available.'));box.append(panel);return}
+  const mapping=library.weeks[`${p.grade}-${p.module}-${w.number}`];
+  panel.append(node('p','Choose a day to see how the resources support its tasks. Linked collections require selecting the matching exercise or chapter; those are labeled. Education.com printables open in your account.','muted'));
+  const toolbar=node('div','','resource-toolbar'),label=node('label','Day'),select=node('select');select.id='resourceDay';select.setAttribute('aria-label','Resource day');dayNames.forEach((d,i)=>{const opt=node('option',`${d} · ${dayPurposes[i]}`);opt.value=i;select.append(opt)});label.append(select);
+  const print=node('button','Print weekly resources + response sheets','secondary');print.type='button';print.addEventListener('click',()=>window.print());toolbar.append(label,print);panel.append(toolbar);
+  const cards=node('div','','resource-cards');panel.append(cards);
+  function show(){cards.replaceChildren();const index=+select.value;
+   if(index===4)cards.append(node('p',w.number===4?'Comprehensive module assessment: cover all four weeks and five subjects. Linked practice is optional review; it does not replace the comprehensive assessment.':'Weekly quiz day: use this week’s goals and the planner’s assessment blueprint. Linked worksheets and practice can support review.','assessment-resource-note'));
+   for(const [key,s]of Object.entries(mapping)){
+    const card=node('article','','resource-card');card.append(node('p',subjects[key].toUpperCase(),'eyebrow'),node('h4',s.topic),node('p',dailyActions[key][index],'resource-direction'));
+    linksFor(s.resources,card,s.topic);
+    const product={math:'Completed practice and one explained solution.',ela:'Annotated reading, completed worksheet, or edited writing.',science:'A labeled model/data record and evidence-based explanation.',social:'A map/timeline, source notes, or supported comparison.',spanish:'Completed practice plus a short spoken or written performance.'};card.append(node('p','Keep: '+product[key],'resource-evidence'));cards.append(card)
+   }
+  }
+  select.addEventListener('change',show);show();panel.append(printSheet(p,w,mapping));box.append(panel);
+ }
+ async function load(){try{const r=await fetch('/planner-resources.json?v=resources-20261012');if(!r.ok)throw Error('Resource library unavailable');library=await r.json()}catch(e){loadError=e;console.error(e)}}
+ return {load,render};
+})();

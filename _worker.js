@@ -312,6 +312,13 @@ async function authRoute(request,env,user,url){
  }
  if(!user)return familyJson({error:'Please sign in.'},401);
  if(path==='/api/family/me'&&method==='GET')return familyJson({user:publicUser(user),today:centralDate()});
+ if(path==='/api/family/reset-link'&&method==='POST'){
+  if(user.role!=='parent')return familyJson({error:'Parent access required'},403);
+  const b=await request.json(),target=await env.DB.prepare("SELECT id FROM family_users WHERE id=? AND role='parent' AND active=1").bind(String(b.id||'')).first();
+  if(!target)return familyJson({error:'Parent account not found'},404);
+  const token=randomToken();await env.DB.batch([env.DB.prepare('DELETE FROM family_invites WHERE user_id=?').bind(target.id),env.DB.prepare('INSERT INTO family_invites(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await digest(token),target.id,epoch()+3600)]);
+  return familyJson({url:url.origin+'/login#invite='+token});
+ }
  if(path==='/api/family/logout'&&method==='POST'){const t=(request.headers.get('cookie')||'').match(/__Host-venv_session=([a-f0-9]{64})/)?.[1];if(t)await env.DB.prepare('DELETE FROM family_sessions WHERE token_hash=?').bind(await digest(t)).run();return familyJson({ok:true},200,{'set-cookie':cookie('',0)});}
  if(path==='/api/family/users'&&method==='GET'){if(user.role!=='parent')return familyJson({error:'Parent access required'},403);return familyJson({users:(await env.DB.prepare('SELECT * FROM family_users WHERE active=1 ORDER BY role,grade,username').all()).results.map(publicUser)});}
  if(path==='/api/family/account'&&method==='POST'){
@@ -344,7 +351,7 @@ async function familyFetch(request,env,ctx){
  const url=new URL(request.url),path=decodeURIComponent(url.pathname);
  // Source/config files must never be delivered as public static assets.
  if(/\/(?:index\.js|_worker\.js|family-server\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git)/i.test(path))return new Response('Not found',{status:404});
- const publicPaths=['/login','/login.html','/login.js','/family.css','/styles.css','/favicon.ico'];
+ const publicPaths=['/login','/login.html','/login.js','/forgot-password','/forgot-password.html','/family.css','/styles.css','/favicon.ico'];
  const user=await familyUser(request,env);
  if(url.pathname.startsWith('/api/family/'))return authRoute(request,env,user,url);
  if(publicPaths.includes(path))return env.ASSETS.fetch(request);

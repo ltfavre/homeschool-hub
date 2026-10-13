@@ -26,7 +26,7 @@ window.PlannerResources=(()=>{
   const mapping=library.weeks[`${p.grade}-${p.module}-${w.number}`];
   panel.append(node('p','Choose a day to see how the resources support its tasks. Linked collections require selecting the matching exercise or chapter; those are labeled. Education.com printables open in your account.','muted'));
   const toolbar=node('div','','resource-toolbar'),label=node('label','Day'),select=node('select');select.id='resourceDay';select.setAttribute('aria-label','Resource day');dayNames.forEach((d,i)=>{const opt=node('option',`${d} · ${dayPurposes[i]}`);opt.value=i;select.append(opt)});label.append(select);
-  const print=node('button','Print weekly resources + response sheets','secondary');print.type='button';print.addEventListener('click',()=>window.print());const dayLink=node('a','Print this day’s lesson + materials','planner-link');dayLink.target='_blank';toolbar.append(label,print,dayLink);panel.append(toolbar);
+  const print=node('a','Download weekly resources + response sheets PDF','planner-link');const dayLink=node('a','Print this day’s lesson + materials','planner-link');toolbar.append(label,print,dayLink);panel.append(toolbar);
   const cards=node('div','','resource-cards');panel.append(cards);
   function show(){cards.replaceChildren();const index=+select.value;const dayDate=new Date(w.start+'T12:00:00Z');dayDate.setUTCDate(dayDate.getUTCDate()+index);dayLink.href='/daily-print.html?date='+dayDate.toISOString().slice(0,10)+'&grade='+p.grade;
    if(index===4)cards.append(node('p',w.number===4?'Comprehensive module assessment: cover all four weeks and five subjects. Linked practice is optional review; it does not replace the comprehensive assessment.':'Weekly quiz day: use this week’s goals and the planner’s assessment blueprint. Linked worksheets and practice can support review.','assessment-resource-note'));
@@ -36,7 +36,7 @@ window.PlannerResources=(()=>{
     const product={math:'Completed practice and one explained solution.',ela:'Annotated reading, completed worksheet, or edited writing.',science:'A labeled model/data record and evidence-based explanation.',social:'A map/timeline, source notes, or supported comparison.',spanish:'Completed practice plus a short spoken or written performance.'};card.append(node('p','Keep: '+product[key],'resource-evidence'));cards.append(card)
    }
   }
-  select.addEventListener('change',show);show();panel.append(printSheet(p,w,mapping));box.append(panel);
+  select.addEventListener('change',show);show();const sheet=printSheet(p,w,mapping);panel.append(sheet);box.append(panel);PrintDownload.prepare(print,sheet,`VenvLearning-Grade-${p.grade}-Module-${p.module}-Week-${w.number}-Resources.pdf`);panel.append(node('p','Download and open the PDF, then choose Print in your PDF viewer.','muted'));
  }
  async function load(){try{const r=await fetch('/planner-resources.json?v=resources-20261012');if(!r.ok)throw Error('Resource library unavailable');library=await r.json()}catch(e){loadError=e;console.error(e)}}
  return {load,render};

@@ -1,7 +1,7 @@
 const $=id=>document.getElementById(id);
 const fmt=s=>new Date(s+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 const addDays=(s,n)=>{const d=new Date(s+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
-const breaks=[['2026-09-28','2026-10-02','Fall Reset / Planning'],['2026-11-23','2026-11-27','Thanksgiving Break'],['2026-12-21','2027-01-01','Winter Break'],['2027-03-15','2027-03-19','Spring Break'],['2027-05-17','2027-05-21','Portfolio / Make-up / Celebration']];
+let breaks=[];
 function el(tag,text,cls){const e=document.createElement(tag);e.textContent=text;if(cls)e.className=cls;return e}
 let data;
 function selected(){return data.plans.find(p=>p.grade===+$('grade').value&&p.module===+$('module').value)}
@@ -23,14 +23,14 @@ function renderCalendar(){
  }$('calendarGrid').replaceChildren(grid);$('breaks').textContent=breaks.filter(b=>b[0].slice(0,7)<=month&&b[1].slice(0,7)>=month).map(b=>b[2]+': '+fmt(b[0])+' – '+fmt(b[1])).join(' · ');
 }
 async function init(){try{
- const r=await fetch('/planner-data.json');if(!r.ok)throw Error('Planner unavailable');data=await r.json();
+ const r=await fetch('/planner-data.json');if(!r.ok)throw Error('Planner unavailable');data=await r.json();breaks=data.calendar.breaks; $('yearDates').textContent=fmt(data.calendar.start)+' – '+fmt(data.calendar.end)+' · 9 modules · 36 instructional weeks';
  data.plans.filter(p=>p.grade===4).forEach(p=>$('module').add(new Option('Module '+p.module+' · '+p.title.split('Module '+p.module+': ')[1].split(' | ')[0],p.module)));
  for(let i=1;i<=4;i++)$('weekSelect').add(new Option('Week '+i,i));
- for(let i=0;i<10;i++){const d=new Date(2026,7+i,1);$('month').add(new Option(d.toLocaleDateString('en-US',{month:'long',year:'numeric'}),d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')))}
+ const firstMonth=new Date(data.calendar.start+'T12:00:00'),lastMonth=data.calendar.end.slice(0,7); for(let d=new Date(firstMonth.getFullYear(),firstMonth.getMonth(),1);;d.setMonth(d.getMonth()+1)){const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');if(key>lastMonth)break;$('month').add(new Option(d.toLocaleDateString('en-US',{month:'long',year:'numeric'}),key))}
  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
  const match=data.plans.filter(p=>p.grade===4).flatMap(p=>p.weeks.map(w=>({p,w}))).find(({w})=>today>=w.start&&today<=w.assessment);
  if(match){$('module').value=match.p.module;$('weekSelect').value=match.w.number}if([...$('month').options].some(o=>o.value===today.slice(0,7)))$('month').value=today.slice(0,7);
  data.plans.filter(p=>p.grade===4).forEach(p=>{const tr=el('tr','');tr.append(el('td','Module '+p.module));p.weeks.forEach(w=>tr.append(el('td',fmt(w.assessment))));$('tests').append(tr)});
  $('guide').textContent=data.guide;$('coverage').textContent=data.standards;$('sources').textContent=data.sources;
- ['grade','module','weekSelect'].forEach(id=>$(id).addEventListener('change',renderPlan));$('month').addEventListener('change',renderCalendar);renderPlan();renderCalendar();$('status').textContent='Plans and dates from your original 59-page teacher planner.';
+ ['grade','module','weekSelect'].forEach(id=>$(id).addEventListener('change',renderPlan));$('month').addEventListener('change',renderCalendar);renderPlan();renderCalendar();$('status').textContent='Lesson content from your original planner; calendar adjusted to start Module 1 on October 12, 2026. PDF dates reflect the original schedule.';
  }catch(e){$('status').textContent='The planner could not load. Please refresh or use the PDF download above.';console.error(e)}}init();

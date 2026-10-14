@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS subjects (
 
 CREATE TABLE IF NOT EXISTS lessons (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  external_id TEXT,
   student_id INTEGER NOT NULL,
   subject_id INTEGER NOT NULL,
   title TEXT NOT NULL,
@@ -35,6 +36,7 @@ CREATE TABLE IF NOT EXISTS lessons (
 
 CREATE TABLE IF NOT EXISTS assignments (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  external_id TEXT,
   lesson_id INTEGER,
   student_id INTEGER NOT NULL,
   subject_id INTEGER NOT NULL,
@@ -54,6 +56,36 @@ CREATE TABLE IF NOT EXISTS assignments (
 
 CREATE INDEX IF NOT EXISTS idx_lessons_date ON lessons(lesson_date);
 CREATE INDEX IF NOT EXISTS idx_assignments_due ON assignments(due_date);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_lessons_external_id ON lessons(external_id) WHERE external_id IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_assignments_external_id ON assignments(external_id) WHERE external_id IS NOT NULL;
+
+CREATE TABLE IF NOT EXISTS family_daily_tasks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source TEXT NOT NULL,
+  external_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  due_date TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',
+  payload_json TEXT,
+  last_synced_at INTEGER NOT NULL,
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_family_daily_tasks_source_external_user
+  ON family_daily_tasks(source, external_id, user_id);
+CREATE INDEX IF NOT EXISTS idx_family_daily_tasks_user_due ON family_daily_tasks(user_id, due_date);
+
+CREATE TABLE IF NOT EXISTS family_sync_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source TEXT NOT NULL,
+  started_at INTEGER NOT NULL,
+  finished_at INTEGER,
+  ok INTEGER NOT NULL DEFAULT 0,
+  summary_json TEXT,
+  error_message TEXT
+);
 
 INSERT OR IGNORE INTO subjects(name) VALUES
 ('Math'),('Language Arts'),('Grammar'),('Spelling'),('Reading'),

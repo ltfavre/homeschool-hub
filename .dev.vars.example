@@ -1,1 +1,19 @@
 # Put local secrets here if we add authenticated integrations later.
+IMPORT_TOKEN=replace-with-import-token
+VENVLEARNING_API_BASE_URL=https://venvlearning.com/api
+VENVLEARNING_API_TOKEN=replace-with-venvlearning-token
+# Optional: bridge endpoint if venvlearning.com does not expose a JSON API directly.
+# VENVLEARNING_ADAPTER_URL=https://internal-adapter.example.com/venvlearning/tasks
+# Optional: authorize external sync callers (for Home Assistant automation).
+# VENVLEARNING_SYNC_TOKEN=replace-with-sync-token
+# Optional student mapping by display name or username.
+# VENVLEARNING_STUDENT_MAP={"Child A":"student-4","Child B":"student-7"}
+# Home Assistant embedding/login compatibility:
+# FAMILY_EMBED_IN_HA=1
+# FAMILY_SESSION_SAMESITE=None
+# FAMILY_ALLOWED_FRAME_ANCESTORS='self' http://homeassistant.local https://homeassistant.local
+# Optional for local HTTP/non-TLS testing only:
+# FAMILY_SESSION_SECURE=0
+# FAMILY_SESSION_COOKIE_NAME=venv_session
+# Optional for modern browser third-party iframe cookie behavior (enabled by default when FAMILY_EMBED_IN_HA=1):
+# FAMILY_SESSION_PARTITIONED=1

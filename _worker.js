@@ -1,3 +1,9 @@
+import {
+  mapTasksToUsers,
+  normalizeVenvlearningPayload,
+  VENVLEARNING_TASK_SOURCE
+} from "./venvlearning-sync.js";
+
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data, null, 2), {
     status,
@@ -38,6 +44,182 @@ const authOK = (request, env) => {
   const auth = request.headers.get("authorization") || "";
   return auth === `Bearer ${env.IMPORT_TOKEN}`;
 };
+
+const venvSyncAuthOK = (request, env) => {
+  if (!env.VENVLEARNING_SYNC_TOKEN) return false;
+  const auth = request.headers.get("authorization") || "";
+  const headerToken = request.headers.get("x-venvlearning-sync-token") || "";
+  return auth === `Bearer ${env.VENVLEARNING_SYNC_TOKEN}` || headerToken === env.VENVLEARNING_SYNC_TOKEN;
+};
+
+const parseJsonEnv = (raw, fallback) => {
+  const value = clean(raw);
+  if (!value) return fallback;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+};
+
+const isDateOnly = (value) => /^\d{4}-\d{2}-\d{2}$/.test(String(value || ""));
+
+const sanitizeDateRange = (startDateRaw, endDateRaw) => {
+  const today = new Date().toISOString().slice(0, 10);
+  const start = isDateOnly(startDateRaw) ? String(startDateRaw) : today;
+  const end = isDateOnly(endDateRaw) ? String(endDateRaw) : start;
+  if (start > end) return { start_date: end, end_date: start };
+  return { start_date: start, end_date: end };
+};
+
+async function ensureFamilyTaskTables(db) {
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS family_daily_tasks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      source TEXT NOT NULL,
+      external_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      title TEXT NOT NULL,
+      due_date TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      payload_json TEXT,
+      last_synced_at INTEGER NOT NULL,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_family_daily_tasks_source_external_user
+      ON family_daily_tasks(source, external_id, user_id);
+    CREATE INDEX IF NOT EXISTS idx_family_daily_tasks_user_due
+      ON family_daily_tasks(user_id, due_date);
+    CREATE TABLE IF NOT EXISTS family_sync_log (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      source TEXT NOT NULL,
+      started_at INTEGER NOT NULL,
+      finished_at INTEGER,
+      ok INTEGER NOT NULL DEFAULT 0,
+      summary_json TEXT,
+      error_message TEXT
+    );
+  `);
+}
+
+async function fetchVenvlearningTasks(env, startDate, endDate) {
+  const baseUrl = clean(env.VENVLEARNING_API_BASE_URL);
+  const adapterUrl = clean(env.VENVLEARNING_ADAPTER_URL);
+  const authToken = clean(env.VENVLEARNING_API_TOKEN);
+  if (!adapterUrl && !baseUrl) {
+    throw new Error("VenvLearning source is not configured. Set VENVLEARNING_API_BASE_URL or VENVLEARNING_ADAPTER_URL.");
+  }
+  if (!authToken) {
+    throw new Error("VenvLearning source is missing credentials. Set VENVLEARNING_API_TOKEN.");
+  }
+
+  const endpoint = adapterUrl || `${baseUrl.replace(/\/$/, "")}/daily-tasks`;
+  const url = new URL(endpoint);
+  url.searchParams.set("start_date", startDate);
+  url.searchParams.set("end_date", endDate);
+  const response = await fetch(url.toString(), {
+    method: "GET",
+    headers: {
+      authorization: `Bearer ${authToken}`,
+      accept: "application/json"
+    }
+  });
+  if (!response.ok) {
+    throw new Error(`VenvLearning request failed (${response.status}) at ${url.pathname}`);
+  }
+  const contentType = response.headers.get("content-type") || "";
+  if (!contentType.toLowerCase().includes("application/json")) {
+    throw new Error("VenvLearning response was not JSON. Configure VENVLEARNING_ADAPTER_URL for non-API integrations.");
+  }
+  return response.json();
+}
+
+async function syncVenvlearningDailyTasks(env, syncRange) {
+  const startedAt = epoch();
+  await ensureFamilyTaskTables(env.DB);
+  const logInsert = await env.DB.prepare(
+    "INSERT INTO family_sync_log(source, started_at, ok) VALUES(?,?,0)"
+  ).bind(VENVLEARNING_TASK_SOURCE, startedAt).run();
+  const logId = logInsert.meta.last_row_id;
+
+  try {
+    const usersResult = await env.DB.prepare(
+      "SELECT id,username,display_name,grade FROM family_users WHERE role='student' AND active=1"
+    ).all();
+    const users = usersResult.results || [];
+    if (!users.length) {
+      throw new Error("No active student accounts are available for VenvLearning task mapping.");
+    }
+
+    const payload = await fetchVenvlearningTasks(env, syncRange.start_date, syncRange.end_date);
+    const normalized = normalizeVenvlearningPayload(payload);
+    const mapping = parseJsonEnv(env.VENVLEARNING_STUDENT_MAP, {});
+    const mapped = mapTasksToUsers(normalized.tasks, users, mapping);
+
+    let inserted = 0;
+    let updated = 0;
+    for (const task of mapped.mapped) {
+      const existing = await env.DB.prepare(
+        "SELECT id FROM family_daily_tasks WHERE source=? AND external_id=? AND user_id=? LIMIT 1"
+      ).bind(task.source, task.external_id, task.user_id).first();
+
+      if (existing) {
+        await env.DB.prepare(`
+          UPDATE family_daily_tasks
+          SET title=?, due_date=?, status=?, payload_json=?, last_synced_at=?, updated_at=CURRENT_TIMESTAMP
+          WHERE id=?
+        `).bind(task.title, task.due_date, task.status, task.payload_json, startedAt, existing.id).run();
+        updated++;
+      } else {
+        await env.DB.prepare(`
+          INSERT INTO family_daily_tasks(source,external_id,user_id,title,due_date,status,payload_json,last_synced_at)
+          VALUES(?,?,?,?,?,?,?,?)
+        `).bind(task.source, task.external_id, task.user_id, task.title, task.due_date, task.status, task.payload_json, startedAt).run();
+        inserted++;
+      }
+    }
+
+    const summary = {
+      source: VENVLEARNING_TASK_SOURCE,
+      start_date: syncRange.start_date,
+      end_date: syncRange.end_date,
+      fetched: normalized.total,
+      inserted,
+      updated,
+      invalid: normalized.errors.length,
+      unmapped: mapped.unmapped.length
+    };
+
+    await env.DB.prepare(`
+      UPDATE family_sync_log
+      SET ok=1, finished_at=?, summary_json=?
+      WHERE id=?
+    `).bind(epoch(), JSON.stringify(summary), logId).run();
+
+    console.info("VenvLearning sync summary", summary);
+    return {
+      ok: true,
+      summary,
+      errors: normalized.errors,
+      unmapped: mapped.unmapped.map((task) => ({
+        title: task.title,
+        assignee: task.assignee,
+        due_date: task.due_date,
+        external_id: task.external_id
+      }))
+    };
+  } catch (error) {
+    const message = error && error.message ? error.message : "Unknown sync failure";
+    await env.DB.prepare(`
+      UPDATE family_sync_log
+      SET finished_at=?, error_message=?
+      WHERE id=?
+    `).bind(epoch(), message, logId).run();
+    console.error("VenvLearning sync failed", message);
+    throw error;
+  }
+}
 
 async function resolveStudent(db, row) {
   if (row.student_id) {
@@ -280,9 +462,51 @@ const digest=async text=>Array.from(new Uint8Array(await crypto.subtle.digest('S
 const passwordHash=async(password,salt)=>{const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);return Array.from(new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(salt),iterations:100000,hash:'SHA-256'},key,256)),b=>b.toString(16).padStart(2,'0')).join('');};
 const equalHash=(a,b)=>{let d=a.length^b.length;for(let i=0;i<Math.max(a.length,b.length);i++)d|=(a.charCodeAt(i)||0)^(b.charCodeAt(i)||0);return d===0;};
 const publicUser=u=>({id:u.id,username:u.username,display_name:u.display_name,role:u.role,grade:u.grade,ready:!!u.password_hash});
-const cookie=(token,maxAge=604800)=>`__Host-venv_session=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`;
-async function familyUser(request,env){const t=(request.headers.get('cookie')||'').match(/(?:^|;\s*)__Host-venv_session=([a-f0-9]{64})(?:;|$)/)?.[1];if(!t)return null;return env.DB.prepare('SELECT u.* FROM family_sessions s JOIN family_users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>? AND u.active=1').bind(await digest(t),epoch()).first();}
-async function sessionResponse(user,env){const t=randomToken();await env.DB.prepare('INSERT INTO family_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await digest(t),user.id,epoch()+604800).run();return familyJson({user:publicUser(user),redirect:user.role==='parent'?'/planner':'/agenda'},200,{'set-cookie':cookie(t)});}
+const sessionSameSite = (env) => {
+  const configured = clean(env.FAMILY_SESSION_SAMESITE).toLowerCase();
+  if (configured === "none" || configured === "lax" || configured === "strict") return configured;
+  return clean(env.FAMILY_EMBED_IN_HA) === "1" ? "none" : "strict";
+};
+const sessionCookieName = (env) => {
+  const configured = clean(env.FAMILY_SESSION_COOKIE_NAME);
+  return configured || "__Host-venv_session";
+};
+const sessionCookieSecure = (env) => {
+  const configured = clean(env.FAMILY_SESSION_SECURE).toLowerCase();
+  if (configured === "0" || configured === "false" || configured === "no") return false;
+  return true;
+};
+const sessionCookiePartitioned = (env) => {
+  const configured = clean(env.FAMILY_SESSION_PARTITIONED).toLowerCase();
+  if (configured === "1" || configured === "true" || configured === "yes") return true;
+  if (configured === "0" || configured === "false" || configured === "no") return false;
+  return clean(env.FAMILY_EMBED_IN_HA) === "1";
+};
+const cookie=(token,env,maxAge=604800)=>{
+  const secure=sessionCookieSecure(env);
+  const sameSite=sessionSameSite(env);
+  const safeCookieName=(!secure && sessionCookieName(env).startsWith("__Host-")) ? "venv_session" : sessionCookieName(env);
+  const attrs=[`${safeCookieName}=${token}`,"Path=/","HttpOnly",`SameSite=${sameSite}`,`Max-Age=${maxAge}`];
+  if(secure) attrs.push("Secure");
+  if(secure && sameSite === "none" && sessionCookiePartitioned(env)) attrs.push("Partitioned");
+  return attrs.join("; ");
+};
+const frameAncestors = (env) => {
+  const configured = clean(env.FAMILY_ALLOWED_FRAME_ANCESTORS);
+  if (configured) return configured;
+  return "'self' http://homeassistant.local http://homeassistant.local:8123 https://homeassistant.local https://homeassistant.local:8123 http://localhost:8123 https://localhost:8123 http://127.0.0.1:8123 https://127.0.0.1:8123";
+};
+const sessionTokenFromCookieHeader=(cookieHeader,env)=>{
+  const names=[sessionCookieName(env),"__Host-venv_session","venv_session"];
+  for(const name of names){
+    const escaped=name.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+    const token=(cookieHeader||"").match(new RegExp(`(?:^|;\\s*)${escaped}=([a-f0-9]{64})(?:;|$)`))?.[1];
+    if(token)return token;
+  }
+  return null;
+};
+async function familyUser(request,env){const t=sessionTokenFromCookieHeader(request.headers.get('cookie')||'',env);if(!t)return null;return env.DB.prepare('SELECT u.* FROM family_sessions s JOIN family_users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>? AND u.active=1').bind(await digest(t),epoch()).first();}
+async function sessionResponse(user,env){const t=randomToken();await env.DB.prepare('INSERT INTO family_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await digest(t),user.id,epoch()+604800).run();return familyJson({user:publicUser(user),redirect:user.role==='parent'?'/planner':'/agenda'},200,{'set-cookie':cookie(t,env)});}
 async function assetJson(request,env,path){const r=await env.ASSETS.fetch(new Request(new URL(path,request.url)));if(!r.ok)throw Error('Curriculum unavailable');return r.json();}
 function centralDate(){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}
 function safeDate(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return false;const value=new Date(d+'T12:00:00Z');return !isNaN(value)&&value.toISOString().slice(0,10)===d;}
@@ -310,6 +534,21 @@ async function authRoute(request,env,user,url){
   if(result[0].meta.changes!==1)return familyJson({error:'Setup link was already used.'},400);
   return sessionResponse(await env.DB.prepare('SELECT * FROM family_users WHERE id=?').bind(invite.user_id).first(),env);
  }
+ if(path==='/api/family/venvlearning/sync'&&method==='POST'){
+  const tokenAuthorized=venvSyncAuthOK(request,env);
+  if(!tokenAuthorized){
+   if(!user)return familyJson({error:'Please sign in.'},401);
+   if(user.role!=='parent')return familyJson({error:'Parent access required'},403);
+  }
+  const body=await parseBody(request) || {};
+  const range=sanitizeDateRange(body.start_date,body.end_date);
+  try{
+   const result=await syncVenvlearningDailyTasks(env,range);
+   return familyJson(result);
+  }catch(error){
+   return familyJson({ok:false,error:error.message||'VenvLearning sync failed'},502);
+  }
+ }
  if(!user)return familyJson({error:'Please sign in.'},401);
  if(path==='/api/family/me'&&method==='GET')return familyJson({user:publicUser(user),today:centralDate()});
  if(path==='/api/family/reset-link'&&method==='POST'){
@@ -319,7 +558,7 @@ async function authRoute(request,env,user,url){
   const token=randomToken();await env.DB.batch([env.DB.prepare('DELETE FROM family_invites WHERE user_id=?').bind(target.id),env.DB.prepare('INSERT INTO family_invites(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await digest(token),target.id,epoch()+3600)]);
   return familyJson({url:url.origin+'/login#invite='+token});
  }
- if(path==='/api/family/logout'&&method==='POST'){const t=(request.headers.get('cookie')||'').match(/__Host-venv_session=([a-f0-9]{64})/)?.[1];if(t)await env.DB.prepare('DELETE FROM family_sessions WHERE token_hash=?').bind(await digest(t)).run();return familyJson({ok:true},200,{'set-cookie':cookie('',0)});}
+ if(path==='/api/family/logout'&&method==='POST'){const t=sessionTokenFromCookieHeader(request.headers.get('cookie')||'',env);if(t)await env.DB.prepare('DELETE FROM family_sessions WHERE token_hash=?').bind(await digest(t)).run();return familyJson({ok:true},200,{'set-cookie':cookie('',env,0)});}
  if(path==='/api/family/users'&&method==='GET'){if(user.role!=='parent')return familyJson({error:'Parent access required'},403);return familyJson({users:(await env.DB.prepare('SELECT * FROM family_users WHERE active=1 ORDER BY role,grade,username').all()).results.map(publicUser)});}
  if(path==='/api/family/account'&&method==='POST'){
   if(user.role!=='parent')return familyJson({error:'Parent access required'},403);const b=await request.json(),target=await env.DB.prepare('SELECT * FROM family_users WHERE id=? AND active=1').bind(String(b.id||'')).first();if(!target)return familyJson({error:'Account not found'},404);
@@ -335,10 +574,12 @@ async function authRoute(request,env,user,url){
  if(path==='/api/family/agenda'&&method==='GET'){
   const date=url.searchParams.get('date')||centralDate();if(!safeDate(date))return familyJson({error:'Invalid date'},400);
   const target=user.role==='parent'?await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(url.searchParams.get('student')||'student-4').first():user;if(!target)return familyJson({error:'Student not found'},404);
-  const [days,library,exams,completion]=await Promise.all([assetJson(request,env,'/daily-packets.json'),assetJson(request,env,'/planner-resources.json'),assetJson(request,env,'/assessment-student.json'),env.DB.prepare("SELECT subject,completed FROM family_curriculum_completion WHERE user_id=? AND school_date=? AND curriculum='khan-primary-v1'").bind(target.id,date).all()]);
-  const d=days[date]?.[target.grade];if(!d)return familyJson({student:publicUser(target),date,teaching:false,next_date:Object.keys(days).sort().find(x=>x>date)||null});
+  await ensureFamilyTaskTables(env.DB);
+  const [days,library,exams,completion,venvTasks]=await Promise.all([assetJson(request,env,'/daily-packets.json'),assetJson(request,env,'/planner-resources.json'),assetJson(request,env,'/assessment-student.json'),env.DB.prepare("SELECT subject,completed FROM family_curriculum_completion WHERE user_id=? AND school_date=? AND curriculum='khan-primary-v1'").bind(target.id,date).all(),env.DB.prepare("SELECT title,status,source,external_id,due_date,updated_at FROM family_daily_tasks WHERE user_id=? AND due_date=? ORDER BY CASE status WHEN 'overdue' THEN 0 WHEN 'pending' THEN 1 WHEN 'in_progress' THEN 2 WHEN 'completed' THEN 3 WHEN 'cancelled' THEN 4 ELSE 5 END, title").bind(target.id,date).all()]);
+  const dailyTasks=(venvTasks.results||[]).map(t=>({title:t.title,status:t.status,source:t.source,external_id:t.external_id,due_date:t.due_date,updated_at:t.updated_at}));
+  const d=days[date]?.[target.grade];if(!d)return familyJson({student:publicUser(target),date,teaching:false,next_date:Object.keys(days).sort().find(x=>x>date)||null,daily_tasks:dailyTasks});
   const mapping=library.weeks[`${target.grade}-${d.module}-${d.week}`],subjects=Object.entries(mapping).map(([key,s])=>({key,topic:s.topic,mode:s.mode,primary:s.primary,gap_note:s.gap_note,resources:s.resources.map(id=>library.resources[id]),completed:completion.results.some(r=>r.subject===key&&r.completed===1)}));
-  return familyJson({student:publicUser(target),date,teaching:true,module:d.module,week:d.week,tasks:d.tasks,goals:d.goals,subjects,assessment:d.assessment?{title:exams[d.assessment].title,student_pdf:'/assessments/'+d.assessment+'-student.pdf'}:null,primary_assessments:d.primary_assessments||[],print_url:'/daily-print?date='+date+'&grade='+target.grade});
+  return familyJson({student:publicUser(target),date,teaching:true,module:d.module,week:d.week,tasks:d.tasks,goals:d.goals,subjects,assessment:d.assessment?{title:exams[d.assessment].title,student_pdf:'/assessments/'+d.assessment+'-student.pdf'}:null,primary_assessments:d.primary_assessments||[],print_url:'/daily-print?date='+date+'&grade='+target.grade,daily_tasks:dailyTasks});
  }
  if(path==='/api/family/completion'&&method==='POST'){
   const b=await request.json(),id=user.role==='parent'?String(b.student_id||''):user.id;if(!safeDate(String(b.date||''))||!['math','ela','science','social','spanish'].includes(b.subject)||typeof b.completed!=='boolean')return familyJson({error:'Invalid task'},400);
@@ -367,6 +608,6 @@ async function familyFetch(request,env,ctx){
   if(/^\/daily-print(?:\.html)?$/.test(path)&&(url.searchParams.get('key')==='1'||url.searchParams.get('grade')!==user.grade)){url.searchParams.delete('key');url.searchParams.set('grade',user.grade);return new Response(null,{status:302,headers:{location:url.pathname+url.search,'cache-control':'no-store'}});}
  }
  const response=path.startsWith('/api/')?await legacy.fetch(request,env,ctx):await env.ASSETS.fetch(request);
- const secured=new Response(response.body,response);secured.headers.set('cache-control','private, no-store');secured.headers.set('x-content-type-options','nosniff');secured.headers.set('referrer-policy','same-origin');secured.headers.set('x-frame-options','DENY');return secured;
+ const secured=new Response(response.body,response);secured.headers.set('cache-control','private, no-store');secured.headers.set('x-content-type-options','nosniff');secured.headers.set('referrer-policy','same-origin');secured.headers.set('content-security-policy',`frame-ancestors ${frameAncestors(env)}`);secured.headers.delete('x-frame-options');return secured;
 }
 export default {async fetch(request,env,ctx){try{return await familyFetch(request,env,ctx)}catch(e){console.error('Family request failed',e.name);return familyJson({error:'This page could not load. Please try again.'},500)}}};

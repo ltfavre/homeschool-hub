@@ -36,5 +36,5 @@ async function init(){try{
  if(match){$('module').value=match.p.module;$('weekSelect').value=match.w.number}if([...$('month').options].some(o=>o.value===today.slice(0,7)))$('month').value=today.slice(0,7);
  data.plans.filter(p=>p.grade===4).forEach(p=>{const tr=el('tr','');tr.append(el('td','Module '+p.module));p.weeks.forEach(w=>tr.append(el('td',fmt(w.assessment))));$('tests').append(tr)});
  $('guide').textContent=data.guide;$('coverage').textContent=data.standards;$('sources').textContent=data.sources;
- ['grade','module','weekSelect'].forEach(id=>$(id).addEventListener('change',renderPlan));$('month').addEventListener('change',renderCalendar);renderPlan();renderCalendar();$('status').textContent='Lesson content from your original planner; calendar adjusted to start Module 1 on October 12, 2026. PDF dates reflect the original schedule.';
+ ['grade','module','weekSelect'].forEach(id=>$(id).addEventListener('change',renderPlan));$('month').addEventListener('change',renderCalendar);renderPlan();renderCalendar();$('status').textContent='Khan primary curriculum · Required gap materials are labeled · Friday quizzes and module-end tests preserved · Original PDFs are archived.';
  }catch(e){$('status').textContent='The planner could not load. Please refresh or use the PDF download above.';console.error(e)}}init();

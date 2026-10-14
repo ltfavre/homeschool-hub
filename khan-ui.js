@@ -1,0 +1,6 @@
+window.KhanUI=(()=>{
+ const node=(t,text='',cls='')=>{const e=document.createElement(t);e.textContent=text;e.className=cls;return e;};
+ function assessments(entries,parent){if(!entries?.length)return;const section=node('section','','khan-assessment-plan');section.append(node('h3','Khan online quizzes / tests'),node('p','Use the child’s Khan login. Take checks on taught skills only; record the first attempt before corrections or retakes. The printable gap paper is a separate part of today’s assessment.'));for(const a of entries){const item=node('article','','khan-check'),link=node('a',a.subject+' · '+a.kind+' · '+a.course);link.href=a.url;link.target='_blank';link.rel='noopener';item.append(link,node('p','Khan units: '+a.units.join('; ')),node('p',a.instruction),node('p','First-attempt score: ______ / ______   Date: __________   Correction / next skill: ____________________','assessment-record'));section.append(item);}parent.append(section);}
+ function priority(s,parent){parent.append(node('p',s.mode||'Supplement','curriculum-label'));if(s.primary){parent.append(node('p','Start with '+s.primary.course+'. Units: '+s.primary.units.join('; '),'primary-unit'));}if(s.gap_note)parent.append(node('p',s.gap_note,'gap-note'));}
+ return {assessments,priority};
+})();

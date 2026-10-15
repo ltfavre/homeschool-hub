@@ -73,7 +73,7 @@ const sanitizeDateRange = (startDateRaw, endDateRaw) => {
 };
 
 async function ensureFamilyTaskTables(db) {
-  await db.exec(`
+  await execSql(db, `
     CREATE TABLE IF NOT EXISTS family_daily_tasks (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       source TEXT NOT NULL,
@@ -103,7 +103,7 @@ async function ensureFamilyTaskTables(db) {
   `);
 }
 async function ensureFamilyAuthTables(db){
-  await db.exec(`
+  await execSql(db, `
     CREATE TABLE IF NOT EXISTS family_users (
       id TEXT PRIMARY KEY,
       username TEXT NOT NULL UNIQUE,
@@ -143,6 +143,19 @@ async function ensureFamilyAuthTables(db){
     );
     CREATE INDEX IF NOT EXISTS idx_family_curriculum_completion_date ON family_curriculum_completion(school_date);
   `);
+}
+async function execSql(db, sql){
+  if(typeof db.exec === "function"){
+    await db.exec(sql);
+    return;
+  }
+  const statements=sql
+    .split(";")
+    .map((s)=>s.trim())
+    .filter(Boolean);
+  for(const statement of statements){
+    await db.prepare(statement).run();
+  }
 }
 
 async function fetchVenvlearningTasks(env, startDate, endDate) {
@@ -670,11 +683,15 @@ async function familyFetch(request,env,ctx){
  const url=new URL(request.url),path=decodeURIComponent(url.pathname);
  // Source/config files must never be delivered as public static assets.
  if(/\/(?:index\.js|_worker\.js|family-server\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git)/i.test(path))return new Response('Not found',{status:404});
- await ensureFamilyAuthTables(env.DB);
  const publicPaths=['/login','/login.html','/login.js','/forgot-password','/forgot-password.html','/family.css','/styles.css','/favicon.ico'];
- const user=await familyUser(request,env);
- if(url.pathname.startsWith('/api/family/'))return authRoute(request,env,user,url);
  if(publicPaths.includes(path))return env.ASSETS.fetch(request);
+ if(url.pathname.startsWith('/api/family/')){
+  if(!env.DB||typeof env.DB.prepare!=='function')return familyJson({error:'Database is not configured for this environment.'},503);
+  await ensureFamilyAuthTables(env.DB);
+  const user=await familyUser(request,env);
+  return authRoute(request,env,user,url);
+ }
+ const user=await familyUser(request,env);
  if(!user)return path.startsWith('/api/')?familyJson({error:'Please sign in.'},401):new Response(null,{status:302,headers:{location:'/login','cache-control':'no-store'}});
  if(path.startsWith('/api/')&&!['GET','HEAD'].includes(request.method)&&(request.headers.get('origin')!==url.origin||!(request.headers.get('content-type')||'').startsWith('application/json')))return familyJson({error:'Please use the website form.'},403);
  if(path==='/'&&user.role==='student')return new Response(null,{status:302,headers:{location:'/agenda','cache-control':'no-store'}});

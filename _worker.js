@@ -463,7 +463,7 @@ const passwordHash=async(password,salt)=>{const key=await crypto.subtle.importKe
 const equalHash=(a,b)=>{let d=a.length^b.length;for(let i=0;i<Math.max(a.length,b.length);i++)d|=(a.charCodeAt(i)||0)^(b.charCodeAt(i)||0);return d===0;};
 const publicUser=u=>({id:u.id,username:u.username,display_name:u.display_name,role:u.role,grade:u.grade,ready:!!u.password_hash});
 const sessionSameSite = (env) => {
-  const configured = clean(env.FAMILY_SESSION_SAMESITE).toLowerCase();
+  const configured = (clean(env.FAMILY_SESSION_SAMESITE) || "").toLowerCase();
   if (configured === "none" || configured === "lax" || configured === "strict") return configured;
   return clean(env.FAMILY_EMBED_IN_HA) === "1" ? "none" : "strict";
 };
@@ -472,12 +472,12 @@ const sessionCookieName = (env) => {
   return configured || "__Host-venv_session";
 };
 const sessionCookieSecure = (env) => {
-  const configured = clean(env.FAMILY_SESSION_SECURE).toLowerCase();
+  const configured = (clean(env.FAMILY_SESSION_SECURE) || "").toLowerCase();
   if (configured === "0" || configured === "false" || configured === "no") return false;
   return true;
 };
 const sessionCookiePartitioned = (env) => {
-  const configured = clean(env.FAMILY_SESSION_PARTITIONED).toLowerCase();
+  const configured = (clean(env.FAMILY_SESSION_PARTITIONED) || "").toLowerCase();
   if (configured === "1" || configured === "true" || configured === "yes") return true;
   if (configured === "0" || configured === "false" || configured === "no") return false;
   return clean(env.FAMILY_EMBED_IN_HA) === "1";
@@ -510,7 +510,23 @@ async function sessionResponse(user,env){const t=randomToken();await env.DB.prep
 async function assetJson(request,env,path){const r=await env.ASSETS.fetch(new Request(new URL(path,request.url)));if(!r.ok)throw Error('Curriculum unavailable');return r.json();}
 function centralDate(){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}
 function safeDate(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return false;const value=new Date(d+'T12:00:00Z');return !isNaN(value)&&value.toISOString().slice(0,10)===d;}
-async function rateLimit(request,env,username){for(const key of ['ip:'+ (request.headers.get('cf-connecting-ip')||'unknown'),'user:'+username]){const bucket=await digest(key)+':'+Math.floor(epoch()/900);const r=await env.DB.prepare('INSERT INTO family_login_limits(bucket,attempts,expires_at) VALUES(?,1,?) ON CONFLICT(bucket) DO UPDATE SET attempts=attempts+1 RETURNING attempts').bind(bucket,epoch()+1800).first();if(r.attempts>20)return false;}return true;}
+async function rateLimit(request,env,username){
+ for(const key of ['ip:'+ (request.headers.get('cf-connecting-ip')||'unknown'),'user:'+username]){
+  const bucket=await digest(key)+':'+Math.floor(epoch()/900);
+  try{
+   const r=await env.DB.prepare('INSERT INTO family_login_limits(bucket,attempts,expires_at) VALUES(?,1,?) ON CONFLICT(bucket) DO UPDATE SET attempts=attempts+1 RETURNING attempts').bind(bucket,epoch()+1800).first();
+   if(r.attempts>20)return false;
+  }catch(error){
+   const message=String(error&&error.message||'');
+   if(/no such table:\s*family_login_limits/i.test(message)){
+    console.error('Login rate-limit table missing; continuing without rate-limit protection');
+    return true;
+   }
+   throw error;
+  }
+ }
+ return true;
+}
 async function authRoute(request,env,user,url){
  const path=url.pathname,method=request.method;
  if(method!=='GET'&&method!=='HEAD'){

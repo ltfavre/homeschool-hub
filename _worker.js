@@ -14,6 +14,12 @@ const parseBody = async (request) => {
   try { return await request.json(); }
   catch { return null; }
 };
+const fetchAsset = (request, env) => {
+  if (env && env.ASSETS && typeof env.ASSETS.fetch === "function") {
+    return env.ASSETS.fetch(request);
+  }
+  return fetch(request);
+};
 
 
 const clean = (v) => {
@@ -370,7 +376,7 @@ const legacy = {
     const url = new URL(request.url);
 
     if (!url.pathname.startsWith("/api/")) {
-      return env.ASSETS.fetch(request);
+      return fetchAsset(request, env);
     }
 
     try {
@@ -575,7 +581,7 @@ async function familyUser(request,env){
  }
 }
 async function sessionResponse(user,env){const t=randomToken();await env.DB.prepare('INSERT INTO family_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await digest(t),user.id,epoch()+604800).run();return familyJson({user:publicUser(user),redirect:user.role==='parent'?'/planner':'/agenda'},200,{'set-cookie':cookie(t,env)});}
-async function assetJson(request,env,path){const r=await env.ASSETS.fetch(new Request(new URL(path,request.url)));if(!r.ok)throw Error('Curriculum unavailable');return r.json();}
+async function assetJson(request,env,path){const r=await fetchAsset(new Request(new URL(path,request.url)),env);if(!r.ok)throw Error('Curriculum unavailable');return r.json();}
 function centralDate(){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}
 function safeDate(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return false;const value=new Date(d+'T12:00:00Z');return !isNaN(value)&&value.toISOString().slice(0,10)===d;}
 async function rateLimit(request,env,username){
@@ -684,7 +690,7 @@ async function familyFetch(request,env,ctx){
  // Source/config files must never be delivered as public static assets.
  if(/\/(?:index\.js|_worker\.js|family-server\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git)/i.test(path))return new Response('Not found',{status:404});
  const publicPaths=['/login','/login.html','/login.js','/forgot-password','/forgot-password.html','/family.css','/styles.css','/favicon.ico'];
- if(publicPaths.includes(path))return env.ASSETS.fetch(request);
+ if(publicPaths.includes(path))return fetchAsset(request, env);
  if(url.pathname.startsWith('/api/family/')){
   if(!env.DB||typeof env.DB.prepare!=='function')return familyJson({error:'Database is not configured for this environment.'},503);
   await ensureFamilyAuthTables(env.DB);
@@ -703,7 +709,7 @@ async function familyFetch(request,env,ctx){
   if(!allowed.includes(path)&&!(pdf&&pdf[1]===user.grade))return familyJson({error:'Parent access required'},403);
   if(/^\/daily-print(?:\.html)?$/.test(path)&&(url.searchParams.get('key')==='1'||url.searchParams.get('grade')!==user.grade)){url.searchParams.delete('key');url.searchParams.set('grade',user.grade);return new Response(null,{status:302,headers:{location:url.pathname+url.search,'cache-control':'no-store'}});}
  }
- const response=path.startsWith('/api/')?await legacy.fetch(request,env,ctx):await env.ASSETS.fetch(request);
+ const response=path.startsWith('/api/')?await legacy.fetch(request,env,ctx):await fetchAsset(request, env);
  const secured=new Response(response.body,response);secured.headers.set('cache-control','private, no-store');secured.headers.set('x-content-type-options','nosniff');secured.headers.set('referrer-policy','same-origin');secured.headers.set('content-security-policy',`frame-ancestors ${frameAncestors(env)}`);secured.headers.delete('x-frame-options');return secured;
 }
 export default {async fetch(request,env,ctx){try{return await familyFetch(request,env,ctx)}catch(e){console.error('Family request failed',e.name);return familyJson({error:'This page could not load. Please try again.'},500)}}};

@@ -505,7 +505,20 @@ const sessionTokenFromCookieHeader=(cookieHeader,env)=>{
   }
   return null;
 };
-async function familyUser(request,env){const t=sessionTokenFromCookieHeader(request.headers.get('cookie')||'',env);if(!t)return null;return env.DB.prepare('SELECT u.* FROM family_sessions s JOIN family_users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>? AND u.active=1').bind(await digest(t),epoch()).first();}
+async function familyUser(request,env){
+ const t=sessionTokenFromCookieHeader(request.headers.get('cookie')||'',env);
+ if(!t)return null;
+ try{
+  return await env.DB.prepare('SELECT u.* FROM family_sessions s JOIN family_users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>? AND u.active=1').bind(await digest(t),epoch()).first();
+ }catch(error){
+  const message=String(error&&error.message||'');
+  if(/no such column:\s*u\.active/i.test(message)){
+   return env.DB.prepare('SELECT u.* FROM family_sessions s JOIN family_users u ON u.id=s.user_id WHERE s.token_hash=? AND s.expires_at>?').bind(await digest(t),epoch()).first();
+  }
+  console.error('Session lookup failed; treating as signed out', message);
+  return null;
+ }
+}
 async function sessionResponse(user,env){const t=randomToken();await env.DB.prepare('INSERT INTO family_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await digest(t),user.id,epoch()+604800).run();return familyJson({user:publicUser(user),redirect:user.role==='parent'?'/planner':'/agenda'},200,{'set-cookie':cookie(t,env)});}
 async function assetJson(request,env,path){const r=await env.ASSETS.fetch(new Request(new URL(path,request.url)));if(!r.ok)throw Error('Curriculum unavailable');return r.json();}
 function centralDate(){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}
@@ -517,15 +530,22 @@ async function rateLimit(request,env,username){
    const r=await env.DB.prepare('INSERT INTO family_login_limits(bucket,attempts,expires_at) VALUES(?,1,?) ON CONFLICT(bucket) DO UPDATE SET attempts=attempts+1 RETURNING attempts').bind(bucket,epoch()+1800).first();
    if(r.attempts>20)return false;
   }catch(error){
-   const message=String(error&&error.message||'');
-   if(/no such table:\s*family_login_limits/i.test(message)){
-    console.error('Login rate-limit table missing; continuing without rate-limit protection');
-    return true;
-   }
-   throw error;
+   console.error('Login rate-limit unavailable; continuing', String(error&&error.message||''));
+   return true;
   }
  }
  return true;
+}
+async function findUserByUsername(env,username){
+ try{
+  return await env.DB.prepare('SELECT * FROM family_users WHERE username=? AND active=1').bind(username).first();
+ }catch(error){
+  const message=String(error&&error.message||'');
+  if(/no such column:\s*active/i.test(message)){
+   return env.DB.prepare('SELECT * FROM family_users WHERE username=? LIMIT 1').bind(username).first();
+  }
+  throw error;
+ }
 }
 async function authRoute(request,env,user,url){
  const path=url.pathname,method=request.method;
@@ -536,7 +556,7 @@ async function authRoute(request,env,user,url){
  if(path==='/api/family/login'&&method==='POST'){
   const b=await request.json(),username=String(b.username||'').trim().toLowerCase().slice(0,200),password=String(b.password||'');
   if(password.length>256||!await rateLimit(request,env,username))return familyJson({error:'Too many attempts. Try again in 15 minutes.'},429);
-  const u=await env.DB.prepare('SELECT * FROM family_users WHERE username=? AND active=1').bind(username).first();
+  const u=await findUserByUsername(env,username);
   const hash=await passwordHash(password,u?.password_salt||'invalid-account-comparison-salt');
   if(!u?.password_hash||!equalHash(hash,u.password_hash))return familyJson({error:'Username or password did not match. Children: ask a parent to set your password if this is your first login.'},401);
   return sessionResponse(u,env);

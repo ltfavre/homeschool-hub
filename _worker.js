@@ -159,14 +159,16 @@ async function ensureFamilyAuthTablesImpl(db){
   `);
 }
 async function execSql(db, sql){
-  if(typeof db.exec === "function"){
-    await db.exec(sql);
-    return;
-  }
+  // D1 exec splits on newlines, so multiline DDL must use prepared statements.
+  // These static schema definitions contain no semicolons inside SQL literals.
   const statements=sql
     .split(";")
     .map((s)=>s.trim())
     .filter(Boolean);
+  if(typeof db.batch === "function"){
+    await db.batch(statements.map((statement)=>db.prepare(statement)));
+    return;
+  }
   for(const statement of statements){
     await db.prepare(statement).run();
   }

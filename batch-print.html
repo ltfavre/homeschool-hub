@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Weekly Batch Print · VenvLearning</title>
+<link rel="stylesheet" href="/daily-print.css"><link rel="stylesheet" href="/batch-print.css">
+</head>
+<body>
+<header class="screen-tools"><a href="/planner">← Teacher Planner</a><a href="/agenda">Student agendas</a></header>
+<main>
+<section class="grade-packet">
+<p class="metadata">VENVLEARNING · WEEKLY PREPARATION</p><h1>Batch Print</h1>
+<p>Prepare every student’s materials and the teacher keys for the week in one PDF.</p>
+<form id="batchForm">
+<label for="weekDate">Choose any day in the week</label><input type="date" id="weekDate" required>
+<p id="weekRange" class="metadata"></p>
+<fieldset><legend>Students</legend><div id="students">Loading students…</div></fieldset>
+<label class="check"><input type="checkbox" id="includeStudents" checked> Include student lesson plans, worksheets, and assessments</label>
+<label class="check"><input type="checkbox" id="includeTeacher" checked> Include teacher practice keys and assessment answer keys</label>
+<p class="metadata">Student packets come first, grouped by student and day. Teacher keys follow in a separate section, once per grade. Each section starts on a fresh sheet for double-sided printing. Breaks and days without lessons are skipped. Publisher downloads and Khan activities remain at their sources.</p>
+<button id="build" type="submit" disabled>Prepare weekly PDF</button>
+</form>
+<p id="batchStatus" role="status" aria-live="polite">Loading weekly materials…</p>
+<div id="ready" hidden><a id="downloadBatch" class="batch-button">Download weekly PDF</a> <a id="openBatch" target="_blank" rel="noopener" class="batch-button">Open &amp; print weekly PDF</a>
+<p>Open the combined PDF, then choose Print or press Ctrl+P once. Teacher answer keys are at the end; separate them before giving the packets to students.</p></div>
+</section>
+<section id="contents" class="grade-packet" hidden><h2>Included in this bundle</h2><ul id="contentsList"></ul></section>
+</main>
+<script src="/vendor/pdf-lib.min.js" defer></script><script src="/khan-ui.js" defer></script><script src="/print-download.js" defer></script><script src="/packet-renderer.js" defer></script><script src="/batch-print.js" defer></script>
+</body></html>

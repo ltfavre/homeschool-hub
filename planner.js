@@ -11,6 +11,7 @@ function renderPlan(){
  const targets=el('div','','targets');p.targets.forEach((t,i)=>{const a=el('article','');a.append(el('h4',['Math','ELA','Science','Social Studies','Spanish'][i]),el('p',t));targets.append(a)});box.append(targets,el('p','Standards: '+p.standards),el('h3','Week '+w.number+' · '+fmt(w.start)),el('p',w.goals));
  window.PlannerAssessments.render(p,w,box);
  window.PlannerResources.render(p,w,box);
+ const batch=el('a','Batch Print this week · All students + teacher keys','planner-link');batch.href='/batch-print?date='+w.start;box.append(batch);
  const daily=el('div','','daily');w.days.forEach((t,i)=>{const a=el('article','');a.append(el('h4',['Monday','Tuesday','Wednesday','Thursday','Friday'][i]+' · '+fmt(addDays(w.start,i))));
  const printDay=el('a','Print this day');printDay.href='/daily-print.html?date='+addDays(w.start,i)+'&grade='+p.grade;a.append(printDay);
  t.split(/(?=Math:|ELA:|Sci:|SS:|Sp:)/).filter(Boolean).forEach(s=>a.append(el('p',s)));daily.append(a)});box.append(daily);

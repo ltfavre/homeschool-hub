@@ -1,3 +1,4 @@
+import { homeAssistantApi, manageHomeAssistant } from "./home-assistant-api.js";
 import {
   mapTasksToUsers,
   normalizeVenvlearningPayload,
@@ -659,6 +660,7 @@ async function authRoute(request,env,user,url){
   }
  }
  if(!user)return familyJson({error:'Please sign in.'},401);
+ if(path==='/api/family/home-assistant-token')return manageHomeAssistant(request,env,user);
  if(path==='/api/family/me'&&method==='GET')return familyJson({user:publicUser(user),today:centralDate()});
  if(path==='/api/family/reset-link'&&method==='POST'){
   if(user.role!=='parent')return familyJson({error:'Parent access required'},403);
@@ -704,6 +706,7 @@ async function familyFetch(request,env,ctx){
  if(/\/(?:index\.js|_worker\.js|family-server\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git)/i.test(path))return new Response('Not found',{status:404});
  const publicPaths=['/login','/login.html','/login.js','/forgot-password','/forgot-password.html','/family.css','/styles.css','/favicon.ico'];
  if(publicPaths.includes(path))return fetchAsset(request, env);
+ if(url.pathname.startsWith('/api/home-assistant/'))return homeAssistantApi(request,env,assetJson);
  if(url.pathname.startsWith('/api/family/')){
   if(!env.DB||typeof env.DB.prepare!=='function')return familyJson({error:'Database is not configured for this environment.'},503);
   await maybeEnsureFamilyAuthTables(env.DB, env);

@@ -108,7 +108,15 @@ async function ensureFamilyTaskTables(db) {
     );
   `);
 }
-async function ensureFamilyAuthTables(db){
+async function maybeEnsureFamilyAuthTables(db, env){
+  if(clean(env.FAMILY_SCHEMA_SELF_HEAL)!=="1") return;
+  try{
+    await ensureFamilyAuthTablesImpl(db);
+  }catch(error){
+    console.error('Auth schema self-heal failed', String(error&&error.message||''));
+  }
+}
+async function ensureFamilyAuthTablesImpl(db){
   await execSql(db, `
     CREATE TABLE IF NOT EXISTS family_users (
       id TEXT PRIMARY KEY,
@@ -693,7 +701,7 @@ async function familyFetch(request,env,ctx){
  if(publicPaths.includes(path))return fetchAsset(request, env);
  if(url.pathname.startsWith('/api/family/')){
   if(!env.DB||typeof env.DB.prepare!=='function')return familyJson({error:'Database is not configured for this environment.'},503);
-  await ensureFamilyAuthTables(env.DB);
+  await maybeEnsureFamilyAuthTables(env.DB, env);
   const user=await familyUser(request,env);
   return authRoute(request,env,user,url);
  }

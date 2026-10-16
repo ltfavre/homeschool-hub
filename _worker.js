@@ -712,4 +712,4 @@ async function familyFetch(request,env,ctx){
  const response=path.startsWith('/api/')?await legacy.fetch(request,env,ctx):await fetchAsset(request, env);
  const secured=new Response(response.body,response);secured.headers.set('cache-control','private, no-store');secured.headers.set('x-content-type-options','nosniff');secured.headers.set('referrer-policy','same-origin');secured.headers.set('content-security-policy',`frame-ancestors ${frameAncestors(env)}`);secured.headers.delete('x-frame-options');return secured;
 }
-export default {async fetch(request,env,ctx){try{return await familyFetch(request,env,ctx)}catch(e){console.error('Family request failed',e.name);return familyJson({error:'This page could not load. Please try again.'},500)}}};
+export default {async fetch(request,env,ctx){try{return await familyFetch(request,env,ctx)}catch(e){console.error('Family request failed',{name:e&&e.name,message:e&&e.message,stack:e&&e.stack});return familyJson({error:'This page could not load. Please try again.'},500)}}};

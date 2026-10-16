@@ -623,7 +623,9 @@ async function authRoute(request,env,user,url){
   if(Number(request.headers.get('content-length')||0)>16384)return familyJson({error:'Request too large'},413);
  }
  if(path==='/api/family/login'&&method==='POST'){
-  const b=await request.json(),username=String(b.username||'').trim().toLowerCase().slice(0,200),password=String(b.password||'');
+  const b=await parseBody(request);
+  if(!b||typeof b!=='object')return familyJson({error:'Invalid JSON body'},400);
+  const username=String(b.username||'').trim().toLowerCase().slice(0,200),password=String(b.password||'');
   if(password.length>256||!await rateLimit(request,env,username))return familyJson({error:'Too many attempts. Try again in 15 minutes.'},429);
   const u=await findUserByUsername(env,username);
   const hash=await passwordHash(password,u?.password_salt||'invalid-account-comparison-salt');
@@ -631,7 +633,7 @@ async function authRoute(request,env,user,url){
   return sessionResponse(u,env);
  }
  if(path==='/api/family/activate'&&method==='POST'){
-  const b=await request.json();if(!/^[a-f0-9]{64}$/.test(b.token||'')||typeof b.password!=='string'||b.password.length<12||b.password.length>256)return familyJson({error:'Use the setup link and a password with at least 12 characters.'},400);
+  const b=await parseBody(request);if(!b||!/^[a-f0-9]{64}$/.test(b.token||'')||typeof b.password!=='string'||b.password.length<12||b.password.length>256)return familyJson({error:'Use the setup link and a password with at least 12 characters.'},400);
   if(!await rateLimit(request,env,'activation'))return familyJson({error:'Try again in 15 minutes.'},429);
   const h=await digest(b.token),invite=await env.DB.prepare('SELECT * FROM family_invites WHERE token_hash=? AND expires_at>?').bind(h,epoch()).first();if(!invite)return familyJson({error:'This setup link has expired or was already used.'},400);
   const salt=randomToken(),hash=await passwordHash(b.password,salt);
@@ -658,7 +660,8 @@ async function authRoute(request,env,user,url){
  if(path==='/api/family/me'&&method==='GET')return familyJson({user:publicUser(user),today:centralDate()});
  if(path==='/api/family/reset-link'&&method==='POST'){
   if(user.role!=='parent')return familyJson({error:'Parent access required'},403);
-  const b=await request.json(),target=await env.DB.prepare("SELECT id FROM family_users WHERE id=? AND role='parent' AND active=1").bind(String(b.id||'')).first();
+  const b=await parseBody(request);if(!b)return familyJson({error:'Invalid JSON body'},400);
+  const target=await env.DB.prepare("SELECT id FROM family_users WHERE id=? AND role='parent' AND active=1").bind(String(b.id||'')).first();
   if(!target)return familyJson({error:'Parent account not found'},404);
   const token=randomToken();await env.DB.batch([env.DB.prepare('DELETE FROM family_invites WHERE user_id=?').bind(target.id),env.DB.prepare('INSERT INTO family_invites(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await digest(token),target.id,epoch()+3600)]);
   return familyJson({url:url.origin+'/login#invite='+token});
@@ -666,7 +669,7 @@ async function authRoute(request,env,user,url){
  if(path==='/api/family/logout'&&method==='POST'){const t=sessionTokenFromCookieHeader(request.headers.get('cookie')||'',env);if(t)await env.DB.prepare('DELETE FROM family_sessions WHERE token_hash=?').bind(await digest(t)).run();return familyJson({ok:true},200,{'set-cookie':cookie('',env,0)});}
  if(path==='/api/family/users'&&method==='GET'){if(user.role!=='parent')return familyJson({error:'Parent access required'},403);return familyJson({users:(await env.DB.prepare('SELECT * FROM family_users WHERE active=1 ORDER BY role,grade,username').all()).results.map(publicUser)});}
  if(path==='/api/family/account'&&method==='POST'){
-  if(user.role!=='parent')return familyJson({error:'Parent access required'},403);const b=await request.json(),target=await env.DB.prepare('SELECT * FROM family_users WHERE id=? AND active=1').bind(String(b.id||'')).first();if(!target)return familyJson({error:'Account not found'},404);
+  if(user.role!=='parent')return familyJson({error:'Parent access required'},403);const b=await parseBody(request);if(!b)return familyJson({error:'Invalid JSON body'},400);const target=await env.DB.prepare('SELECT * FROM family_users WHERE id=? AND active=1').bind(String(b.id||'')).first();if(!target)return familyJson({error:'Account not found'},404);
   if(target.role==='parent'&&target.id!==user.id)return familyJson({error:'Each parent manages their own password.'},403);
   const name=String(b.display_name||'').trim().slice(0,60),username=String(b.username||'').trim().toLowerCase();if(!name||!username||username.length>200||!/^[-a-z0-9@._+]+$/.test(username))return familyJson({error:'Enter a name and valid email or username.'},400);
   if(target.role==='parent'&&username!==target.username)return familyJson({error:'Parent email changes require account verification.'},400);
@@ -687,7 +690,7 @@ async function authRoute(request,env,user,url){
   return familyJson({student:publicUser(target),date,teaching:true,module:d.module,week:d.week,tasks:d.tasks,goals:d.goals,subjects,assessment:d.assessment?{title:exams[d.assessment].title,student_pdf:'/assessments/'+d.assessment+'-student.pdf'}:null,primary_assessments:d.primary_assessments||[],print_url:'/daily-print?date='+date+'&grade='+target.grade,daily_tasks:dailyTasks});
  }
  if(path==='/api/family/completion'&&method==='POST'){
-  const b=await request.json(),id=user.role==='parent'?String(b.student_id||''):user.id;if(!safeDate(String(b.date||''))||!['math','ela','science','social','spanish'].includes(b.subject)||typeof b.completed!=='boolean')return familyJson({error:'Invalid task'},400);
+  const b=await parseBody(request);if(!b)return familyJson({error:'Invalid JSON body'},400);const id=user.role==='parent'?String(b.student_id||''):user.id;if(!safeDate(String(b.date||''))||!['math','ela','science','social','spanish'].includes(b.subject)||typeof b.completed!=='boolean')return familyJson({error:'Invalid task'},400);
   const target=await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(id).first();if(!target)return familyJson({error:'Student not found'},404);const days=await assetJson(request,env,'/daily-packets.json');if(!days[b.date]?.[target.grade])return familyJson({error:'No teaching day scheduled'},400);
   await env.DB.prepare("INSERT INTO family_curriculum_completion(user_id,school_date,subject,completed,updated_at,curriculum) VALUES(?,?,?,?,?,'khan-primary-v1') ON CONFLICT(user_id,school_date,subject,curriculum) DO UPDATE SET completed=excluded.completed,updated_at=excluded.updated_at").bind(id,b.date,b.subject,b.completed?1:0,epoch()).run();return familyJson({ok:true});
  }

@@ -38,8 +38,10 @@ export async function homeAssistantApi(request, env, assetJson) {
   if (!connection) return reply({error: 'School connection key is not valid.'}, 401);
   const url = new URL(request.url);
   if (url.pathname === '/api/home-assistant/agenda' && request.method === 'GET') {
-    const start = url.searchParams.get('start') || today(), end = url.searchParams.get('end') || shift(start, 35);
-    if (!validDate(start) || !validDate(end) || end < start || (Date.parse(end)-Date.parse(start))/86400000 > 92) return reply({error: 'Use a date range of 93 days or fewer.'}, 400);
+    const start = url.searchParams.get('start') || today();
+    if (!validDate(start)) return reply({error: 'Invalid start date'}, 400);
+    const end = url.searchParams.get('end') || shift(start, 35);
+    if (!validDate(end) || end < start || (Date.parse(end)-Date.parse(start))/86400000 > 92) return reply({error: 'Use a date range of 93 days or fewer.'}, 400);
     const [users, days, library, completion] = await Promise.all([
       env.DB.prepare("SELECT id,display_name,grade FROM family_users WHERE role='student' AND active=1 ORDER BY grade,id").all(),
       assetJson(request, env, '/daily-packets.json'), assetJson(request, env, '/planner-resources.json'),
@@ -57,7 +59,7 @@ export async function homeAssistantApi(request, env, assetJson) {
         const uid = `${student.id}|${date}|${subject}`;
         const task = day.tasks.split(/\s+(?=Math:|ELA:|Sci:|SS:|Sp:)/).find(text => text.startsWith(prefixes[subject]));
         const links = plan.resources.map(id => library.resources[id]).filter(Boolean).map(resource => `${resource.title}: ${resource.url}`).join('\n');
-        student.items.push({uid, student_id: student.id, date, subject, summary: `${labels[subject] || subject}: ${plan.topic}`, completed: done.has(uid),
+        student.items.push({uid, student_id: student.id, date, subject, summary: `${student.display_name} · ${labels[subject] || subject}: ${plan.topic}`, completed: done.has(uid),
           description: `${task || day.tasks}\n\n${links}\n\nAgenda: ${url.origin}/agenda?date=${date}\nPacket: ${url.origin}/daily-print?date=${date}&grade=${student.grade}`});
       }
     }

@@ -1,4 +1,4 @@
-"""Today's five subject checkboxes for each student."""
+"""Subject checkboxes for the selected school date."""
 from datetime import date
 from aiohttp import ClientError
 from homeassistant.components.todo import TodoItem, TodoItemStatus, TodoListEntity, TodoListEntityFeature
@@ -32,7 +32,7 @@ class StudentTodo(CoordinatorEntity, TodoListEntity):
         student = self.coordinator.student(self.student_id)
         return [TodoItem(uid=item["uid"], summary=item["summary"], due=date.fromisoformat(item["date"]), description=item["description"],
             status=TodoItemStatus.COMPLETED if item["completed"] else TodoItemStatus.NEEDS_ACTION)
-            for item in (student or {}).get("items", []) if item["date"] == self.coordinator.data["today"]]
+            for item in (student or {}).get("items", []) if item["date"] == self.coordinator.data["selected_date"]]
 
     async def async_update_todo_item(self, item):
         student = self.coordinator.student(self.student_id)

@@ -1,3 +1,4 @@
+import { subjectLabels, taskPrefixes, subjectsForDay, curriculumForDay, taskForSubject } from './curriculum-schedule.js';
 // Home Assistant can read student agendas and update subject completion only.
 const reply = (body, status = 200) => Response.json(body, {status, headers: {'cache-control': 'private, no-store', 'x-content-type-options': 'nosniff'}});
 const hash = async value => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value))), byte => byte.toString(16).padStart(2, '0')).join('');
@@ -45,22 +46,22 @@ export async function homeAssistantApi(request, env, assetJson) {
     const [users, days, library, completion] = await Promise.all([
       env.DB.prepare("SELECT id,display_name,grade FROM family_users WHERE role='student' AND active=1 ORDER BY grade,id").all(),
       assetJson(request, env, '/daily-packets.json'), assetJson(request, env, '/planner-resources.json'),
-      env.DB.prepare("SELECT user_id,school_date,subject,completed FROM family_curriculum_completion WHERE school_date>=? AND school_date<=? AND curriculum='khan-primary-v1'").bind(start, end).all()
+      env.DB.prepare("SELECT user_id,school_date,subject,completed,curriculum FROM family_curriculum_completion WHERE school_date>=? AND school_date<=? ").bind(start, end).all()
     ]);
-    const done = new Set(completion.results.filter(row => row.completed === 1).map(row => `${row.user_id}|${row.school_date}|${row.subject}`));
-    const labels = {math: 'Math', ela: 'Language Arts', science: 'Science', social: 'Social Studies', spanish: 'Spanish'};
-    const prefixes = {math: 'Math:', ela: 'ELA:', science: 'Sci:', social: 'SS:', spanish: 'Sp:'};
+    const done = new Set(completion.results.filter(row => row.completed === 1).map(row => `${row.user_id}|${row.school_date}|${row.subject}|${row.curriculum}`));
+    const labels = subjectLabels;
+    const prefixes = taskPrefixes;
     const students = users.results.map(student => ({...student, items: []}));
     for (const date of Object.keys(days).filter(date => date >= start && date <= end).sort()) for (const student of students) {
       const day = days[date]?.[student.grade]; if (!day) continue;
       const mapping = library.weeks[`${student.grade}-${day.module}-${day.week}`];
       if (!mapping) throw Error('Curriculum resources unavailable');
-      for (const [subject, plan] of Object.entries(mapping)) {
+      for (const subject of subjectsForDay(day,mapping)) { const plan=mapping[subject];
         const uid = `${student.id}|${date}|${subject}`;
-        const task = day.tasks.split(/\s+(?=Math:|ELA:|Sci:|SS:|Sp:)/).find(text => text.startsWith(prefixes[subject]));
+        const task = taskForSubject(day,subject);
         const links = plan.resources.map(id => library.resources[id]).filter(Boolean).map(resource => `${resource.title}: ${resource.url}`).join('\n');
-        student.items.push({uid, student_id: student.id, date, subject, summary: `${student.display_name} · ${labels[subject] || subject}: ${plan.topic}`, completed: done.has(uid),
-          description: `${task || day.tasks}\n\n${links}\n\nAgenda: ${url.origin}/agenda?date=${date}\nPacket: ${url.origin}/daily-print?date=${date}&grade=${student.grade}`});
+        student.items.push({uid, student_id: student.id, date, subject, summary: `${student.display_name} · ${labels[subject] || subject}: ${plan.topic}`, completed: done.has(uid+'|'+curriculumForDay(day)),
+          description: `${task || day.tasks}\n\n${day.integration||''}\n\n${links}\n\nAgenda: ${url.origin}/agenda?date=${date}\nPacket: ${url.origin}/daily-print?date=${date}&grade=${student.grade}`});
       }
     }
     return reply({today: today(), start, end, students});
@@ -68,12 +69,14 @@ export async function homeAssistantApi(request, env, assetJson) {
   if (url.pathname === '/api/home-assistant/completion' && request.method === 'POST') {
     if (!(request.headers.get('content-type') || '').startsWith('application/json') || Number(request.headers.get('content-length') || 0) > 16384) return reply({error: 'Invalid request'}, 400);
     const body = await request.json().catch(() => null);
-    if (!body || !validDate(body.date) || !['math','ela','science','social','spanish'].includes(body.subject) || typeof body.student_id !== 'string' || typeof body.completed !== 'boolean') return reply({error: 'Invalid task'}, 400);
+    if (!body || !validDate(body.date) || !['math','ela','science','social','spanish','art','life','computer','skills','review'].includes(body.subject) || typeof body.student_id !== 'string' || typeof body.completed !== 'boolean') return reply({error: 'Invalid task'}, 400);
     const student = await env.DB.prepare("SELECT id,grade FROM family_users WHERE id=? AND role='student' AND active=1").bind(body.student_id).first();
     if (!student) return reply({error: 'Student not found'}, 404);
     const days = await assetJson(request, env, '/daily-packets.json');
-    if (!days[body.date]?.[student.grade]) return reply({error: 'No teaching day scheduled'}, 400);
-    await env.DB.prepare("INSERT INTO family_curriculum_completion(user_id,school_date,subject,completed,updated_at,curriculum) VALUES(?,?,?,?,?,'khan-primary-v1') ON CONFLICT(user_id,school_date,subject,curriculum) DO UPDATE SET completed=excluded.completed,updated_at=excluded.updated_at").bind(body.student_id,body.date,body.subject,body.completed?1:0,Math.floor(Date.now()/1000)).run();
+    const day=days[body.date]?.[student.grade];
+    if (!day) return reply({error: 'No teaching day scheduled'}, 400);
+    if(day.subjects&&!day.subjects.includes(body.subject))return reply({error:'Subject is not scheduled on this date'},400);
+    await env.DB.prepare("INSERT INTO family_curriculum_completion(user_id,school_date,subject,completed,updated_at,curriculum) VALUES(?,?,?,?,?,?) ON CONFLICT(user_id,school_date,subject,curriculum) DO UPDATE SET completed=excluded.completed,updated_at=excluded.updated_at").bind(body.student_id,body.date,body.subject,body.completed?1:0,Math.floor(Date.now()/1000),curriculumForDay(day)).run();
     return reply({ok: true});
   }
   return reply({error: 'Not found'}, 404);

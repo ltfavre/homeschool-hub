@@ -8,13 +8,13 @@ function selected(){return data.plans.find(p=>p.grade===+$('grade').value&&p.mod
 function renderPlan(){
  const p=selected(),w=p.weeks[+$('weekSelect').value-1],box=$('plan');box.replaceChildren(el('h3',p.title));
  box.append(el('p','Module mastery targets','eyebrow'));
- const targets=el('div','','targets');p.targets.forEach((t,i)=>{const a=el('article','');a.append(el('h4',['Math','ELA','Science','Social Studies','Spanish'][i]),el('p',t));targets.append(a)});box.append(targets,el('p','Standards: '+p.standards),el('h3','Week '+w.number+' · '+fmt(w.start)),el('p',w.goals));
- window.PlannerAssessments.render(p,w,box);
+ const targets=el('div','','targets');p.targets.forEach((t,i)=>{const a=el('article','');a.append(el('h4',p.subject_order?({math:'Math',ela:'ELA',science:'Physical Sciences',social:'Social Studies',art:'Art',life:'Life Sciences',computer:'Computer Science',skills:'Life Skills'}[p.subject_order[i]]):['Math','ELA','Science','Social Studies','Spanish'][i]),el('p',t));targets.append(a)});box.append(targets,el('p','Standards: '+p.standards),el('h3','Week '+w.number+' · '+fmt(w.start)),el('p',w.goals));
+ if(w.integration)box.append(el('p','Weekly connections: '+w.integration));window.PlannerAssessments.render(p,w,box);
  window.PlannerResources.render(p,w,box);
  const batch=el('a','Batch Print this week · All students + teacher keys','planner-link');batch.href='/batch-print?date='+w.start;box.append(batch);
  const daily=el('div','','daily');w.days.forEach((t,i)=>{const a=el('article','');a.append(el('h4',['Monday','Tuesday','Wednesday','Thursday','Friday'][i]+' · '+fmt(addDays(w.start,i))));
  const printDay=el('a','Print this day');printDay.href='/daily-print.html?date='+addDays(w.start,i)+'&grade='+p.grade;a.append(printDay);
- t.split(/(?=Math:|ELA:|Sci:|SS:|Sp:)/).filter(Boolean).forEach(s=>a.append(el('p',s)));daily.append(a)});box.append(daily);
+ t.split(/(?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)/).filter(Boolean).forEach(s=>a.append(el('p',s)));daily.append(a)});box.append(daily);
  const link=el('a','View original module pages in PDF');link.href='/downloads/Homeschool_Teacher_Planner_2026-2027_Grades_4_7.pdf#page='+p.page;box.append(link);
 }
 function renderCalendar(){
@@ -37,5 +37,5 @@ async function init(){try{
  if(match){$('module').value=match.p.module;$('weekSelect').value=match.w.number}if([...$('month').options].some(o=>o.value===today.slice(0,7)))$('month').value=today.slice(0,7);
  data.plans.filter(p=>p.grade===4).forEach(p=>{const tr=el('tr','');tr.append(el('td','Module '+p.module));p.weeks.forEach(w=>tr.append(el('td',fmt(w.assessment))));$('tests').append(tr)});
  $('guide').textContent=data.guide;$('coverage').textContent=data.standards;$('sources').textContent=data.sources;
- ['grade','module','weekSelect'].forEach(id=>$(id).addEventListener('change',renderPlan));$('month').addEventListener('change',renderCalendar);renderPlan();renderCalendar();$('status').textContent='Khan primary curriculum · Required gap materials are labeled · Friday quizzes and module-end tests preserved · Original PDFs are archived.';
+ ['grade','module','weekSelect'].forEach(id=>$(id).addEventListener('change',renderPlan));$('month').addEventListener('change',renderCalendar);renderPlan();renderCalendar();$('status').textContent='Eight core subjects · Four lessons per Monday–Thursday · Spanish within ELA · Flexible Fridays · Historical first week and archived PDFs preserved.';
  }catch(e){$('status').textContent='The planner could not load. Please refresh or use the PDF download above.';console.error(e)}}init();

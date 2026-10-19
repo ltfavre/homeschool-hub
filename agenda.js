@@ -6,13 +6,7 @@ const node = (tag, text = "", cls = "") => {
   return element;
 };
 
-const names = {
-  math: "Math",
-  ela: "Language Arts",
-  science: "Science",
-  social: "Social Studies",
-  spanish: "Spanish"
-};
+const names = {math:'Math',ela:'ELA',science:'Physical Sciences',social:'Social Studies',spanish:'Spanish',art:'Art',life:'Life Sciences',computer:'Computer Science',skills:'Life Skills',review:'Friday Review / Projects / Catch-up'};
 
 let me;
 let today;
@@ -96,7 +90,7 @@ async function load() {
     $("printPacket").href = view.print_url;
     $("summary").append(
       node("p", `Module ${view.module} · Week ${view.week}`),
-      node("p", "Your printed work is prepared by your parent. Use the links below for videos, readings, and online practice.")
+      node("p", "Read the assigned book with your parent, practice together, and use the supporting links when helpful.")
     );
 
     const dailyPlan = node("details");
@@ -104,7 +98,7 @@ async function load() {
     $("summary").append(dailyPlan);
 
     if (view.assessment) {
-      const note = node("p", `${view.assessment.title} · Complete the Khan checks listed below, then the printed gap assessment. `);
+      const note = node("p", `${view.assessment.title} · Use taught skills for the selected review. Friday can also be used for projects, field trips, independent study, or catch-up. `);
       const anchor = node("a", "Download student assessment PDF");
       anchor.href = view.assessment.student_pdf;
       anchor.download = "";
@@ -112,11 +106,11 @@ async function load() {
       $("summary").append(note);
     }
 
-    KhanUI.assessments(view.primary_assessments, $("summary"));
+    KhanUI.assessments(view.primary_assessments, $("summary"));if(view.integration)$("summary").append(node("p","Weekly connections: "+view.integration));
 
     for (const subject of view.subjects) {
       const card = node("article", "", `agenda-card${subject.completed ? " completed" : ""}`);
-      card.append(node("p", names[subject.key].toUpperCase(), "eyebrow"), node("h2", subject.topic));
+      card.append(node("p", (names[subject.key]||subject.key).toUpperCase(), "eyebrow"), node("h2", subject.topic));
       KhanUI.priority(subject, card);
 
       const taskPrefix = {
@@ -124,10 +118,10 @@ async function load() {
         ela: "ELA:",
         science: "Sci:",
         social: "SS:",
-        spanish: "Sp:"
+        spanish: "Sp:", art:"Art:",life:"Life:",computer:"CS:",skills:"Skills:",review:"Friday:"
       }[subject.key];
-      const task = view.tasks
-        .split(/\s+(?=Math:|ELA:|Sci:|SS:|Sp:)/)
+      const task = subject.task || view.tasks
+        .split(/\s+(?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)/)
         .find((entry) => entry.startsWith(taskPrefix));
 
       card.append(
@@ -150,7 +144,7 @@ async function load() {
         anchor.target = "_blank";
         anchor.rel = "noopener noreferrer";
         item.append(
-          node("p", resource.kind === "Primary course" ? "START HERE · KHAN PRIMARY" : "SUPPLEMENT / REQUIRED GAP WORK", "curriculum-label"),
+          node("p", resource.kind === "Primary course" ? "OPTIONAL KHAN SUPPORT" : "BOOK / SUPPORTING PRACTICE", "curriculum-label"),
           anchor,
           node("p", `${resource.provider} · ${resource.kind} · ${resource.access}`, "muted")
         );

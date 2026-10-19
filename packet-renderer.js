@@ -6,7 +6,7 @@ window.PacketRenderer = (() => {
     element.className = cls;
     return element;
   };
-  const labels = {math: 'Math', ela: 'ELA', science: 'Science', social: 'Social Studies', spanish: 'Spanish'};
+  const labels = {math:'Math',ela:'ELA',science:'Physical Sciences',social:'Social Studies',spanish:'Spanish',art:'Art',life:'Life Sciences',computer:'Computer Science',skills:'Life Skills',review:'Friday Review / Projects / Catch-up'};
   function questions(section, parent, teacher) {
     const part = node('section', '', 'print-section');
     part.append(node('h2', section.title));
@@ -33,17 +33,17 @@ window.PacketRenderer = (() => {
       node('p', `Module ${record.module} · Week ${record.week}`, 'metadata'),
       node('p', teacher ? 'Teacher materials — keep separate from student packets.' : `Student: ${studentName || '________________________'}   Completed: ________________________`),
       node('h2', 'Daily lesson plan'),
-      node('p', record.tasks.replace(/ (?=Math:|ELA:|Sci:|SS:|Sp:)/g, '\n'), 'day-plan'),
-      node('p', `Weekly goals\n${record.goals.replace(/; (?=Math:|ELA:|Sci:|SS:|Sp:)/g, '\n')}`, 'metadata'),
+      node('p', record.tasks.replace(/ (?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)/g, '\n'), 'day-plan'),
+      node('p', `Weekly goals\n${record.goals.replace(/; (?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)/g, '\n')}`, 'metadata'),
       node('p', `Standards\n${record.standards.replace(/ \| /g, '\n')}`, 'metadata'),
       node('h2', 'Materials to open or print')
     );
     const mapping = resources.weeks[`${record.grade}-${record.module}-${record.week}`];
     if (!mapping) throw Error(`Resources are missing for Grade ${record.grade}, ${record.date}.`);
-    for (const [key, subject] of Object.entries(mapping)) {
+    for (const [key, subject] of Object.entries(mapping).filter(([key]) => !record.subjects || record.subjects.includes(key))) {
       const section = node('section', '', 'subject');
       section.append(node('h3', `${labels[key] || key}: ${subject.topic}`));
-      KhanUI.priority(subject, section);
+      KhanUI.priority(subject, section);if(subject.reading_instruction)section.append(node('p',subject.reading_instruction,'metadata'));
       const list = node('ul');
       for (const id of subject.resources) {
         const resource = resources.resources[id];
@@ -51,7 +51,7 @@ window.PacketRenderer = (() => {
         const item = node('li');
         const link = node('a', resource.title);
         link.href = resource.url;
-        item.append(node('p', resource.kind === 'Primary course' ? 'START HERE · KHAN PRIMARY' : 'SUPPLEMENT / REQUIRED GAP WORK', 'curriculum-label'), link,
+        item.append(node('p', resource.kind === 'Primary course' ? 'OPTIONAL KHAN SUPPORT' : 'BOOK / SUPPORTING PRACTICE', 'curriculum-label'), link,
           node('p', `${resource.provider} · ${resource.kind} · ${resource.access}`, 'metadata'));
         if (resource.note) item.append(node('p', resource.note, 'metadata'));
         list.append(item);

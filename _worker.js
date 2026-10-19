@@ -1,3 +1,5 @@
+import { subjectsForDay, curriculumForDay, taskForSubject, studentResourceLibrary } from './curriculum-schedule.js';
+import { curriculumAsset } from './curriculum-assets.js';
 import { homeAssistantApi, manageHomeAssistant } from "./home-assistant-api.js";
 import {
   mapTasksToUsers,
@@ -15,12 +17,13 @@ const parseBody = async (request) => {
   try { return await request.json(); }
   catch { return null; }
 };
-const fetchAsset = (request, env) => {
+const rawAsset = (request, env) => {
   if (env && env.ASSETS && typeof env.ASSETS.fetch === "function") {
     return env.ASSETS.fetch(request);
   }
   return fetch(request);
 };
+const fetchAsset = (request, env) => curriculumAsset(request, env, rawAsset);
 
 
 const clean = (v) => {
@@ -687,16 +690,17 @@ async function authRoute(request,env,user,url){
   const date=url.searchParams.get('date')||centralDate();if(!safeDate(date))return familyJson({error:'Invalid date'},400);
   const target=user.role==='parent'?await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(url.searchParams.get('student')||'student-4').first():user;if(!target)return familyJson({error:'Student not found'},404);
   await ensureFamilyTaskTables(env.DB);
-  const [days,library,exams,completion,venvTasks]=await Promise.all([assetJson(request,env,'/daily-packets.json'),assetJson(request,env,'/planner-resources.json'),assetJson(request,env,'/assessment-student.json'),env.DB.prepare("SELECT subject,completed FROM family_curriculum_completion WHERE user_id=? AND school_date=? AND curriculum='khan-primary-v1'").bind(target.id,date).all(),env.DB.prepare("SELECT title,status,source,external_id,due_date,updated_at FROM family_daily_tasks WHERE user_id=? AND due_date=? ORDER BY CASE status WHEN 'overdue' THEN 0 WHEN 'pending' THEN 1 WHEN 'in_progress' THEN 2 WHEN 'completed' THEN 3 WHEN 'cancelled' THEN 4 ELSE 5 END, title").bind(target.id,date).all()]);
+  const days=await assetJson(request,env,'/daily-packets.json');const activeDay=days[date]?.[target.grade];const activeVersion=curriculumForDay(activeDay);
+  const [library,exams,completion,venvTasks]=await Promise.all([assetJson(request,env,'/planner-resources.json'),assetJson(request,env,'/assessment-student.json'),env.DB.prepare("SELECT subject,completed FROM family_curriculum_completion WHERE user_id=? AND school_date=? AND curriculum=?").bind(target.id,date,activeVersion).all(),env.DB.prepare("SELECT title,status,source,external_id,due_date,updated_at FROM family_daily_tasks WHERE user_id=? AND due_date=? ORDER BY CASE status WHEN 'overdue' THEN 0 WHEN 'pending' THEN 1 WHEN 'in_progress' THEN 2 WHEN 'completed' THEN 3 WHEN 'cancelled' THEN 4 ELSE 5 END, title").bind(target.id,date).all()]);
   const dailyTasks=(venvTasks.results||[]).map(t=>({title:t.title,status:t.status,source:t.source,external_id:t.external_id,due_date:t.due_date,updated_at:t.updated_at}));
   const d=days[date]?.[target.grade];if(!d)return familyJson({student:publicUser(target),date,teaching:false,next_date:Object.keys(days).sort().find(x=>x>date)||null,daily_tasks:dailyTasks});
-  const mapping=library.weeks[`${target.grade}-${d.module}-${d.week}`],subjects=Object.entries(mapping).map(([key,s])=>({key,topic:s.topic,mode:s.mode,primary:s.primary,gap_note:s.gap_note,resources:s.resources.map(id=>library.resources[id]),completed:completion.results.some(r=>r.subject===key&&r.completed===1)}));
-  return familyJson({student:publicUser(target),date,teaching:true,module:d.module,week:d.week,tasks:d.tasks,goals:d.goals,subjects,assessment:d.assessment?{title:exams[d.assessment].title,student_pdf:'/assessments/'+d.assessment+'-student.pdf'}:null,primary_assessments:d.primary_assessments||[],print_url:'/daily-print?date='+date+'&grade='+target.grade,daily_tasks:dailyTasks});
+  const mapping=library.weeks[`${target.grade}-${d.module}-${d.week}`],subjects=subjectsForDay(d,mapping).map(key=>{const s=mapping[key];return ({key,task:taskForSubject(d,key),topic:s.topic,mode:s.mode,primary:s.primary,gap_note:s.gap_note,resources:s.resources.map(id=>library.resources[id]),completed:completion.results.some(r=>r.subject===key&&r.completed===1)});});
+  return familyJson({student:publicUser(target),date,teaching:true,module:d.module,week:d.week,tasks:d.tasks,goals:d.goals,integration:d.integration||'',curriculum:curriculumForDay(d),subjects,assessment:d.assessment?{title:exams[d.assessment].title,student_pdf:'/assessments/'+d.assessment+'-student.pdf'}:null,primary_assessments:d.primary_assessments||[],print_url:'/daily-print?date='+date+'&grade='+target.grade,daily_tasks:dailyTasks});
  }
  if(path==='/api/family/completion'&&method==='POST'){
-  const b=await parseBody(request);if(!b)return familyJson({error:'Invalid JSON body'},400);const id=user.role==='parent'?String(b.student_id||''):user.id;if(!safeDate(String(b.date||''))||!['math','ela','science','social','spanish'].includes(b.subject)||typeof b.completed!=='boolean')return familyJson({error:'Invalid task'},400);
-  const target=await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(id).first();if(!target)return familyJson({error:'Student not found'},404);const days=await assetJson(request,env,'/daily-packets.json');if(!days[b.date]?.[target.grade])return familyJson({error:'No teaching day scheduled'},400);
-  await env.DB.prepare("INSERT INTO family_curriculum_completion(user_id,school_date,subject,completed,updated_at,curriculum) VALUES(?,?,?,?,?,'khan-primary-v1') ON CONFLICT(user_id,school_date,subject,curriculum) DO UPDATE SET completed=excluded.completed,updated_at=excluded.updated_at").bind(id,b.date,b.subject,b.completed?1:0,epoch()).run();return familyJson({ok:true});
+  const b=await parseBody(request);if(!b)return familyJson({error:'Invalid JSON body'},400);const id=user.role==='parent'?String(b.student_id||''):user.id;if(!safeDate(String(b.date||''))||!['math','ela','science','social','spanish','art','life','computer','skills','review'].includes(b.subject)||typeof b.completed!=='boolean')return familyJson({error:'Invalid task'},400);
+  const target=await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(id).first();if(!target)return familyJson({error:'Student not found'},404);const days=await assetJson(request,env,'/daily-packets.json');const scheduledDay=days[b.date]?.[target.grade];if(!scheduledDay)return familyJson({error:'No teaching day scheduled'},400);if(scheduledDay.subjects&&!scheduledDay.subjects.includes(b.subject))return familyJson({error:'Subject is not scheduled on this date'},400);
+  await env.DB.prepare("INSERT INTO family_curriculum_completion(user_id,school_date,subject,completed,updated_at,curriculum) VALUES(?,?,?,?,?,?) ON CONFLICT(user_id,school_date,subject,curriculum) DO UPDATE SET completed=excluded.completed,updated_at=excluded.updated_at").bind(id,b.date,b.subject,b.completed?1:0,epoch(),curriculumForDay(scheduledDay)).run();return familyJson({ok:true});
  }
  return familyJson({error:'Not found'},404);
 }
@@ -719,10 +723,12 @@ async function familyFetch(request,env,ctx){
  if(path==='/'&&user.role==='student')return new Response(null,{status:302,headers:{location:'/agenda','cache-control':'no-store'}});
  if(user.role==='student'){
   const allowed=['/agenda','/agenda.html','/agenda.js','/account-nav.js','/daily-print','/daily-print.html','/daily-print.js','/daily-print.css','/print-download.js','/planner-resources.json','/khan-ui.js','/khan-ui.css'];
+  if(path==='/planner-resources.json')return familyJson(studentResourceLibrary(await assetJson(request,env,path)));
   if(path==='/daily-packets.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).map(([date,g])=>[date,{[user.grade]:g[user.grade]}])));}
   if(path==='/assessment-student.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).filter(([,e])=>String(e.grade)===user.grade)));}
-  const pdf=path.match(/^\/assessments\/(?:khan-)?g([47])-m[1-9]-(?:w[1-3]-quiz|test)-student\.pdf$/);
-  if(!allowed.includes(path)&&!(pdf&&pdf[1]===user.grade))return familyJson({error:'Parent access required'},403);
+  const pdf=path.match(/^\/assessments\/(?:(?:khan|eight)-)?g([47])-m[1-9]-(?:w[1-3]-quiz|test)-student\.pdf$/);
+  const booklet=path.match(/^\/downloads\/integrated\/grade([47])-(?:art|life|computer|skills)-student\.pdf$/);
+  if(!allowed.includes(path)&&!(pdf&&pdf[1]===user.grade)&&!(booklet&&booklet[1]===user.grade))return familyJson({error:'Parent access required'},403);
   if(/^\/daily-print(?:\.html)?$/.test(path)&&(url.searchParams.get('key')==='1'||url.searchParams.get('grade')!==user.grade)){url.searchParams.delete('key');url.searchParams.set('grade',user.grade);return new Response(null,{status:302,headers:{location:url.pathname+url.search,'cache-control':'no-store'}});}
  }
  const response=path.startsWith('/api/')?await legacy.fetch(request,env,ctx):await fetchAsset(request, env);

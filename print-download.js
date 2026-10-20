@@ -29,9 +29,10 @@ window.PrintDownload = (() => {
     }
     function walk(el) {
       if(el.classList.contains('grade-packet')||el.classList.contains('print-subject')||el.classList.contains('print-section'))next();
+      if(el.classList.contains('key-section')){const q=el.querySelector('.question');const estimate=90+(q?wrap(q.textContent,528,11).length*17.05:0);room(Math.min(estimate,650));}
       if(el.classList.contains('question')) {
-        const p=el.querySelector('p'),space=el.querySelector('.work-space');
-        const h=(p?wrap(p.textContent,528,11).length*17.05+10:0)+(space?parseFloat(space.style.minHeight)||36:0);
+        const p=el.querySelector('p'),space=el.querySelector('.work-space'),answer=el.querySelector('.answer');
+        const h=(p?wrap(p.textContent,528,11).length*17.05+10:0)+(space?parseFloat(space.style.minHeight)||36:0)+(answer?wrap(answer.textContent,528,11).length*17.05+10:0);
         room(Math.min(h,650));
       }
       if(el.classList.contains('work-space')){const h=Math.max(30,parseFloat(el.style.minHeight)||36);room(h);y-=h;pages.at(-1).push(`0.6 G 42 ${y.toFixed(2)} m 570 ${y.toFixed(2)} l S 0 G`);y-=10;return;}

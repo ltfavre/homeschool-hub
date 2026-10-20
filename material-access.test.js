@@ -1,0 +1,8 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import worker from './_worker.js';
+const env=role=>({DB:{prepare(){return {bind(){return this},async first(){return {id:'qa',role,grade:role==='student'?'4':null,display_name:'QA',active:1}}}}},ASSETS:{async fetch(){return new Response('trusted asset',{status:200})}}});
+const request=path=>new Request('https://venvlearning.com'+path,{headers:{cookie:'venv_session='+'a'.repeat(64)}});
+test('student teacher-key URLs redirect to their own worksheets',async()=>{for(const path of ['/daily-print?date=2026-10-20&grade=4&kind=keys','/daily-print.html?date=2026-10-20&grade=4&key=1']){const r=await worker.fetch(request(path),env('student'),{});assert.equal(r.status,302);const u=new URL(r.headers.get('location'),'https://venvlearning.com');assert.equal(u.searchParams.get('grade'),'4');assert.notEqual(u.searchParams.get('kind'),'keys');assert.equal(u.searchParams.has('key'),false);}});
+test('student cannot request teacher answer data or weekly parent preparation',async()=>{for(const path of ['/daily-practice-keys.json','/batch-print'])assert.equal((await worker.fetch(request(path),env('student'),{})).status,403)});
+test('student can load worksheet and guide tools while parent retains access to teacher-key view',async()=>{for(const path of ['/packet-files.js','/packet-renderer.js','/materials.css','/vendor/pdf-lib.min.js','/daily-print?grade=4&kind=guide'])assert.equal((await worker.fetch(request(path),env('student'),{})).status,200);assert.equal((await worker.fetch(request('/daily-print?grade=4&kind=keys'),env('parent'),{})).status,200)});

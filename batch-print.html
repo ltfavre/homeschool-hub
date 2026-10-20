@@ -1,30 +1,7 @@
-<!doctype html>
-<html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Weekly Batch Print · VenvLearning</title>
-<link rel="stylesheet" href="/daily-print.css"><link rel="stylesheet" href="/batch-print.css">
-</head>
-<body>
-<header class="screen-tools"><a href="/planner">← Teacher Planner</a><a href="/agenda">Student agendas</a></header>
-<main>
-<section class="grade-packet">
-<p class="metadata">VENVLEARNING · WEEKLY PREPARATION</p><h1>Batch Print</h1>
-<p>Prepare every student’s materials and the teacher keys for the week in one PDF.</p>
-<form id="batchForm">
-<label for="weekDate">Choose any day in the week</label><input type="date" id="weekDate" required>
-<p id="weekRange" class="metadata"></p>
-<fieldset><legend>Students</legend><div id="students">Loading students…</div></fieldset>
-<label class="check"><input type="checkbox" id="includeStudents" checked> Include student lesson plans, worksheets, and assessments</label>
-<label class="check"><input type="checkbox" id="includeTeacher" checked> Include teacher practice keys and assessment answer keys</label>
-<p class="metadata">Student packets come first, grouped by student and day. Teacher keys follow in a separate section, once per grade. Each section starts on a fresh sheet for double-sided printing. Breaks and days without lessons are skipped. Publisher downloads and Khan activities remain at their sources.</p>
-<button id="build" type="submit" disabled>Prepare weekly PDF</button>
-</form>
-<p id="batchStatus" role="status" aria-live="polite">Loading weekly materials…</p>
-<div id="ready" hidden><a id="downloadBatch" class="batch-button">Download weekly PDF</a> <a id="openBatch" target="_blank" rel="noopener" class="batch-button">Open &amp; print weekly PDF</a>
-<p>Open the combined PDF, then choose Print or press Ctrl+P once. Teacher answer keys are at the end; separate them before giving the packets to students.</p></div>
-</section>
-<section id="contents" class="grade-packet" hidden><h2>Included in this bundle</h2><ul id="contentsList"></ul></section>
-</main>
-<script src="/page-readings.js?v=ui-20261020" defer></script>
-<script src="/vendor/pdf-lib.min.js" defer></script><script src="/khan-ui.js" defer></script><script src="/print-download.js" defer></script><script src="/packet-renderer.js" defer></script><script src="/batch-print.js" defer></script>
-</body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Prepare weekly materials · VenvLearning</title><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/family.css?v=packets-v2"><link rel="stylesheet" href="/materials.css?v=packets-v2"></head><body><header class="topbar"><div><p class="eyebrow">FAMILY HOMESCHOOL</p><h1>Prepare a week</h1></div><nav aria-label="Main navigation"><a href="/planner">Lesson plans</a></nav></header><main>
+<section class="hero"><div><p class="eyebrow">NO MORE SORTING PAGES</p><h2>One download. Separate files.</h2><p>Student worksheets, lesson guides, and teacher keys stay in their own PDFs.</p></div></section>
+<section class="card"><form id="batchForm" class="preparation-form"><div class="material-controls"><label>Choose any day in the week<input type="date" id="weekDate" required></label><p id="weekRange" class="helper-text"></p></div><fieldset><legend>Students</legend><div id="students" class="student-choices">Loading students…</div></fieldset>
+<div class="export-choices"><label class="export-choice"><input type="checkbox" id="includeStudents" checked><span><strong>Student worksheets</strong><small>One PDF per student. Questions, passages & writing space.</small></span></label><label class="export-choice"><input type="checkbox" id="includeGuides" checked><span><strong>Lesson guides</strong><small>One PDF per grade. Daily subjects, directions & resource links.</small></span></label><label class="export-choice"><input type="checkbox" id="includeTeacher" checked><span><strong>Teacher keys</strong><small>One PDF per grade. Practice answers & assessment keys.</small></span></label></div>
+<p class="helper-text">Worksheets include VenvLearning practice and scheduled assessments. Publisher worksheets and online activities open separately from the guide.</p><button id="build" type="submit" disabled>Prepare separate weekly files</button></form><p id="batchStatus" role="status" aria-live="polite">Loading weekly materials…</p></section>
+<section id="ready" class="card" hidden><div class="section-heading"><div><p class="eyebrow">READY TO DOWNLOAD</p><h2>Your files are already sorted</h2></div><a id="downloadAll" class="primary-download">Download all files (.zip)</a></div><p class="helper-text">The ZIP contains separate folders for student worksheets, lesson guides, and teacher keys. Or download any PDF below.</p><div id="fileGroups" class="file-groups"></div></section>
+<div id="weekOverview"></div></main><script src="/vendor/pdf-lib.min.js" defer></script><script src="/page-readings.js?v=packets-v2" defer></script><script src="/print-download.js?v=packets-v2" defer></script><script src="/packet-renderer.js?v=packets-v2" defer></script><script src="/packet-files.js?v=packets-v2" defer></script><script src="/batch-print.js?v=packets-v2" defer></script><script src="/account-nav.js?v=packets-v2" defer></script></body></html>

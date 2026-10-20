@@ -36,8 +36,7 @@ function renderDailyTasks() {
   section.id = "venvTasks";
   section.append(node("p", "VENVLEARNING", "eyebrow"), node("h2", "Daily tasks"));
 
-  PageReadings.append({readings:subject.readings||[]},{resources:Object.fromEntries((subject.readings||[]).map(r=>[r.resource_id,r]))},card);
-      const list = node("ul");
+  const list = node("ul");
   for (const task of tasks) {
     const status = String(task.status || "pending")
       .replaceAll("_", " ")
@@ -79,7 +78,7 @@ async function load() {
       )
     );
 
-    $("printPacket").hidden = !view.teaching;
+    $("printPacket").hidden = !view.teaching;$("lessonGuide").hidden=!view.teaching;
     if (!view.teaching) {
       $("summary").append(node("p", "No teaching activities are scheduled for this date."));
       if (view.next_date) $("summary").append(node("p", `Next teaching day: ${view.next_date}`));
@@ -88,7 +87,7 @@ async function load() {
       return;
     }
 
-    $("printPacket").href = view.print_url;
+    $("printPacket").href = view.print_url+"&kind=work";$("lessonGuide").href=view.print_url+"&kind=guide";
     $("summary").append(
       node("p", `Module ${view.module} · Week ${view.week}`),
       node("p", "Read the assigned book with your parent, practice together, and use the supporting links when helpful.")

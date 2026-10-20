@@ -12,9 +12,9 @@ window.PlannerResources=(()=>{
   if(!library){panel.append(node('p','Materials could not load. Refresh to try again.'));box.append(panel);return;}
   const mapping=library.weeks[`${p.grade}-${p.module}-${w.number}`];
   const toolbar=node('div','','resource-toolbar'),label=node('label','Day '),select=node('select');names.forEach((n,i)=>{const o=node('option',n);o.value=i;select.append(o)});label.append(select);
-  const print=node('a','Weekly materials PDF','planner-link'),day=node('a','Open daily packet →','planner-link');toolbar.append(label,print,day);panel.append(toolbar);
+  const day=node('a','Lesson guide & links →','planner-link'),work=node('a','Student worksheets →','planner-link'),weekFiles=node('a','Prepare separate weekly files →','planner-link');weekFiles.href='/batch-print?date='+w.start;toolbar.append(label,day,work,weekFiles);panel.append(toolbar);
   const cards=node('div','','resource-cards');panel.append(cards);
-  function show(){cards.replaceChildren();const i=+select.value,d=new Date(w.start+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+i);day.href='/daily-print?date='+d.toISOString().slice(0,10)+'&grade='+p.grade;
+  function show(){cards.replaceChildren();const i=+select.value,d=new Date(w.start+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+i);day.href='/daily-print?date='+d.toISOString().slice(0,10)+'&grade='+p.grade+'&kind=guide';work.href='/daily-print?date='+d.toISOString().slice(0,10)+'&grade='+p.grade+'&kind=work';
    const selected=w.subjects_by_day?.[i]||Object.keys(mapping);
    for(const key of selected){const s=mapping[key];if(!s)continue;const card=node('article','','resource-card'),details=node('details','','lesson-disclosure'),summary=node('summary'),title=node('div');title.append(node('span',labels[key]||key,'subject-tag'),node('h4',s.topic),node('span','Open lesson & materials','summary-hint'));summary.append(title);details.append(summary);const body=node('div','','lesson-body');const direction=instructions(w,i,key).replace(/Open the assigned chapters and exact pages listed in Materials\./g,'').trim();body.append(node('p',direction,'resource-direction'));PageReadings.append(s,library,body,{date:d.toISOString().slice(0,10)});
     if(s.teacher_resources?.length){const teacher=node('details','','support-details');teacher.append(node('summary','Parent preparation'));PageReadings.append(s,library,teacher,{date:d.toISOString().slice(0,10),teacher:true});const assigned=new Set((s.teacher_readings||[]).map(r=>r.resource_id));links(s.teacher_resources.filter(id=>!assigned.has(id)),teacher);body.append(teacher);}
@@ -22,10 +22,7 @@ window.PlannerResources=(()=>{
 
   }
   select.addEventListener('change',show);show();
-  const sheet=node('section','','resource-print-sheet');sheet.append(node('h2',`Grade ${p.grade} · Module ${p.module} · Week ${w.number}`),node('p',w.start+' through '+w.assessment));if(w.integration)sheet.append(node('p',w.integration));
-  for(const [key,s] of Object.entries(mapping)){if(key==='review')continue;const part=node('article','','print-subject');part.append(node('h3',(labels[key]||key)+': '+s.topic));if(s.reading_instruction)part.append(node('p',s.reading_instruction));PageReadings.append(s,library,part);PageReadings.append(s,library,part,{teacher:true});links(s.resources,part);for(let i=0;i<5;i++){if(w.subjects_by_day&&!w.subjects_by_day[i].includes(key))continue;part.append(node('p',names[i]+': '+instructions(w,i,key)));}part.append(node('p','Evidence / work completed: __________________________________________\nOne correction or improvement: _____________________________________'));sheet.append(part);}
-  sheet.append(node('p','Friday: choose review/module exam, independent study, project, field trip, or catch-up. Use assessments on taught work only.'));
-  panel.append(sheet);box.append(panel);PrintDownload.prepare(print,sheet,`VenvLearning-Grade-${p.grade}-Module-${p.module}-Week-${w.number}-Materials.pdf`);
+  box.append(panel);
  }
  async function load(){try{const r=await fetch('/planner-resources.json');if(!r.ok)throw Error('Resources unavailable');library=await r.json()}catch(e){console.error(e)}}
  return {load,render};

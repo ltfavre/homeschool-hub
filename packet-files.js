@@ -1,0 +1,40 @@
+window.PacketFiles=(()=>{
+ const {PDFDocument,StandardFonts,rgb,PDFName,PDFString}=PDFLib;
+ const clean=s=>String(s||'').replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"').replace(/[\u2013\u2014]/g,'-').replace(/\u2026/g,'...').replace(/\u2192|\u2197/g,'>').replace(/[^\x20-\x7e\xa0-\xff\n]/g,' ');
+ const safe=s=>String(s).replace(/[^a-zA-Z0-9 _-]/g,'').trim().replace(/\s+/g,'-').slice(0,45)||'Student';
+ const fetched=new Map();
+ async function assessment(id,teacher){if(!/^(?:(?:khan|eight)-)?g[47]-m[1-9]-(?:w[1-3]-quiz|test)$/.test(id))throw Error('An assessment reference is invalid.');const path=`/assessments/${id}-${teacher?'key':'student'}.pdf`;if(!fetched.has(path)){const r=await fetch(path);if(!r.ok)throw Error('An assessment PDF could not load. Please try again.');fetched.set(path,await r.arrayBuffer());}return fetched.get(path);}
+ async function work(records,{teacher=false,studentName=''}={}){
+  const pdf=await PDFDocument.create();pdf.setTitle(teacher?'Teacher answer keys':'Student worksheets');
+  for(const r of records){let bytes;if(r.assessment)bytes=await assessment(r.assessment,teacher);else bytes=await PrintDownload.create(PacketRenderer.work(r,{teacher,studentName}),`Grade ${r.grade} - ${r.date} - ${teacher?'Teacher key':'Worksheets'}`).arrayBuffer();
+   const source=await PDFDocument.load(bytes);for(const p of await pdf.copyPages(source,source.getPageIndices()))pdf.addPage(p);
+  }return {bytes:await pdf.save(),pages:pdf.getPageCount()};
+ }
+ async function guide(records,library,{parent=false,weekly=false}={}){
+  const pdf=await PDFDocument.create(),font=await pdf.embedFont(StandardFonts.Helvetica),bold=await pdf.embedFont(StandardFonts.HelveticaBold);
+  const green=rgb(.13,.31,.23),muted=rgb(.34,.41,.37),pale=rgb(.93,.96,.94),line=rgb(.82,.87,.83);let page,y,title,subtitle;
+  const wrapped=(text,size,width,face=font)=>{const result=[];for(const paragraph of clean(text).split('\n')){let row='';for(let word of paragraph.split(/\s+/).filter(Boolean)){if(row&&face.widthOfTextAtSize(row+' '+word,size)>width){result.push(row);row='';}while(face.widthOfTextAtSize(word,size)>width){let n=1;while(n<word.length&&face.widthOfTextAtSize(word.slice(0,n+1),size)<=width)n++;result.push(word.slice(0,n));word=word.slice(n);}if(word)row+=(row?' ':'')+word;}if(row)result.push(row);}return result;};
+  function newPage(t=title,s=subtitle){page=pdf.addPage([612,792]);title=t;subtitle=s;page.drawRectangle({x:0,y:716,width:612,height:76,color:green});page.drawText(clean(t),{x:40,y:754,size:18,font:bold,color:rgb(1,1,1)});page.drawText(clean(s),{x:40,y:732,size:10,font,color:rgb(.87,.94,.89)});y=694;}
+  function need(h){if(y-h<48)newPage(title.replace(/ \(continued\)$/,'')+' (continued)',subtitle);}
+  function text(t,{size=10,b=false,color=muted,indent=0,gap=5,url=null}={}){const face=b?bold:font;for(const row of wrapped(t,size,532-indent,face)){need(size*1.45+gap);page.drawText(row,{x:40+indent,y,size,font:face,color});if(url){const width=face.widthOfTextAtSize(row,size);page.drawLine({start:{x:40+indent,y:y-2},end:{x:40+indent+width,y:y-2},thickness:.5,color});const a=pdf.context.obj({Type:PDFName.of('Annot'),Subtype:PDFName.of('Link'),Rect:[40+indent,y-3,40+indent+width,y+size+2],Border:[0,0,0],A:{S:PDFName.of('URI'),URI:PDFString.of(new URL(url,'https://venvlearning.com').href)}});page.node.addAnnot(pdf.context.register(a));}y-=size*1.45;}y-=gap;}
+  function band(t){const rows=wrapped(t,11,512,bold),height=rows.length*16+14;need(height+25);page.drawRectangle({x:40,y:y-height+5,width:532,height,color:pale,borderColor:line,borderWidth:.5});for(const [i,row]of rows.entries())page.drawText(row,{x:49,y:y-14-i*16,size:11,font:bold,color:green});y-=height+8;}
+  function refHeight(r,role){return wrapped(role+': '+r.section,10,532,bold).length*14.5+17+wrapped(r.book,8.5,532).length*12.325+6+(r.note?wrapped(r.note,8.5,532).length*12.325+8:0);}
+  function reference(r,role){need(refHeight(r,role));text(role+': '+r.section,{b:true,color:green,url:r.url,gap:2});text(r.pages,{size:9,b:true,gap:2});text(r.book,{size:8.5,gap:6});if(r.note)text(r.note,{size:8.5,gap:8});}
+  if(weekly){const grade=records[0].grade;newPage(`Grade ${grade} - Week at a glance`,`${PacketRenderer.fmt(records[0].date)} through ${PacketRenderer.fmt(records.at(-1).date)}`);for(const r of records){const m=PacketRenderer.model(r,library);band(PacketRenderer.fmt(r.date));text(m.subjects.map(s=>s.name).join('  /  '),{size:11,b:true,color:green,gap:16});}text('Student questions and writing space are in the separate worksheets file. This guide contains directions and resource links.',{size:10});text('Publisher worksheets and online activities open at their source; account-based downloads are not embedded.',{size:9});}
+  for(const r of records){const m=PacketRenderer.model(r,library,{parent});newPage(`Grade ${r.grade} - ${PacketRenderer.fmt(r.date)}`,`LESSON GUIDE  |  Module ${r.module} - Week ${r.week}  |  Questions are in the separate student worksheets`);
+   text('TODAY: '+m.subjects.map(s=>s.name).join(' / '),{size:10,b:true,color:green,gap:14});
+   for(const s of m.subjects){const neededExtras=s.extras.filter(e=>/worksheet|activity/i.test(e.kind||'')&&!/book|reader|guide/i.test(e.kind+' '+e.title)).slice(0,3);const estimated=wrapped(s.name+' - '+s.topic,11,512,bold).length*16+22+s.readings.reduce((n,r)=>n+refHeight(r,'Read'),0)+wrapped('DO: '+s.task,10,532).length*14.5+9+neededExtras.reduce((n,e)=>n+wrapped('Worksheet at source: '+e.title,9,532,bold).length*13.05+5,0)+(parent&&s.preparation.length?s.preparation.reduce((n,r)=>n+refHeight(r,'Parent'),0)+15:0)+10;if(estimated<630)need(estimated);band(s.name+' - '+s.topic);for(const ref of s.readings)reference(ref,'Read');text('DO: '+s.task,{size:10,gap:9});
+    const extra=s.extras.filter(e=>/worksheet|activity/i.test(e.kind||'')&&!/book|reader|guide/i.test(e.kind+' '+e.title));for(const e of extra.slice(0,3))text('Worksheet at source: '+e.title,{size:9,b:true,color:green,url:e.url});
+    if(parent&&s.preparation.length){need(25+refHeight(s.preparation[0],'Parent'));text('PARENT PREPARATION',{size:8,b:true,color:muted,gap:3});for(const ref of s.preparation)reference(ref,'Parent');}
+    if(!s.readings.length)text('Use the selected review, project, field trip, or catch-up activity.',{size:9});y-=10;
+   }
+  }
+  const pages=pdf.getPages();for(const [i,p]of pages.entries())p.drawText(`VenvLearning - Lesson guide - ${i+1} of ${pages.length}`,{x:40,y:25,size:8,font,color:muted});pdf.setTitle(`Grade ${records[0].grade} lesson guide`);return {bytes:await pdf.save(),pages:pages.length};
+ }
+ // ZIP entries are stored without compression so every PDF remains independently printable.
+ function zip(files){const enc=new TextEncoder(),parts=[],central=[];let offset=0;const crc=bytes=>{let c=0xffffffff;for(const b of bytes){c^=b;for(let n=0;n<8;n++)c=(c>>>1)^((c&1)?0xedb88320:0);}return (c^0xffffffff)>>>0;};const header=n=>{const a=new Uint8Array(n);return [a,new DataView(a.buffer)];};
+  for(const file of files){const name=enc.encode(file.path),bytes=file.bytes instanceof Uint8Array?file.bytes:new Uint8Array(file.bytes),sum=crc(bytes);const [h,v]=header(30);v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0x800,true);v.setUint16(12,33,true);v.setUint32(14,sum,true);v.setUint32(18,bytes.length,true);v.setUint32(22,bytes.length,true);v.setUint16(26,name.length,true);parts.push(h,name,bytes);const [c,d]=header(46);d.setUint32(0,0x02014b50,true);d.setUint16(4,20,true);d.setUint16(6,20,true);d.setUint16(8,0x800,true);d.setUint16(14,33,true);d.setUint32(16,sum,true);d.setUint32(20,bytes.length,true);d.setUint32(24,bytes.length,true);d.setUint16(28,name.length,true);d.setUint32(42,offset,true);central.push(c,name);offset+=30+name.length+bytes.length;}
+  const size=central.reduce((n,a)=>n+a.length,0),[end,v]=header(22);v.setUint32(0,0x06054b50,true);v.setUint16(8,files.length,true);v.setUint16(10,files.length,true);v.setUint32(12,size,true);v.setUint32(16,offset,true);return new Blob([...parts,...central,end],{type:'application/zip'});
+ }
+ return {work,guide,zip,safe};
+})();

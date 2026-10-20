@@ -1,0 +1,17 @@
+// Exact assignments use physical PDF pages; printed folios are shown when verified.
+function readingsForDay(subject, date, teacher=false) {
+ const day=new Date(date+'T12:00:00Z').getUTCDay(),session=day===1||day===2?1:day===3||day===4?2:0;
+ return (subject?.[teacher?'teacher_readings':'readings']||[]).filter(r=>!session||!r.session||r.session===session);
+}
+function readingText(r) {
+ const range=a=>a[0]===a[1]?String(a[0]):a.join('–');
+ return `${r.section} · ${r.printed?'printed pp. '+range(r.printed)+' · ':''}PDF pp. ${range(r.pdf)}`;
+}
+function readingLink(r,resources) {const b=resources[r.resource_id];return b?{...r,title:b.title,url:b.url.split('#')[0]+'#page='+r.pdf[0]}:null;}
+
+window.PageReadings={append(subject,library,parent,{date,teacher=false}={}){
+ const refs=date?readingsForDay(subject,date,teacher):subject?.[teacher?'teacher_readings':'readings']||[];
+ if(!refs.length)return;
+ const box=document.createElement('section');box.className='assigned-readings';const h=document.createElement('h4');h.textContent=teacher?'Parent preparation — exact pages':'Assigned reading — exact pages';box.append(h);
+ for(const ref of refs){const r=readingLink(ref,library.resources);if(!r)continue;const p=document.createElement('p'),a=document.createElement('a');a.href=r.url;a.target='_blank';a.rel='noopener';a.textContent=r.title;const span=document.createElement('strong');span.textContent=readingText(r);p.append(a,document.createElement('br'),span);if(!date&&r.session)p.append(document.createTextNode(r.session===1?' · First meeting':' · Second meeting'));if(r.note){const note=document.createElement('small');note.textContent=r.note;note.style.display='block';p.append(note)}box.append(p)}parent.append(box);
+}};

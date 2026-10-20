@@ -36,7 +36,8 @@ function renderDailyTasks() {
   section.id = "venvTasks";
   section.append(node("p", "VENVLEARNING", "eyebrow"), node("h2", "Daily tasks"));
 
-  const list = node("ul");
+  PageReadings.append({readings:subject.readings||[]},{resources:Object.fromEntries((subject.readings||[]).map(r=>[r.resource_id,r]))},card);
+      const list = node("ul");
   for (const task of tasks) {
     const status = String(task.status || "pending")
       .replaceAll("_", " ")
@@ -135,6 +136,7 @@ async function load() {
         )
       );
 
+      PageReadings.append({readings:subject.readings||[]},{resources:Object.fromEntries((subject.readings||[]).map(r=>[r.resource_id,r]))},card);
       const list = node("ul");
       for (const resource of subject.resources) {
         if (!/^https:\/\//.test(resource.url)) continue;

@@ -13,8 +13,8 @@ export function taskForSubject(day, subject) {
 export function studentResourceLibrary(library) {
   const resources = Object.fromEntries(Object.entries(library.resources).filter(([,r]) => !r.teacher_only));
   const weeks = Object.fromEntries(Object.entries(library.weeks).map(([id,mapping]) => [id,Object.fromEntries(Object.entries(mapping).map(([key,subject]) => {
-    const {teacher_resources,mini,...safe} = subject;
-    return [key,{...safe,resources:(safe.resources || []).filter(id => resources[id])}];
+    const {teacher_resources,teacher_readings,mini,...safe} = subject;
+    return [key,{...safe,resources:(safe.resources || []).filter(id => resources[id]),readings:(safe.readings||[]).filter(r=>resources[r.resource_id])}];
   }))]));
   return {...library,resources,weeks};
 }

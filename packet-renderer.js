@@ -43,7 +43,7 @@ window.PacketRenderer = (() => {
     for (const [key, subject] of Object.entries(mapping).filter(([key]) => !record.subjects || record.subjects.includes(key))) {
       const section = node('section', '', 'subject');
       section.append(node('h3', `${labels[key] || key}: ${subject.topic}`));
-      KhanUI.priority(subject, section);if(subject.reading_instruction)section.append(node('p',subject.reading_instruction,'metadata'));
+      PageReadings.append(subject,resources,section,{date:record.date});if(teacher)PageReadings.append(subject,resources,section,{date:record.date,teacher:true});KhanUI.priority(subject, section);if(subject.reading_instruction)section.append(node('p',subject.reading_instruction,'metadata'));
       const list = node('ul');
       for (const id of subject.resources) {
         const resource = resources.resources[id];

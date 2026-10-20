@@ -1,3 +1,4 @@
+import {readingsForDay,readingLink} from './page-readings-core.js';
 import { subjectsForDay, curriculumForDay, taskForSubject, studentResourceLibrary } from './curriculum-schedule.js';
 import { curriculumAsset } from './curriculum-assets.js';
 import { homeAssistantApi, manageHomeAssistant } from "./home-assistant-api.js";
@@ -694,7 +695,7 @@ async function authRoute(request,env,user,url){
   const [library,exams,completion,venvTasks]=await Promise.all([assetJson(request,env,'/planner-resources.json'),assetJson(request,env,'/assessment-student.json'),env.DB.prepare("SELECT subject,completed FROM family_curriculum_completion WHERE user_id=? AND school_date=? AND curriculum=?").bind(target.id,date,activeVersion).all(),env.DB.prepare("SELECT title,status,source,external_id,due_date,updated_at FROM family_daily_tasks WHERE user_id=? AND due_date=? ORDER BY CASE status WHEN 'overdue' THEN 0 WHEN 'pending' THEN 1 WHEN 'in_progress' THEN 2 WHEN 'completed' THEN 3 WHEN 'cancelled' THEN 4 ELSE 5 END, title").bind(target.id,date).all()]);
   const dailyTasks=(venvTasks.results||[]).map(t=>({title:t.title,status:t.status,source:t.source,external_id:t.external_id,due_date:t.due_date,updated_at:t.updated_at}));
   const d=days[date]?.[target.grade];if(!d)return familyJson({student:publicUser(target),date,teaching:false,next_date:Object.keys(days).sort().find(x=>x>date)||null,daily_tasks:dailyTasks});
-  const mapping=library.weeks[`${target.grade}-${d.module}-${d.week}`],subjects=subjectsForDay(d,mapping).map(key=>{const s=mapping[key];return ({key,task:taskForSubject(d,key),topic:s.topic,mode:s.mode,primary:s.primary,gap_note:s.gap_note,resources:s.resources.map(id=>library.resources[id]),completed:completion.results.some(r=>r.subject===key&&r.completed===1)});});
+  const mapping=library.weeks[`${target.grade}-${d.module}-${d.week}`],subjects=subjectsForDay(d,mapping).map(key=>{const s=mapping[key];return ({key,task:taskForSubject(d,key),topic:s.topic,readings:readingsForDay(s,date).map(r=>readingLink(r,library.resources)).filter(Boolean),mode:s.mode,primary:s.primary,gap_note:s.gap_note,resources:s.resources.map(id=>library.resources[id]),completed:completion.results.some(r=>r.subject===key&&r.completed===1)});});
   return familyJson({student:publicUser(target),date,teaching:true,module:d.module,week:d.week,tasks:d.tasks,goals:d.goals,integration:d.integration||'',curriculum:curriculumForDay(d),subjects,assessment:d.assessment?{title:exams[d.assessment].title,student_pdf:'/assessments/'+d.assessment+'-student.pdf'}:null,primary_assessments:d.primary_assessments||[],print_url:'/daily-print?date='+date+'&grade='+target.grade,daily_tasks:dailyTasks});
  }
  if(path==='/api/family/completion'&&method==='POST'){
@@ -722,7 +723,7 @@ async function familyFetch(request,env,ctx){
  if(path.startsWith('/api/')&&!['GET','HEAD'].includes(request.method)&&(request.headers.get('origin')!==url.origin||!(request.headers.get('content-type')||'').startsWith('application/json')))return familyJson({error:'Please use the website form.'},403);
  if(path==='/'&&user.role==='student')return new Response(null,{status:302,headers:{location:'/agenda','cache-control':'no-store'}});
  if(user.role==='student'){
-  const allowed=['/agenda','/agenda.html','/agenda.js','/account-nav.js','/daily-print','/daily-print.html','/daily-print.js','/daily-print.css','/print-download.js','/planner-resources.json','/khan-ui.js','/khan-ui.css'];
+  const allowed=['/page-readings.js','/agenda','/agenda.html','/agenda.js','/account-nav.js','/daily-print','/daily-print.html','/daily-print.js','/daily-print.css','/print-download.js','/planner-resources.json','/khan-ui.js','/khan-ui.css'];
   if(path==='/planner-resources.json')return familyJson(studentResourceLibrary(await assetJson(request,env,path)));
   if(path==='/daily-packets.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).map(([date,g])=>[date,{[user.grade]:g[user.grade]}])));}
   if(path==='/assessment-student.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).filter(([,e])=>String(e.grade)===user.grade)));}

@@ -8,16 +8,18 @@ window.PlannerResources=(()=>{
  function links(ids,parent){const ul=node('ul','','resource-links');for(const id of ids||[]){const r=library.resources[id];if(!r)continue;const li=node('li'),a=node('a',r.title);a.href=r.url;a.target='_blank';a.rel='noopener';li.append(a,node('p',r.provider+' · '+r.access,'resource-meta'));if(r.note)li.append(node('p',r.note,'resource-note'));ul.append(li);}parent.append(ul);}
  function instructions(w,i,key){return PageReadings.clean(w.days[i].split(pattern).find(t=>t.trim().startsWith(prefixes[key]))||'');}
  function render(p,w,box){
-  const panel=node('section','','resource-panel');panel.append(node('h3','Books, teaching guides, and activities for this week'));
+  const panel=node('section','','resource-panel');panel.id='learningResources';panel.append(node('h3','Teach this day'),node('p','Choose a day, then open a subject.','helper-text'));
   if(!library){panel.append(node('p','Materials could not load. Refresh to try again.'));box.append(panel);return;}
   const mapping=library.weeks[`${p.grade}-${p.module}-${w.number}`];
   const toolbar=node('div','','resource-toolbar'),label=node('label','Day '),select=node('select');names.forEach((n,i)=>{const o=node('option',n);o.value=i;select.append(o)});label.append(select);
-  const print=node('a','Download weekly materials and response sheet PDF','planner-link'),day=node('a','Open daily packet','planner-link');toolbar.append(label,print,day);panel.append(toolbar);
+  const print=node('a','Weekly materials PDF','planner-link'),day=node('a','Open daily packet →','planner-link');toolbar.append(label,print,day);panel.append(toolbar);
   const cards=node('div','','resource-cards');panel.append(cards);
   function show(){cards.replaceChildren();const i=+select.value,d=new Date(w.start+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+i);day.href='/daily-print?date='+d.toISOString().slice(0,10)+'&grade='+p.grade;
    const selected=w.subjects_by_day?.[i]||Object.keys(mapping);
-   for(const key of selected){const s=mapping[key];if(!s)continue;const card=node('article','','resource-card');card.append(node('h4',(labels[key]||key)+': '+s.topic),node('p',instructions(w,i,key),'resource-direction'));KhanUI.priority(s,card);if(s.reading_instruction)card.append(node('p',s.reading_instruction));PageReadings.append(s,library,card,{date:d.toISOString().slice(0,10)});links(s.resources,card);
-    if(s.teacher_resources?.length){const teacher=node('details');teacher.append(node('summary','Parent teaching guides'));PageReadings.append(s,library,teacher,{date:d.toISOString().slice(0,10),teacher:true});links(s.teacher_resources,teacher);card.append(teacher);}cards.append(card);}
+   for(const key of selected){const s=mapping[key];if(!s)continue;const card=node('article','','resource-card'),details=node('details','','lesson-disclosure'),summary=node('summary'),title=node('div');title.append(node('span',labels[key]||key,'subject-tag'),node('h4',s.topic),node('span','Open lesson & materials','summary-hint'));summary.append(title);details.append(summary);const body=node('div','','lesson-body');const direction=instructions(w,i,key).replace(/Open the assigned chapters and exact pages listed in Materials\./g,'').trim();body.append(node('p',direction,'resource-direction'));PageReadings.append(s,library,body,{date:d.toISOString().slice(0,10)});
+    if(s.teacher_resources?.length){const teacher=node('details','','support-details');teacher.append(node('summary','Parent preparation'));PageReadings.append(s,library,teacher,{date:d.toISOString().slice(0,10),teacher:true});const assigned=new Set((s.teacher_readings||[]).map(r=>r.resource_id));links(s.teacher_resources.filter(id=>!assigned.has(id)),teacher);body.append(teacher);}
+    const assigned=new Set((s.readings||[]).map(r=>r.resource_id)),extraIds=s.resources.filter(id=>!assigned.has(id));if(extraIds.length){const extra=node('details','','support-details');extra.append(node('summary','Optional books & practice'));links(extraIds,extra);body.append(extra);}details.append(body);card.append(details);cards.append(card);}
+
   }
   select.addEventListener('change',show);show();
   const sheet=node('section','','resource-print-sheet');sheet.append(node('h2',`Grade ${p.grade} · Module ${p.module} · Week ${w.number}`),node('p',w.start+' through '+w.assessment));if(w.integration)sheet.append(node('p',w.integration));

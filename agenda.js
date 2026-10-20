@@ -107,12 +107,11 @@ async function load() {
       $("summary").append(note);
     }
 
-    KhanUI.assessments(view.primary_assessments, $("summary"));if(view.integration)$("summary").append(node("p","Weekly connections: "+view.integration));
+    KhanUI.assessments(view.primary_assessments, $("summary"));if(view.integration){const connections=node('details','','support-details');connections.append(node('summary','This week’s connections'),node('p',view.integration));$("summary").append(connections);}
 
     for (const subject of view.subjects) {
-      const card = node("article", "", `agenda-card${subject.completed ? " completed" : ""}`);
-      card.append(node("p", (names[subject.key]||subject.key).toUpperCase(), "eyebrow"), node("h2", subject.topic));
-      KhanUI.priority(subject, card);
+      const outer = node("article", "", `agenda-card${subject.completed ? " completed" : ""}`), disclosure=node('details','','lesson-disclosure'),heading=node('summary'),title=node('div'),card=node('div','','lesson-body');
+      title.append(node('span',names[subject.key]||subject.key,'subject-tag'),node('h2',subject.topic),node('span','Open lesson & reading','summary-hint'));heading.append(title);disclosure.append(heading,card);outer.append(disclosure);
 
       const taskPrefix = {
         math: "Math:",
@@ -139,7 +138,7 @@ async function load() {
       PageReadings.append({readings:subject.readings||[]},{resources:Object.fromEntries((subject.readings||[]).map(r=>[r.resource_id,r]))},card);
       const list = node("ul");
       for (const resource of subject.resources) {
-        if (!/^https:\/\//.test(resource.url)) continue;
+        if (!/^https:\/\//.test(resource.url)||(subject.readings||[]).some(r=>r.url.split('#')[0]===resource.url.split('#')[0])) continue;
         const item = node("li");
         const anchor = node("a", resource.title);
         anchor.href = resource.url;
@@ -156,7 +155,7 @@ async function load() {
         if (resource.note) item.append(node("p", resource.note, "muted"));
         list.append(item);
       }
-      card.append(list);
+      if(list.children.length){const support=node('details','','support-details');support.append(node('summary','Optional books & practice'),list);card.append(support);}
 
       const label = node("label", "", "done");
       const checkbox = node("input");
@@ -176,7 +175,7 @@ async function load() {
             })
           });
           subject.completed = checkbox.checked;
-          card.classList.toggle("completed", checkbox.checked);
+          outer.classList.toggle("completed", checkbox.checked);
           updateProgress();
         } catch (error) {
           checkbox.checked = !checkbox.checked;
@@ -185,8 +184,8 @@ async function load() {
           checkbox.disabled = false;
         }
       };
-      card.append(label);
-      $("cards").append(card);
+      outer.append(label);
+      $("cards").append(outer);
     }
 
     renderDailyTasks();

@@ -33,7 +33,7 @@ window.PacketRenderer = (() => {
       node('p', `Module ${record.module} · Week ${record.week}`, 'metadata'),
       node('p', teacher ? 'Teacher materials — keep separate from student packets.' : `Student: ${studentName || '________________________'}   Completed: ________________________`),
       node('h2', 'Daily lesson plan'),
-      node('p', record.tasks.replace(/ (?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)/g, '\n'), 'day-plan'),
+      node('p', PageReadings.clean(record.tasks).replace(/ (?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)/g, '\n'), 'day-plan'),
       node('p', `Weekly goals\n${record.goals.replace(/; (?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)/g, '\n')}`, 'metadata'),
       node('p', `Standards\n${record.standards.replace(/ \| /g, '\n')}`, 'metadata'),
       node('h2', 'Materials to open or print')

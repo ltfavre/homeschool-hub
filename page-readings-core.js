@@ -1,3 +1,4 @@
+export function cleanTaskText(text){return String(text||'').replace(/Open the linked book and use its contents\/index for: .*?publisher order can differ from the current sequence\./g,'Open the assigned chapters and exact pages listed in Materials.').replace(/then use the reference contents\/index for supporting diagrams or examples\./g,'then use the assigned pages listed in Materials for supporting diagrams or examples.');}
 // Exact assignments use physical PDF pages; printed folios are shown when verified.
 export function readingsForDay(subject, date, teacher=false) {
  const day=new Date(date+'T12:00:00Z').getUTCDay(),session=day===1||day===2?1:day===3||day===4?2:0;

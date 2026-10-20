@@ -6,7 +6,7 @@ window.PlannerResources=(()=>{
  const names=['Monday','Tuesday','Wednesday','Thursday','Friday'];
  const node=(t,text='',cls='')=>{const e=document.createElement(t);e.textContent=text;e.className=cls;return e;};
  function links(ids,parent){const ul=node('ul','','resource-links');for(const id of ids||[]){const r=library.resources[id];if(!r)continue;const li=node('li'),a=node('a',r.title);a.href=r.url;a.target='_blank';a.rel='noopener';li.append(a,node('p',r.provider+' · '+r.access,'resource-meta'));if(r.note)li.append(node('p',r.note,'resource-note'));ul.append(li);}parent.append(ul);}
- function instructions(w,i,key){return w.days[i].split(pattern).find(t=>t.trim().startsWith(prefixes[key]))||'';}
+ function instructions(w,i,key){return PageReadings.clean(w.days[i].split(pattern).find(t=>t.trim().startsWith(prefixes[key]))||'');}
  function render(p,w,box){
   const panel=node('section','','resource-panel');panel.append(node('h3','Books, teaching guides, and activities for this week'));
   if(!library){panel.append(node('p','Materials could not load. Refresh to try again.'));box.append(panel);return;}

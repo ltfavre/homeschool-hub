@@ -12,7 +12,7 @@ function renderPlan(){
  if(w.integration)box.append(el('p','Weekly connections: '+w.integration));window.PlannerAssessments.render(p,w,box);
  window.PlannerResources.render(p,w,box);
  const batch=el('a','Batch Print this week · All students + teacher keys','planner-link');batch.href='/batch-print?date='+w.start;box.append(batch);
- const daily=el('div','','daily');w.days.forEach((t,i)=>{const a=el('article','');a.append(el('h4',['Monday','Tuesday','Wednesday','Thursday','Friday'][i]+' · '+fmt(addDays(w.start,i))));
+ const daily=el('div','','daily');w.days.forEach((t,i)=>{t=PageReadings.clean(t);const a=el('article','');a.append(el('h4',['Monday','Tuesday','Wednesday','Thursday','Friday'][i]+' · '+fmt(addDays(w.start,i))));
  const printDay=el('a','Print this day');printDay.href='/daily-print.html?date='+addDays(w.start,i)+'&grade='+p.grade;a.append(printDay);
  t.split(/(?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)/).filter(Boolean).forEach(s=>a.append(el('p',s)));daily.append(a)});box.append(daily);
  const link=el('a','View original module pages in PDF');link.href='/downloads/Homeschool_Teacher_Planner_2026-2027_Grades_4_7.pdf#page='+p.page;box.append(link);

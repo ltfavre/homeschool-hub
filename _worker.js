@@ -1,4 +1,4 @@
-import {readingsForDay,readingLink} from './page-readings-core.js';
+import {readingsForDay,readingLink,cleanTaskText} from './page-readings-core.js';
 import { subjectsForDay, curriculumForDay, taskForSubject, studentResourceLibrary } from './curriculum-schedule.js';
 import { curriculumAsset } from './curriculum-assets.js';
 import { homeAssistantApi, manageHomeAssistant } from "./home-assistant-api.js";
@@ -696,7 +696,7 @@ async function authRoute(request,env,user,url){
   const dailyTasks=(venvTasks.results||[]).map(t=>({title:t.title,status:t.status,source:t.source,external_id:t.external_id,due_date:t.due_date,updated_at:t.updated_at}));
   const d=days[date]?.[target.grade];if(!d)return familyJson({student:publicUser(target),date,teaching:false,next_date:Object.keys(days).sort().find(x=>x>date)||null,daily_tasks:dailyTasks});
   const mapping=library.weeks[`${target.grade}-${d.module}-${d.week}`],subjects=subjectsForDay(d,mapping).map(key=>{const s=mapping[key];return ({key,task:taskForSubject(d,key),topic:s.topic,readings:readingsForDay(s,date).map(r=>readingLink(r,library.resources)).filter(Boolean),mode:s.mode,primary:s.primary,gap_note:s.gap_note,resources:s.resources.map(id=>library.resources[id]),completed:completion.results.some(r=>r.subject===key&&r.completed===1)});});
-  return familyJson({student:publicUser(target),date,teaching:true,module:d.module,week:d.week,tasks:d.tasks,goals:d.goals,integration:d.integration||'',curriculum:curriculumForDay(d),subjects,assessment:d.assessment?{title:exams[d.assessment].title,student_pdf:'/assessments/'+d.assessment+'-student.pdf'}:null,primary_assessments:d.primary_assessments||[],print_url:'/daily-print?date='+date+'&grade='+target.grade,daily_tasks:dailyTasks});
+  return familyJson({student:publicUser(target),date,teaching:true,module:d.module,week:d.week,tasks:cleanTaskText(d.tasks),goals:d.goals,integration:d.integration||'',curriculum:curriculumForDay(d),subjects,assessment:d.assessment?{title:exams[d.assessment].title,student_pdf:'/assessments/'+d.assessment+'-student.pdf'}:null,primary_assessments:d.primary_assessments||[],print_url:'/daily-print?date='+date+'&grade='+target.grade,daily_tasks:dailyTasks});
  }
  if(path==='/api/family/completion'&&method==='POST'){
   const b=await parseBody(request);if(!b)return familyJson({error:'Invalid JSON body'},400);const id=user.role==='parent'?String(b.student_id||''):user.id;if(!safeDate(String(b.date||''))||!['math','ela','science','social','spanish','art','life','computer','skills','review'].includes(b.subject)||typeof b.completed!=='boolean')return familyJson({error:'Invalid task'},400);

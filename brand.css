@@ -1,0 +1,97 @@
+/* VenvLearning brand layer — Atlas (Homeschool Learning)
+   Source: Creative Design System. Warm & Playful pairing: DM Serif Display + Outfit,
+   IBM Plex Mono for data. Load AFTER styles.css / family.css / khan-ui.css so it overrides them.
+   Not linked from print pages (daily-print, batch-print, home-assistant) on purpose. */
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root{
+  --blush:#E8BFC4; --hunter:#234638; --ink:#171717; --ivory:#FAF7F2; --rose:#F5E5E5; --forest:#142B23;
+  --gold:#D4AF37; --sage:#A8B89F; --sky:#B7D4EA;
+  --muted:#5F5B56;            /* darker than brand #77736E so small text passes 4.5:1 on ivory */
+  --line:#E6DFD2; --surface:#FFFFFF; --sage-wash:#EEF2EA;
+  --radius:8px; --radius-lg:12px;
+  --shadow:0 1px 2px rgba(23,23,23,.05),0 8px 22px rgba(35,70,56,.07);
+  --font-display:"DM Serif Display",Georgia,serif;
+  --font-body:"Outfit","DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --stripe:repeating-linear-gradient(90deg,var(--ink) 0 4px,var(--ivory) 4px 8px);
+  font-family:var(--font-body); color:var(--ink); background:var(--ivory);
+}
+html,body{background:var(--ivory)}
+body{font-family:var(--font-body);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* type */
+h1,h2,h3{font-family:var(--font-display);font-weight:400;color:var(--hunter);letter-spacing:-.005em}
+h4{font-family:var(--font-body);font-weight:600;color:var(--hunter)}
+h1{font-size:clamp(1.7rem,3.2vw,2.4rem)}
+.eyebrow,.subject-tag,.curriculum-label,.assigned-readings>h4{font-family:var(--font-body);text-transform:uppercase;letter-spacing:.16em;font-weight:600;color:var(--muted)}
+.muted,.helper-text,.summary-hint,.reading-book,.reading-note,.gap-note,#status,.stats span,.meta{color:var(--muted)}
+a{color:var(--hunter);text-decoration-color:var(--gold);text-underline-offset:3px}
+a:hover{color:var(--forest)}
+.stats strong,.reading-pages,code,.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+
+/* header + signature stripe */
+.topbar{background:var(--hunter);border-bottom:0;color:var(--ivory);position:relative}
+.topbar h1,.topbar .eyebrow,.topbar a{color:var(--ivory)}
+.topbar .eyebrow{color:var(--blush)}
+.topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height:8px;background:var(--stripe)}
+.topbar.has-family-nav{padding-bottom:1.6rem}
+.main-nav>a{color:var(--ivory)}
+.main-nav>a:hover{background:rgba(250,247,242,.12);color:var(--ivory);text-decoration:none}
+.main-nav>a[aria-current=page]{background:var(--ivory);color:var(--hunter)}
+.account-menu>summary{border-color:rgba(250,247,242,.45);color:var(--ivory)}
+.account-menu-body{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold)}
+.account-menu-body a{color:var(--hunter)}
+.main-nav .account-menu-body a:hover{background:var(--rose)}
+
+/* surfaces */
+.card,.agenda-card,.subject-card,.resource-card,.book-card,.stats div,.stats a{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg)}
+.card{border-top:4px solid var(--gold);box-shadow:var(--shadow)}
+.agenda-card,.subject-card,.resource-card,.book-card{box-shadow:var(--shadow)}
+.hero,.agenda-hero{background:var(--rose);border:1px solid var(--line);border-left:6px solid var(--blush);border-radius:var(--radius-lg)}
+.agenda-hero{background:var(--sage-wash);border-left-color:var(--sage)}
+.stats a{color:var(--hunter)}
+.stats a:hover{background:var(--rose);border-color:var(--blush)}
+.pill{background:var(--rose);color:var(--hunter)}
+.dot{background:var(--sage-wash)}
+.day{background:var(--ivory);border-color:var(--line)}
+.item{border-color:var(--line)}
+.support-details{background:var(--ivory);border-color:var(--line)}
+.lesson-disclosure>summary:hover{background:var(--sage-wash)}
+.lesson-disclosure[open]>summary{background:var(--sage-wash);border-bottom-color:var(--line)}
+.lesson-disclosure>summary::after{color:var(--hunter)}
+.agenda-card.completed{border-color:var(--sage);background:var(--sage-wash)}
+.agenda-card.completed .lesson-disclosure>summary{background:#E4EDDF}
+.agenda-card>.done{background:var(--ivory);border-top-color:var(--line)}
+.agenda-card a,.family-tools a,.khan-check a{color:var(--hunter)}
+.reading-pages{background:var(--sage-wash);color:var(--hunter)}
+.reading-item{border-bottom-color:var(--line)}
+.primary-unit{border-left-color:var(--hunter);background:var(--sage-wash)}
+.khan-assessment-plan{background:var(--sage-wash);border-color:var(--sage)}
+.khan-check{border-top-color:var(--line)}
+.section-nav a,.book-action{background:var(--surface);border-color:var(--line);color:var(--hunter);border-radius:var(--radius)}
+.section-nav a:hover,.book-action:hover{background:var(--rose);border-color:var(--blush)}
+
+/* controls */
+button{font-family:var(--font-body);font-weight:600;letter-spacing:.03em;background:var(--hunter);color:var(--ivory);border-radius:var(--radius)}
+button:hover{background:var(--forest)}
+button.secondary{background:transparent;color:var(--hunter);box-shadow:inset 0 0 0 1.5px var(--hunter)}
+button.secondary:hover{background:var(--rose)}
+input,select,textarea{font-family:var(--font-body);background:var(--ivory);color:var(--ink);border:1px solid #D2C9B8;border-radius:var(--radius)}
+input:focus,select:focus,textarea:focus{border-color:var(--hunter)}
+label{color:var(--hunter);font-weight:600}
+:is(a,button,summary,input,select,textarea):focus-visible{outline:3px solid var(--hunter);outline-offset:3px;box-shadow:0 0 0 6px rgba(212,175,55,.5)}
+
+/* login / forgot-password */
+.login-wrap{margin-top:clamp(1.5rem,6vh,4rem)}
+.login-wrap h1{font-size:clamp(2rem,5vw,2.8rem);margin-bottom:.5rem}
+.login-wrap form{padding:1.75rem}
+#message{color:var(--muted)}
+
+/* closing stripe above any footer, and a utility for dividers */
+footer::before,.stripe{content:"";display:block;height:8px;background:var(--stripe);margin-bottom:1rem}
+.stripe{margin:2rem 0}
+
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+@media print{.topbar::after{display:none}.topbar{background:#fff;color:#000}.topbar h1,.topbar .eyebrow,.topbar a{color:#000}}

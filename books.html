@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Books & workbooks · VenvLearning</title>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/family.css?v=ui-20261020">
+<link rel="stylesheet" href="/brand.css?v=brand-4">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <p class="eyebrow">FAMILY HOMESCHOOL</p>
+    <h1>Books & workbooks</h1>
+  </div>
+  <nav></nav>
+</header>
+<main class="ck-page">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">GRADES 4 &amp; 7</p>
+      <h2>Every book and workbook in the plan.</h2>
+      <p class="muted">All student readers, workbooks, textbooks and booklets linked in the lesson plans, grouped by grade and subject. The number shows how many weeks use each one.</p>
+    </div>
+  </section>
+  <section class="card ck-controls" aria-label="Filter books">
+    <label>Grade
+      <select id="bkGrade"><option value="4">Grade 4</option><option value="7">Grade 7</option></select>
+    </label>
+    <label>Subject
+      <select id="bkSubject"><option value="all">All subjects</option></select>
+    </label>
+    <label>Search
+      <input id="bkSearch" type="search" placeholder="Title or publisher">
+    </label>
+    <p id="status" role="status" class="family-status"></p>
+  </section>
+  <div id="bkList"></div>
+</main>
+<script src="/books.js?v=bk-1" defer></script>
+<script src="/account-nav.js?v=bk-1" defer></script>
+<script src="/ux.js?v=ux-1" defer></script>
+</body>
+</html>

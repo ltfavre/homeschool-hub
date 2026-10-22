@@ -25,6 +25,24 @@
  }
  try{const me=await json('/api/family/me');user=me.user;if(user.role==='student'){kind=kind==='keys'?'work':kind;$('keysTab').hidden=true;$('weeklyLink').hidden=true;$('grade').replaceChildren(node('option','Grade '+user.grade));$('grade').options[0].value=user.grade;}
   [daily,library,exams]=await Promise.all(['/daily-packets.json','/planner-resources.json','/assessment-student.json'].map(json));$('schoolDate').value=q.get('date')||me.today;if(user.role==='parent'&&['4','7','both'].includes(q.get('grade')))$('grade').value=q.get('grade');
-  $('grade').addEventListener('change',render);$('schoolDate').addEventListener('change',render);for(const b of document.querySelectorAll('[data-kind]'))b.addEventListener('click',()=>{if(b.dataset.kind==='keys'&&user.role!=='parent')return;kind=b.dataset.kind;render();});$('print').addEventListener('click',()=>{if(url)window.open(url,'_blank','noopener');});await render();
+  $('grade').addEventListener('change',render);$('schoolDate').addEventListener('change',render);for(const b of document.querySelectorAll('[data-kind]'))b.addEventListener('click',()=>{if(b.dataset.kind==='keys'&&user.role!=='parent')return;kind=b.dataset.kind;render();});$('print').addEventListener('click',()=>{if(url)window.open(url,'_blank','noopener');});
+  if(user.role==='parent'){const full=$('fullPacket');full.hidden=false;full.addEventListener('click',async()=>{
+   const date=$('schoolDate').value,grade=$('grade').value;full.disabled=true;const old=full.textContent;full.textContent='Building full packet…';
+   try{
+    if(!keys)keys=await json('/daily-practice-keys.json');
+    const parts=[];const gs=grade==='both'?['4','7']:[grade];
+    for(const g of gs){const rec=daily[date]?.[g];if(!rec)continue;const record={...rec,date,grade:String(rec.grade||g)};
+     parts.push((await PacketFiles.guide([record],library,{parent:true})).bytes);
+     parts.push((await PacketFiles.work([record],{teacher:false})).bytes);
+     parts.push((await PacketFiles.work([{...keys[date][g],date,grade:String(g)}],{teacher:true})).bytes);}
+    if(!parts.length)throw Error('No teaching materials are scheduled for this date. Choose a school day.');
+    const merged=await PacketFiles.merge(parts,'Full day packet '+date);
+    const href=URL.createObjectURL(new Blob([merged.bytes],{type:'application/pdf'}));
+    const a=document.createElement('a');a.href=href;a.download=`Full-day-packet-${date}-${grade==='both'?'Grades-4-and-7':'Grade-'+grade}.pdf`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(href),60000);
+    $('dailyStatus').textContent=`Full packet ready · ${merged.pages} pages: lesson guide, student worksheets, then teacher key${gs.length>1?' for each grade':''}. Print the key pages separately from the student's pages.`;
+   }catch(e){$('dailyStatus').textContent=e.message;}
+   finally{full.disabled=false;full.textContent=old;}
+  });}
+  await render();
  }catch(e){$('dailyStatus').textContent=e.message;}
 })();

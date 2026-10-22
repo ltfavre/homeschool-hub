@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Attendance · VenvLearning</title>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/family.css?v=ui-20261020">
+<link rel="stylesheet" href="/brand.css?v=brand-5">
+<link rel="stylesheet" href="/lms.css?v=lms-5">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <p class="eyebrow">FAMILY HOMESCHOOL</p>
+    <h1>Attendance</h1>
+  </div>
+  <nav></nav>
+</header>
+<main class="lms-dash">
+  <div class="lms-dash-head">
+    <h2 id="attName"></h2>
+    <div class="lms-toolbar"><span id="lmsSwitch"></span><label>Month <select id="attMonth"></select></label><button type="button" id="attCsv" class="secondary">Download CSV</button></div>
+  </div>
+  <p id="status" role="status" class="family-status">Loading…</p>
+  <section id="attSum" class="att-sum" aria-label="Year totals"></section>
+  <div id="attBulk" class="lms-toolbar"></div>
+  <table class="lms-gb att-table"><thead><tr><th>Date</th><th>Status</th><th>Hours</th><th>Note</th></tr></thead><tbody id="attRows"></tbody></table>
+</main>
+<script src="/lms.js?v=lms-4" defer></script>
+<script src="/attendance.js?v=lms-4" defer></script>
+<script src="/account-nav.js?v=lms-4" defer></script>
+<script src="/ux.js?v=ux-1" defer></script>
+</body>
+</html>

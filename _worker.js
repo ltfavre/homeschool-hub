@@ -174,6 +174,24 @@ async function ensureFamilyAuthTablesImpl(db){
       updated_at INTEGER NOT NULL,
       PRIMARY KEY (student_id, item_key)
     );
+    CREATE TABLE IF NOT EXISTS family_announcements (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      body TEXT NOT NULL,
+      grade TEXT NOT NULL DEFAULT 'both',
+      pinned INTEGER NOT NULL DEFAULT 0,
+      author TEXT NOT NULL DEFAULT '',
+      created_at INTEGER NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS family_attendance (
+      student_id TEXT NOT NULL,
+      school_date TEXT NOT NULL,
+      status TEXT NOT NULL,
+      hours REAL,
+      note TEXT NOT NULL DEFAULT '',
+      updated_at INTEGER NOT NULL,
+      PRIMARY KEY (student_id, school_date)
+    );
   `);
 }
 async function execSql(db, sql){
@@ -715,6 +733,44 @@ async function authRoute(request,env,user,url){
   const target=user.role==='parent'?await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(url.searchParams.get('student')||'student-4').first():user;if(!target)return familyJson({error:'Student not found'},404);
   const rows=await env.DB.prepare("SELECT school_date AS d,subject AS s,completed AS c FROM family_curriculum_completion WHERE user_id=? AND completed=1").bind(target.id).all();
   return familyJson({student:publicUser(target),rows:rows.results||[]});
+ }
+ if(path==='/api/family/announcements'&&method==='GET'){
+  await ensureFamilyTaskTables(env.DB);
+  const rows=user.role==='parent'?await env.DB.prepare("SELECT id,title,body,grade,pinned,author,created_at FROM family_announcements ORDER BY pinned DESC,created_at DESC LIMIT 100").all():await env.DB.prepare("SELECT id,title,body,grade,pinned,author,created_at FROM family_announcements WHERE grade IN ('both',?) ORDER BY pinned DESC,created_at DESC LIMIT 50").bind(String(user.grade)).all();
+  return familyJson({announcements:rows.results||[]});
+ }
+ if(path==='/api/family/announcements'&&method==='POST'){
+  if(user.role!=='parent')return familyJson({error:'Parent access required'},403);
+  await ensureFamilyTaskTables(env.DB);
+  const b=await parseBody(request);if(!b)return familyJson({error:'Invalid JSON body'},400);
+  if(b.delete_id!==undefined){await env.DB.prepare('DELETE FROM family_announcements WHERE id=?').bind(Number(b.delete_id)).run();return familyJson({ok:true});}
+  const title=String(b.title||'').trim().slice(0,120),body=String(b.body||'').trim().slice(0,2000),grade=String(b.grade||'both');
+  if(!title||!['both','4','7'].includes(grade))return familyJson({error:'Add a title and choose who it is for.'},400);
+  await env.DB.prepare('INSERT INTO family_announcements(title,body,grade,pinned,author,created_at) VALUES(?,?,?,?,?,?)').bind(title,body,grade,b.pinned?1:0,String(user.display_name||'').slice(0,60),epoch()).run();
+  return familyJson({ok:true});
+ }
+ if(path==='/api/family/attendance'&&method==='GET'){
+  if(user.role!=='parent')return familyJson({error:'Parent access required'},403);
+  await ensureFamilyTaskTables(env.DB);
+  const target=await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(url.searchParams.get('student')||'student-4').first();if(!target)return familyJson({error:'Student not found'},404);
+  const rows=await env.DB.prepare("SELECT school_date AS d,status AS s,hours AS h,note AS n FROM family_attendance WHERE student_id=? ORDER BY school_date").bind(target.id).all();
+  return familyJson({student:publicUser(target),rows:rows.results||[]});
+ }
+ if(path==='/api/family/attendance'&&method==='POST'){
+  if(user.role!=='parent')return familyJson({error:'Parent access required'},403);
+  await ensureFamilyTaskTables(env.DB);
+  const b=await parseBody(request);if(!b)return familyJson({error:'Invalid JSON body'},400);
+  const target=await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(String(b.student_id||'')).first();if(!target)return familyJson({error:'Student not found'},404);
+  const entries=Array.isArray(b.entries)?b.entries.slice(0,250):[];if(!entries.length)return familyJson({error:'Nothing to save'},400);
+  const days=await assetJson(request,env,'/daily-packets.json');const stmts=[];
+  for(const e of entries){
+   const date=String(e.date||'');if(!safeDate(date)||!days[date]?.[target.grade])return familyJson({error:'Not a scheduled school day: '+date},400);
+   if(e.clear===true){stmts.push(env.DB.prepare('DELETE FROM family_attendance WHERE student_id=? AND school_date=?').bind(target.id,date));continue;}
+   const status=String(e.status||'');if(!['present','absent','partial'].includes(status))return familyJson({error:'Invalid status'},400);
+   const hours=e.hours===null||e.hours===undefined||e.hours===''?null:Number(e.hours);if(hours!==null&&(!Number.isFinite(hours)||hours<0||hours>24))return familyJson({error:'Hours must be between 0 and 24'},400);
+   stmts.push(env.DB.prepare("INSERT INTO family_attendance(student_id,school_date,status,hours,note,updated_at) VALUES(?,?,?,?,?,?) ON CONFLICT(student_id,school_date) DO UPDATE SET status=excluded.status,hours=excluded.hours,note=excluded.note,updated_at=excluded.updated_at").bind(target.id,date,status,hours,String(e.note||'').slice(0,300),epoch()));
+  }
+  await env.DB.batch(stmts);return familyJson({ok:true,saved:stmts.length});
  }
  if(path==='/api/family/grades'&&method==='GET'){
   await ensureFamilyTaskTables(env.DB);

@@ -116,3 +116,14 @@
 .cal-detail{position:sticky;top:1rem}
 .cal-event{background:var(--ivory);border-left:4px solid var(--gold);padding:.4rem .6rem;margin:.5rem 0;border-radius:4px}
 @media (max-width:900px){.cal-layout{grid-template-columns:1fr}.cal-cell{min-height:64px}.cal-meta{display:none}.cal-detail{position:static}}
+
+.lms-ann{border-left:4px solid var(--sage);background:var(--ivory);border-radius:4px;padding:.5rem .7rem;margin-bottom:.6rem}
+.lms-ann.is-pinned{border-left-color:var(--gold)}
+.lms-ann-body{margin:.3rem 0;white-space:pre-wrap}
+.lms-ann-form{display:grid;gap:.5rem;margin-top:.5rem}
+.att-table td .att-btns{display:flex;gap:.3rem;flex-wrap:wrap}
+.att-btns button{padding:.25rem .6rem;background:transparent;color:var(--hunter);border:1px solid var(--hunter)}
+.att-btns button[aria-pressed=true]{background:var(--hunter);color:var(--ivory)}
+.att-btns button[data-s=absent][aria-pressed=true]{background:#8a3b00;border-color:#8a3b00}
+.att-sum{display:flex;gap:1.5rem;flex-wrap:wrap;margin:.8rem 0}
+.att-sum strong{display:block;font-size:1.8rem;font-family:var(--font-display);color:var(--hunter)}

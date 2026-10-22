@@ -68,11 +68,56 @@
     if (!soon.length) s.append(el("li", "Nothing scheduled in the next four weeks.", "muted"));
   }
 
+  async function announcements(ctx) {
+    const box = $("lmsAnn");
+    const load = async () => {
+      const data = await L.json("/api/family/announcements");
+      box.replaceChildren();
+      const forStudent = (a) => a.grade === "both" || String(a.grade) === String(ctx.student.grade);
+      const list = (data.announcements || []).filter((a) => ctx.me.role === "parent" || forStudent(a)).slice(0, 8);
+      for (const a of list) {
+        const item = el("article", "", "lms-ann" + (a.pinned ? " is-pinned" : ""));
+        item.append(el("strong", (a.pinned ? "📌 " : "") + a.title));
+        item.append(el("p", `${new Date(a.created_at * 1000).toLocaleDateString("en-US", { month: "short", day: "numeric" })}${ctx.me.role === "parent" ? " · " + (a.grade === "both" ? "Everyone" : "Grade " + a.grade) : ""}`, "muted lms-small"));
+        if (a.body) item.append(el("p", a.body, "lms-ann-body"));
+        if (ctx.me.role === "parent") {
+          const del = el("button", "Delete", "secondary lms-small"); del.type = "button";
+          del.onclick = async () => { del.disabled = true; await L.json("/api/family/announcements", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ delete_id: a.id }) }); load(); };
+          item.append(del);
+        }
+        box.append(item);
+      }
+      if (!list.length) box.append(el("p", "No announcements.", "muted"));
+      if (ctx.me.role === "parent") box.append(composer());
+    };
+    const composer = () => {
+      const d = el("details", "", "lms-details");
+      d.append(el("summary", "Post an announcement"));
+      const f = el("form", "", "lms-ann-form");
+      const t = el("input"); t.placeholder = "Title"; t.maxLength = 120; t.required = true; t.setAttribute("aria-label", "Title");
+      const b = el("textarea"); b.rows = 3; b.maxLength = 2000; b.placeholder = "Message"; b.setAttribute("aria-label", "Message");
+      const g = el("select"); g.setAttribute("aria-label", "Who is it for");
+      for (const [v, n] of [["both", "Everyone"], ["4", "Grade 4"], ["7", "Grade 7"]]) { const o = el("option", n); o.value = v; g.append(o); }
+      const pl = el("label", " Pin to top"); const pin = el("input"); pin.type = "checkbox"; pl.prepend(pin);
+      const go = el("button", "Post"); go.type = "submit";
+      const msg = el("span", "", "lms-small muted"); msg.setAttribute("role", "status");
+      f.append(t, b, g, pl, go, msg);
+      f.onsubmit = async (e) => {
+        e.preventDefault(); go.disabled = true; msg.textContent = "Posting…";
+        try { await L.json("/api/family/announcements", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ title: t.value, body: b.value, grade: g.value, pinned: pin.checked }) }); await load(); } catch (err) { msg.textContent = err.message; go.disabled = false; }
+      };
+      d.append(f);
+      return d;
+    };
+    try { await load(); } catch (e) { box.textContent = e.message; }
+  }
+
   (async () => {
     try {
       const ctx = await L.load();
       $("status").textContent = "";
       render(ctx);
+      announcements(ctx);
     } catch (e) {
       $("status").textContent = e.message;
     }

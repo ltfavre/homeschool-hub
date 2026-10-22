@@ -156,3 +156,22 @@ CREATE TABLE IF NOT EXISTS family_grades (
   updated_at INTEGER NOT NULL,
   PRIMARY KEY (student_id, item_key)
 );
+
+CREATE TABLE IF NOT EXISTS family_announcements (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL,
+  grade TEXT NOT NULL DEFAULT 'both',
+  pinned INTEGER NOT NULL DEFAULT 0,
+  author TEXT NOT NULL DEFAULT '',
+  created_at INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS family_attendance (
+  student_id TEXT NOT NULL,
+  school_date TEXT NOT NULL,
+  status TEXT NOT NULL,
+  hours REAL,
+  note TEXT NOT NULL DEFAULT '',
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (student_id, school_date)
+);

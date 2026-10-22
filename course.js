@@ -139,6 +139,60 @@
     }
   }
 
+  function viewGrades(root) {
+    const parent = ctx.me.role === "parent";
+    const g = L.courseGrade(ctx, course.subject);
+    const sum = el("section", "", "card lms-grade-sum");
+    sum.append(el("p", "CURRENT GRADE", "eyebrow"));
+    if (g.pct === null) sum.append(el("h3", "No grades yet"), el("p", parent ? "Enter scores below as you grade each worksheet or quiz." : "Scores appear here after your teacher grades your work.", "muted"));
+    else {
+      sum.append(el("h3", `${g.letter} · ${L.pct1(g.pct)}%`));
+      const ul = el("ul", "", "lms-list");
+      for (const [cat, label] of [["work", "Daily work"], ["quiz", "Weekly quizzes"], ["test", "Module tests"]]) {
+        const c = g.byCat[cat];
+        const li = el("li");
+        li.append(el("span", `${label} (${ctx.config.weights[cat] ?? 0}% of grade)`), el("span", c ? `${L.pct1(c.pct)}% · ${c.n} graded` : "nothing graded yet", "muted lms-small"));
+        ul.append(li);
+      }
+      sum.append(ul);
+    }
+    root.append(sum);
+
+    const all = L.items(ctx, course.subject).filter((i) => i.date <= ctx.today);
+    const graded = all.filter((i) => ctx.grades.has(i.key));
+    const pending = all.filter((i) => !ctx.grades.has(i.key));
+    const table = el("section", "", "card");
+    table.append(el("h3", parent ? "Score entry" : "My scores"));
+    if (!parent) {
+      const ul = el("ul", "", "lms-rows");
+      for (const i of graded.slice().reverse()) {
+        const r = ctx.grades.get(i.key);
+        const li = el("li", "", "lms-row");
+        const main = el("div", "", "lms-row-main");
+        main.append(el("strong", i.title), el("span", ` · ${L.day(i.date)}`, "muted"));
+        if (r.n) main.append(el("p", r.n, "lms-small muted"));
+        li.append(main, el("strong", `${L.pct1(r.p)}/${L.pct1(r.m)}`), el("span", `${L.pct1((r.p / r.m) * 100)}%`, "muted"));
+        ul.append(li);
+      }
+      table.append(graded.length ? ul : el("p", "Nothing graded yet.", "muted"));
+      if (pending.length) table.append(el("p", `${pending.length} item${pending.length === 1 ? "" : "s"} waiting to be graded.`, "muted lms-small"));
+    } else {
+      const again = () => render(true);
+      const list = el("ul", "", "lms-rows");
+      const show = [...pending.slice().reverse().slice(0, 25), ...graded.slice().reverse()];
+      for (const i of show) {
+        const li = el("li", "", "lms-row lms-row-grade" + (ctx.grades.has(i.key) ? " is-done" : ""));
+        const main = el("div", "", "lms-row-main");
+        main.append(el("strong", i.title), el("span", ` · ${L.day(i.date)}`, "muted"), el("span", i.category === "work" ? "Work" : i.category === "quiz" ? "Quiz" : "Test", "lms-chip"));
+        li.append(main, L.gradeEditor(ctx, i, again));
+        list.append(li);
+      }
+      table.append(show.length ? list : el("p", "Nothing to grade yet.", "muted"));
+      if (pending.length > 25) table.append(el("p", `Showing the 25 most recent ungraded items of ${pending.length}.`, "muted lms-small"));
+    }
+    root.append(table);
+  }
+
   function viewResources(root) {
     const groups = new Map();
     const seen = new Set();
@@ -169,12 +223,12 @@
   }
 
   function render(keepScroll) {
-    const tab = ["home", "modules", "resources"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "home";
+    const tab = ["home", "modules", "grades", "resources"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "home";
     for (const a of document.querySelectorAll(".lms-menu [data-tab]")) if (a.dataset.tab === tab) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
     const y = scrollY;
     const root = $("lmsView");
     root.replaceChildren();
-    ({ home: viewHome, modules: viewModules, resources: viewResources })[tab](root);
+    ({ home: viewHome, modules: viewModules, grades: viewGrades, resources: viewResources })[tab](root);
     if (keepScroll) scrollTo(0, y);
   }
 

@@ -26,6 +26,8 @@
         body.append(el("p", `Module ${st.current.module} · Week ${st.current.week}`, "lms-strong"), el("p", st.current.topic, "muted lms-topic"));
       }
       body.append(L.bar(st.done, st.total), el("p", `${st.done} of ${st.total} lessons done`, "muted lms-small"));
+      const gr = L.courseGrade(ctx, c.subject);
+      if (gr.pct !== null) body.append(el("p", `Grade: ${gr.letter} · ${L.pct1(gr.pct)}%`, "lms-strong"));
       if (st.overdue) body.append(el("p", `${st.overdue} past lesson${st.overdue === 1 ? "" : "s"} not marked done`, "lms-flag"));
       a.append(band, body);
       card.append(a);

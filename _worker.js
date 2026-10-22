@@ -161,6 +161,19 @@ async function ensureFamilyAuthTablesImpl(db){
       PRIMARY KEY (user_id, school_date, subject, curriculum)
     );
     CREATE INDEX IF NOT EXISTS idx_family_curriculum_completion_date ON family_curriculum_completion(school_date);
+    CREATE TABLE IF NOT EXISTS family_grades (
+      student_id TEXT NOT NULL,
+      item_key TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      category TEXT NOT NULL,
+      title TEXT NOT NULL,
+      school_date TEXT NOT NULL,
+      points REAL NOT NULL,
+      possible REAL NOT NULL,
+      comment TEXT NOT NULL DEFAULT '',
+      updated_at INTEGER NOT NULL,
+      PRIMARY KEY (student_id, item_key)
+    );
   `);
 }
 async function execSql(db, sql){
@@ -703,6 +716,25 @@ async function authRoute(request,env,user,url){
   const rows=await env.DB.prepare("SELECT school_date AS d,subject AS s,completed AS c FROM family_curriculum_completion WHERE user_id=? AND completed=1").bind(target.id).all();
   return familyJson({student:publicUser(target),rows:rows.results||[]});
  }
+ if(path==='/api/family/grades'&&method==='GET'){
+  await ensureFamilyTaskTables(env.DB);
+  const target=user.role==='parent'?await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(url.searchParams.get('student')||'student-4').first():user;if(!target)return familyJson({error:'Student not found'},404);
+  const rows=await env.DB.prepare("SELECT item_key AS k,subject AS s,category AS c,title AS t,school_date AS d,points AS p,possible AS m,comment AS n FROM family_grades WHERE student_id=? ORDER BY school_date,item_key").bind(target.id).all();
+  return familyJson({student:publicUser(target),rows:rows.results||[]});
+ }
+ if(path==='/api/family/grades'&&method==='POST'){
+  if(user.role!=='parent')return familyJson({error:'Parent access required'},403);
+  await ensureFamilyTaskTables(env.DB);
+  const b=await parseBody(request);if(!b)return familyJson({error:'Invalid JSON body'},400);
+  const target=await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(String(b.student_id||'')).first();if(!target)return familyJson({error:'Student not found'},404);
+  const key=String(b.key||''),subject=String(b.subject||''),category=String(b.category||''),date=String(b.date||'');
+  if(!/^[A-Za-z0-9|:_.-]{1,90}$/.test(key)||!['math','ela','science','social','spanish','art','life','computer','skills'].includes(subject)||!['work','quiz','test','project'].includes(category)||!safeDate(date))return familyJson({error:'Invalid grade item'},400);
+  if(b.clear===true){await env.DB.prepare('DELETE FROM family_grades WHERE student_id=? AND item_key=?').bind(target.id,key).run();return familyJson({ok:true});}
+  const points=Number(b.points),possible=Number(b.possible),title=String(b.title||'').slice(0,160),comment=String(b.comment||'').slice(0,500);
+  if(!Number.isFinite(points)||!Number.isFinite(possible)||points<0||possible<=0||possible>1000||points>possible*2||!title)return familyJson({error:'Enter a score and a total above zero.'},400);
+  await env.DB.prepare("INSERT INTO family_grades(student_id,item_key,subject,category,title,school_date,points,possible,comment,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?) ON CONFLICT(student_id,item_key) DO UPDATE SET points=excluded.points,possible=excluded.possible,comment=excluded.comment,title=excluded.title,updated_at=excluded.updated_at").bind(target.id,key,subject,category,title,date,points,possible,comment,epoch()).run();
+  return familyJson({ok:true});
+ }
  if(path==='/api/family/completion'&&method==='POST'){
   const b=await parseBody(request);if(!b)return familyJson({error:'Invalid JSON body'},400);const id=user.role==='parent'?String(b.student_id||''):user.id;if(!safeDate(String(b.date||''))||!['math','ela','science','social','spanish','art','life','computer','skills','review'].includes(b.subject)||typeof b.completed!=='boolean')return familyJson({error:'Invalid task'},400);
   const target=await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(id).first();if(!target)return familyJson({error:'Student not found'},404);const days=await assetJson(request,env,'/daily-packets.json');const scheduledDay=days[b.date]?.[target.grade];if(!scheduledDay)return familyJson({error:'No teaching day scheduled'},400);if(scheduledDay.subjects&&!scheduledDay.subjects.includes(b.subject))return familyJson({error:'Subject is not scheduled on this date'},400);
@@ -728,7 +760,7 @@ async function familyFetch(request,env,ctx){
  if(path.startsWith('/api/')&&!['GET','HEAD'].includes(request.method)&&(request.headers.get('origin')!==url.origin||!(request.headers.get('content-type')||'').startsWith('application/json')))return familyJson({error:'Please use the website form.'},403);
  if(path==='/'&&user.role==='student')return new Response(null,{status:302,headers:{location:'/courses','cache-control':'no-store'}});
  if(user.role==='student'){
-  const allowed=['/courses','/courses.html','/courses.js','/course','/course.html','/course.js','/lms.js','/lms.css','/school-events.json','/packet-renderer.js','/packet-files.js','/materials.css','/vendor/pdf-lib.min.js','/page-readings.js','/agenda','/agenda.html','/agenda.js','/account-nav.js','/daily-print','/daily-print.html','/daily-print.js','/daily-print.css','/print-download.js','/planner-resources.json','/khan-ui.js','/khan-ui.css','/books','/books.html','/books.js','/books-library.json','/core-knowledge','/core-knowledge.html','/core-knowledge.js','/core-knowledge-units.json','/brand.css'];
+  const allowed=['/courses','/courses.html','/courses.js','/course','/course.html','/course.js','/lms.js','/lms.css','/school-events.json','/grading-config.json','/packet-renderer.js','/packet-files.js','/materials.css','/vendor/pdf-lib.min.js','/page-readings.js','/agenda','/agenda.html','/agenda.js','/account-nav.js','/daily-print','/daily-print.html','/daily-print.js','/daily-print.css','/print-download.js','/planner-resources.json','/khan-ui.js','/khan-ui.css','/books','/books.html','/books.js','/books-library.json','/core-knowledge','/core-knowledge.html','/core-knowledge.js','/core-knowledge-units.json','/brand.css'];
   if(path==='/planner-resources.json')return familyJson(studentResourceLibrary(await assetJson(request,env,path)));
   if(path==='/daily-packets.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).map(([date,g])=>[date,{[user.grade]:g[user.grade]}])));}
   if(path==='/assessment-student.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).filter(([,e])=>String(e.grade)===user.grade)));}

@@ -27,8 +27,10 @@ window.LMS = (() => {
     const students = me.role === "parent" ? (await json("/api/family/users")).users.filter((u) => u.role === "student") : [me];
     const wanted = new URLSearchParams(location.search).get("student");
     const student = students.find((s) => s.id === wanted) || students[0];
-    const ctx = { me, today: meRes.today, daily, library, events, students, student, progress: new Map() };
-    await loadProgress(ctx);
+    let config = { weights: { work: 40, quiz: 25, test: 35 }, defaultPossible: { work: 10, quiz: 20, test: 50 }, scale: [[90, "A"], [80, "B"], [70, "C"], [60, "D"], [0, "F"]] };
+    try { config = await json("/grading-config.json"); } catch { /* defaults */ }
+    const ctx = { me, today: meRes.today, daily, library, events, students, student, config, progress: new Map(), grades: new Map() };
+    await Promise.all([loadProgress(ctx), loadGrades(ctx)]);
     return ctx;
   }
 
@@ -36,6 +38,12 @@ window.LMS = (() => {
     const q = ctx.me.role === "parent" ? `?student=${encodeURIComponent(ctx.student.id)}` : "";
     const data = await json("/api/family/progress" + q);
     ctx.progress = new Map((data.rows || []).filter((r) => r.c === 1).map((r) => [`${r.d}|${r.s}`, true]));
+  }
+
+  async function loadGrades(ctx) {
+    const q = ctx.me.role === "parent" ? `?student=${encodeURIComponent(ctx.student.id)}` : "";
+    const data = await json("/api/family/grades" + q);
+    ctx.grades = new Map((data.rows || []).map((r) => [r.k, r]));
   }
 
   const subjectsOn = (rec, mapping) => rec.subjects || Object.keys(mapping);
@@ -114,6 +122,75 @@ window.LMS = (() => {
     return { total: days.length, done: days.filter((d) => d.done).length, current, next, overdue };
   }
 
+  // Everything that can be graded in one course, built from the schedule.
+  function items(ctx, subject) {
+    const out = [];
+    for (const m of modules(ctx, subject)) for (const w of m.weeks) {
+      w.days.forEach((d, i) => out.push({ key: `L|${d.date}|${subject}`, subject, category: "work", date: d.date, title: `${w.topic} (lesson ${i + 1})`, lesson: true }));
+      for (const a of w.assessments) out.push({ key: `A|${a.id}|${subject}`, subject, category: /-test$/.test(a.id) ? "test" : "quiz", date: a.date, title: `${assessLabel(a.id)} · Module ${w.module}, Week ${w.week}` });
+    }
+    return out.sort((x, y) => x.date.localeCompare(y.date));
+  }
+
+  const letter = (ctx, pct) => (ctx.config.scale.find(([min]) => pct >= min) || [0, "F"])[1];
+  const pct1 = (n) => (Math.round(n * 10) / 10).toString();
+
+  function courseGrade(ctx, subject) {
+    const sums = {};
+    for (const r of ctx.grades.values()) {
+      if (r.s !== subject) continue;
+      const c = (sums[r.c] ||= { p: 0, m: 0, n: 0 });
+      c.p += r.p; c.m += r.m; c.n++;
+    }
+    let weighted = 0, wsum = 0;
+    const byCat = {};
+    for (const [cat, c] of Object.entries(sums)) {
+      byCat[cat] = { pct: (c.p / c.m) * 100, n: c.n };
+      const w = ctx.config.weights[cat] ?? 0;
+      weighted += w * byCat[cat].pct; wsum += w;
+    }
+    const n = Object.values(sums).reduce((a, c) => a + c.n, 0);
+    if (!n) return { pct: null, letter: "", byCat, n: 0 };
+    const pct = wsum ? weighted / wsum : Object.values(byCat).reduce((a, c) => a + c.pct, 0) / Object.keys(byCat).length;
+    return { pct, letter: letter(ctx, pct), byCat, n };
+  }
+
+  async function saveGrade(ctx, item, points, possible, comment) {
+    await json("/api/family/grades", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ student_id: ctx.student.id, key: item.key, subject: item.subject, category: item.category, date: item.date, title: item.title, points, possible, comment }) });
+    if (item.lesson && !ctx.progress.has(`${item.date}|${item.subject}`)) {
+      await json("/api/family/completion", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ student_id: ctx.student.id, date: item.date, subject: item.subject, completed: true }) }).catch(() => {});
+    }
+    await Promise.all([loadGrades(ctx), loadProgress(ctx)]);
+  }
+
+  async function clearGrade(ctx, item) {
+    await json("/api/family/grades", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ student_id: ctx.student.id, key: item.key, subject: item.subject, category: item.category, date: item.date, title: item.title, clear: true }) });
+    await loadGrades(ctx);
+  }
+
+  // One editable score row (parent). onChange runs after a save or clear.
+  function gradeEditor(ctx, item, onChange) {
+    const g = ctx.grades.get(item.key);
+    const form = el("form", "", "lms-grade-form");
+    const pts = el("input"); pts.type = "number"; pts.min = "0"; pts.step = "any"; pts.inputMode = "decimal"; pts.value = g ? g.p : "";
+    pts.setAttribute("aria-label", `Score for ${item.title}`);
+    const max = el("input"); max.type = "number"; max.min = "1"; max.step = "any"; max.inputMode = "decimal"; max.value = g ? g.m : ctx.config.defaultPossible[item.category] || 10;
+    max.setAttribute("aria-label", `Points possible for ${item.title}`);
+    const note = el("input"); note.type = "text"; note.maxLength = 500; note.placeholder = "Comment (optional)"; note.value = g ? g.n : "";
+    note.setAttribute("aria-label", `Comment for ${item.title}`);
+    const save = el("button", g ? "Update" : "Save"); save.type = "submit";
+    const msg = el("span", "", "lms-small muted"); msg.setAttribute("role", "status");
+    form.append(pts, el("span", "/"), max, note, save);
+    if (g) { const x = el("button", "Clear", "secondary"); x.type = "button"; x.onclick = async () => { x.disabled = true; try { await clearGrade(ctx, item); onChange(); } catch (e) { msg.textContent = e.message; x.disabled = false; } }; form.append(x); }
+    form.append(msg);
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      save.disabled = true; msg.textContent = "Saving…";
+      try { await saveGrade(ctx, item, Number(pts.value), Number(max.value), note.value.trim()); onChange(); } catch (err) { msg.textContent = err.message; save.disabled = false; }
+    };
+    return form;
+  }
+
   const assessLabel = (id) => (/-test$/.test(id) ? "Module test" : "Weekly quiz");
 
   function bar(done, total) {
@@ -146,5 +223,5 @@ window.LMS = (() => {
   const courseUrl = (ctx, c, hash = "") => `/course?grade=${c.grade}&subject=${c.subject}${ctx.me.role === "parent" ? "&student=" + encodeURIComponent(ctx.student.id) : ""}${hash}`;
   const agendaUrl = (ctx, date) => `/agenda?date=${date}${ctx.me.role === "parent" ? "&student=" + encodeURIComponent(ctx.student.id) : ""}`;
 
-  return { NAMES, el, fmt, day, load, loadProgress, courses, modules, stats, assessLabel, bar, studentSwitcher, courseUrl, agendaUrl, json };
+  return { items, courseGrade, letter, pct1, saveGrade, clearGrade, gradeEditor, loadGrades, NAMES, el, fmt, day, load, loadProgress, courses, modules, stats, assessLabel, bar, studentSwitcher, courseUrl, agendaUrl, json };
 })();

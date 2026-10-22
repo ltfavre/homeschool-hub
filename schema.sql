@@ -142,3 +142,17 @@ WHERE NOT EXISTS (SELECT 1 FROM students WHERE grade='4');
 INSERT INTO students(name, grade)
 SELECT '7th Grader', '7'
 WHERE NOT EXISTS (SELECT 1 FROM students WHERE grade='7');
+
+CREATE TABLE IF NOT EXISTS family_grades (
+  student_id TEXT NOT NULL,
+  item_key TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  category TEXT NOT NULL,
+  title TEXT NOT NULL,
+  school_date TEXT NOT NULL,
+  points REAL NOT NULL,
+  possible REAL NOT NULL,
+  comment TEXT NOT NULL DEFAULT '',
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (student_id, item_key)
+);

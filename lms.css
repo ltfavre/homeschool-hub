@@ -81,3 +81,20 @@
   .lms-menu .lms-back{width:100%;margin:0}
 }
 @media (prefers-reduced-motion:reduce){.lms-card{transition:none}}
+
+.lms-grade-form{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem}
+.lms-grade-form input[type=number]{width:5rem}
+.lms-grade-form input[type=text]{flex:1;min-width:10rem}
+.lms-grade-form button{padding:.35rem .8rem}
+.lms-row-grade{flex-wrap:wrap;align-items:flex-start}
+.lms-row-grade .lms-row-main{flex:1 1 16rem}
+.lms-grade-sum h3{font-size:2rem;margin:.2rem 0 .6rem}
+.lms-gb{width:100%;border-collapse:collapse;background:var(--surface)}
+.lms-gb th,.lms-gb td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left}
+.lms-gb th{background:var(--sage-wash);font-weight:600}
+.lms-gb td.num{font-variant-numeric:tabular-nums;font-family:var(--font-mono)}
+.lms-tabs{display:flex;gap:.4rem;margin:.8rem 0}
+.lms-tabs button{background:transparent;color:var(--hunter);border:1px solid var(--hunter)}
+.lms-tabs button[aria-pressed=true]{background:var(--hunter);color:var(--ivory)}
+.lms-toolbar{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin:.6rem 0}
+@media print{.topbar,.lms-tabs,.lms-toolbar,.lms-switch{display:none!important}}

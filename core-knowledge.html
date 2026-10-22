@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Core Knowledge library · VenvLearning</title>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/family.css?v=ui-20261020">
+<link rel="stylesheet" href="/brand.css?v=brand-3">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <p class="eyebrow">FAMILY HOMESCHOOL</p>
+    <h1>Core Knowledge library</h1>
+  </div>
+  <nav></nav>
+</header>
+<main class="ck-page">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">FREE CURRICULUM · GRADES 4 &amp; 7</p>
+      <h2>Every Core Knowledge unit, in one place.</h2>
+      <p class="muted">Full free units for math, language arts, history, and science, linked straight from the Core Knowledge Foundation. Your daily plans already use many of their worksheets and guides. Use these unit pages for the complete student readers, teacher guides, and activity books.</p>
+    </div>
+  </section>
+
+  <section class="card ck-controls" aria-label="Filter units">
+    <label>Grade
+      <select id="ckGrade">
+        <option value="4">Grade 4</option>
+        <option value="7">Grade 7</option>
+      </select>
+    </label>
+    <label>Subject
+      <select id="ckSubject">
+        <option value="all">All subjects</option>
+        <option value="math">Math</option>
+        <option value="ela">Language arts</option>
+        <option value="history">History &amp; geography</option>
+        <option value="science">Science</option>
+      </select>
+    </label>
+    <p id="status" role="status" class="family-status"></p>
+  </section>
+
+  <section id="ckUnits" class="ck-grid" aria-live="polite"></section>
+
+  <aside class="card ck-credit">
+    <p class="eyebrow">CREDIT &amp; LICENSE</p>
+    <p>These units are © Core Knowledge Foundation and shared under the
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 license</a>.
+      Links open the official <a href="https://www.coreknowledge.org/download-free-curriculum/" target="_blank" rel="noopener noreferrer">Core Knowledge download page</a>.
+      This site is a private family tool and is not affiliated with or endorsed by the Core Knowledge Foundation.</p>
+  </aside>
+</main>
+<script src="/core-knowledge.js?v=ck-1" defer></script>
+<script src="/account-nav.js?v=ck-1" defer></script>
+<script src="/ux.js?v=ux-1" defer></script>
+</body>
+</html>

@@ -5,7 +5,7 @@ window.PacketRenderer=(()=>{
  const prefixes={math:'Math:',ela:'ELA:',science:'Sci:',social:'SS:',spanish:'Sp:',art:'Art:',life:'Life:',computer:'CS:',skills:'Skills:',review:'Friday:'};
  const fmt=date=>new Date(date+'T12:00:00Z').toLocaleDateString('en-US',{timeZone:'UTC',weekday:'long',month:'short',day:'numeric',year:'numeric'});
  const range=n=>n[0]===n[1]?String(n[0]):n.join('–');
- function reading(r,resources){const b=resources[r.resource_id];if(!b)return null;return {...r,book:b.title,url:b.url.split('#')[0]+'#page='+r.pdf[0],pages:'PDF pp. '+range(r.pdf)+(r.printed?' · printed '+range(r.printed):'')};}
+ function reading(r,resources){const b=resources[r.resource_id];if(!b)return null;return {...r,book:b.title,url:b.url.split('#')[0]+(r.pdf?'#page='+r.pdf[0]:''),pages:r.pdf?'PDF pp. '+range(r.pdf)+(r.printed?' · printed '+range(r.printed):''):'printed pp. '+range(r.printed)};}
  function model(record,library,{parent=false}={}){
   const mapping=library.weeks[`${record.grade}-${record.module}-${record.week}`];if(!mapping)throw Error('This lesson’s materials are unavailable.');
   const weekday=new Date(record.date+'T12:00:00Z').getUTCDay(),session=weekday===1||weekday===2?1:weekday===3||weekday===4?2:0;

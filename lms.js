@@ -191,6 +191,16 @@ window.LMS = (() => {
     return form;
   }
 
+  // Weekly quiz on a trip Friday moves to the Thursday named in school-events.json.
+  function assessOn(ctx, date, grade = ctx.student.grade) {
+    const rec = ctx.daily[date]?.[grade];
+    const moved = ctx.events.find((e) => e.quiz_moved_to && e.date === date && (e.grade === "both" || String(e.grade) === String(grade)));
+    if (rec?.assessment && !(moved && !/-test$/.test(rec.assessment))) return rec.assessment;
+    const from = ctx.events.find((e) => e.quiz_moved_to === date && (e.grade === "both" || String(e.grade) === String(grade)));
+    const orig = from && ctx.daily[from.date]?.[grade]?.assessment;
+    return orig && !/-test$/.test(orig) ? orig : null;
+  }
+
   const assessLabel = (id) => (/-test$/.test(id) ? "Module test" : "Weekly quiz");
 
   function bar(done, total) {
@@ -223,5 +233,5 @@ window.LMS = (() => {
   const courseUrl = (ctx, c, hash = "") => `/course?grade=${c.grade}&subject=${c.subject}${ctx.me.role === "parent" ? "&student=" + encodeURIComponent(ctx.student.id) : ""}${hash}`;
   const agendaUrl = (ctx, date) => `/agenda?date=${date}${ctx.me.role === "parent" ? "&student=" + encodeURIComponent(ctx.student.id) : ""}`;
 
-  return { items, courseGrade, letter, pct1, saveGrade, clearGrade, gradeEditor, loadGrades, NAMES, el, fmt, day, load, loadProgress, courses, modules, stats, assessLabel, bar, studentSwitcher, courseUrl, agendaUrl, json };
+  return { assessOn, items, courseGrade, letter, pct1, saveGrade, clearGrade, gradeEditor, loadGrades, NAMES, el, fmt, day, load, loadProgress, courses, modules, stats, assessLabel, bar, studentSwitcher, courseUrl, agendaUrl, json };
 })();

@@ -53,8 +53,8 @@
     const end = horizon.toISOString().slice(0, 10);
     for (const date of Object.keys(ctx.daily).sort()) {
       if (date < ctx.today || date > end) continue;
-      const rec = ctx.daily[date]?.[ctx.student.grade];
-      if (rec?.assessment) soon.push({ date, text: `${L.assessLabel(rec.assessment)} · Module ${rec.module}`, kind: "Test" });
+      const rec = ctx.daily[date]?.[ctx.student.grade], as = L.assessOn(ctx, date);
+      if (as) soon.push({ date, text: `${L.assessLabel(as)} · Module ${rec?.module ?? ""}`, kind: "Test" });
     }
     for (const e of ctx.events) if (e.date >= ctx.today && e.date <= end && (e.grade === "both" || String(e.grade) === String(ctx.student.grade))) soon.push({ date: e.date, text: e.title, kind: e.type === "field trip" ? "Trip" : "Event" });
     soon.sort((a, b) => a.date.localeCompare(b.date));

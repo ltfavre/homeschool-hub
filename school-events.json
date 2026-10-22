@@ -1,4 +1,61 @@
 {
   "about": "Add field trips, projects, co-op days, holidays and other dates here. type is one of: field trip, project, test, event, no school. grade is 4, 7 or both.",
-  "events": []
+  "events": [
+    {
+      "date": "2026-11-20",
+      "type": "field trip",
+      "grade": "4",
+      "title": "Maritime & Seafood Industry Museum, Biloxi",
+      "note": "115 1st Street, Biloxi. (228) 435-6320. Weekly quiz moves to Thursday."
+    },
+    {
+      "date": "2026-12-04",
+      "type": "field trip",
+      "grade": "4",
+      "title": "Mississippi Sandhill Crane National Wildlife Refuge, Gautier",
+      "note": "7200 Crane Lane, Gautier. Tue-Sat 9-3, free. (228) 497-6322. Weekly quiz moves to Thursday."
+    },
+    {
+      "date": "2027-01-08",
+      "type": "field trip",
+      "grade": "4",
+      "title": "La Pointe-Krebs Museum (Old Spanish Fort), Pascagoula",
+      "note": "200 Fort Street, Pascagoula. 228-471-5126. Call first to confirm it is open. Weekly quiz moves to Thursday."
+    },
+    {
+      "date": "2027-04-30",
+      "type": "field trip",
+      "grade": "both",
+      "title": "INFINITY Science Center, Pearlington",
+      "note": "One Discovery Circle, Pearlington. Wed-Sat 9-4. 228-533-9025 ext. 307. Weekly quiz moves to Thursday."
+    },
+    {
+      "date": "2027-05-28",
+      "type": "field trip",
+      "grade": "7",
+      "title": "USM Marine Education Center, Ocean Springs",
+      "note": "101 Sweet Bay Drive, Ocean Springs. 228-818-8095. Call for programs and prices. Weekly quiz moves to Thursday."
+    },
+    {
+      "date": "2027-06-11",
+      "type": "field trip",
+      "grade": "4",
+      "title": "USM Marine Education Center, Ocean Springs",
+      "note": "101 Sweet Bay Drive, Ocean Springs. 228-818-8095. Call for programs and prices. Weekly quiz moves to Thursday."
+    },
+    {
+      "date": "2027-06-17",
+      "type": "field trip",
+      "grade": "both",
+      "title": "Walter Anderson Museum of Art, Ocean Springs",
+      "note": "510 Washington Avenue, Ocean Springs. (228) 872-3164. Thursday, because the Module 8 test is Friday Jun 18."
+    },
+    {
+      "date": "2027-06-25",
+      "type": "field trip",
+      "grade": "7",
+      "title": "Ship Island and Fort Massachusetts (Gulfport ferry) (Grade 7; Grade 4 optional)",
+      "note": "Reserve 48 hours ahead: (228) 864-1014. Apply for the NPS fee waiver 10 business days ahead. Weekly quiz moves to Thursday."
+    }
+  ]
 }

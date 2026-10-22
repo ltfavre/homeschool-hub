@@ -6,6 +6,38 @@ window.PacketRenderer=(()=>{
  const fmt=date=>new Date(date+'T12:00:00Z').toLocaleDateString('en-US',{timeZone:'UTC',weekday:'long',month:'short',day:'numeric',year:'numeric'});
  const range=n=>n[0]===n[1]?String(n[0]):n.join('–');
  function reading(r,resources){const b=resources[r.resource_id];if(!b)return null;return {...r,book:b.title,url:b.url.split('#')[0]+(r.pdf?'#page='+r.pdf[0]:''),pages:r.pdf?'PDF pp. '+range(r.pdf)+(r.printed?' · printed '+range(r.printed):''):'printed pp. '+range(r.printed)};}
+
+ // Core subjects get directions built from the lesson's own topic, pages, worksheet questions and optional extras.
+ const CORE=new Set(['math','ela','science','social']);
+ const short=(t,n=85)=>{t=String(t||'').split(/\s+(?:Use precise|Use a labeled|Look for|Include a|Explain your)/)[0].replace(/\s+/g,' ').trim();return t.length>n?t.slice(0,n-1).trimEnd()+'…':t;};
+ function sectionItems(id,practice){const rx={math:/^Math/i,science:/Physical Sciences/i,social:/Social Studies/i,ela:/^(Required writing|Required reading|ELA(?!.*Spanish))/i}[id];const hit=(practice||[]).find(x=>rx&&rx.test(x.title||'')&&!/Spanish/i.test(x.title||''));return hit?.items||[];}
+ function spanishItems(practice){return ((practice||[]).find(x=>/Spanish/i.test(x.title||''))?.items)||[];}
+ function worksheetLine(items){if(!items.length)return '';const list=items.slice(0,3).map((q,i)=>`${i+1}) ${short(q.prompt)}`).join('  ');return `Worksheet (${items.length} question${items.length===1?'':'s'}): ${list}${items.length>3?' …':''}`.replace(/([.?!])\.$/,'$1');}
+ function specificTask(id,topic,original,{session,practice,extrasList}){
+  if(!CORE.has(id)){
+   const rx={art:/^Art/i,life:/Human Sciences/i,computer:/Computer Science/i,skills:/Life Skills/i}[id];
+   if(rx&&session===2&&/^Revisit the chapter/i.test(original)){
+    const items=((practice||[]).find(x=>rx.test(x.title||''))?.items)||[],ws=worksheetLine(items),tail=(original.match(/Read Chapter[^.]*\./)||[''])[0];
+    return ['Revisit the chapter and improve one feature of your first-meeting work.',ws?(/[.?!…]$/.test(ws)?ws:ws+'.'):'',tail].filter(Boolean).join('\n');
+   }
+   return original;
+  }
+  const items=sectionItems(id,practice),ws=worksheetLine(items);
+  const extra=extrasList.filter(r=>/worksheet|activity|video|practice/i.test((r.kind||'')+' '+r.title)&&!/book|reader|guide/i.test((r.kind||'')+' '+r.title)).slice(0,2).map(r=>r.title.replace(/\s+—.*$/,''));
+  const extraLine=extra.length?`Optional extra practice: ${extra.join('; ')}.`:'';
+  const first=session!==2;
+  const lines=[`Focus: ${topic}.`];
+  const act={
+   math:first?'Read the lesson pages aloud. Work one example from the pages on paper while your child watches, then work a second together. Your child tries the first worksheet problem alone.':'Review the lesson example from last time. Your child completes the worksheet independently, then checks each answer with the key and redoes any miss, explaining the fix aloud.',
+   science:first?`Read the pages aloud, stopping at each diagram or key term. Your child names each term in their own words and sketches one diagram that shows “${topic}”.`:`Your child reviews the key terms and diagram from the first meeting, completes the worksheet, and adds one sentence of evidence for each answer.`,
+   social:first?`Read the pages aloud. Find each place, person or event on a map or timeline, then your child says in one sentence how it connects to “${topic}”.`:`Your child re-reads their notes, completes the worksheet using the pages as evidence, and corrects any answer the sources do not support.`,
+   ela:first?`Read the passage or lesson together. Your child marks three examples of “${topic}” in the text, picks 5–8 unfamiliar words, and explains their spelling or meaning.`:`Your child revises the earlier writing, uses the chosen words correctly, completes the response below, and edits for spelling and grammar.`
+  }[id];
+  lines.push(act);if(ws)lines.push(/[.?!…]$/.test(ws)?ws:ws+'.');
+  if(id==='ela'){const sp=spanishItems(practice);if(sp.length)lines.push(`Spanish (10–15 minutes): say the new words aloud, then ${worksheetLine(sp).replace(/^Worksheet/,'worksheet')}.`);}
+  if(extraLine)lines.push(extraLine);
+  return lines.join('\n');
+ }
  function model(record,library,{parent=false}={}){
   const mapping=library.weeks[`${record.grade}-${record.module}-${record.week}`];if(!mapping)throw Error('This lesson’s materials are unavailable.');
   const weekday=new Date(record.date+'T12:00:00Z').getUTCDay(),session=weekday===1||weekday===2?1:weekday===3||weekday===4?2:0;
@@ -16,6 +48,7 @@ window.PacketRenderer=(()=>{
    let task=PageReadings.clean(record.tasks).split(/\s+(?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)/).find(t=>t.startsWith(prefixes[id]))||s.topic;
    if(task.startsWith(prefixes[id]))task=task.slice(prefixes[id].length).trim();if(task.startsWith(s.topic+' — '))task=task.slice(s.topic.length+3);
    task=task.replace(/Open the assigned chapters and exact pages listed in Materials\./g,'').replace(/Read the selected passage with your parent; model an example and complete guided practice\./g,'Read together and model an example, then complete the student worksheet.').trim();
+   task=specificTask(id,s.topic,task,{session,readings,practice:record.practice,extrasList:(s.resources||[]).filter(k=>!assigned.has(k)).map(k=>library.resources[k]).filter(r=>r&&r.title&&!r.teacher_only)});
    const extras=(s.resources||[]).filter(k=>!assigned.has(k)).map(k=>({...library.resources[k],resource_id:k})).filter(r=>r.title&&!r.teacher_only);
    return {id,name:labels[id]||id,topic:s.topic,task,readings,preparation,extras};
   })};
@@ -51,7 +84,7 @@ window.PacketRenderer=(()=>{
   const grid=node('div','','guide-grid');for(const s of m.subjects){const card=node('section','','guide-card');card.id=`guide-${record.grade}-${record.date}-${s.id}`;card.append(node('p',s.name.toUpperCase(),'subject-tag'),node('h2',s.topic));
    
    if(s.readings.length){card.append(node('h3','Open these pages'));resourceRows(s.readings,card);}
-   else card.append(node('p','Use the review, project, or catch-up activity selected for today.','guide-note'));card.append(node('h3','What to do'));const sentences=s.task.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g)||[s.task];card.append(node('p',sentences[0],'guide-task'));if(sentences.length>1){const more=node('details','','support-details');more.append(node('summary','More lesson directions'),node('p',sentences.slice(1).join(' ').trim(),'guide-task'));card.append(more);}
+   else card.append(node('p','Use the review, project, or catch-up activity selected for today.','guide-note'));card.append(node('h3','What to do'));if(s.task.includes('\n')){for(const l of s.task.split('\n'))card.append(node('p',l,'guide-task'));}else{const sentences=s.task.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g)||[s.task];card.append(node('p',sentences[0],'guide-task'));if(sentences.length>1){const more=node('details','','support-details');more.append(node('summary','More lesson directions'),node('p',sentences.slice(1).join(' ').trim(),'guide-task'));card.append(more);}}
    if(s.extras.length){const extra=node('details','','support-details');extra.append(node('summary','Extra worksheets & optional practice'));for(const r of s.extras){const item=node('div','','guide-resource');item.append(link(r.title+' ↗',r.url,'guide-resource-title'));if(r.access)item.append(node('p',r.access,'guide-note'));extra.append(item);}card.append(extra);}
    if(s.preparation.length){const prep=node('details','','support-details');prep.append(node('summary','Parent preparation'));resourceRows(s.preparation,prep);card.append(prep);}
    grid.append(card);

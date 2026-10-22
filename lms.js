@@ -30,7 +30,7 @@ window.LMS = (() => {
     let config = { weights: { work: 40, quiz: 25, test: 35 }, defaultPossible: { work: 10, quiz: 20, test: 50 }, scale: [[90, "A"], [80, "B"], [70, "C"], [60, "D"], [0, "F"]] };
     try { config = await json("/grading-config.json"); } catch { /* defaults */ }
     const ctx = { me, today: meRes.today, daily, library, events, students, student, config, progress: new Map(), grades: new Map() };
-    await Promise.all([loadProgress(ctx), loadGrades(ctx)]);
+    await Promise.all([loadProgress(ctx), loadGrades(ctx).catch(() => {})]);
     return ctx;
   }
 

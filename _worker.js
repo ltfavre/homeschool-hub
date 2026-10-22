@@ -111,7 +111,38 @@ async function ensureFamilyTaskTables(db) {
       summary_json TEXT,
       error_message TEXT
     );
-  `);
+    CREATE TABLE IF NOT EXISTS family_grades (
+      student_id TEXT NOT NULL,
+      item_key TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      category TEXT NOT NULL,
+      title TEXT NOT NULL,
+      school_date TEXT NOT NULL,
+      points REAL NOT NULL,
+      possible REAL NOT NULL,
+      comment TEXT NOT NULL DEFAULT '',
+      updated_at INTEGER NOT NULL,
+      PRIMARY KEY (student_id, item_key)
+    );
+    CREATE TABLE IF NOT EXISTS family_announcements (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      body TEXT NOT NULL,
+      grade TEXT NOT NULL DEFAULT 'both',
+      pinned INTEGER NOT NULL DEFAULT 0,
+      author TEXT NOT NULL DEFAULT '',
+      created_at INTEGER NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS family_attendance (
+      student_id TEXT NOT NULL,
+      school_date TEXT NOT NULL,
+      status TEXT NOT NULL,
+      hours REAL,
+      note TEXT NOT NULL DEFAULT '',
+      updated_at INTEGER NOT NULL,
+      PRIMARY KEY (student_id, school_date)
+    );
+    `);
 }
 async function maybeEnsureFamilyAuthTables(db, env){
   if(clean(env.FAMILY_SCHEMA_SELF_HEAL)!=="1") return;
@@ -161,38 +192,7 @@ async function ensureFamilyAuthTablesImpl(db){
       PRIMARY KEY (user_id, school_date, subject, curriculum)
     );
     CREATE INDEX IF NOT EXISTS idx_family_curriculum_completion_date ON family_curriculum_completion(school_date);
-    CREATE TABLE IF NOT EXISTS family_grades (
-      student_id TEXT NOT NULL,
-      item_key TEXT NOT NULL,
-      subject TEXT NOT NULL,
-      category TEXT NOT NULL,
-      title TEXT NOT NULL,
-      school_date TEXT NOT NULL,
-      points REAL NOT NULL,
-      possible REAL NOT NULL,
-      comment TEXT NOT NULL DEFAULT '',
-      updated_at INTEGER NOT NULL,
-      PRIMARY KEY (student_id, item_key)
-    );
-    CREATE TABLE IF NOT EXISTS family_announcements (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      body TEXT NOT NULL,
-      grade TEXT NOT NULL DEFAULT 'both',
-      pinned INTEGER NOT NULL DEFAULT 0,
-      author TEXT NOT NULL DEFAULT '',
-      created_at INTEGER NOT NULL
-    );
-    CREATE TABLE IF NOT EXISTS family_attendance (
-      student_id TEXT NOT NULL,
-      school_date TEXT NOT NULL,
-      status TEXT NOT NULL,
-      hours REAL,
-      note TEXT NOT NULL DEFAULT '',
-      updated_at INTEGER NOT NULL,
-      PRIMARY KEY (student_id, school_date)
-    );
-  `);
+`);
 }
 async function execSql(db, sql){
   // D1 exec splits on newlines, so multiline DDL must use prepared statements.

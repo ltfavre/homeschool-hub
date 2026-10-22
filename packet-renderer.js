@@ -1,7 +1,7 @@
 // Shared model keeps student work, lesson directions, and teacher answers separate.
 window.PacketRenderer=(()=>{
  const node=(tag,text='',cls='')=>{const e=document.createElement(tag);e.textContent=text;e.className=cls;return e;};
- const labels={math:'Math',ela:'ELA + Spanish',science:'Physical Sciences',social:'Social Studies',spanish:'Spanish',art:'Art',life:'Life Sciences',computer:'Computer Science',skills:'Life Skills',review:'Friday review / projects'};
+ const labels={math:'Math',ela:'ELA + Spanish',science:'Physical Sciences',social:'Social Studies',spanish:'Spanish',art:'Art',life:'Human Sciences',computer:'Computer Science',skills:'Life Skills',review:'Friday review / projects'};
  const prefixes={math:'Math:',ela:'ELA:',science:'Sci:',social:'SS:',spanish:'Sp:',art:'Art:',life:'Life:',computer:'CS:',skills:'Skills:',review:'Friday:'};
  const fmt=date=>new Date(date+'T12:00:00Z').toLocaleDateString('en-US',{timeZone:'UTC',weekday:'long',month:'short',day:'numeric',year:'numeric'});
  const range=n=>n[0]===n[1]?String(n[0]):n.join('–');

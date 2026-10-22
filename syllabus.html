@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Year syllabus · VenvLearning</title>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/family.css?v=ui-20261020">
+<link rel="stylesheet" href="/brand.css?v=brand-5">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <p class="eyebrow">FAMILY HOMESCHOOL</p>
+    <h1>Year syllabus</h1>
+  </div>
+  <nav></nav>
+</header>
+<main class="syl-page">
+  <section class="card ck-controls screen-only" aria-label="Syllabus options">
+    <label>Grade
+      <select id="sylGrade"><option value="4">Grade 4</option><option value="7">Grade 7</option></select>
+    </label>
+    <button id="sylPrint" type="button">Print / save as PDF</button>
+    <p id="status" role="status" class="family-status">Loading…</p>
+  </section>
+  <section id="sylNow" class="card syl-now"></section>
+  <section id="sylModules"></section>
+  <section id="sylWeeks"></section>
+  <section class="card" id="sylNotes"></section>
+</main>
+<script src="/syllabus.js?v=syl-1" defer></script>
+<script src="/account-nav.js?v=syl-1" defer></script>
+<script src="/ux.js?v=ux-1" defer></script>
+</body>
+</html>

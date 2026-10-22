@@ -183,3 +183,21 @@ dialog::backdrop{background:rgba(20,43,35,.55)}
 .bk-group h3{margin:8px 0 0}
 .ck-card h4{margin:0;font-size:1rem}
 .ck-controls input[type=search]{min-height:44px;padding:0 12px}
+
+/* Year syllabus */
+.syl-page{max-width:1200px;margin:0 auto;padding:16px;display:grid;gap:16px}
+.syl-now-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.syl-now-block h3{margin:0 0 6px}
+.syl-now-block ul{margin:6px 0;padding-left:18px}
+.syl-strong{font-weight:700;margin:0}
+.syl-test{font-weight:600;margin:4px 0}
+.syl-event{margin:4px 0}
+.syl-table{width:100%;border-collapse:collapse;font-size:.92rem}
+.syl-table th,.syl-table td{border:1px solid rgba(0,0,0,.15);padding:6px 8px;vertical-align:top;text-align:left}
+.syl-table th{background:rgba(0,0,0,.05)}
+.syl-table tr.is-now td{background:rgba(255,200,0,.18)}
+.syl-table tr.syl-break td{text-align:center;font-style:italic;background:rgba(0,0,0,.04)}
+.syl-topic{font-weight:600}
+.syl-unit{font-size:.82rem;opacity:.75}
+@media(max-width:700px){.syl-weeks{display:block;overflow-x:auto}}
+@media print{.screen-only,.topbar nav,.skip-link{display:none!important}.syl-page{padding:0}.syl-table{font-size:.72rem}.syl-table tr{break-inside:avoid}h2{break-after:avoid}}

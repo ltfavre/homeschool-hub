@@ -6,9 +6,10 @@ function readingsForDay(subject, date, teacher=false) {
 }
 function readingText(r) {
  const range=a=>a[0]===a[1]?String(a[0]):a.join('–');
+ if(!r.pdf)return `${r.section} · printed pp. ${range(r.printed)} (use the guide's page numbers, not the PDF viewer's)`;
  return `${r.section} · ${r.printed?'printed pp. '+range(r.printed)+' · ':''}PDF pp. ${range(r.pdf)}`;
 }
-function readingLink(r,resources) {const b=resources[r.resource_id];return b?{...r,title:b.title,url:b.url.split('#')[0]+'#page='+r.pdf[0]}:null;}
+function readingLink(r,resources) {const b=resources[r.resource_id];return b?{...r,title:b.title,url:b.url.split('#')[0]+(r.pdf?'#page='+r.pdf[0]:'')}:null;}
 
 window.PageReadings={clean:cleanTaskText,append(subject,library,parent,{date,teacher=false}={}){
  const refs=date?readingsForDay(subject,date,teacher):subject?.[teacher?'teacher_readings':'readings']||[];

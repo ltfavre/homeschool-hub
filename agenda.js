@@ -54,7 +54,24 @@ function renderDailyTasks() {
 
 function updateProgress() {
   const done = view.subjects.filter((subject) => subject.completed).length;
-  $("status").textContent = `${done} of ${view.subjects.length} subjects complete · Saved to this account`;
+  const total = view.subjects.length;
+  $("status").textContent = done === total && total
+    ? `All ${total} subjects complete — great work today! · Saved to this account`
+    : `${done} of ${total} subjects complete · Saved to this account`;
+  let bar = $("dayProgress");
+  if (!bar) {
+    bar = node("div", "", "day-progress");
+    bar.id = "dayProgress";
+    bar.setAttribute("role", "progressbar");
+    bar.setAttribute("aria-label", "Subjects completed today");
+    bar.append(node("span"));
+    $("status").after(bar);
+  }
+  bar.setAttribute("aria-valuemin", "0");
+  bar.setAttribute("aria-valuemax", String(total));
+  bar.setAttribute("aria-valuenow", String(done));
+  bar.firstChild.style.width = total ? `${Math.round((done / total) * 100)}%` : "0%";
+  bar.classList.toggle("is-complete", total > 0 && done === total);
 }
 
 async function load() {
@@ -65,6 +82,7 @@ async function load() {
     view = await api(`/api/family/agenda?date=${date}${studentQuery}`);
 
     $("cards").replaceChildren();
+    $("dayProgress")?.remove();
     $("summary").replaceChildren(
       node("h2", `${view.student.display_name} · Grade ${view.student.grade}`),
       node(

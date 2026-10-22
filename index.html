@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Homeschool Hub</title>
   <link rel="stylesheet" href="/styles.css">
-<link rel="stylesheet" href="/family.css?v=ui-20261020"><link rel="stylesheet" href="/brand.css?v=brand-1"></head>
+<link rel="stylesheet" href="/family.css?v=ui-20261020"><link rel="stylesheet" href="/brand.css?v=brand-2"></head>
 <body>
   <header class="topbar">
     <div>
@@ -73,6 +73,7 @@
       <label>Instructions<textarea id="instructions" rows="4"></textarea></label>
       <label>Resource link<input id="resourceUrl" type="url" placeholder="https://..."></label>
 
+      <p id="formError" class="form-error" role="alert"></p>
       <div class="dialog-actions">
         <button value="cancel" class="secondary">Cancel</button>
         <button id="saveBtn" value="default">Save</button>
@@ -81,5 +82,5 @@
   </dialog>
 
   <script type="module" src="/app.js"></script>
-<script src="/account-nav.js?v=packets-v2" defer></script></body>
+<script src="/account-nav.js?v=packets-v2" defer></script><script src="/ux.js?v=ux-1" defer></script></body>
 </html>

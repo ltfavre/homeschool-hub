@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Report card · VenvLearning</title>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/family.css?v=ui-20261020">
+<link rel="stylesheet" href="/brand.css?v=brand-5">
+<link rel="stylesheet" href="/lms.css?v=lms-6">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <p class="eyebrow">FAMILY HOMESCHOOL</p>
+    <h1>Report card</h1>
+  </div>
+  <nav></nav>
+</header>
+<main class="lms-dash">
+  <div class="lms-dash-head">
+    <div class="lms-toolbar"><span id="lmsSwitch"></span><label>Period <select id="rcPeriod"></select></label><button type="button" id="rcPrint" class="secondary">Print</button></div>
+  </div>
+  <p id="status" role="status" class="family-status">Loading…</p>
+  <article id="rcPaper" class="rc-paper" hidden>
+    <header class="rc-head">
+      <p class="eyebrow">VENVLEARNING HOMESCHOOL</p>
+      <h2>Progress report</h2>
+      <p id="rcWho" class="rc-who"></p>
+      <p id="rcWhen" class="muted"></p>
+    </header>
+    <table class="lms-gb rc-table"><thead><tr><th>Course</th><th>Daily work</th><th>Quizzes</th><th>Tests</th><th>Grade</th><th>Letter</th></tr></thead><tbody id="rcRows"></tbody></table>
+    <p id="rcAvg" class="rc-avg"></p>
+    <section class="rc-att"><h3>Attendance</h3><p id="rcAtt"></p></section>
+    <section><h3>Teacher comments</h3><textarea id="rcNote" rows="4" aria-label="Teacher comments (not saved; included when you print)"></textarea><p class="muted lms-small rc-hide-print">Comments are not saved. Type them before you print.</p></section>
+    <p id="rcScale" class="muted lms-small"></p>
+    <div class="rc-sign"><span>Parent / teacher signature</span><span>Date</span></div>
+  </article>
+</main>
+<script src="/lms.js?v=lms-5" defer></script>
+<script src="/report-card.js?v=lms-5" defer></script>
+<script src="/account-nav.js?v=lms-5" defer></script>
+<script src="/ux.js?v=ux-1" defer></script>
+</body>
+</html>

@@ -135,10 +135,11 @@ window.LMS = (() => {
   const letter = (ctx, pct) => (ctx.config.scale.find(([min]) => pct >= min) || [0, "F"])[1];
   const pct1 = (n) => (Math.round(n * 10) / 10).toString();
 
-  function courseGrade(ctx, subject) {
+  function courseGrade(ctx, subject, range) {
     const sums = {};
     for (const r of ctx.grades.values()) {
       if (r.s !== subject) continue;
+      if (range && (r.d < range.from || r.d > range.to)) continue;
       const c = (sums[r.c] ||= { p: 0, m: 0, n: 0 });
       c.p += r.p; c.m += r.m; c.n++;
     }

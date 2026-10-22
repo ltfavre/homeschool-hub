@@ -1,6 +1,6 @@
 import {cleanTaskText} from './page-readings-core.js';
 // One source for both the website agenda and the Home Assistant calendar.
-export const subjectLabels = {math:'Math',ela:'ELA',science:'Physical Sciences',social:'Social Studies',art:'Art',life:'Life Sciences',computer:'Computer Science',skills:'Life Skills',spanish:'Spanish',review:'Friday Review / Projects / Catch-up'};
+export const subjectLabels = {math:'Math',ela:'ELA',science:'Physical Sciences',social:'Social Studies',art:'Art',life:'Human Sciences',computer:'Computer Science',skills:'Life Skills',spanish:'Spanish',review:'Friday Review / Projects / Catch-up'};
 export const taskPrefixes = {math:'Math:',ela:'ELA:',science:'Sci:',social:'SS:',art:'Art:',life:'Life:',computer:'CS:',skills:'Skills:',spanish:'Sp:',review:'Friday:'};
 export const taskPattern = /\s+(?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)/;
 export function subjectsForDay(day, mapping) {

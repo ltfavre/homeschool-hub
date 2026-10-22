@@ -1,6 +1,6 @@
 window.PlannerResources=(()=>{
  let library;
- const labels={math:'Math',ela:'ELA',science:'Physical Sciences',social:'Social Studies',art:'Art',life:'Life Sciences',computer:'Computer Science',skills:'Life Skills',spanish:'Spanish',review:'Friday Review / Projects / Catch-up'};
+ const labels={math:'Math',ela:'ELA',science:'Physical Sciences',social:'Social Studies',art:'Art',life:'Human Sciences',computer:'Computer Science',skills:'Life Skills',spanish:'Spanish',review:'Friday Review / Projects / Catch-up'};
  const prefixes={math:'Math:',ela:'ELA:',science:'Sci:',social:'SS:',art:'Art:',life:'Life:',computer:'CS:',skills:'Skills:',spanish:'Sp:',review:'Friday:'};
  const pattern=/(?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)/;
  const names=['Monday','Tuesday','Wednesday','Thursday','Friday'];

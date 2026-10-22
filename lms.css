@@ -1,0 +1,83 @@
+/* LMS layout: dashboard cards, course shell, modules. Uses brand.css tokens. */
+.lms-dash{max-width:1180px;margin:0 auto;padding:1.25rem 16px 3rem}
+.lms-main{width:100%;min-width:0;max-width:980px;margin:0;padding:1.25rem 20px 3rem}
+.lms-dash-head{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap}
+.lms-switch select{margin-left:.4rem}
+.lms-dash-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:1.25rem;align-items:start}
+.lms-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem}
+.lms-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;transition:transform .15s,box-shadow .15s}
+.lms-card:hover,.lms-card:focus-within{transform:translateY(-2px)}
+.lms-card-link{display:block;color:inherit;text-decoration:none}
+.lms-card-link:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
+.lms-card-band{height:76px;background:var(--hunter)}
+.lms-card[data-subject=math] .lms-card-band,.lms-banner[data-subject=math]{background:var(--sky)}
+.lms-card[data-subject=ela] .lms-card-band,.lms-banner[data-subject=ela]{background:var(--blush)}
+.lms-card[data-subject=science] .lms-card-band,.lms-banner[data-subject=science]{background:var(--sage)}
+.lms-card[data-subject=social] .lms-card-band,.lms-banner[data-subject=social]{background:var(--gold)}
+.lms-card[data-subject=art] .lms-card-band,.lms-banner[data-subject=art]{background:var(--rose)}
+.lms-card[data-subject=life] .lms-card-band,.lms-banner[data-subject=life]{background:var(--sage-wash)}
+.lms-card[data-subject=computer] .lms-card-band,.lms-banner[data-subject=computer]{background:var(--sky)}
+.lms-card[data-subject=skills] .lms-card-band,.lms-banner[data-subject=skills]{background:var(--blush)}
+.lms-card[data-subject=spanish] .lms-card-band,.lms-banner[data-subject=spanish]{background:var(--gold)}
+.lms-card-body{padding:.9rem 1rem 1.1rem;display:grid;gap:.35rem}
+.lms-card-body h3{margin:0;font-size:1.35rem}
+.lms-card-body .eyebrow{margin:0;font-size:.7rem}
+.lms-strong{font-weight:600;margin:.2rem 0 0}
+.lms-topic{margin:0;min-height:2.4em}
+.lms-small{font-size:.85rem;margin:0}
+.lms-flag{color:#8a3b00;font-size:.85rem;margin:0}
+.lms-bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:.4rem 0}
+.lms-bar span{display:block;height:100%;background:var(--hunter)}
+.lms-side{display:grid;gap:1rem}
+.lms-side h3{margin:.1rem 0 .6rem}
+.lms-list{list-style:none;margin:0;padding:0;display:grid;gap:.55rem}
+.lms-list li{display:grid;grid-template-columns:1fr auto;gap:.1rem .5rem;align-items:baseline;font-size:.95rem}
+.lms-list li>.lms-small{grid-column:1}
+.lms-chip{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;background:var(--sage-wash);color:var(--hunter);border-radius:99px;padding:.1rem .55rem;white-space:nowrap}
+.lms-chip-now{background:var(--gold);color:var(--ink);margin-left:.5rem}
+
+.lms-shell{display:grid;grid-template-columns:220px minmax(0,1fr);max-width:1320px;margin:0 auto}
+.lms-menu{border-right:1px solid var(--line);padding:1.25rem .75rem;display:flex;flex-direction:column;gap:.25rem;position:sticky;top:0;align-self:start;min-height:60vh}
+.lms-menu a{padding:.55rem .8rem;border-radius:var(--radius);text-decoration:none;color:var(--hunter);font-weight:500}
+.lms-menu a:hover{background:var(--sage-wash)}
+.lms-menu a[aria-current=page]{background:var(--hunter);color:var(--ivory)}
+.lms-menu .lms-back{color:var(--muted);font-size:.9rem;margin-bottom:.6rem}
+.lms-banner{border-radius:var(--radius-lg);padding:1.2rem 1.4rem;margin-bottom:1rem;background:var(--sage)}
+.lms-banner h2{margin:.1rem 0 .4rem;font-size:2rem}
+.lms-banner .eyebrow{color:var(--ink);margin:0}
+.lms-two{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.lms-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin:.8rem 0 0}
+.lms-btn{display:inline-block;background:var(--hunter);color:var(--ivory);padding:.55rem 1rem;border-radius:var(--radius);text-decoration:none;font-weight:600}
+.lms-btn:hover{background:var(--forest);color:var(--ivory)}
+.lms-btn-2{background:transparent;color:var(--hunter);border:1px solid var(--hunter)}
+.lms-btn-2:hover{background:var(--sage-wash);color:var(--hunter)}
+.lms-main .card{margin-bottom:1rem}
+.lms-module{border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface);margin-bottom:.9rem;padding:.2rem 1rem 1rem}
+.lms-module>summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.8rem 0;list-style:none}
+.lms-module>summary::-webkit-details-marker{display:none}
+.lms-module>summary::before{content:"▸";margin-right:.5rem;color:var(--hunter)}
+.lms-module[open]>summary::before{content:"▾"}
+.lms-module-title{font-family:var(--font-display);font-size:1.3rem;color:var(--hunter);flex:1}
+.lms-week{border-top:1px solid var(--line);padding:.8rem 0 .2rem}
+.lms-week-head h4{margin:0}
+.lms-rows{list-style:none;margin:.5rem 0;padding:0;display:grid;gap:.3rem}
+.lms-row{display:flex;align-items:center;gap:.75rem;padding:.4rem .5rem;border-radius:var(--radius);background:var(--ivory)}
+.lms-row.is-done{background:var(--sage-wash)}
+.lms-row-main{flex:1}
+.lms-open{font-size:.9rem;white-space:nowrap}
+.lms-check{box-sizing:border-box;flex:none;width:28px;height:28px;min-width:28px;min-height:0;margin:0;padding:0;border-radius:50%;border:2px solid var(--hunter);background:var(--surface);color:var(--ivory);font-weight:700;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.lms-check[aria-pressed=true]{background:var(--hunter)}
+.lms-check:disabled{opacity:.45;cursor:not-allowed}
+.lms-check:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.lms-check-test{border-style:dashed;border-color:var(--gold);cursor:default}
+.lms-details summary{cursor:pointer;color:var(--hunter);font-weight:600;padding:.3rem 0}
+.lms-res{list-style:none;margin:.4rem 0;padding:0;display:grid;gap:.4rem}
+.lms-res li{display:flex;flex-wrap:wrap;gap:.2rem .6rem;align-items:baseline}
+@media (max-width:900px){
+  .lms-dash-grid{grid-template-columns:1fr}
+  .lms-two{grid-template-columns:1fr}
+  .lms-shell{grid-template-columns:1fr}
+  .lms-menu{position:static;flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--line);padding:.6rem 16px;min-height:0}
+  .lms-menu .lms-back{width:100%;margin:0}
+}
+@media (prefers-reduced-motion:reduce){.lms-card{transition:none}}

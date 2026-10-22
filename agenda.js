@@ -229,6 +229,9 @@ async function load() {
       }
     }
 
+    const q = new URLSearchParams(location.search);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(q.get("date") || "")) $("date").value = q.get("date");
+    if (me.role === "parent" && q.get("student")) $("student").value = q.get("student");
     $("date").onchange = load;
     $("student").onchange = load;
     $("today").onclick = () => {

@@ -107,7 +107,7 @@ async function studentForGrade(db, grade) { return db.prepare("SELECT * FROM fam
 const publicFile = (f) => ({ id: f.id, title: f.title, name: f.name, mime: f.mime, size: f.size, kind: f.kind, audience: f.audience, subject: f.subject, note: f.note, assignment_id: f.assignment_id, owner_id: f.owner_id, created_at: f.created_at, url: '/api/family/files/' + f.id });
 
 // May this user open this file?
-async function canRead(db, user, f) {
+export async function canRead(db, user, f) {
   if (user.role === 'parent') return true;
   if (f.kind === 'submission') return f.owner_id === user.id;
   if (f.kind === 'document' && (f.audience === 'both' || f.audience === String(user.grade))) return true;
@@ -183,6 +183,11 @@ async function upload(request, env, user, url) {
 async function download(request, env, user, id) {
   const f = await env.DB.prepare('SELECT * FROM family_files WHERE id=?').bind(id).first();
   if (!f || !(await canRead(env.DB, user, f))) return json({ error: 'File not found' }, 404);
+  return fileResponse(request, env, f);
+}
+
+// Stream a stored file with safe headers. Callers check permission first.
+export async function fileResponse(request, env, f) {
   const body = await readFileBody(env, f);
   if (!body) return json({ error: 'File data missing' }, 404);
   const inline = INLINE.has(f.mime) && new URL(request.url).searchParams.get('download') !== '1';

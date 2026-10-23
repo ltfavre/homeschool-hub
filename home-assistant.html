@@ -1,1 +1,58 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Connect Home Assistant · VenvLearning</title><link rel="stylesheet" href="/daily-print.css"></head><body><header class="screen-tools"><a href="/planner">Teacher Planner</a></header><main><section class="grade-packet"><h1>Connect Home Assistant</h1><p>A school connection lets Home Assistant read student agendas and mark subjects complete. Checkmarks stay synced with VenvLearning. It cannot manage family accounts, passwords, or teacher answer keys.</p><button id="create" disabled>Create school connection key</button><p id="status" role="status">Checking connection…</p><section id="newKey" hidden><h2>Your connection key</h2><p>Copy this key into the VenvLearning integration in Home Assistant. It is shown only now. Keep it private.</p><pre id="token" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></section><h2>Active connections</h2><div id="connections"></div></section></main><script src="/home-assistant.js" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Home Assistant · VenvLearning</title>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/family.css?v=ui-20261020">
+<link rel="stylesheet" href="/brand.css?v=brand-5">
+<link rel="stylesheet" href="/lms.css?v=lms-7">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <p class="eyebrow">FAMILY HOMESCHOOL</p>
+    <h1>Home Assistant</h1>
+  </div>
+  <nav></nav>
+</header>
+<main class="lms-dash">
+  <section class="hero lib-hero">
+    <div>
+      <p class="eyebrow">THE KIDS' SCHOOL SCREEN</p>
+      <h2>The kids work from the family dashboard. You teach from here.</h2>
+      <p class="muted">Home Assistant shows each child's lessons for the day, the assignments you create here, what to read now, and documents you share with their grade. When they check something off on the tablet, it's marked done or turned in here.</p>
+    </div>
+  </section>
+  <div class="lms-two">
+    <section class="card" style="padding:1rem 1.25rem">
+      <h3>What the kids see</h3>
+      <ul>
+        <li><strong>Today's lessons</strong>: one checkbox per subject. Checking it marks the lesson done in the gradebook's daily-work list.</li>
+        <li><strong>Assignments</strong>: everything you publish on the Assignments page. Checking one off turns it in (it shows as “Turned in” for you to grade). Graded work shows the score and your feedback and can't be unchecked.</li>
+        <li><strong>Reading now</strong>: this module's book with a read-online link and discussion prompts.</li>
+        <li><strong>From your teacher</strong>: Library documents shared with their grade, and files attached to open assignments.</li>
+      </ul>
+      <p class="muted lms-small">File links on the tablet are signed and expire after one to two weeks; they refresh on their own. Private documents and other students' work are never shown.</p>
+    </section>
+    <section class="card" style="padding:1rem 1.25rem">
+      <h3>School connection key</h3>
+      <p class="muted">Home Assistant uses this key instead of a password. It can read school agendas, check off lessons and assignments, and open shared files. It can't enter grades, change accounts or passwords, or open answer keys.</p>
+      <button id="create" disabled>Create a new connection key</button>
+      <p id="status" role="status" class="lms-small">Checking connection…</p>
+      <section id="newKey" hidden>
+        <h4>Your new key</h4>
+        <p class="lms-small">Paste it into the VenvLearning integration in Home Assistant. It's shown only once; keep it private.</p>
+        <pre id="token" style="white-space:pre-wrap;overflow-wrap:anywhere;background:var(--ivory);padding:.6rem;border-radius:var(--radius);font-family:var(--font-mono)"></pre>
+      </section>
+      <h4>Active connections</h4>
+      <div id="connections"></div>
+    </section>
+  </div>
+</main>
+<script src="/home-assistant.js?v=ha-2" defer></script>
+<script src="/account-nav.js?v=lms-6" defer></script>
+<script src="/ux.js?v=ux-1" defer></script>
+</body>
+</html>

@@ -1,0 +1,3640 @@
+{
+ "resources": {
+  "ckva4-sab": {
+   "title": "Core Knowledge Visual Arts Grade 4 - Student Activity Book",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2025/11/CKVA_G4_SAB_W1.pdf",
+   "provider": "Core Knowledge Foundation",
+   "kind": "Printable workbook",
+   "access": "Free printable PDF (CC BY-NC-SA)",
+   "note": "Print the pages listed for each lesson; the color art prints are at the back.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Teacher Guide and Student Activity Book read page by page 2026-10-23"
+  },
+  "ckva4-org": {
+   "title": "Core Knowledge Visual Arts Grade 4 - Online Resources (virtual tours and extra art)",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2025/11/CKVA_G4_ORG_W2.pdf",
+   "provider": "Core Knowledge Foundation",
+   "kind": "Lesson / reading collection",
+   "access": "Free",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Teacher Guide and Student Activity Book read page by page 2026-10-23"
+  },
+  "ckva4-tg": {
+   "title": "Core Knowledge Visual Arts Grade 4 - Teacher Guide",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2025/11/CKVA_G4_TG_W2.pdf",
+   "provider": "Core Knowledge Foundation",
+   "kind": "Teacher guide",
+   "access": "Free printable PDF (CC BY-NC-SA)",
+   "note": "35 class days of 45 minutes; scripted discussion questions and answer key.",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Teacher Guide and Student Activity Book read page by page 2026-10-23"
+  },
+  "ckva4-slides": {
+   "title": "Core Knowledge Visual Arts Grade 4 - Slide Deck (artwork images)",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2025/11/CKVA_G4_SlideDeck_W1.pptx",
+   "provider": "Core Knowledge Foundation",
+   "kind": "Slide deck",
+   "access": "Free PowerPoint",
+   "note": "Show the artwork slide named in each lesson on a screen.",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Teacher Guide and Student Activity Book read page by page 2026-10-23"
+  },
+  "ckva7-sab": {
+   "title": "Core Knowledge Visual Arts Grade 7 - Student Activity Book",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2026/02/CKVA_G7_SAB_W1.pdf",
+   "provider": "Core Knowledge Foundation",
+   "kind": "Printable workbook",
+   "access": "Free printable PDF (CC BY-NC-SA)",
+   "note": "Print the pages listed for each lesson; the color art prints are at the back.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Teacher Guide and Student Activity Book read page by page 2026-10-23"
+  },
+  "ckva7-org": {
+   "title": "Core Knowledge Visual Arts Grade 7 - Online Resources (virtual tours and extra art)",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2026/02/CKVA_G7_ORG_W1.pdf",
+   "provider": "Core Knowledge Foundation",
+   "kind": "Lesson / reading collection",
+   "access": "Free",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Teacher Guide and Student Activity Book read page by page 2026-10-23"
+  },
+  "ckva7-tg": {
+   "title": "Core Knowledge Visual Arts Grade 7 - Teacher Guide",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2026/02/CKVA_G7_TG_W1.pdf",
+   "provider": "Core Knowledge Foundation",
+   "kind": "Teacher guide",
+   "access": "Free printable PDF (CC BY-NC-SA)",
+   "note": "35 class days of 45 minutes; scripted discussion questions and answer key.",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Teacher Guide and Student Activity Book read page by page 2026-10-23"
+  },
+  "ckva7-slides": {
+   "title": "Core Knowledge Visual Arts Grade 7 - Slide Deck (artwork images)",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2026/02/CKVA_G7_SlideDeck_W1.pptx",
+   "provider": "Core Knowledge Foundation",
+   "kind": "Slide deck",
+   "access": "Free PowerPoint",
+   "note": "Show the artwork slide named in each lesson on a screen.",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Teacher Guide and Student Activity Book read page by page 2026-10-23"
+  }
+ },
+ "weeks": {
+  "4-1-2": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 1: Introduction to Art of the Middle Ages in Europe - Student Activity Book",
+      "pdf": [
+       9,
+       10
+      ],
+      "printed": [
+       3,
+       4
+      ],
+      "session": 1,
+      "note": "Explore and summarize the defining features of art in the European Middle Ages."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 1: Introduction to Art of the Middle Ages in Europe (Middle Ages in Europe)",
+      "pdf": [
+       17,
+       19
+      ],
+      "printed": [
+       9,
+       11
+      ],
+      "session": 1,
+      "note": "Objective: Summarize defining features and themes of art of the European Middle Ages."
+     }
+    ],
+    "ckva": {
+     "day": 1,
+     "unit": "Middle Ages in Europe",
+     "lesson": "Introduction to Art of the Middle Ages in Europe",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-1-3": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 2: The Madonna and Child in Medieval Art - Student Activity Book",
+      "pdf": [
+       11,
+       11
+      ],
+      "printed": [
+       5,
+       5
+      ],
+      "session": 1,
+      "note": "Learn about the Madonna as a main subject in medieval artwork. Artwork: Madonna and Child on a Curved Throne."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 2: The Madonna and Child in Medieval Art (Middle Ages in Europe)",
+      "pdf": [
+       20,
+       22
+      ],
+      "printed": [
+       12,
+       14
+      ],
+      "session": 1,
+      "note": "Objective: Analyze the style and symbolism of the Madonna in medieval artwork."
+     }
+    ],
+    "ckva": {
+     "day": 2,
+     "unit": "Middle Ages in Europe",
+     "lesson": "The Madonna and Child in Medieval Art",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-1-4": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 3: Illuminated Manuscripts - Student Activity Book",
+      "pdf": [
+       12,
+       12
+      ],
+      "printed": [
+       6,
+       6
+      ],
+      "session": 1,
+      "note": "Create an original two-page illuminated manuscript based on your initials. Artwork: Chi Rho Page from the Book of Kells. Supplies: markers or colored pencils (including gold), white paper (2 sheets), eraser, black ink pen (optional)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 3: Illuminated Manuscripts (Middle Ages in Europe)",
+      "pdf": [
+       23,
+       25
+      ],
+      "printed": [
+       15,
+       17
+      ],
+      "session": 1,
+      "note": "Objective: Describe the features and purposes of illuminated manuscripts."
+     }
+    ],
+    "ckva": {
+     "day": 3,
+     "unit": "Middle Ages in Europe",
+     "lesson": "Illuminated Manuscripts",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-2-1": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 4: Tapestries - Student Activity Book",
+      "pdf": [
+       13,
+       13
+      ],
+      "printed": [
+       7,
+       7
+      ],
+      "session": 1,
+      "note": "Learn how medieval tapestries were designed and used, then build a cardboard loom. Artwork: The Unicorn in Captivity (Tapestry). Supplies: drawing paper, cardboard 8 x 12 in, ruler, scissors, tape, yarn (about 10 ft)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 4: Tapestries (Middle Ages in Europe)",
+      "pdf": [
+       26,
+       28
+      ],
+      "printed": [
+       18,
+       20
+      ],
+      "session": 1,
+      "note": "Objective: Identify the artistic, decorative and practical purposes of medieval tapestries."
+     }
+    ],
+    "ckva": {
+     "day": 4,
+     "unit": "Middle Ages in Europe",
+     "lesson": "Tapestries",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-2-2": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 5: Creating Art of the Middle Ages - Student Activity Book",
+      "pdf": [
+       14,
+       14
+      ],
+      "printed": [
+       8,
+       8
+      ],
+      "session": 1,
+      "note": "Review medieval art and create artwork that represents the Middle Ages. Supplies: sketch paper, drawing paper, pencil and eraser, markers, colored pencils or watercolors."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 5: Creating Art of the Middle Ages (Middle Ages in Europe)",
+      "pdf": [
+       30,
+       32
+      ],
+      "printed": [
+       22,
+       24
+      ],
+      "session": 1,
+      "note": "Objective: Represent the characteristics of medieval art in an original artwork."
+     }
+    ],
+    "ckva": {
+     "day": 5,
+     "unit": "Middle Ages in Europe",
+     "lesson": "Creating Art of the Middle Ages",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-2-3": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 6: Gothic Architecture (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       15,
+       15
+      ],
+      "printed": [
+       9,
+       9
+      ],
+      "session": 1,
+      "note": "Learn the elements of Gothic architecture. Artwork: Notre Dame Cathedral. Supplies: writing paper, pencil."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 6: Gothic Architecture (day 1 of 2) (Middle Ages in Europe)",
+      "pdf": [
+       32,
+       34
+      ],
+      "printed": [
+       24,
+       26
+      ],
+      "session": 1,
+      "note": "Objective: Describe the features of Gothic architecture and explain their purpose."
+     }
+    ],
+    "ckva": {
+     "day": 6,
+     "unit": "Middle Ages in Europe",
+     "lesson": "Gothic Architecture",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "4-2-4": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 7: Gothic Architecture (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       16,
+       16
+      ],
+      "printed": [
+       10,
+       10
+      ],
+      "session": 1,
+      "note": "Learn about gargoyles and sculpt your own gargoyle from clay. Supplies: air-dry clay, sculpting tools (plastic knife, toothpicks), small bowl of water, washable work surface."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 7: Gothic Architecture (day 2 of 2) (Middle Ages in Europe)",
+      "pdf": [
+       32,
+       34
+      ],
+      "printed": [
+       24,
+       26
+      ],
+      "session": 1,
+      "note": "Objective: Describe the features of Gothic architecture and explain their purpose."
+     }
+    ],
+    "ckva": {
+     "day": 7,
+     "unit": "Middle Ages in Europe",
+     "lesson": "Gothic Architecture",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "4-3-1": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 8: Unit 1 Assessment - Student Activity Book",
+      "pdf": [
+       17,
+       17
+      ],
+      "printed": [
+       11,
+       11
+      ],
+      "session": 1,
+      "note": "Make a rose window to show what you learned in Unit 1. Supplies: black construction paper, white chalk, scissors, colored tissue paper or cellophane, glue stick."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 8: Unit 1 Assessment (Middle Ages in Europe)",
+      "pdf": [
+       37,
+       39
+      ],
+      "printed": [
+       29,
+       31
+      ],
+      "session": 1,
+      "note": "Objective: Show understanding of medieval art through a performance task."
+     }
+    ],
+    "ckva": {
+     "day": 8,
+     "unit": "Middle Ages in Europe",
+     "lesson": "Unit 1 Assessment",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-3-2": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 9: Characteristics of Islamic Art - Student Activity Book",
+      "pdf": [
+       18,
+       18
+      ],
+      "printed": [
+       12,
+       12
+      ],
+      "session": 1,
+      "note": "Match pictures to the element of Islamic art they show."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 9: Characteristics of Islamic Art (Islamic Art and Architecture)",
+      "pdf": [
+       46,
+       48
+      ],
+      "printed": [
+       38,
+       40
+      ],
+      "session": 1,
+      "note": "Objective: Recognize elements of religious and secular Islamic art."
+     }
+    ],
+    "ckva": {
+     "day": 9,
+     "unit": "Islamic Art and Architecture",
+     "lesson": "Characteristics of Islamic Art",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-3-3": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 10: Patterns and Illumination (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       19,
+       19
+      ],
+      "printed": [
+       13,
+       13
+      ],
+      "session": 1,
+      "note": "Create artwork from repeating geometric patterns. Artwork: Illumination of the Qur'an. Supplies: graph paper, ruler, pencil and eraser, colored pencils or markers."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 10: Patterns and Illumination (day 1 of 2) (Islamic Art and Architecture)",
+      "pdf": [
+       48,
+       50
+      ],
+      "printed": [
+       40,
+       42
+      ],
+      "session": 1,
+      "note": "Objective: Analyze how and why geometric patterns were used in Islamic art."
+     }
+    ],
+    "ckva": {
+     "day": 10,
+     "unit": "Islamic Art and Architecture",
+     "lesson": "Patterns and Illumination",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "4-3-4": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 11: Patterns and Illumination (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       19,
+       19
+      ],
+      "printed": [
+       13,
+       13
+      ],
+      "session": 1,
+      "note": "Complete your repeating geometric pattern artwork. Supplies: graph paper, ruler, colored pencils or markers."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 11: Patterns and Illumination (day 2 of 2) (Islamic Art and Architecture)",
+      "pdf": [
+       48,
+       50
+      ],
+      "printed": [
+       40,
+       42
+      ],
+      "session": 1,
+      "note": "Objective: Analyze how and why geometric patterns were used in Islamic art."
+     }
+    ],
+    "ckva": {
+     "day": 11,
+     "unit": "Islamic Art and Architecture",
+     "lesson": "Patterns and Illumination",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "4-4-1": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 12: Intersection of Art and Architecture (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       20,
+       20
+      ],
+      "printed": [
+       14,
+       14
+      ],
+      "session": 1,
+      "note": "Identify elements of Islamic architecture. Artwork: Court of the Lions, Dome of the Rock."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 12: Intersection of Art and Architecture (day 1 of 2) (Islamic Art and Architecture)",
+      "pdf": [
+       52,
+       54
+      ],
+      "printed": [
+       44,
+       46
+      ],
+      "session": 1,
+      "note": "Objective: Identify the structural and decorative features of Islamic architecture."
+     }
+    ],
+    "ckva": {
+     "day": 12,
+     "unit": "Islamic Art and Architecture",
+     "lesson": "Intersection of Art and Architecture",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "4-4-2": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 13: Intersection of Art and Architecture (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       21,
+       21
+      ],
+      "printed": [
+       15,
+       15
+      ],
+      "session": 1,
+      "note": "Design architectural plans for an Islamic building or monument. Artwork: Taj Mahal. Supplies: sketch paper (2 sheets), pencil and eraser, ruler."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 13: Intersection of Art and Architecture (day 2 of 2) (Islamic Art and Architecture)",
+      "pdf": [
+       52,
+       54
+      ],
+      "printed": [
+       44,
+       46
+      ],
+      "session": 1,
+      "note": "Objective: Identify the structural and decorative features of Islamic architecture."
+     }
+    ],
+    "ckva": {
+     "day": 13,
+     "unit": "Islamic Art and Architecture",
+     "lesson": "Intersection of Art and Architecture",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "4-4-3": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 14: Unit 2 Assessment - Student Activity Book",
+      "pdf": [
+       22,
+       22
+      ],
+      "printed": [
+       16,
+       16
+      ],
+      "session": 1,
+      "note": "Answer questions about the Taj Mahal to review Unit 2. Artwork: Taj Mahal. Supplies: pencil."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 14: Unit 2 Assessment (Islamic Art and Architecture)",
+      "pdf": [
+       58,
+       60
+      ],
+      "printed": [
+       50,
+       52
+      ],
+      "session": 1,
+      "note": "Objective: Show understanding of Islamic art and architecture."
+     }
+    ],
+    "ckva": {
+     "day": 14,
+     "unit": "Islamic Art and Architecture",
+     "lesson": "Unit 2 Assessment",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-4-4": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 15: Introduction to Art of Africa - Student Activity Book",
+      "pdf": [
+       23,
+       23
+      ],
+      "printed": [
+       17,
+       17
+      ],
+      "session": 1,
+      "note": "Learn that African art has practical and traditional purposes."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 15: Introduction to Art of Africa (The Art of Africa)",
+      "pdf": [
+       64,
+       66
+      ],
+      "printed": [
+       56,
+       58
+      ],
+      "session": 1,
+      "note": "Objective: Compare the purposes and functions of African art with art of other cultures."
+     }
+    ],
+    "ckva": {
+     "day": 15,
+     "unit": "The Art of Africa",
+     "lesson": "Introduction to Art of Africa",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-5-1": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 16: Portraying Leaders (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       24,
+       24
+      ],
+      "printed": [
+       18,
+       18
+      ],
+      "session": 1,
+      "note": "Examine sculpted portrait heads that represent African leaders. Artwork: Benin Bronze Head, Portrait Head of an Ife King."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 16: Portraying Leaders (day 1 of 2) (The Art of Africa)",
+      "pdf": [
+       66,
+       68
+      ],
+      "printed": [
+       58,
+       60
+      ],
+      "session": 1,
+      "note": "Objective: Analyze how leaders are portrayed in traditional African art."
+     }
+    ],
+    "ckva": {
+     "day": 16,
+     "unit": "The Art of Africa",
+     "lesson": "Portraying Leaders",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "4-5-2": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 17: Portraying Leaders (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       25,
+       25
+      ],
+      "printed": [
+       19,
+       19
+      ],
+      "session": 1,
+      "note": "Create a royal self-portrait that communicates a personal message. Supplies: drawing paper, pencil and eraser, markers, colored pencils or watercolors."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 17: Portraying Leaders (day 2 of 2) (The Art of Africa)",
+      "pdf": [
+       66,
+       68
+      ],
+      "printed": [
+       58,
+       60
+      ],
+      "session": 1,
+      "note": "Objective: Analyze how leaders are portrayed in traditional African art."
+     }
+    ],
+    "ckva": {
+     "day": 17,
+     "unit": "The Art of Africa",
+     "lesson": "Portraying Leaders",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "4-5-3": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-org",
+      "section": "CKVA Day 18: Masks: Carvings and Sculptures (day 1 of 2) - view the artwork online",
+      "session": 1,
+      "note": "Learn about African carvings, masks and headdresses. Artwork: Face Mask, Bamana Antelope Headdress of Mali."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 18: Masks: Carvings and Sculptures (day 1 of 2) (The Art of Africa)",
+      "pdf": [
+       71,
+       73
+      ],
+      "printed": [
+       63,
+       65
+      ],
+      "session": 1,
+      "note": "Objective: Analyze the form and function of traditional African masks and headdresses."
+     }
+    ],
+    "ckva": {
+     "day": 18,
+     "unit": "The Art of Africa",
+     "lesson": "Masks: Carvings and Sculptures",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "4-5-4": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 19: Masks: Carvings and Sculptures (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       26,
+       26
+      ],
+      "printed": [
+       20,
+       20
+      ],
+      "session": 1,
+      "note": "Create an animal mask inspired by traditional African art. Supplies: construction paper, glue, clear tape, scissors, craft stick, natural decorations (feathers, leaves, seeds)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 19: Masks: Carvings and Sculptures (day 2 of 2) (The Art of Africa)",
+      "pdf": [
+       71,
+       73
+      ],
+      "printed": [
+       63,
+       65
+      ],
+      "session": 1,
+      "note": "Objective: Analyze the form and function of traditional African masks and headdresses."
+     }
+    ],
+    "ckva": {
+     "day": 19,
+     "unit": "The Art of Africa",
+     "lesson": "Masks: Carvings and Sculptures",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "4-6-1": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 20: Contemporary and Ancient Connections - Student Activity Book",
+      "pdf": [
+       27,
+       27
+      ],
+      "printed": [
+       21,
+       21
+      ],
+      "session": 1,
+      "note": "Create a collage inspired by contemporary African collage artists. Supplies: heavy drawing paper, magazines, scissors, glue, paints or markers (optional)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 20: Contemporary and Ancient Connections (The Art of Africa)",
+      "pdf": [
+       76,
+       78
+      ],
+      "printed": [
+       68,
+       70
+      ],
+      "session": 1,
+      "note": "Objective: Compare contemporary African art with traditional African art."
+     }
+    ],
+    "ckva": {
+     "day": 20,
+     "unit": "The Art of Africa",
+     "lesson": "Contemporary and Ancient Connections",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-6-2": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 21: Unit 3 Assessment - Student Activity Book",
+      "pdf": [
+       28,
+       28
+      ],
+      "printed": [
+       22,
+       22
+      ],
+      "session": 1,
+      "note": "Create a painting that shows characteristics of African art. Supplies: canvas panel or heavy paper, acrylic paints, brushes and palette, cup of water, paper towels."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 21: Unit 3 Assessment (The Art of Africa)",
+      "pdf": [
+       79,
+       81
+      ],
+      "printed": [
+       71,
+       73
+      ],
+      "session": 1,
+      "note": "Objective: Show understanding of the art of Africa."
+     }
+    ],
+    "ckva": {
+     "day": 21,
+     "unit": "The Art of Africa",
+     "lesson": "Unit 3 Assessment",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-6-3": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 22: Introduction to Art of China - Student Activity Book",
+      "pdf": [
+       29,
+       29
+      ],
+      "printed": [
+       23,
+       23
+      ],
+      "session": 1,
+      "note": "Read and answer questions about the Chinese invention of silk and paper."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 22: Introduction to Art of China (The Art of China)",
+      "pdf": [
+       85,
+       87
+      ],
+      "printed": [
+       77,
+       79
+      ],
+      "session": 1,
+      "note": "Objective: Identify Chinese artistic inventions and the art forms Chinese artists excelled in."
+     }
+    ],
+    "ckva": {
+     "day": 22,
+     "unit": "The Art of China",
+     "lesson": "Introduction to Art of China",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-6-4": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 23: Calligraphy - Student Activity Book",
+      "pdf": [
+       30,
+       30
+      ],
+      "printed": [
+       24,
+       24
+      ],
+      "session": 1,
+      "note": "Practice writing Chinese calligraphy. Artwork: Calligraphy. Supplies: heavy drawing or watercolor paper, black calligraphy pen, marker, or pointed brush with black paint."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 23: Calligraphy (The Art of China)",
+      "pdf": [
+       87,
+       89
+      ],
+      "printed": [
+       79,
+       81
+      ],
+      "session": 1,
+      "note": "Objective: Identify the purpose and techniques of traditional Chinese calligraphy."
+     }
+    ],
+    "ckva": {
+     "day": 23,
+     "unit": "The Art of China",
+     "lesson": "Calligraphy",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-7-1": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 24: Landscapes (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       31,
+       31
+      ],
+      "printed": [
+       25,
+       25
+      ],
+      "session": 1,
+      "note": "Reflect on the artistic qualities of a silk scroll painting. Artwork: Lonely Retreat Overlooking a Misty Valley (Silk Scroll)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 24: Landscapes (day 1 of 2) (The Art of China)",
+      "pdf": [
+       91,
+       93
+      ],
+      "printed": [
+       83,
+       85
+      ],
+      "session": 1,
+      "note": "Objective: Describe how traditional Chinese artists painted landscapes on scrolls."
+     }
+    ],
+    "ckva": {
+     "day": 24,
+     "unit": "The Art of China",
+     "lesson": "Landscapes",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "4-7-2": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 25: Landscapes (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       32,
+       32
+      ],
+      "printed": [
+       26,
+       26
+      ],
+      "session": 1,
+      "note": "Paint a landscape inspired by traditional Chinese art. Supplies: watercolor paper, watercolor paints, brushes, cup of water, paper towels."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 25: Landscapes (day 2 of 2) (The Art of China)",
+      "pdf": [
+       91,
+       93
+      ],
+      "printed": [
+       83,
+       85
+      ],
+      "session": 1,
+      "note": "Objective: Describe how traditional Chinese artists painted landscapes on scrolls."
+     }
+    ],
+    "ckva": {
+     "day": 25,
+     "unit": "The Art of China",
+     "lesson": "Landscapes",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "4-7-3": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 26: Pottery - Student Activity Book",
+      "pdf": [
+       33,
+       33
+      ],
+      "printed": [
+       27,
+       27
+      ],
+      "session": 1,
+      "note": "Sculpt a vase or bowl from clay. Artwork: Ming Dynasty Vase. Supplies: air-dry porcelain clay (3-5 lb), sculpting tools, rolling pin, cup of water, washable work surface."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 26: Pottery (The Art of China)",
+      "pdf": [
+       96,
+       98
+      ],
+      "printed": [
+       88,
+       90
+      ],
+      "session": 1,
+      "note": "Objective: Identify the key features of traditional Chinese porcelain."
+     }
+    ],
+    "ckva": {
+     "day": 26,
+     "unit": "The Art of China",
+     "lesson": "Pottery",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-7-4": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 27: Unit 4 Assessment - Student Activity Book",
+      "pdf": [
+       34,
+       34
+      ],
+      "printed": [
+       28,
+       28
+      ],
+      "session": 1,
+      "note": "Paint your clay pottery with traditional Chinese imagery. Supplies: your clay pot from last lesson, blue ceramic or acrylic paint, paintbrush, cup of water, paper towels."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 27: Unit 4 Assessment (The Art of China)",
+      "pdf": [
+       99,
+       101
+      ],
+      "printed": [
+       91,
+       93
+      ],
+      "session": 1,
+      "note": "Objective: Show understanding of the art of China."
+     }
+    ],
+    "ckva": {
+     "day": 27,
+     "unit": "The Art of China",
+     "lesson": "Unit 4 Assessment",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-8-1": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 28: Introduction to Art and Architecture of a New Nation - Student Activity Book",
+      "pdf": [
+       35,
+       35
+      ],
+      "printed": [
+       29,
+       29
+      ],
+      "session": 1,
+      "note": "Read and answer questions about early American portraits. Artwork: Paul Revere (John Singleton Copley)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 28: Introduction to Art and Architecture of a New Nation (Early United States)",
+      "pdf": [
+       106,
+       108
+      ],
+      "printed": [
+       98,
+       100
+      ],
+      "session": 1,
+      "note": "Objective: Analyze the purpose of portraiture in colonial America."
+     }
+    ],
+    "ckva": {
+     "day": 28,
+     "unit": "Early United States",
+     "lesson": "Introduction to Art and Architecture of a New Nation",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-8-2": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 29: History Through an Artist's Lens - Student Activity Book",
+      "pdf": [
+       36,
+       36
+      ],
+      "printed": [
+       30,
+       30
+      ],
+      "session": 1,
+      "note": "Analyze the painting Washington Crossing the Delaware. Artwork: Washington Crossing the Delaware (Emanuel Leutze). Supplies: colored pencils."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 29: History Through an Artist's Lens (Early United States)",
+      "pdf": [
+       109,
+       111
+      ],
+      "printed": [
+       101,
+       103
+      ],
+      "session": 1,
+      "note": "Objective: Analyze the purpose of history painting after the American Revolution."
+     }
+    ],
+    "ckva": {
+     "day": 29,
+     "unit": "Early United States",
+     "lesson": "History Through an Artist's Lens",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-8-3": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-org",
+      "section": "CKVA Day 30: Portrait of a Leader (day 1 of 2) - view the artwork online",
+      "session": 1,
+      "note": "Analyze portraits of national heroes. Artwork: George Washington (Gilbert Stuart), Profile Bust of Benjamin Franklin (Patience Wright)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 30: Portrait of a Leader (day 1 of 2) (Early United States)",
+      "pdf": [
+       113,
+       115
+      ],
+      "printed": [
+       105,
+       107
+      ],
+      "session": 1,
+      "note": "Objective: Analyze portraits of national heroes from the colonial and revolutionary periods."
+     }
+    ],
+    "ckva": {
+     "day": 30,
+     "unit": "Early United States",
+     "lesson": "Portrait of a Leader",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "4-8-4": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 31: Portrait of a Leader (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       37,
+       37
+      ],
+      "printed": [
+       31,
+       31
+      ],
+      "session": 1,
+      "note": "Draw a portrait of an inspiring early American leader. Supplies: drawing paper, pencil and eraser, colored pencils."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 31: Portrait of a Leader (day 2 of 2) (Early United States)",
+      "pdf": [
+       113,
+       115
+      ],
+      "printed": [
+       105,
+       107
+      ],
+      "session": 1,
+      "note": "Objective: Analyze portraits of national heroes from the colonial and revolutionary periods."
+     }
+    ],
+    "ckva": {
+     "day": 31,
+     "unit": "Early United States",
+     "lesson": "Portrait of a Leader",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "4-9-1": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 32: Architecture to Represent Us - Student Activity Book",
+      "pdf": [
+       38,
+       38
+      ],
+      "printed": [
+       32,
+       32
+      ],
+      "session": 1,
+      "note": "Design your own neoclassical building after learning about Monticello. Artwork: Monticello (Thomas Jefferson). Supplies: sketch paper, drawing paper, pencil and eraser, colored pencils."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 32: Architecture to Represent Us (Early United States)",
+      "pdf": [
+       117,
+       119
+      ],
+      "printed": [
+       109,
+       111
+      ],
+      "session": 1,
+      "note": "Objective: Recognize the features of American neoclassical architecture."
+     }
+    ],
+    "ckva": {
+     "day": 32,
+     "unit": "Early United States",
+     "lesson": "Architecture to Represent Us",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-9-2": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 33: Unit 5 Assessment - Student Activity Book",
+      "pdf": [
+       39,
+       39
+      ],
+      "printed": [
+       33,
+       33
+      ],
+      "session": 1,
+      "note": "Reflect on architectural designs and review Unit 5. Supplies: pencil."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 33: Unit 5 Assessment (Early United States)",
+      "pdf": [
+       120,
+       122
+      ],
+      "printed": [
+       112,
+       114
+      ],
+      "session": 1,
+      "note": "Objective: Show understanding of early American art and architecture."
+     }
+    ],
+    "ckva": {
+     "day": 33,
+     "unit": "Early United States",
+     "lesson": "Unit 5 Assessment",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "4-9-3": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-sab",
+      "section": "CKVA Day 34: Culminating Activity: A Year in Review (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       40,
+       40
+      ],
+      "printed": [
+       34,
+       34
+      ],
+      "session": 1,
+      "note": "Make a year-in-review booklet about the art you studied. Artwork: Madonna and Child on a Curved Throne, Illumination of the Qur'an, Portrait Head of an Ife King, Washington Crossing the Delaware. Supplies: blank booklet (folded paper), markers or colored pencils, pencil and eraser."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 34: Culminating Activity: A Year in Review (day 1 of 2) (Year in Review)",
+      "pdf": [
+       123,
+       125
+      ],
+      "printed": [
+       115,
+       117
+      ],
+      "session": 1,
+      "note": "Objective: Summarize the features and purposes of the art studied this year."
+     }
+    ],
+    "ckva": {
+     "day": 34,
+     "unit": "Year in Review",
+     "lesson": "Culminating Activity: A Year in Review",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "4-9-4": {
+   "art": {
+    "resources": [
+     "ckva4-sab",
+     "ckva4-org"
+    ],
+    "teacher_resources": [
+     "ckva4-tg",
+     "ckva4-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva4-org",
+      "section": "CKVA Day 35: Culminating Activity: Gallery Show (day 2 of 2) - view the artwork online",
+      "session": 1,
+      "note": "Set up a gallery of your artwork from the year and present it to the family. Supplies: your artwork from the year."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva4-tg",
+      "section": "CKVA Day 35: Culminating Activity: Gallery Show (day 2 of 2) (Year in Review)",
+      "pdf": [
+       123,
+       125
+      ],
+      "printed": [
+       115,
+       117
+      ],
+      "session": 1,
+      "note": "Objective: Present and explain your own artwork to an audience."
+     }
+    ],
+    "ckva": {
+     "day": 35,
+     "unit": "Year in Review",
+     "lesson": "Culminating Activity: Gallery Show",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "7-1-2": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 1: What Is Expressionism? - Student Activity Book",
+      "pdf": [
+       8,
+       9
+      ],
+      "printed": [
+       2,
+       3
+      ],
+      "session": 1,
+      "note": "Explore expressionist art and create an expressionist sketch. Artwork: The Scream (Edvard Munch). Supplies: heavy paper, pencil, kneaded and vinyl erasers, oil pastels."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 1: What Is Expressionism? (Expressionism)",
+      "pdf": [
+       16,
+       18
+      ],
+      "printed": [
+       8,
+       10
+      ],
+      "session": 1,
+      "note": "Objective: Learn the characteristics of the expressionist movement."
+     }
+    ],
+    "ckva": {
+     "day": 1,
+     "unit": "Expressionism",
+     "lesson": "What Is Expressionism?",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-1-3": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 2: Fauvism (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       10,
+       11
+      ],
+      "printed": [
+       4,
+       5
+      ],
+      "session": 1,
+      "note": "Explore fauvism and begin a fauvist painting. Artwork: The Dessert: Harmony in Red (Henri Matisse). Supplies: heavy paper, pencil and erasers, tempera or acrylic paints, brush, palette, cup of water."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 2: Fauvism (day 1 of 2) (Expressionism)",
+      "pdf": [
+       20,
+       22
+      ],
+      "printed": [
+       12,
+       14
+      ],
+      "session": 1,
+      "note": "Objective: Learn the characteristics of fauvism."
+     }
+    ],
+    "ckva": {
+     "day": 2,
+     "unit": "Expressionism",
+     "lesson": "Fauvism",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "7-1-4": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 3: Fauvism (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       11,
+       11
+      ],
+      "printed": [
+       5,
+       5
+      ],
+      "session": 1,
+      "note": "Compare impressionist and fauvist art and finish your fauvist painting. Supplies: your painting from Day 1, charcoal pencil, paints, brush, palette, water."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 3: Fauvism (day 2 of 2) (Expressionism)",
+      "pdf": [
+       20,
+       22
+      ],
+      "printed": [
+       12,
+       14
+      ],
+      "session": 1,
+      "note": "Objective: Learn the characteristics of fauvism."
+     }
+    ],
+    "ckva": {
+     "day": 3,
+     "unit": "Expressionism",
+     "lesson": "Fauvism",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "7-2-1": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 4: Unit 1 Assessment - Student Activity Book",
+      "pdf": [
+       12,
+       12
+      ],
+      "printed": [
+       6,
+       6
+      ],
+      "session": 1,
+      "note": "Review Unit 1 and analyze another expressionist work (Indian Church). Artwork: Indian Church (Emily Carr)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 4: Unit 1 Assessment (Expressionism)",
+      "pdf": [
+       25,
+       27
+      ],
+      "printed": [
+       17,
+       19
+      ],
+      "session": 1,
+      "note": "Objective: Show understanding of expressionism and fauvism."
+     }
+    ],
+    "ckva": {
+     "day": 4,
+     "unit": "Expressionism",
+     "lesson": "Unit 1 Assessment",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-2-2": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 5: What Is Cubism? - Student Activity Book",
+      "pdf": [
+       13,
+       13
+      ],
+      "printed": [
+       7,
+       7
+      ],
+      "session": 1,
+      "note": "Learn the features of cubism and examine key works. Artwork: Le verre sur la table (Georges Braque)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 5: What Is Cubism? (Cubism)",
+      "pdf": [
+       31,
+       33
+      ],
+      "printed": [
+       23,
+       25
+      ],
+      "session": 1,
+      "note": "Objective: Learn the features of cubism."
+     }
+    ],
+    "ckva": {
+     "day": 5,
+     "unit": "Cubism",
+     "lesson": "What Is Cubism?",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-2-3": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 6: Depicting a Scene (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       14,
+       14
+      ],
+      "printed": [
+       8,
+       8
+      ],
+      "session": 1,
+      "note": "Study Picasso's Guernica and draw a realistic scene in colored pencil. Artwork: Guernica (Pablo Picasso). Supplies: drawing paper, pencil, colored pencils."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 6: Depicting a Scene (day 1 of 2) (Cubism)",
+      "pdf": [
+       35,
+       37
+      ],
+      "printed": [
+       27,
+       29
+      ],
+      "session": 1,
+      "note": "Objective: Explore Guernica and create a cubist work."
+     }
+    ],
+    "ckva": {
+     "day": 6,
+     "unit": "Cubism",
+     "lesson": "Depicting a Scene",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "7-2-4": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 7: Depicting a Scene (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       15,
+       15
+      ],
+      "printed": [
+       9,
+       9
+      ],
+      "session": 1,
+      "note": "Re-create your realistic scene in a cubist style. Supplies: drawing paper, scrap paper (4 sheets), erasers, scissors, glue."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 7: Depicting a Scene (day 2 of 2) (Cubism)",
+      "pdf": [
+       35,
+       37
+      ],
+      "printed": [
+       27,
+       29
+      ],
+      "session": 1,
+      "note": "Objective: Explore Guernica and create a cubist work."
+     }
+    ],
+    "ckva": {
+     "day": 7,
+     "unit": "Cubism",
+     "lesson": "Depicting a Scene",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "7-3-1": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 8: Unit 2 Assessment - Student Activity Book",
+      "pdf": [
+       16,
+       16
+      ],
+      "printed": [
+       10,
+       10
+      ],
+      "session": 1,
+      "note": "Review Unit 2 and analyze Nude Descending a Staircase (No. 2). Artwork: Le verre sur la table, Guernica."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 8: Unit 2 Assessment (Cubism)",
+      "pdf": [
+       39,
+       41
+      ],
+      "printed": [
+       31,
+       33
+      ],
+      "session": 1,
+      "note": "Objective: Show understanding of cubism."
+     }
+    ],
+    "ckva": {
+     "day": 8,
+     "unit": "Cubism",
+     "lesson": "Unit 2 Assessment",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-3-2": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 9: What Is Surrealism? - Student Activity Book",
+      "pdf": [
+       17,
+       17
+      ],
+      "printed": [
+       11,
+       11
+      ],
+      "session": 1,
+      "note": "Learn the features of surrealism and draw like a surrealist. Artwork: The Persistence of Memory (Salvador Dali). Supplies: drawing paper, pencil and vinyl eraser, colored pencils."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 9: What Is Surrealism? (Surrealism)",
+      "pdf": [
+       45,
+       47
+      ],
+      "printed": [
+       37,
+       39
+      ],
+      "session": 1,
+      "note": "Objective: Learn the features of surrealism."
+     }
+    ],
+    "ckva": {
+     "day": 9,
+     "unit": "Surrealism",
+     "lesson": "What Is Surrealism?",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-3-3": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 10: Portraits - Student Activity Book",
+      "pdf": [
+       18,
+       19
+      ],
+      "printed": [
+       12,
+       13
+      ],
+      "session": 1,
+      "note": "Study surrealist portraits and make your own surrealist portrait. Artwork: Creation of the Birds (Remedios Varo), Self-Portrait (Leonora Carrington). Supplies: heavy paper, pencil and eraser, colored pencils, watercolors (optional)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 10: Portraits (Surrealism)",
+      "pdf": [
+       49,
+       51
+      ],
+      "printed": [
+       41,
+       43
+      ],
+      "session": 1,
+      "note": "Objective: Learn surrealist self-portraiture."
+     }
+    ],
+    "ckva": {
+     "day": 10,
+     "unit": "Surrealism",
+     "lesson": "Portraits",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-3-4": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 11: Max Ernst and Surrealist Techniques (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       20,
+       20
+      ],
+      "printed": [
+       14,
+       14
+      ],
+      "session": 1,
+      "note": "Explore Max Ernst's techniques and start a surrealist collage. Artwork: The Forest (Max Ernst). Supplies: heavy drawing paper, newspapers and magazines, construction paper, scissors."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 11: Max Ernst and Surrealist Techniques (day 1 of 2) (Surrealism)",
+      "pdf": [
+       52,
+       54
+      ],
+      "printed": [
+       44,
+       46
+      ],
+      "session": 1,
+      "note": "Objective: Learn Max Ernst's techniques (collage, frottage, grattage)."
+     }
+    ],
+    "ckva": {
+     "day": 11,
+     "unit": "Surrealism",
+     "lesson": "Max Ernst and Surrealist Techniques",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "7-4-1": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 12: Max Ernst and Surrealist Techniques (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       20,
+       20
+      ],
+      "printed": [
+       14,
+       14
+      ],
+      "session": 1,
+      "note": "Finish your surrealist collage. Supplies: your collage from Day 1, glue."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 12: Max Ernst and Surrealist Techniques (day 2 of 2) (Surrealism)",
+      "pdf": [
+       52,
+       54
+      ],
+      "printed": [
+       44,
+       46
+      ],
+      "session": 1,
+      "note": "Objective: Learn Max Ernst's techniques (collage, frottage, grattage)."
+     }
+    ],
+    "ckva": {
+     "day": 12,
+     "unit": "Surrealism",
+     "lesson": "Max Ernst and Surrealist Techniques",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "7-4-2": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 13: Unit 3 Assessment - Student Activity Book",
+      "pdf": [
+       21,
+       21
+      ],
+      "printed": [
+       15,
+       15
+      ],
+      "session": 1,
+      "note": "Present your collage and explain the surrealist techniques you used."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 13: Unit 3 Assessment (Surrealism)",
+      "pdf": [
+       55,
+       57
+      ],
+      "printed": [
+       47,
+       49
+      ],
+      "session": 1,
+      "note": "Objective: Show understanding of surrealism."
+     }
+    ],
+    "ckva": {
+     "day": 13,
+     "unit": "Surrealism",
+     "lesson": "Unit 3 Assessment",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-4-3": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 14: What Is Abstract Expressionism? - Student Activity Book",
+      "pdf": [
+       22,
+       22
+      ],
+      "printed": [
+       16,
+       16
+      ],
+      "session": 1,
+      "note": "Explore the features of abstract expressionism and analyze a Pollock painting. Artwork: Number 28, 1950 (Jackson Pollock)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 14: What Is Abstract Expressionism? (Abstract Expressionism)",
+      "pdf": [
+       61,
+       63
+      ],
+      "printed": [
+       53,
+       55
+      ],
+      "session": 1,
+      "note": "Objective: Learn the features of abstract expressionism."
+     }
+    ],
+    "ckva": {
+     "day": 14,
+     "unit": "Abstract Expressionism",
+     "lesson": "What Is Abstract Expressionism?",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-4-4": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 15: Drip Painting - Student Activity Book",
+      "pdf": [
+       23,
+       23
+      ],
+      "printed": [
+       17,
+       17
+      ],
+      "session": 1,
+      "note": "Make a drip painting in the style of Jackson Pollock. Supplies: large heavy craft paper (24 in+), acrylic paints, brushes, spoons, squeeze bottles, newspaper or drop cloth (work outside if possible)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 15: Drip Painting (Abstract Expressionism)",
+      "pdf": [
+       65,
+       67
+      ],
+      "printed": [
+       57,
+       59
+      ],
+      "session": 1,
+      "note": "Objective: Learn the technique of drip painting."
+     }
+    ],
+    "ckva": {
+     "day": 15,
+     "unit": "Abstract Expressionism",
+     "lesson": "Drip Painting",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-5-1": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 16: A Study in Texture - Student Activity Book",
+      "pdf": [
+       24,
+       25
+      ],
+      "printed": [
+       18,
+       19
+      ],
+      "session": 1,
+      "note": "Explore texture and create a thickly painted textured work. Artwork: Night Light (Lee Krasner). Supplies: small canvas or heavy paper, acrylic paints, brush, palette knife (optional)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 16: A Study in Texture (Abstract Expressionism)",
+      "pdf": [
+       67,
+       69
+      ],
+      "printed": [
+       59,
+       61
+      ],
+      "session": 1,
+      "note": "Objective: Learn how abstract expressionists used texture."
+     }
+    ],
+    "ckva": {
+     "day": 16,
+     "unit": "Abstract Expressionism",
+     "lesson": "A Study in Texture",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-5-2": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 17: A Study in Color - Student Activity Book",
+      "pdf": [
+       26,
+       27
+      ],
+      "printed": [
+       20,
+       21
+      ],
+      "session": 1,
+      "note": "Explore color fields and create an abstract color painting. Artwork: No. 9 (Mark Rothko), John F. Kennedy (Elaine de Kooning). Supplies: heavy paper, acrylic paints, brushes."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 17: A Study in Color (Abstract Expressionism)",
+      "pdf": [
+       70,
+       72
+      ],
+      "printed": [
+       62,
+       64
+      ],
+      "session": 1,
+      "note": "Objective: Learn how abstract expressionists used color."
+     }
+    ],
+    "ckva": {
+     "day": 17,
+     "unit": "Abstract Expressionism",
+     "lesson": "A Study in Color",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-5-3": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 18: Unit 4 Assessment - Student Activity Book",
+      "pdf": [
+       28,
+       28
+      ],
+      "printed": [
+       22,
+       22
+      ],
+      "session": 1,
+      "note": "Create an abstract work using the techniques from Unit 4. Supplies: heavy paper or small canvas, acrylic paints, brushes."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 18: Unit 4 Assessment (Abstract Expressionism)",
+      "pdf": [
+       73,
+       75
+      ],
+      "printed": [
+       65,
+       67
+      ],
+      "session": 1,
+      "note": "Objective: Show understanding of abstract expressionism."
+     }
+    ],
+    "ckva": {
+     "day": 18,
+     "unit": "Abstract Expressionism",
+     "lesson": "Unit 4 Assessment",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-5-4": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 19: What Is Abstraction? - Student Activity Book",
+      "pdf": [
+       29,
+       29
+      ],
+      "printed": [
+       23,
+       23
+      ],
+      "session": 1,
+      "note": "Explore abstraction through Mondrian and Kandinsky. Artwork: Broadway Boogie Woogie (Piet Mondrian), Points (Wassily Kandinsky)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 19: What Is Abstraction? (Abstraction)",
+      "pdf": [
+       79,
+       81
+      ],
+      "printed": [
+       71,
+       73
+      ],
+      "session": 1,
+      "note": "Objective: Learn the characteristics of abstraction."
+     }
+    ],
+    "ckva": {
+     "day": 19,
+     "unit": "Abstraction",
+     "lesson": "What Is Abstraction?",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-6-1": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 20: Create Abstract Style (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       30,
+       30
+      ],
+      "printed": [
+       24,
+       24
+      ],
+      "session": 1,
+      "note": "Paint an abstract work in the style of Mondrian or Kandinsky. Supplies: heavy paper, pencil, markers, watercolors and brush."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 20: Create Abstract Style (day 1 of 2) (Abstraction)",
+      "pdf": [
+       83,
+       85
+      ],
+      "printed": [
+       75,
+       77
+      ],
+      "session": 1,
+      "note": "Objective: Create two scenes in the abstract style."
+     }
+    ],
+    "ckva": {
+     "day": 20,
+     "unit": "Abstraction",
+     "lesson": "Create Abstract Style",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "7-6-2": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 21: Create Abstract Style (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       31,
+       31
+      ],
+      "printed": [
+       25,
+       25
+      ],
+      "session": 1,
+      "note": "Paint a second abstract work with different materials. Supplies: heavy paper, pencil, acrylic paints and brush."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 21: Create Abstract Style (day 2 of 2) (Abstraction)",
+      "pdf": [
+       83,
+       85
+      ],
+      "printed": [
+       75,
+       77
+      ],
+      "session": 1,
+      "note": "Objective: Create two scenes in the abstract style."
+     }
+    ],
+    "ckva": {
+     "day": 21,
+     "unit": "Abstraction",
+     "lesson": "Create Abstract Style",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "7-6-3": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 22: Abstract Portraiture (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       32,
+       32
+      ],
+      "printed": [
+       26,
+       26
+      ],
+      "session": 1,
+      "note": "Study abstract portraits by Klee and Lois Mailou Jones. Artwork: Senecio (Paul Klee), Les fetiches (Lois Mailou Jones)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 22: Abstract Portraiture (day 1 of 2) (Abstraction)",
+      "pdf": [
+       85,
+       87
+      ],
+      "printed": [
+       77,
+       79
+      ],
+      "session": 1,
+      "note": "Objective: Learn about abstract portraiture."
+     }
+    ],
+    "ckva": {
+     "day": 22,
+     "unit": "Abstraction",
+     "lesson": "Abstract Portraiture",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "7-6-4": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 23: Abstract Portraiture (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       33,
+       34
+      ],
+      "printed": [
+       27,
+       28
+      ],
+      "session": 1,
+      "note": "Create an abstract portrait and compare it with your surrealist portrait. Supplies: heavy paper, pencil, paints or markers."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 23: Abstract Portraiture (day 2 of 2) (Abstraction)",
+      "pdf": [
+       85,
+       87
+      ],
+      "printed": [
+       77,
+       79
+      ],
+      "session": 1,
+      "note": "Objective: Learn about abstract portraiture."
+     }
+    ],
+    "ckva": {
+     "day": 23,
+     "unit": "Abstraction",
+     "lesson": "Abstract Portraiture",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "7-7-1": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 24: Abstraction in Nature (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       35,
+       35
+      ],
+      "printed": [
+       29,
+       29
+      ],
+      "session": 1,
+      "note": "Explore abstraction in nature paintings (O'Keeffe and others)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 24: Abstraction in Nature (day 1 of 2) (Abstraction)",
+      "pdf": [
+       89,
+       91
+      ],
+      "printed": [
+       81,
+       83
+      ],
+      "session": 1,
+      "note": "Objective: Learn about abstraction in nature."
+     }
+    ],
+    "ckva": {
+     "day": 24,
+     "unit": "Abstraction",
+     "lesson": "Abstraction in Nature",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "7-7-2": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 25: Abstraction in Nature (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       36,
+       36
+      ],
+      "printed": [
+       30,
+       30
+      ],
+      "session": 1,
+      "note": "Create an abstract nature scene. Supplies: heavy paper, pencil, markers, watercolors and brush."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 25: Abstraction in Nature (day 2 of 2) (Abstraction)",
+      "pdf": [
+       89,
+       91
+      ],
+      "printed": [
+       81,
+       83
+      ],
+      "session": 1,
+      "note": "Objective: Learn about abstraction in nature."
+     }
+    ],
+    "ckva": {
+     "day": 25,
+     "unit": "Abstraction",
+     "lesson": "Abstraction in Nature",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "7-7-3": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 26: The Gutai Group (day 1 of 3) - Student Activity Book",
+      "pdf": [
+       37,
+       37
+      ],
+      "printed": [
+       31,
+       31
+      ],
+      "session": 1,
+      "note": "Explore the Gutai Group's work and mission."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 26: The Gutai Group (day 1 of 3) (Abstraction)",
+      "pdf": [
+       92,
+       94
+      ],
+      "printed": [
+       84,
+       86
+      ],
+      "session": 1,
+      "note": "Objective: Learn about the Gutai Group."
+     }
+    ],
+    "ckva": {
+     "day": 26,
+     "unit": "Abstraction",
+     "lesson": "The Gutai Group",
+     "of": 3,
+     "part": 1
+    }
+   }
+  },
+  "7-7-4": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 27: The Gutai Group (day 2 of 3) - Student Activity Book",
+      "pdf": [
+       38,
+       38
+      ],
+      "printed": [
+       32,
+       32
+      ],
+      "session": 1,
+      "note": "Create artwork using Gutai principles. Supplies: large heavy craft paper, acrylic paints, sponges or found tools, newspaper or drop cloth."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 27: The Gutai Group (day 2 of 3) (Abstraction)",
+      "pdf": [
+       92,
+       94
+      ],
+      "printed": [
+       84,
+       86
+      ],
+      "session": 1,
+      "note": "Objective: Learn about the Gutai Group."
+     }
+    ],
+    "ckva": {
+     "day": 27,
+     "unit": "Abstraction",
+     "lesson": "The Gutai Group",
+     "of": 3,
+     "part": 2
+    }
+   }
+  },
+  "7-8-1": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 28: The Gutai Group (day 3 of 3) - Student Activity Book",
+      "pdf": [
+       39,
+       39
+      ],
+      "printed": [
+       33,
+       33
+      ],
+      "session": 1,
+      "note": "Hold a gallery walk and compare your work with the Gutai Group."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 28: The Gutai Group (day 3 of 3) (Abstraction)",
+      "pdf": [
+       92,
+       94
+      ],
+      "printed": [
+       84,
+       86
+      ],
+      "session": 1,
+      "note": "Objective: Learn about the Gutai Group."
+     }
+    ],
+    "ckva": {
+     "day": 28,
+     "unit": "Abstraction",
+     "lesson": "The Gutai Group",
+     "of": 3,
+     "part": 3
+    }
+   }
+  },
+  "7-8-2": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 29: Unit 5 Assessment - Student Activity Book",
+      "pdf": [
+       40,
+       40
+      ],
+      "printed": [
+       34,
+       34
+      ],
+      "session": 1,
+      "note": "Compare and contrast art from Unit 5."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 29: Unit 5 Assessment (Abstraction)",
+      "pdf": [
+       95,
+       97
+      ],
+      "printed": [
+       87,
+       89
+      ],
+      "session": 1,
+      "note": "Objective: Show understanding of abstraction."
+     }
+    ],
+    "ckva": {
+     "day": 29,
+     "unit": "Abstraction",
+     "lesson": "Unit 5 Assessment",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-8-3": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 30: What Is Organic Architecture? - Student Activity Book",
+      "pdf": [
+       41,
+       42
+      ],
+      "printed": [
+       35,
+       36
+      ],
+      "session": 1,
+      "note": "Learn the features of organic architecture through four famous buildings. Artwork: Tassel House (Victor Horta), Guaranty Building (Sullivan and Adler), Darwin Martin House (Frank Lloyd Wright), Casa Batllo (Antoni Gaudi)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 30: What Is Organic Architecture? (Twentieth-Century Architecture)",
+      "pdf": [
+       101,
+       103
+      ],
+      "printed": [
+       93,
+       95
+      ],
+      "session": 1,
+      "note": "Objective: Learn the characteristics of organic architecture."
+     }
+    ],
+    "ckva": {
+     "day": 30,
+     "unit": "Twentieth-Century Architecture",
+     "lesson": "What Is Organic Architecture?",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-8-4": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 31: Architectural Design (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       43,
+       43
+      ],
+      "printed": [
+       37,
+       37
+      ],
+      "session": 1,
+      "note": "Design a building using organic architecture. Supplies: paper or 1-inch graph paper, pencil, ruler, eraser."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 31: Architectural Design (day 1 of 2) (Twentieth-Century Architecture)",
+      "pdf": [
+       106,
+       108
+      ],
+      "printed": [
+       98,
+       100
+      ],
+      "session": 1,
+      "note": "Objective: Design and model a building using organic architecture."
+     }
+    ],
+    "ckva": {
+     "day": 31,
+     "unit": "Twentieth-Century Architecture",
+     "lesson": "Architectural Design",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "7-9-1": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 32: Architectural Design (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       44,
+       44
+      ],
+      "printed": [
+       38,
+       38
+      ],
+      "session": 1,
+      "note": "Build a cardboard model of your design. Supplies: cardboard, construction paper, markers, scissors, masking tape."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 32: Architectural Design (day 2 of 2) (Twentieth-Century Architecture)",
+      "pdf": [
+       106,
+       108
+      ],
+      "printed": [
+       98,
+       100
+      ],
+      "session": 1,
+      "note": "Objective: Design and model a building using organic architecture."
+     }
+    ],
+    "ckva": {
+     "day": 32,
+     "unit": "Twentieth-Century Architecture",
+     "lesson": "Architectural Design",
+     "of": 2,
+     "part": 2
+    }
+   }
+  },
+  "7-9-2": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 33: Unit 6 Assessment - Student Activity Book",
+      "pdf": [
+       45,
+       45
+      ],
+      "printed": [
+       39,
+       39
+      ],
+      "session": 1,
+      "note": "Review twentieth-century architecture."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 33: Unit 6 Assessment (Twentieth-Century Architecture)",
+      "pdf": [
+       109,
+       111
+      ],
+      "printed": [
+       101,
+       103
+      ],
+      "session": 1,
+      "note": "Objective: Show understanding of organic architecture."
+     }
+    ],
+    "ckva": {
+     "day": 33,
+     "unit": "Twentieth-Century Architecture",
+     "lesson": "Unit 6 Assessment",
+     "of": 1,
+     "part": 1
+    }
+   }
+  },
+  "7-9-3": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 34: Culminating Activity: Reflection (day 1 of 2) - Student Activity Book",
+      "pdf": [
+       46,
+       46
+      ],
+      "printed": [
+       40,
+       40
+      ],
+      "session": 1,
+      "note": "Reflect on each movement you studied this year."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 34: Culminating Activity: Reflection (day 1 of 2) (Year in Review)",
+      "pdf": [
+       112,
+       114
+      ],
+      "printed": [
+       104,
+       106
+      ],
+      "session": 1,
+      "note": "Objective: Summarize the art movements studied this year."
+     }
+    ],
+    "ckva": {
+     "day": 34,
+     "unit": "Year in Review",
+     "lesson": "Culminating Activity: Reflection",
+     "of": 2,
+     "part": 1
+    }
+   }
+  },
+  "7-9-4": {
+   "art": {
+    "resources": [
+     "ckva7-sab",
+     "ckva7-org"
+    ],
+    "teacher_resources": [
+     "ckva7-tg",
+     "ckva7-slides"
+    ],
+    "readings": [
+     {
+      "resource_id": "ckva7-sab",
+      "section": "CKVA Day 35: Culminating Activity: Put It All Together (day 2 of 2) - Student Activity Book",
+      "pdf": [
+       47,
+       47
+      ],
+      "printed": [
+       41,
+       41
+      ],
+      "session": 1,
+      "note": "Create a new work in one of the styles you studied. Supplies: large paper, construction paper, markers, glue, tape, scissors, paints (optional)."
+     }
+    ],
+    "teacher_readings": [
+     {
+      "resource_id": "ckva7-tg",
+      "section": "CKVA Day 35: Culminating Activity: Put It All Together (day 2 of 2) (Year in Review)",
+      "pdf": [
+       112,
+       114
+      ],
+      "printed": [
+       104,
+       106
+      ],
+      "session": 1,
+      "note": "Objective: Create a new work in a studied style and explain it."
+     }
+    ],
+    "ckva": {
+     "day": 35,
+     "unit": "Year in Review",
+     "lesson": "Culminating Activity: Put It All Together",
+     "of": 2,
+     "part": 2
+    }
+   }
+  }
+ }
+}

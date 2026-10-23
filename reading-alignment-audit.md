@@ -40,3 +40,10 @@ Built by `tools/build-enrichment-2026-10.py` into `curriculum-data/assigned-reso
 | All ELA weeks | "Required: independent reading" | One free public-domain book per module from the 2026–27 reading list (`reading-list.json`, shown on the Library page). |
 
 Printed page numbers are given for the new readers; PDF page numbers were not checked.
+
+## Art: Core Knowledge Visual Arts added — 2026-10-23
+Built by `tools/build-ckva-art.py` (data part `curriculum-data/assigned-resources-017.json`). CKVA is free (CC BY-NC-SA) and written as 35 class days per grade, so the **first art day of every week** is the next CKVA day and the **second art day** keeps the existing studio, music, theatre or media topic (its booklet chapter moved to that day).
+
+- Grade 4 (35 days): Middle Ages in Europe, Islamic Art and Architecture, The Art of Africa, The Art of China, Early United States, culminating gallery show.
+- Grade 7 (35 days): Expressionism, Cubism, Surrealism, Abstract Expressionism, Abstraction, Twentieth-Century Architecture, culminating project.
+- Each CKVA day lists the Student Activity Book pages, the artwork, supplies and the Teacher Guide pages (parent view). Monday worksheets and answer keys were rewritten to match the lesson.

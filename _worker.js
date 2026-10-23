@@ -3,6 +3,7 @@ import { subjectsForDay, curriculumForDay, taskForSubject, studentResourceLibrar
 import { curriculumAsset } from './curriculum-assets.js';
 import { homeAssistantApi, manageHomeAssistant } from "./home-assistant-api.js";
 import { isTeacherToolsPath, teacherToolsRoute } from "./teacher-tools.js";
+import { isWishlistPath, wishlistRoute } from "./wishlist.js";
 import {
   mapTasksToUsers,
   normalizeVenvlearningPayload,
@@ -802,7 +803,7 @@ async function authRoute(request,env,user,url){
 async function familyFetch(request,env,ctx){
  const url=new URL(request.url),path=decodeURIComponent(url.pathname);
  // Source/config files must never be delivered as public static assets.
- if(/\/(?:index\.js|_worker\.js|family-server\.js|teacher-tools\.js|ha-school\.js|home-assistant-api\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git|tools\/)/i.test(path))return new Response('Not found',{status:404});
+ if(/\/(?:index\.js|_worker\.js|family-server\.js|teacher-tools\.js|wishlist\.js|ha-school\.js|home-assistant-api\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git|tools\/)/i.test(path))return new Response('Not found',{status:404});
  const publicPaths=['/login','/login.html','/login.js','/forgot-password','/forgot-password.html','/family.css','/styles.css','/brand.css','/ux.js','/favicon.ico'];
  if(publicPaths.includes(path))return fetchAsset(request, env);
  if(url.pathname.startsWith('/api/home-assistant/'))return homeAssistantApi(request,env,assetJson);
@@ -810,6 +811,7 @@ async function familyFetch(request,env,ctx){
   if(!env.DB||typeof env.DB.prepare!=='function')return familyJson({error:'Database is not configured for this environment.'},503);
   await maybeEnsureFamilyAuthTables(env.DB, env);
   const user=await familyUser(request,env);
+  if(isWishlistPath(path))return wishlistRoute(request,env,user,url,assetJson);
   if(isTeacherToolsPath(path))return teacherToolsRoute(request,env,user,url,{ensureBaseTables:ensureFamilyTaskTables});
   return authRoute(request,env,user,url);
  }

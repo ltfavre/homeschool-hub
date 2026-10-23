@@ -1,4 +1,5 @@
 import {readingsForDay,readingText,readingLink} from './page-readings-core.js';
+import { addSchoolExtras, completeAssignment, signedFileRoute } from './ha-school.js';
 import { subjectLabels, taskPrefixes, subjectsForDay, curriculumForDay, taskForSubject } from './curriculum-schedule.js';
 // Home Assistant can read student agendas and update subject completion only.
 const reply = (body, status = 200) => Response.json(body, {status, headers: {'cache-control': 'private, no-store', 'x-content-type-options': 'nosniff'}});
@@ -22,7 +23,7 @@ export async function manageHomeAssistant(request, env, user) {
   if (body?.action === 'create') {
     const token = random(), id = crypto.randomUUID();
     await env.DB.prepare('INSERT INTO family_ha_connections(id,token_hash,owner_id,created_at) VALUES(?,?,?,?)').bind(id, await hash(token), user.id, Math.floor(Date.now()/1000)).run();
-    return reply({id, token, scope: ['student_agendas:read', 'subject_completion:write']});
+    return reply({id, token, scope: ['student_agendas:read', 'subject_completion:write', 'assignments:check_off', 'shared_documents:read']});
   }
   if (body?.action === 'revoke' && typeof body.id === 'string') {
     await env.DB.prepare('UPDATE family_ha_connections SET revoked_at=? WHERE id=? AND owner_id=?').bind(Math.floor(Date.now()/1000), body.id, user.id).run();
@@ -31,6 +32,12 @@ export async function manageHomeAssistant(request, env, user) {
   return reply({error: 'Invalid action'}, 400);
 }
 export async function homeAssistantApi(request, env, assetJson) {
+  // Signed file links open on the family tablet without a key or login.
+  const fileMatch = new URL(request.url).pathname.match(/^\/api\/home-assistant\/file\/([a-f0-9]{24})$/);
+  if (fileMatch && (request.method === 'GET' || request.method === 'HEAD')) {
+    if (!env.DB) return reply({error: 'Database unavailable'}, 503);
+    return signedFileRoute(request, env, fileMatch[1]);
+  }
   const token = (request.headers.get('authorization') || '').match(/^Bearer ([a-f0-9]{64})$/)?.[1];
   if (!token) return reply({error: 'A school connection key is required.'}, 401);
   if (!env.DB) return reply({error: 'Database unavailable'}, 503);
@@ -66,11 +73,16 @@ export async function homeAssistantApi(request, env, assetJson) {
           description: `${task || day.tasks}\n\n${day.integration||''}\n\nAssigned reading:\n${assigned}\n\n${links}\n\nAgenda: ${url.origin}/agenda?date=${date}\nWorksheets: ${url.origin}/daily-print?date=${date}&grade=${student.grade}&kind=work\nLesson guide: ${url.origin}/daily-print?date=${date}&grade=${student.grade}&kind=guide`});
       }
     }
-    return reply({today: today(), start, end, students});
+    await addSchoolExtras(request, env, assetJson, students, today(), url.origin);
+    return reply({today: today(), start, end, students, features: ['assignments', 'reading', 'documents']});
   }
   if (url.pathname === '/api/home-assistant/completion' && request.method === 'POST') {
     if (!(request.headers.get('content-type') || '').startsWith('application/json') || Number(request.headers.get('content-length') || 0) > 16384) return reply({error: 'Invalid request'}, 400);
     const body = await request.json().catch(() => null);
+    if (body && body.assignment_id !== undefined) {
+      if (typeof body.student_id !== 'string' || typeof body.completed !== 'boolean' || !Number.isInteger(Number(body.assignment_id))) return reply({error: 'Invalid task'}, 400);
+      return completeAssignment(env, body);
+    }
     if (!body || !validDate(body.date) || !['math','ela','science','social','spanish','art','life','computer','skills','review'].includes(body.subject) || typeof body.student_id !== 'string' || typeof body.completed !== 'boolean') return reply({error: 'Invalid task'}, 400);
     const student = await env.DB.prepare("SELECT id,grade FROM family_users WHERE id=? AND role='student' AND active=1").bind(body.student_id).first();
     if (!student) return reply({error: 'Student not found'}, 404);

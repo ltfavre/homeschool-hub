@@ -802,7 +802,7 @@ async function authRoute(request,env,user,url){
 async function familyFetch(request,env,ctx){
  const url=new URL(request.url),path=decodeURIComponent(url.pathname);
  // Source/config files must never be delivered as public static assets.
- if(/\/(?:index\.js|_worker\.js|family-server\.js|teacher-tools\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git|tools\/)/i.test(path))return new Response('Not found',{status:404});
+ if(/\/(?:index\.js|_worker\.js|family-server\.js|teacher-tools\.js|ha-school\.js|home-assistant-api\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git|tools\/)/i.test(path))return new Response('Not found',{status:404});
  const publicPaths=['/login','/login.html','/login.js','/forgot-password','/forgot-password.html','/family.css','/styles.css','/brand.css','/ux.js','/favicon.ico'];
  if(publicPaths.includes(path))return fetchAsset(request, env);
  if(url.pathname.startsWith('/api/home-assistant/'))return homeAssistantApi(request,env,assetJson);

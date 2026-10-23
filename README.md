@@ -101,6 +101,19 @@ Use Cloudflare Worker secrets (or `.dev.vars` for local development):
 
 If VenvLearning authentication or API shape is not available, configure `VENVLEARNING_ADAPTER_URL` to a trusted internal adapter that returns JSON tasks and preserves a stable task id.
 
+## Kids use Home Assistant; parents use VenvLearning
+
+The kids' school screen is a Home Assistant dashboard (a shared tablet works well). The VenvLearning integration (`home-assistant/custom_components/venvlearning`, v1.2.0) gives each child:
+
+- `todo.<child>_daily_school_tasks`: today's subject lessons (checking one marks it done)
+- `todo.<child>_assignments`: teacher-created assignments (checking one turns it in; graded work is locked and shows the score)
+- `sensor.<child>_reading_now`, `sensor.<child>_assignments_due`, `sensor.<child>_school_documents`: the module's book with links and prompts, open assignments with attachment links, and documents shared with that grade
+- `calendar.<child>_school_calendar`
+
+File links in Home Assistant are signed (`/api/home-assistant/file/<id>?e=…&s=…`) so the tablet needs no VenvLearning login; they rotate weekly and never cover private documents or student work.
+
+`home-assistant/dashboard/school-dashboard.js` builds the "School" dashboard (one tab per child) through the Home Assistant WebSocket API.
+
 ## Teacher tools (assignments, uploads, submissions)
 
 Parent accounts can:

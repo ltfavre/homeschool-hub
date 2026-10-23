@@ -48,10 +48,12 @@ def load(name):
     spec=importlib.util.spec_from_file_location('school.'+name, ROOT/(name+'.py'))
     m=importlib.util.module_from_spec(spec);sys.modules[spec.name]=m;spec.loader.exec_module(m);return m
 Coordinator=load('coordinator').VenvCoordinator
-Todo=load('todo').StudentTodo
+todo_mod=load('todo')
+Todo=todo_mod.StudentTodo
+Assignments=todo_mod.StudentAssignments
 
 class Client:
-    def __init__(self): self.today='2026-10-17'; self.completed={}; self.calls=[]; self.fail=False
+    def __init__(self): self.today='2026-10-17'; self.completed={}; self.turned_in={}; self.calls=[]; self.fail=False
     async def agenda(self, start=None, end=None):
         if self.fail: raise ClientError()
         self.calls.append((start,end))
@@ -60,9 +62,11 @@ class Client:
         students=[]
         for student in ('ellie','lillie'):
             items=[dict(uid=f'{student}|{d}|math',student_id=student,date=d,subject='math',summary='Math',description='Lesson',completed=self.completed.get((student,d),False)) for d in days if first<=d<=last]
-            students.append({'id':student,'display_name':student,'grade':'4','items':items})
+            assignments=[dict(uid=f'assignment|5|{student}',assignment_id=5,student_id=student,date='2026-10-19',subject='math',summary='Fractions',description='Do 1-10',completed=self.turned_in.get(student,False),locked=student=='lillie',status='graded' if student=='lillie' else 'assigned',score=9 if student=='lillie' else None,possible=10)]
+            students.append({'id':student,'display_name':student,'grade':'4','items':items,'assignments':assignments})
         return {'today':self.today,'start':first,'end':last,'students':students}
     async def complete(self,item,completed): self.completed[item['student_id'],item['date']]=completed
+    async def complete_assignment(self,item,completed): self.turned_in[item['student_id']]=completed
 
 class DateTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
@@ -109,6 +113,16 @@ class DateTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(HAError): await self.c.async_select_date(date(2027,2,1))
         self.assertEqual(self.c.selected_date,date(2026,10,16))
         self.assertEqual(self.entry.options['school_date'],'2026-10-16')
+
+class AssignmentTests(DateTests):
+    async def test_check_off_turns_in_and_graded_is_locked(self):
+        ellie,lillie=[Assignments(self.c,self.entry,s) for s in self.c.data['students']]
+        self.assertEqual(ellie.todo_items[0].summary,'Math: Fractions')
+        await ellie.async_update_todo_item(Item(uid='assignment|5|ellie',status=Status.COMPLETED))
+        self.assertTrue(self.client.turned_in['ellie'])
+        self.assertEqual(ellie.todo_items[0].status,Status.COMPLETED)
+        self.assertEqual(lillie.todo_items[0].summary,'Math: Fractions (9/10)')
+        with self.assertRaises(HAError): await lillie.async_update_todo_item(Item(uid='assignment|5|lillie',status=Status.NEEDS_ACTION))
 
 if __name__=='__main__': unittest.main()
 

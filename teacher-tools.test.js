@@ -162,3 +162,48 @@ test('students can open the new Library and Assignments pages; server code stays
   assert.equal((await call('parent-1', '/teacher-tools.js')).status, 404);
   assert.equal((await call('parent-1', '/tools/build-reading-list.py')).status, 404);
 });
+
+test('Home Assistant shows assignments, readings and shared files, and checks work off', async () => {
+  const { env, call, upload } = await setup();
+  // A school connection key, created the same way the parent page does.
+  const key = await (await call('parent-1', '/api/family/home-assistant-token', { method: 'POST', body: { action: 'create' } })).json();
+  const ha = (path, opts = {}) => worker.fetch(new Request(ORIGIN + path, { method: opts.method || 'GET', headers: { authorization: 'Bearer ' + key.token, ...(opts.body ? { 'content-type': 'application/json' } : {}) }, body: opts.body ? JSON.stringify(opts.body) : undefined }), env, {});
+  const sheet = (await (await upload('parent-1', 'Map practice.pdf', bytes(300), 'kind=attachment')).json()).file;
+  const privateDoc = (await (await upload('parent-1', 'Taxes.pdf', bytes(50), 'kind=document&audience=private')).json()).file;
+  const shared = (await (await upload('parent-1', 'Field trip.pdf', bytes(70), 'kind=document&audience=both')).json()).file;
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Chicago' }).format(new Date());
+  const id = (await (await call('parent-1', '/api/family/assignments', { method: 'POST', body: { title: 'Label the regions map', grade: '4', subject: 'social', category: 'work', due_date: today, points: 10, attachments: [sheet.id], allow_submission: false } })).json()).id;
+  await call('parent-1', '/api/family/assignments', { method: 'POST', body: { title: 'Hidden draft', grade: '4', subject: 'math', category: 'work', due_date: today, points: 10, published: false } });
+
+  const agenda = await (await ha(`/api/home-assistant/agenda?start=${today}&end=${today}`)).json();
+  const ava = agenda.students.find((s) => s.id === 'student-4'), ben = agenda.students.find((s) => s.id === 'student-7');
+  assert.deepEqual(ava.assignments.map((a) => a.summary), ['Label the regions map']);
+  assert.equal(ben.assignments.length, 0);
+  assert.equal(ava.assignments[0].status, 'due_today');
+  assert.ok(ava.reading.books.length >= 1, 'current module reading');
+  assert.deepEqual(ava.documents.map((d) => d.title), ['Field trip']);
+
+  // Signed links open without a login; tampering or private files do not.
+  const link = ava.assignments[0].attachments[0].url;
+  const open = await worker.fetch(new Request(link), env, {});
+  assert.equal(open.status, 200);
+  assert.equal((await open.arrayBuffer()).byteLength, 300);
+  assert.equal((await worker.fetch(new Request(link.replace(/s=./, 's=0')), env, {})).status, 403);
+  assert.equal((await worker.fetch(new Request(link.replace(sheet.id, privateDoc.id)), env, {})).status, 403);
+  assert.equal((await worker.fetch(new Request(ava.documents[0].url), env, {})).status, 200);
+
+  // Checking it off on the tablet shows as turned in for the parent; unchecking takes it back.
+  assert.equal((await ha('/api/home-assistant/completion', { method: 'POST', body: { student_id: 'student-4', assignment_id: id, completed: true } })).status, 200);
+  const view = await (await call('parent-1', '/api/family/assignments?student=student-4')).json();
+  assert.equal(view.assignments.find((a) => a.id === id).submissions[0].status, 'submitted');
+  assert.equal((await ha('/api/home-assistant/completion', { method: 'POST', body: { student_id: 'student-7', assignment_id: id, completed: true } })).status, 404, 'other grade');
+  await ha('/api/home-assistant/completion', { method: 'POST', body: { student_id: 'student-4', assignment_id: id, completed: false } });
+  assert.equal((await (await ha(`/api/home-assistant/agenda?start=${today}&end=${today}`)).json()).students.find((s) => s.id === 'student-4').assignments[0].completed, false);
+  // Once graded, the checkmark is locked.
+  await call('parent-1', '/api/family/grades', { method: 'POST', body: { student_id: 'student-4', key: `C|${id}`, subject: 'social', category: 'work', date: today, title: 'Label the regions map', points: 9, possible: 10 } });
+  assert.equal((await ha('/api/home-assistant/completion', { method: 'POST', body: { student_id: 'student-4', assignment_id: id, completed: false } })).status, 409);
+  const graded = (await (await ha(`/api/home-assistant/agenda?start=${today}&end=${today}`)).json()).students.find((s) => s.id === 'student-4').assignments[0];
+  assert.equal(graded.status, 'graded'); assert.equal(graded.score, 9);
+  assert.equal((await ha('/api/home-assistant/agenda', {})).status, 200);
+  assert.equal((await worker.fetch(new Request(ORIGIN + '/api/home-assistant/agenda'), env, {})).status, 401, 'key required');
+});

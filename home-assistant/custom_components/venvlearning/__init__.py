@@ -5,7 +5,7 @@ from .api import VenvClient
 from .coordinator import VenvCoordinator
 from .const import CONF_URL, CONF_TOKEN
 
-PLATFORMS = [Platform.CALENDAR, Platform.TODO, Platform.DATE, Platform.BUTTON]
+PLATFORMS = [Platform.CALENDAR, Platform.TODO, Platform.DATE, Platform.BUTTON, Platform.SENSOR]
 
 async def async_setup_entry(hass, entry):
     client = VenvClient(async_get_clientsession(hass), entry.data[CONF_URL], entry.data[CONF_TOKEN])

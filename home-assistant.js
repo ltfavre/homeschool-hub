@@ -8,8 +8,8 @@
     const {connections} = await api();
     $('connections').replaceChildren();
     for (const connection of connections) {
-      const row = document.createElement('p'), button = document.createElement('button');
-      row.append(document.createTextNode(`School connection · ${new Date(connection.created_at*1000).toLocaleString()} `));
+      const row = document.createElement('p'), button = document.createElement('button'); button.className='secondary lms-small';
+      row.append(document.createTextNode(`Connected ${new Date(connection.created_at*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} `));
       button.textContent = 'Disconnect'; button.onclick = async () => {try {await api({action:'revoke',id:connection.id}); await refresh(); $('status').textContent='Connection revoked.';} catch(error){$('status').textContent=error.message;}};
       row.append(button); $('connections').append(row);
     }

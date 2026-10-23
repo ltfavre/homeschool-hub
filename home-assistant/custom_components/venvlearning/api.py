@@ -33,3 +33,8 @@ class VenvClient:
             "student_id": item["student_id"], "date": item["date"],
             "subject": item["subject"], "completed": completed,
         })
+
+    async def complete_assignment(self, item, completed):
+        return await self.request("POST", "/api/home-assistant/completion", json={
+            "student_id": item["student_id"], "assignment_id": item["assignment_id"], "completed": completed,
+        })

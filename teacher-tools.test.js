@@ -188,7 +188,7 @@ test('Home Assistant shows assignments, readings and shared files, and checks wo
   const open = await worker.fetch(new Request(link), env, {});
   assert.equal(open.status, 200);
   assert.equal((await open.arrayBuffer()).byteLength, 300);
-  assert.equal((await worker.fetch(new Request(link.replace(/s=./, 's=0')), env, {})).status, 403);
+  assert.equal((await worker.fetch(new Request(link.replace(/s=(.)/, (m, c) => 's=' + (c === '0' ? '1' : '0'))), env, {})).status, 403);
   assert.equal((await worker.fetch(new Request(link.replace(sheet.id, privateDoc.id)), env, {})).status, 403);
   assert.equal((await worker.fetch(new Request(ava.documents[0].url), env, {})).status, 200);
 

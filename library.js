@@ -151,14 +151,67 @@
     sec.append(listEl); root.append(sec);
   }
 
+  // Parent-only curriculum shopping list.
+  let shop = null;
+  const SHOP_STATUS = [["considering", "Considering"], ["buy", "Plan to buy"], ["bought", "Bought"], ["skip", "Skip"]];
+  async function loadShop() { shop = await window.LMS.json("/api/family/wishlist"); }
+  function shopping(root) {
+    if (!shop) { root.append(el("p", "Loading…", "muted")); loadShop().then(render).catch((e) => { $("status").textContent = e.message; }); return; }
+    root.append(el("p", "Curricula and books to come back to. Suggested items are added as we research each subject; add your own with the form at the bottom. Only parent accounts can see this list.", "muted lib-lead"));
+    const shown = shop.items.filter((i) => match(i.title, i.vendor || "", i.why || "", i.notes || "", shop.subjects[i.subject] || ""));
+    const totals = SHOP_STATUS.map(([k, n]) => `${shop.items.filter((i) => i.status === k).length} ${n.toLowerCase()}`).join(" · ");
+    root.append(el("p", totals, "lms-small muted"));
+    const groups = [...new Set(shown.map((i) => i.subject || "other"))];
+    for (const g of groups) {
+      const sec = el("section", "", "lib-section"); sec.append(el("h3", shop.subjects[g] || g || "Other"));
+      const grid = el("div", "", "lib-grid");
+      for (const i of shown.filter((x) => (x.subject || "other") === g)) {
+        const c = el("article", "", "lib-book shop-item is-" + i.status);
+        const sel = el("select"); sel.setAttribute("aria-label", `Status for ${i.title}`);
+        for (const [k, n] of SHOP_STATUS) sel.append(new Option(n, k));
+        sel.value = i.status;
+        const head = el("div", "", "shop-head"); head.append(el("span", i.price || "", "shop-price"), sel);
+        c.append(head, el("h4", i.title));
+        if (i.vendor || i.format) c.append(el("p", [i.vendor, i.format].filter(Boolean).join(" · "), "muted lms-small"));
+        if (i.grades || i.for) c.append(el("p", [i.grades && `Grades ${i.grades}`, i.for].filter(Boolean).join(" · "), "lms-small"));
+        if (i.why) c.append(el("p", i.why));
+        if (i.notes) { const n = el("p", "", "lib-note"); n.append(el("strong", "Notes: "), document.createTextNode(i.notes)); c.append(n); }
+        const note = el("textarea"); note.rows = 2; note.maxLength = 1000; note.placeholder = "Your notes (order date, where you bought it, etc.)"; note.value = i.my_note || ""; note.setAttribute("aria-label", `Your notes for ${i.title}`);
+        const save = async () => { try { await post("/api/family/wishlist", { id: i.id, status: sel.value, note: note.value }); i.status = sel.value; i.my_note = note.value; c.className = "lib-book shop-item is-" + i.status; } catch (e) { $("status").textContent = e.message; } };
+        sel.onchange = save; note.onchange = save;
+        c.append(note);
+        const act = el("div", "", "lms-actions");
+        if (safe(i.link)) { const a = el("a", "Open listing", "lms-btn"); a.href = safe(i.link); a.target = "_blank"; a.rel = "noopener noreferrer"; act.append(a); }
+        if (i.custom) { const d = el("button", "Remove", "secondary"); d.type = "button"; d.onclick = async () => { if (!confirm(`Remove “${i.title}”?`)) return; await post("/api/family/wishlist", { id: i.id, delete: true }); shop = null; render(); }; act.append(d); }
+        c.append(act, el("p", `Added ${i.added || ""}`, "muted lms-small"));
+        grid.append(c);
+      }
+      sec.append(grid); root.append(sec);
+    }
+    if (!shown.length) root.append(el("p", "Nothing matches.", "muted"));
+    const f = el("form", "", "card lib-upload"); f.append(el("h3", "Add something to the list"));
+    const row = el("div", "", "lib-upload-row");
+    const fld = (label, input) => { const l = el("label", "", "as-field"); l.append(el("span", label), input); return l; };
+    const t = el("input"); t.required = true; t.maxLength = 200;
+    const sub = el("select"); for (const [k, n] of Object.entries(shop.subjects)) sub.append(new Option(n, k));
+    const pr = el("input"); pr.maxLength = 60; pr.placeholder = "$";
+    const ln = el("input"); ln.type = "url"; ln.placeholder = "https://";
+    row.append(fld("Title", t), fld("Subject", sub), fld("Price", pr), fld("Link", ln));
+    const nt = el("textarea"); nt.rows = 2; nt.placeholder = "Notes"; nt.style.width = "100%";
+    const go = el("button", "Add to list"); go.type = "submit";
+    f.append(row, nt, go);
+    f.onsubmit = async (e) => { e.preventDefault(); go.disabled = true; try { await post("/api/family/wishlist", { add: { title: t.value, subject: sub.value, price: pr.value, link: ln.value, notes: nt.value } }); shop = null; render(); } catch (err) { $("status").textContent = err.message; go.disabled = false; } };
+    root.append(f);
+  }
+
   async function loadFiles() { try { files = (await window.LMS.json("/api/family/files")).files || []; } catch (e) { files = []; $("status").textContent = `Documents unavailable: ${e.message}`; } }
 
   function render() {
     for (const b of document.querySelectorAll("[data-tab]")) b.setAttribute("aria-pressed", String(b.dataset.tab === tab));
     $("libPrint").hidden = tab !== "reading";
-    $("libGradeWrap").hidden = !parent() || tab === "docs";
+    $("libGradeWrap").hidden = !parent() || tab === "docs" || tab === "shop";
     const root = $("view"); root.replaceChildren();
-    ({ reading, books: curriculumBooks, docs })[tab](root);
+    ({ reading, books: curriculumBooks, docs, shop: shopping })[tab](root);
     if (location.hash.slice(1) !== tab) history.replaceState(null, "", `#${tab}`);
   }
 
@@ -168,9 +221,9 @@
       me = meRes.user; today = meRes.today;
       [list, books] = await Promise.all([window.LMS.json("/reading-list.json"), window.LMS.json("/books-library.json")]);
       await loadFiles();
-      if (parent()) { const want = new URLSearchParams(location.search).get("grade"); if (want === "4" || want === "7") $("libGrade").value = want; }
+      if (parent()) { $("shopTab").hidden = false; const want = new URLSearchParams(location.search).get("grade"); if (want === "4" || want === "7") $("libGrade").value = want; }
       else { $("libGradeWrap").hidden = true; $("libIntro").textContent = `Your Grade ${me.grade} reading list, the books in your lessons, and documents your teacher shared with you.`; }
-      const h = location.hash.slice(1); if (["reading", "books", "docs"].includes(h)) tab = h;
+      const h = location.hash.slice(1); if (["reading", "books", "docs"].concat(parent() ? ["shop"] : []).includes(h)) tab = h;
       for (const b of document.querySelectorAll("[data-tab]")) b.onclick = () => { tab = b.dataset.tab; render(); };
       $("libGrade").onchange = render; $("libSearch").oninput = render; $("libPrint").onclick = () => window.print();
       $("status").textContent = "";

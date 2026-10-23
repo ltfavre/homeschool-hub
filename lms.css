@@ -246,3 +246,11 @@
 .as-checks label input{flex:none;margin:0}
 .lib-doc-meta{flex:0 1 auto;justify-content:flex-end}
 .lib-doc-meta select{width:auto;max-width:12rem}
+/* Shopping list */
+.shop-head{display:flex;justify-content:space-between;align-items:center;gap:.6rem}
+.shop-price{font-family:var(--font-mono);font-weight:500;color:var(--hunter)}
+.shop-head select{min-height:38px;padding:0 .5rem}
+.shop-item textarea{width:100%;box-sizing:border-box;padding:.45rem;font:inherit;margin-top:.3rem}
+.shop-item.is-buy{border-left-color:var(--gold)}
+.shop-item.is-bought{border-left-color:var(--hunter);background:var(--sage-wash)}
+.shop-item.is-skip{opacity:.6}

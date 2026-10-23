@@ -207,3 +207,21 @@ test('Home Assistant shows assignments, readings and shared files, and checks wo
   assert.equal((await ha('/api/home-assistant/agenda', {})).status, 200);
   assert.equal((await worker.fetch(new Request(ORIGIN + '/api/home-assistant/agenda'), env, {})).status, 401, 'key required');
 });
+
+test('curriculum shopping list is parent-only and keeps status, notes and added items', async () => {
+  const { call } = await setup();
+  assert.equal((await call('student-4', '/api/family/wishlist')).status, 403);
+  assert.equal((await call('student-4', '/curriculum-wishlist.json')).status, 403);
+  let list = await (await call('parent-1', '/api/family/wishlist')).json();
+  const art = list.items.find((i) => i.id === 'art-fundamentals-letsdoschool');
+  assert.equal(art.status, 'considering');
+  assert.equal((await call('parent-1', '/api/family/wishlist', { method: 'POST', body: { id: art.id, status: 'bought', note: 'Ordered Oct 24' } })).status, 200);
+  assert.equal((await call('parent-1', '/api/family/wishlist', { method: 'POST', body: { add: { title: 'Sketchbooks x2', subject: 'art', price: '$12', link: 'javascript:alert(1)' } } })).status, 400);
+  assert.equal((await call('parent-1', '/api/family/wishlist', { method: 'POST', body: { add: { title: 'Sketchbooks x2', subject: 'art', price: '$12' } } })).status, 201);
+  list = await (await call('parent-1', '/api/family/wishlist')).json();
+  assert.equal(list.items.find((i) => i.id === art.id).my_note, 'Ordered Oct 24');
+  const mine = list.items.find((i) => i.custom);
+  assert.equal(mine.title, 'Sketchbooks x2');
+  await call('parent-1', '/api/family/wishlist', { method: 'POST', body: { id: mine.id, delete: true } });
+  assert.equal((await (await call('parent-1', '/api/family/wishlist')).json()).items.some((i) => i.custom), false);
+});

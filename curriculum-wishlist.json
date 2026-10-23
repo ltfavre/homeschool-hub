@@ -1,0 +1,20 @@
+{
+  "about": "Curricula and books suggested for purchase. Status and notes are saved per family in the database; edit this file to add suggestions.",
+  "subjects": { "art": "Art", "life": "Human & Life Sciences", "science": "Science", "math": "Math", "ela": "ELA", "social": "Social Studies", "computer": "Computer Science", "skills": "Life Skills", "music": "Music & Drama", "other": "Other" },
+  "items": [
+    {
+      "id": "art-fundamentals-letsdoschool",
+      "subject": "art",
+      "title": "Art Fundamentals: All-in-One Homeschool Art Curriculum",
+      "vendor": "LetsDoSchoolStore on Etsy",
+      "price": "$39.98 + $6.99 shipping",
+      "format": "Printed book, 325 full-color pages, lay-flat comb binding",
+      "grades": "3–12 (reads at a 5th-grade level)",
+      "for": "Ellie and Lillie (one book; each works in her own sketchbook)",
+      "link": "https://www.etsy.com/listing/1789569785/art-fundamentals-all-in-one-homeschool",
+      "why": "Hands-on drawing and color skills that the Core Knowledge Art & Art History block is light on: line, pattern, shape, texture, value, color mixing and theory, positive and negative space, focal point. Short 20–30 minute lessons, each studying real artists.",
+      "notes": "4.6 stars from 32 reviews; shop has 260 sales. Two reviewers said the binding is weak. Needs only pencils and colored pencils (plus sketchbooks).",
+      "added": "2026-10-23"
+    }
+  ]
+}

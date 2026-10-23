@@ -29,8 +29,10 @@ window.LMS = (() => {
     const student = students.find((s) => s.id === wanted) || students[0];
     let config = { weights: { work: 40, quiz: 25, test: 35 }, defaultPossible: { work: 10, quiz: 20, test: 50 }, scale: [[90, "A"], [80, "B"], [70, "C"], [60, "D"], [0, "F"]] };
     try { config = await json("/grading-config.json"); } catch { /* defaults */ }
-    const ctx = { me, today: meRes.today, daily, library, events, students, student, config, progress: new Map(), grades: new Map() };
-    await Promise.all([loadProgress(ctx), loadGrades(ctx).catch(() => {})]);
+    // Weights and letter scale saved on the Grades page override the file.
+    try { const saved = (await json("/api/family/settings/grading")).grading; if (saved) config = { ...config, ...saved }; } catch { /* file settings */ }
+    const ctx = { me, today: meRes.today, daily, library, events, students, student, config, progress: new Map(), grades: new Map(), assignments: [] };
+    await Promise.all([loadProgress(ctx), loadGrades(ctx).catch(() => {}), loadAssignments(ctx).catch(() => {})]);
     return ctx;
   }
 
@@ -38,6 +40,12 @@ window.LMS = (() => {
     const q = ctx.me.role === "parent" ? `?student=${encodeURIComponent(ctx.student.id)}` : "";
     const data = await json("/api/family/progress" + q);
     ctx.progress = new Map((data.rows || []).filter((r) => r.c === 1).map((r) => [`${r.d}|${r.s}`, true]));
+  }
+
+  // Teacher-created assignments for the student being viewed.
+  async function loadAssignments(ctx) {
+    const q = ctx.me.role === "parent" ? `?student=${encodeURIComponent(ctx.student.id)}` : "";
+    ctx.assignments = (await json("/api/family/assignments" + q)).assignments || [];
   }
 
   async function loadGrades(ctx) {
@@ -129,7 +137,20 @@ window.LMS = (() => {
       w.days.forEach((d, i) => out.push({ key: `L|${d.date}|${subject}`, subject, category: "work", date: d.date, title: `${w.topic} (lesson ${i + 1})`, lesson: true }));
       for (const a of w.assessments) out.push({ key: `A|${a.id}|${subject}`, subject, category: /-test$/.test(a.id) ? "test" : "quiz", date: a.date, title: `${assessLabel(a.id)} · Module ${w.module}, Week ${w.week}` });
     }
+    for (const a of ctx.assignments || []) if (a.subject === subject && a.published) out.push(assignmentItem(a));
     return out.sort((x, y) => x.date.localeCompare(y.date));
+  }
+
+  const CATEGORY_NAMES = { work: "Daily work", quiz: "Quiz", test: "Test", project: "Project" };
+  const assignmentItem = (a) => ({ key: a.key, subject: a.subject, category: a.category, date: a.due_date, title: a.title, possible: a.points, assignment: a });
+  // Where an assignment stands for the student being viewed.
+  function assignmentState(ctx, a) {
+    const sub = a.submissions?.[0], graded = ctx.grades.has(a.key);
+    if (graded || sub?.status === "returned") return { code: "graded", label: "Graded" };
+    if (sub?.status === "submitted") return { code: "submitted", label: "Turned in" };
+    if (a.due_date < ctx.today) return { code: "late", label: a.allow_submission ? "Missing" : "Not graded" };
+    if (a.due_date === ctx.today) return { code: "today", label: "Due today" };
+    return { code: "open", label: "Assigned" };
   }
 
   const letter = (ctx, pct) => (ctx.config.scale.find(([min]) => pct >= min) || [0, "F"])[1];
@@ -175,7 +196,7 @@ window.LMS = (() => {
     const form = el("form", "", "lms-grade-form");
     const pts = el("input"); pts.type = "number"; pts.min = "0"; pts.step = "any"; pts.inputMode = "decimal"; pts.value = g ? g.p : "";
     pts.setAttribute("aria-label", `Score for ${item.title}`);
-    const max = el("input"); max.type = "number"; max.min = "1"; max.step = "any"; max.inputMode = "decimal"; max.value = g ? g.m : ctx.config.defaultPossible[item.category] || 10;
+    const max = el("input"); max.type = "number"; max.min = "1"; max.step = "any"; max.inputMode = "decimal"; max.value = g ? g.m : item.possible || ctx.config.defaultPossible[item.category] || 10;
     max.setAttribute("aria-label", `Points possible for ${item.title}`);
     const note = el("input"); note.type = "text"; note.maxLength = 500; note.placeholder = "Comment (optional)"; note.value = g ? g.n : "";
     note.setAttribute("aria-label", `Comment for ${item.title}`);
@@ -234,5 +255,5 @@ window.LMS = (() => {
   const courseUrl = (ctx, c, hash = "") => `/course?grade=${c.grade}&subject=${c.subject}${ctx.me.role === "parent" ? "&student=" + encodeURIComponent(ctx.student.id) : ""}${hash}`;
   const agendaUrl = (ctx, date) => `/agenda?date=${date}${ctx.me.role === "parent" ? "&student=" + encodeURIComponent(ctx.student.id) : ""}`;
 
-  return { assessOn, items, courseGrade, letter, pct1, saveGrade, clearGrade, gradeEditor, loadGrades, NAMES, el, fmt, day, load, loadProgress, courses, modules, stats, assessLabel, bar, studentSwitcher, courseUrl, agendaUrl, json };
+  return { assessOn, items, loadAssignments, assignmentItem, assignmentState, CATEGORY_NAMES, courseGrade, letter, pct1, saveGrade, clearGrade, gradeEditor, loadGrades, NAMES, el, fmt, day, load, loadProgress, courses, modules, stats, assessLabel, bar, studentSwitcher, courseUrl, agendaUrl, json };
 })();

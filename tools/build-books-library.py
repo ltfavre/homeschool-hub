@@ -4,9 +4,15 @@ import json, glob, collections
 SUBJ = {'math':'Math','ela':'Language arts','science':'Science','social':'Social studies','art':'Art, music & theatre',
         'life':'Life science','computer':'Computer science','skills':'Life skills','spanish':'Spanish','review':'Review'}
 res = {}; weeks = {}
+def merge(t, s):  # same rules as curriculum-assets.js: arrays append, objects merge
+    for k, v in s.items():
+        if isinstance(v, list): t[k] = t.get(k, []) + v
+        elif isinstance(v, dict): t[k] = merge(t.get(k, {}), v)
+        else: t[k] = v
+    return t
 for f in sorted(glob.glob('curriculum-data/assigned-resources-0*.json')):
     d = json.load(open(f)); res.update(d.get('resources', {}))
-    weeks.update(d.get('weeks', {}))
+    merge(weeks, d.get('weeks', {}))
 KEYS = ('book', 'workbook', 'reader', 'booklet', 'textbook', 'activity guide')
 def is_book(r):
     return any(k in (r.get('kind', '') + ' ' + r.get('title', '')).lower() for k in KEYS) and 'collection' not in r.get('kind', '').lower()

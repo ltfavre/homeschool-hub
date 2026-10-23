@@ -175,3 +175,62 @@ CREATE TABLE IF NOT EXISTS family_attendance (
   updated_at INTEGER NOT NULL,
   PRIMARY KEY (student_id, school_date)
 );
+
+-- Teacher tools (teacher-tools.js): uploaded files, assignments, submissions, grading settings.
+-- Files are stored in R2 when a FILES bucket is bound, otherwise in family_file_chunks.
+CREATE TABLE IF NOT EXISTS family_files (
+  id TEXT PRIMARY KEY,
+  owner_id TEXT NOT NULL,
+  kind TEXT NOT NULL,
+  title TEXT NOT NULL,
+  name TEXT NOT NULL,
+  mime TEXT NOT NULL,
+  size INTEGER NOT NULL,
+  storage TEXT NOT NULL,
+  chunks INTEGER NOT NULL DEFAULT 0,
+  audience TEXT NOT NULL DEFAULT 'private',
+  subject TEXT NOT NULL DEFAULT '',
+  note TEXT NOT NULL DEFAULT '',
+  assignment_id INTEGER,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_family_files_kind ON family_files(kind, audience);
+CREATE INDEX IF NOT EXISTS idx_family_files_assignment ON family_files(assignment_id, owner_id);
+CREATE TABLE IF NOT EXISTS family_file_chunks (
+  file_id TEXT NOT NULL,
+  idx INTEGER NOT NULL,
+  data TEXT NOT NULL,
+  PRIMARY KEY (file_id, idx)
+);
+CREATE TABLE IF NOT EXISTS family_assignments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  grade TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  category TEXT NOT NULL,
+  title TEXT NOT NULL,
+  instructions TEXT NOT NULL DEFAULT '',
+  due_date TEXT NOT NULL,
+  points REAL NOT NULL,
+  allow_submission INTEGER NOT NULL DEFAULT 1,
+  published INTEGER NOT NULL DEFAULT 1,
+  attachments TEXT NOT NULL DEFAULT '[]',
+  created_by TEXT NOT NULL DEFAULT '',
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_family_assignments_grade_due ON family_assignments(grade, due_date);
+CREATE TABLE IF NOT EXISTS family_submissions (
+  assignment_id INTEGER NOT NULL,
+  student_id TEXT NOT NULL,
+  body TEXT NOT NULL DEFAULT '',
+  status TEXT NOT NULL DEFAULT 'submitted',
+  feedback TEXT NOT NULL DEFAULT '',
+  submitted_at INTEGER,
+  returned_at INTEGER,
+  PRIMARY KEY (assignment_id, student_id)
+);
+CREATE TABLE IF NOT EXISTS family_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at INTEGER NOT NULL
+);

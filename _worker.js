@@ -2,6 +2,7 @@ import {readingsForDay,readingLink,cleanTaskText} from './page-readings-core.js'
 import { subjectsForDay, curriculumForDay, taskForSubject, studentResourceLibrary } from './curriculum-schedule.js';
 import { curriculumAsset } from './curriculum-assets.js';
 import { homeAssistantApi, manageHomeAssistant } from "./home-assistant-api.js";
+import { isTeacherToolsPath, teacherToolsRoute } from "./teacher-tools.js";
 import {
   mapTasksToUsers,
   normalizeVenvlearningPayload,
@@ -801,7 +802,7 @@ async function authRoute(request,env,user,url){
 async function familyFetch(request,env,ctx){
  const url=new URL(request.url),path=decodeURIComponent(url.pathname);
  // Source/config files must never be delivered as public static assets.
- if(/\/(?:index\.js|_worker\.js|family-server\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git)/i.test(path))return new Response('Not found',{status:404});
+ if(/\/(?:index\.js|_worker\.js|family-server\.js|teacher-tools\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git|tools\/)/i.test(path))return new Response('Not found',{status:404});
  const publicPaths=['/login','/login.html','/login.js','/forgot-password','/forgot-password.html','/family.css','/styles.css','/brand.css','/ux.js','/favicon.ico'];
  if(publicPaths.includes(path))return fetchAsset(request, env);
  if(url.pathname.startsWith('/api/home-assistant/'))return homeAssistantApi(request,env,assetJson);
@@ -809,6 +810,7 @@ async function familyFetch(request,env,ctx){
   if(!env.DB||typeof env.DB.prepare!=='function')return familyJson({error:'Database is not configured for this environment.'},503);
   await maybeEnsureFamilyAuthTables(env.DB, env);
   const user=await familyUser(request,env);
+  if(isTeacherToolsPath(path))return teacherToolsRoute(request,env,user,url,{ensureBaseTables:ensureFamilyTaskTables});
   return authRoute(request,env,user,url);
  }
  const user=await familyUser(request,env);
@@ -816,7 +818,7 @@ async function familyFetch(request,env,ctx){
  if(path.startsWith('/api/')&&!['GET','HEAD'].includes(request.method)&&(request.headers.get('origin')!==url.origin||!(request.headers.get('content-type')||'').startsWith('application/json')))return familyJson({error:'Please use the website form.'},403);
  if(path==='/'&&user.role==='student')return new Response(null,{status:302,headers:{location:'/courses','cache-control':'no-store'}});
  if(user.role==='student'){
-  const allowed=['/courses','/courses.html','/courses.js','/course','/course.html','/course.js','/lms.js','/lms.css','/school-events.json','/grading-config.json','/calendar','/calendar.html','/calendar.js','/packet-renderer.js','/packet-files.js','/materials.css','/vendor/pdf-lib.min.js','/page-readings.js','/agenda','/agenda.html','/agenda.js','/account-nav.js','/daily-print','/daily-print.html','/daily-print.js','/daily-print.css','/print-download.js','/planner-resources.json','/khan-ui.js','/khan-ui.css','/books','/books.html','/books.js','/books-library.json','/core-knowledge','/core-knowledge.html','/core-knowledge.js','/core-knowledge-units.json','/brand.css'];
+  const allowed=['/courses','/courses.html','/courses.js','/course','/course.html','/course.js','/lms.js','/lms.css','/school-events.json','/grading-config.json','/calendar','/calendar.html','/calendar.js','/packet-renderer.js','/packet-files.js','/materials.css','/vendor/pdf-lib.min.js','/page-readings.js','/agenda','/agenda.html','/agenda.js','/account-nav.js','/daily-print','/daily-print.html','/daily-print.js','/daily-print.css','/print-download.js','/planner-resources.json','/khan-ui.js','/khan-ui.css','/books','/books.html','/books.js','/books-library.json','/core-knowledge','/core-knowledge.html','/core-knowledge.js','/core-knowledge-units.json','/brand.css','/assignments','/assignments.html','/assignments.js','/library','/library.html','/library.js','/files.js','/reading-list.json'];
   if(path==='/planner-resources.json')return familyJson(studentResourceLibrary(await assetJson(request,env,path)));
   if(path==='/daily-packets.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).map(([date,g])=>[date,{[user.grade]:g[user.grade]}])));}
   if(path==='/assessment-student.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).filter(([,e])=>String(e.grade)===user.grade)));}

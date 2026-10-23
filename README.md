@@ -101,15 +101,38 @@ Use Cloudflare Worker secrets (or `.dev.vars` for local development):
 
 If VenvLearning authentication or API shape is not available, configure `VENVLEARNING_ADAPTER_URL` to a trusted internal adapter that returns JSON tasks and preserves a stable task id.
 
+## Teacher tools (assignments, uploads, submissions)
+
+Parent accounts can:
+
+- **Create assignments** (`/assignments`) for either grade: title, subject, type (daily work, quiz, test, project), due date, points, instructions and file attachments. Assignments can be hidden until ready, and can accept online submissions or be handed in on paper.
+- **Grade turned-in work**: see the student's typed answer and uploaded files, enter a score (it lands in the gradebook and report card automatically), return the work with written feedback, or reopen it for revisions.
+- **Upload documents** to the Library (`/library#docs`), shared with Grade 4, Grade 7, both, or kept private.
+- **Set grading weights and the letter scale** on the Grades page (Settings tab). Saved settings override `grading-config.json`.
+
+Students see their assignments on the dashboard (To do / Coming up) and on `/assignments`, where they can type an answer, attach photos or files, turn work in, and read their grade and feedback.
+
+### File storage
+
+Uploads (up to 25 MB each; PDF, Office, images, text, audio and video only) are stored in D1 as chunks, so nothing extra is needed. For larger libraries you can add an R2 bucket and bind it as `FILES` in the Cloudflare dashboard; new uploads will then go to R2 automatically. New tables are created on first use and are also listed in `schema.sql`.
+
+## Library and 2026–27 reading list
+
+`/library` has three tabs: the module-by-module reading list (`reading-list.json`, built by `tools/build-reading-list.py`), every curriculum book in the lesson plans (`books-library.json`), and uploaded documents. The reading list's core books are free public-domain e-books; each module's book is also added to that module's ELA weeks by `tools/build-enrichment-2026-10.py`, which also adds the October 2026 gap-filling resources (see `reading-alignment-audit.md`).
+
+## Tests
+
+`npm test` runs the VenvLearning sync tests and `teacher-tools.test.js`, which exercises the real Worker against an in-memory SQLite stand-in for D1 (Node 22+).
+
 ## Planned next steps
 
 1. Authentication / parent-only editing.
 2. Bulk CSV lesson import.
 3. Education.com resource catalog/import workflow.
 4. Google Calendar sync/export.
-5. Completion checkboxes and grades.
+5. ~~Completion checkboxes and grades.~~ Done (gradebook, assignments, submissions).
 6. Segment/week filters for the 9 x 4-week homeschool structure.
-7. Attachments via Google Drive.
+7. ~~Attachments~~ Done (built-in uploads; Google Drive linking still possible).
 8. Student dashboards and gifted-extension tags.
 9. Attendance and report-card views.
 

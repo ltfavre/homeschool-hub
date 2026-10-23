@@ -55,6 +55,34 @@
       "why": "Fills the world-religions weeks of the block: Christianity, Islam, Judaism, Hinduism and Buddhism, plus older beliefs, new movements, modern spirituality and atheism, with scriptures, places of worship, food and clothing. Matches the block's goal of comparing worldviews fairly.",
       "notes": "The publisher describes it as unbiased; I couldn't find an independent review confirming that. For Lillie, Harvard's free Pluralism Project (pluralism.org) adds case studies and essays.",
       "added": "2026-10-23"
+    },
+    {
+      "id": "skilltrek-family",
+      "subject": "skills",
+      "title": "SkillTrek (online life-skills program)",
+      "vendor": "skill-trek.com",
+      "price": "$20/month or $150/year, whole family",
+      "format": "Online videos + printables, progress tracking per child",
+      "grades": "Ages 5–16",
+      "for": "Ellie and Lillie (one family plan)",
+      "link": "https://www.skill-trek.com/lp/ycul062025",
+      "why": "Covers almost the whole Cooking, Nutrition & Household Skills block (Feb 8 – Mar 26): cooking, housekeeping, nutrition, safety and hygiene, plus money and tools for later. 450+ lessons, each about 15 minutes of video and reading plus 30 minutes of practice, so the 6-week block fits easily. Monthly for just February–March would cost about $40.",
+      "notes": "Official page lists $20/month or $150/year for the family and a money-back guarantee; an older review listed $159.99/year. Laundry isn't listed as its own category, so check before relying on it for the laundry week.",
+      "added": "2026-10-23"
+    },
+    {
+      "id": "atk-young-chefs",
+      "subject": "skills",
+      "title": "The Complete Cookbook for Young Chefs (America's Test Kitchen Kids)",
+      "vendor": "America's Test Kitchen Kids; any bookstore",
+      "price": "$19.99 list",
+      "format": "Hardcover cookbook, 100 kid-tested recipes",
+      "grades": "Upper elementary and middle school cooks",
+      "for": "Ellie and Lillie (shared)",
+      "link": "https://www.cbcbooks.org/?p=49509",
+      "why": "Real recipes for the cooking weeks (kitchen tools, measuring with fractions, meal planning, cook-and-evaluate), with step-by-step photos. Recipes are tested with kids, so they work the first time.",
+      "notes": "Pairs with the free USDA Recipes for Healthy Kids cookbook already in the plan. Often discounted.",
+      "added": "2026-10-23"
     }
   ]
 }

@@ -5,7 +5,7 @@ window.PacketRenderer=(()=>{
  const prefixes={math:'Math:',ela:'ELA:',science:'Sci:',social:'SS:',spanish:'Sp:',art:'Art:',life:'Life:',computer:'CS:',skills:'Skills:',review:'Friday:'};
  const fmt=date=>new Date(date+'T12:00:00Z').toLocaleDateString('en-US',{timeZone:'UTC',weekday:'long',month:'short',day:'numeric',year:'numeric'});
  const range=n=>n[0]===n[1]?String(n[0]):n.join('–');
- function reading(r,resources){const b=resources[r.resource_id];if(!b)return null;return {...r,book:b.title,url:b.url.split('#')[0]+(r.pdf?'#page='+r.pdf[0]:''),pages:r.pdf?'PDF pp. '+range(r.pdf)+(r.printed?' · printed '+range(r.printed):''):'printed pp. '+range(r.printed)};}
+ function reading(r,resources){const b=resources[r.resource_id];if(!b)return null;return {...r,book:b.title,url:b.url.split('#')[0]+(r.pdf?'#page='+r.pdf[0]:''),pages:r.pdf?'PDF pp. '+range(r.pdf)+(r.printed?' · printed '+range(r.printed):''):r.printed?'printed pp. '+range(r.printed):'Online lesson'};}
 
  // Core subjects get directions built from the lesson's own topic, pages, worksheet questions and optional extras.
  const CORE=new Set(['math','ela','science','social']);
@@ -84,7 +84,7 @@ window.PacketRenderer=(()=>{
   const grid=node('div','','guide-grid');for(const s of m.subjects){const card=node('section','','guide-card');card.id=`guide-${record.grade}-${record.date}-${s.id}`;card.append(node('p',s.name.toUpperCase(),'subject-tag'),node('h2',s.topic));
    
    if(s.readings.length){card.append(node('h3','Open these pages'));resourceRows(s.readings,card);}
-   else card.append(node('p','Use the review, project, or catch-up activity selected for today.','guide-note'));card.append(node('h3','What to do'));if(s.task.includes('\n')){for(const l of s.task.split('\n'))card.append(node('p',l,'guide-task'));}else{const sentences=s.task.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g)||[s.task];card.append(node('p',sentences[0],'guide-task'));if(sentences.length>1){const more=node('details','','support-details');more.append(node('summary','More lesson directions'),node('p',sentences.slice(1).join(' ').trim(),'guide-task'));card.append(more);}}
+   else card.append(node('p','Use the review, project, or catch-up activity selected for today.','guide-note'));card.append(node('h3','What to do'));if(s.task.includes('\n')){for(const l of s.task.split('\n'))card.append(node('p',l,'guide-task'));}else{const sentences=s.task.split(/(?<=[.!?])\s+/).filter(Boolean);if(!sentences.length)sentences.push(s.task);card.append(node('p',sentences[0],'guide-task'));if(sentences.length>1){const more=node('details','','support-details');more.append(node('summary','More lesson directions'),node('p',sentences.slice(1).join(' ').trim(),'guide-task'));card.append(more);}}
    if(s.extras.length){const extra=node('details','','support-details');extra.append(node('summary','Extra worksheets & optional practice'));for(const r of s.extras){const item=node('div','','guide-resource');item.append(link(r.title+' ↗',r.url,'guide-resource-title'));if(r.access)item.append(node('p',r.access,'guide-note'));extra.append(item);}card.append(extra);}
    if(s.preparation.length){const prep=node('details','','support-details');prep.append(node('summary','Parent preparation'));resourceRows(s.preparation,prep);card.append(prep);}
    grid.append(card);

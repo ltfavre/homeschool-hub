@@ -6,6 +6,7 @@ export function readingsForDay(subject, date, teacher=false) {
 }
 export function readingText(r) {
  const range=a=>a[0]===a[1]?String(a[0]):a.join('–');
+ if(!r.pdf&&!r.printed)return `${r.section} · online lesson`;
  if(!r.pdf)return `${r.section} · printed pp. ${range(r.printed)} (use the guide's page numbers, not the PDF viewer's)`;
  return `${r.section} · ${r.printed?'printed pp. '+range(r.printed)+' · ':''}PDF pp. ${range(r.pdf)}`;
 }

@@ -1,6 +1,6 @@
 {
-  "about": "Grading settings. weights are percentages of the course grade; they are rescaled over the categories that have grades so far. defaultPossible is the starting 'out of' value on each score box. scale lists the minimum percent for each letter.",
-  "weights": { "work": 40, "quiz": 25, "test": 35 },
-  "defaultPossible": { "work": 10, "quiz": 20, "test": 50 },
+  "about": "Grading settings. weights are percentages of the course grade (daily work, quizzes, tests, projects); they are rescaled over the categories that have grades so far. defaultPossible is the starting 'out of' value on each score box. scale lists the minimum percent for each letter. A parent can change these on the Grades page (Settings tab); saved settings take priority over this file.",
+  "weights": { "work": 40, "quiz": 25, "test": 35, "project": 15 },
+  "defaultPossible": { "work": 10, "quiz": 20, "test": 50, "project": 100 },
   "scale": [[90, "A"], [80, "B"], [70, "C"], [60, "D"], [0, "F"]]
 }

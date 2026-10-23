@@ -1,0 +1,1023 @@
+{
+ "year": "2026–2027",
+ "updated": "2026-10-23",
+ "about": "Independent-reading plan for the 2026–27 school year. Core books are public domain and free to read online, download (EPUB/Kindle), or hear on LibriVox. One core book per module, matched to that module's ELA skill and history or science topic. Library picks are modern titles you can borrow free with a library card.",
+ "modules": {
+  "1": {
+   "label": "Module 1",
+   "dates": "Oct 12 – Nov 6",
+   "start": "2026-10-12",
+   "end": "2026-11-06"
+  },
+  "2": {
+   "label": "Module 2",
+   "dates": "Nov 9 – Dec 11",
+   "start": "2026-11-09",
+   "end": "2026-12-11"
+  },
+  "3": {
+   "label": "Module 3",
+   "dates": "Dec 14 – Jan 22",
+   "start": "2026-12-14",
+   "end": "2027-01-22"
+  },
+  "4": {
+   "label": "Module 4",
+   "dates": "Jan 25 – Feb 19",
+   "start": "2027-01-25",
+   "end": "2027-02-19"
+  },
+  "5": {
+   "label": "Module 5",
+   "dates": "Feb 22 – Mar 26",
+   "start": "2027-02-22",
+   "end": "2027-03-26"
+  },
+  "6": {
+   "label": "Module 6",
+   "dates": "Mar 29 – Apr 23",
+   "start": "2027-03-29",
+   "end": "2027-04-23"
+  },
+  "7": {
+   "label": "Module 7",
+   "dates": "Apr 26 – May 21",
+   "start": "2027-04-26",
+   "end": "2027-05-21"
+  },
+  "8": {
+   "label": "Module 8",
+   "dates": "May 24 – Jun 18",
+   "start": "2027-05-24",
+   "end": "2027-06-18"
+  },
+  "9": {
+   "label": "Module 9",
+   "dates": "Jun 21 – Jul 16",
+   "start": "2027-06-21",
+   "end": "2027-07-16"
+  }
+ },
+ "grades": {
+  "4": {
+   "pace": "About 20–30 minutes a day; read aloud together whenever a note suggests it.",
+   "books": [
+    {
+     "id": "rl4-arthur",
+     "module": 1,
+     "dates": "Oct 12 – Nov 6",
+     "role": "core",
+     "title": "Stories of King Arthur's Knights, Told to the Children",
+     "author": "Mary Macgregor",
+     "year": 1905,
+     "why": "Short, child-friendly retellings that run alongside the King Arthur unit in ELA, so independent reading reinforces class vocabulary.",
+     "ties": "ELA Module 1 (King Arthur); word parts and context clues",
+     "prompts": [
+      "Pick one unfamiliar word from today's chapter. What clues in the sentence helped you figure it out?",
+      "Which knight would you trust most? Give two details from the story."
+     ],
+     "note": "",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/25654",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/25654/pg25654-images.html",
+       "type": "web"
+      }
+     ],
+     "length": "~120 pp."
+    },
+    {
+     "id": "rl4-verses",
+     "module": 1,
+     "dates": "Oct 12 – Nov 6",
+     "role": "companion",
+     "title": "A Child's Garden of Verses",
+     "author": "Robert Louis Stevenson",
+     "year": 1885,
+     "why": "A poem-a-week companion for the whole year: short, musical poems for reading aloud, copywork, and memorization.",
+     "ties": "All modules: fluency, figurative language, copywork",
+     "prompts": [
+      "Read the poem aloud twice. Which line has the strongest rhythm?",
+      "Copy your favorite stanza in your best handwriting and illustrate it."
+     ],
+     "note": "",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/136",
+       "type": "ebook"
+      }
+     ]
+    },
+    {
+     "id": "rl4-beauty",
+     "module": 2,
+     "dates": "Nov 9 – Dec 11",
+     "role": "core",
+     "title": "Black Beauty (Young Folks' Edition)",
+     "author": "Anna Sewell",
+     "year": 1877,
+     "why": "A shortened edition of the classic told by the horse itself, ideal for practicing inference and theme in Module 2.",
+     "ties": "ELA Module 2 (evidence, inference, theme); Science (animal needs and life cycles)",
+     "prompts": [
+      "Black Beauty never says how he feels directly in this chapter. What can you infer, and what evidence shows it?",
+      "What lesson about kindness does the author want readers to learn?"
+     ],
+     "note": "",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/11860",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/11860/pg11860-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl4-legends",
+     "module": 3,
+     "dates": "Dec 14 – Jan 22",
+     "role": "core",
+     "title": "Old Indian Legends",
+     "author": "Zitkala-Ša",
+     "year": 1901,
+     "why": "Dakota stories retold by a Dakota author, read alongside the Indigenous peoples of Mississippi unit. Pair with the Mississippi Band of Choctaw Indians site already in the plan.",
+     "ties": "Social Studies Module 3 (Indigenous peoples of Mississippi); ELA longer passages",
+     "prompts": [
+      "How does Iktomi's trickery cause trouble? Track the evidence across two paragraphs.",
+      "Compare one legend with a Choctaw story or fact you learned this module."
+     ],
+     "note": "Dakota (Sioux) legends from the Great Plains, not Mississippi nations; use them to compare oral traditions.",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/338",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/338/pg338-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl4-pooh",
+     "module": 3,
+     "dates": "Dec 14 – Jan 22",
+     "role": "companion",
+     "title": "Winnie-the-Pooh",
+     "author": "A. A. Milne",
+     "year": 1926,
+     "why": "A gentle winter-break read-aloud with playful language; great for expression and fluency.",
+     "ties": "Winter break read-aloud; ELA fluency",
+     "prompts": [
+      "Read a Pooh conversation aloud with a partner using different voices.",
+      "Which character is most like you? Why?"
+     ],
+     "note": "",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/67098",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/67098/pg67098-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl4-justso",
+     "module": 4,
+     "dates": "Jan 25 – Feb 19",
+     "role": "core",
+     "title": "Just So Stories",
+     "author": "Rudyard Kipling",
+     "year": 1902,
+     "why": "Invented words and silly 'how it came to be' tales make this a perfect match for interpreting words and phrases.",
+     "ties": "ELA Module 4 (interpret words and phrases); Science (animal structures)",
+     "prompts": [
+      "Find a made-up word Kipling uses. What do you think it means and why?",
+      "Write your own 'How the ___ Got Its ___' story in one page."
+     ],
+     "note": "",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/2781",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/2781/pg2781-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl4-peterpan",
+     "module": 5,
+     "dates": "Feb 22 – Mar 26",
+     "role": "core",
+     "title": "Peter Pan (Peter and Wendy)",
+     "author": "J. M. Barrie",
+     "year": 1911,
+     "why": "Pirates and adventure to read beside the adapted Treasure Island reader; compare how two authors build a villain.",
+     "ties": "ELA Module 5 (Treasure Island; compare structure and viewpoint)",
+     "prompts": [
+      "Compare Captain Hook with Long John Silver. Which is scarier, and why?",
+      "Who tells this story? How would it change if Wendy told it?"
+     ],
+     "note": "Contains outdated, stereotyped descriptions of Native characters (the 'Piccaninny' tribe chapters). Preview the chapters with that tribe (such as \"The Happy Home\") and talk about why the portrayal is hurtful.",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/16",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/16/pg16-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl4-oz",
+     "module": 6,
+     "dates": "Mar 29 – Apr 23",
+     "role": "core",
+     "title": "The Wonderful Wizard of Oz",
+     "author": "L. Frank Baum",
+     "year": 1900,
+     "why": "Opens in Kansas with a cyclone, so it pairs with the Midwest region and the weather unit in the same module.",
+     "ties": "Social Studies Module 6 (Midwest); Science Module 6 (weather)",
+     "prompts": [
+      "How is Kansas described in Chapter 1? Compare it with what you learned about the Midwest.",
+      "What weather facts about tornadoes does the story get right or wrong?"
+     ],
+     "note": "",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/55",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/55/pg55-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl4-smoky",
+     "module": 7,
+     "dates": "Apr 26 – May 21",
+     "role": "core",
+     "title": "Smoky the Cow Horse",
+     "author": "Will James",
+     "year": 1926,
+     "why": "1927 Newbery Medal winner about a horse on a Western cattle ranch; supports the West/Southwest region study.",
+     "ties": "Social Studies Module 7 (West/Southwest); ELA multiple texts",
+     "prompts": [
+      "What ranch jobs does Smoky do? Connect them to the West's resources and economy.",
+      "How does Smoky change from the beginning of the book?"
+     ],
+     "note": "Written in cowboy dialect, so read the first chapters aloud together.",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/69798",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/69798/pg69798-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl4-poohcorner",
+     "module": 8,
+     "dates": "May 24 – Jun 18",
+     "role": "core",
+     "title": "The House at Pooh Corner",
+     "author": "A. A. Milne",
+     "year": 1928,
+     "why": "Milne's Capitalized Important Words and playful punctuation make a fun springboard for the conventions module.",
+     "ties": "ELA Module 8 (punctuation, capitalization, editing)",
+     "prompts": [
+      "Find three words Milne capitalizes that normally would not be. Why do you think he did it?",
+      "Rewrite a short passage with standard capitalization. What changes?"
+     ],
+     "note": "",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/73011",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/73011/pg73011-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl4-westafrica",
+     "module": 9,
+     "dates": "Jun 21 – Jul 16",
+     "role": "core",
+     "title": "West African Folk-Tales",
+     "author": "W. H. Barker & Cecilia Sinclair",
+     "year": 1917,
+     "why": "Short Anansi tales for summer reading and the final portfolio, ideal for retelling and presentations.",
+     "ties": "ELA Module 9 (portfolio, presenting with evidence)",
+     "prompts": [
+      "Retell your favorite Anansi tale to the family in under two minutes.",
+      "What lesson does the tale teach? Use one quote as evidence."
+     ],
+     "note": "The introduction reflects 1917 colonial attitudes; start with the stories themselves.",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/66923",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/66923/pg66923-images.html",
+       "type": "web"
+      }
+     ]
+    }
+   ],
+   "library": [
+    {
+     "id": "lb4-despereaux",
+     "title": "The Tale of Despereaux",
+     "author": "Kate DiCamillo",
+     "why": "A tiny mouse who dreams of knights and chivalry; a perfect partner to the King Arthur unit.",
+     "modules": [
+      1,
+      2
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=The%20Tale%20of%20Despereaux%20Kate%20DiCamillo",
+       "type": "library"
+      }
+     ]
+    },
+    {
+     "id": "lb4-winndixie",
+     "title": "Because of Winn-Dixie",
+     "author": "Kate DiCamillo",
+     "why": "A warm Southern small-town story; good for character and theme.",
+     "modules": [
+      2,
+      5
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=Because%20of%20Winn-Dixie%20Kate%20DiCamillo",
+       "type": "library"
+      }
+     ]
+    },
+    {
+     "id": "lb4-ivan",
+     "title": "The One and Only Ivan",
+     "author": "Katherine Applegate",
+     "why": "Newbery winner told in short chapters by a gorilla; strong for inference and viewpoint.",
+     "modules": [
+      2,
+      4
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=The%20One%20and%20Only%20Ivan%20Katherine%20Applegate",
+       "type": "library"
+      }
+     ]
+    },
+    {
+     "id": "lb4-wildrobot",
+     "title": "The Wild Robot",
+     "author": "Peter Brown",
+     "why": "A robot learns to survive on an island; connects to life cycles and ecosystems.",
+     "modules": [
+      2,
+      8
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=The%20Wild%20Robot%20Peter%20Brown",
+       "type": "library"
+      }
+     ]
+    },
+    {
+     "id": "lb4-rubybridges",
+     "title": "Through My Eyes",
+     "author": "Ruby Bridges",
+     "why": "Ruby Bridges's own account of integrating her school; supports civics and the Southeast region.",
+     "modules": [
+      4,
+      5
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=Through%20My%20Eyes%20Ruby%20Bridges",
+       "type": "library"
+      }
+     ]
+    },
+    {
+     "id": "lb4-frontdesk",
+     "title": "Front Desk",
+     "author": "Kelly Yang",
+     "why": "An immigrant girl runs a motel front desk; great for comparing viewpoints and community.",
+     "modules": [
+      6
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=Front%20Desk%20Kelly%20Yang",
+       "type": "library"
+      }
+     ]
+    },
+    {
+     "id": "lb4-bluedolphins",
+     "title": "Island of the Blue Dolphins",
+     "author": "Scott O'Dell",
+     "why": "Survival on an island off California; ties to the West region and natural resources.",
+     "modules": [
+      7
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=Island%20of%20the%20Blue%20Dolphins%20Scott%20O%27Dell",
+       "type": "library"
+      }
+     ]
+    }
+   ]
+  },
+  "7": {
+   "pace": "About 30–40 minutes a day, with a short written response each Friday.",
+   "books": [
+    {
+     "id": "rl7-wild",
+     "module": 1,
+     "dates": "Oct 12 – Nov 6",
+     "role": "core",
+     "title": "The Call of the Wild",
+     "author": "Jack London",
+     "year": 1903,
+     "why": "A short survival novel about adaptation and environment that pairs with ecosystems and the theme work in Module 1.",
+     "ties": "Science Module 1 (ecosystems); ELA central ideas and theme",
+     "prompts": [
+      "How does Buck adapt to each new environment? Cite two moments.",
+      "State the theme in one sentence and support it with evidence."
+     ],
+     "note": "Includes realistic animal violence and fighting.",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/215",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/215/pg215-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl7-lamb",
+     "module": 1,
+     "dates": "Oct 12 – Nov 6",
+     "role": "companion",
+     "title": "Tales from Shakespeare",
+     "author": "Charles & Mary Lamb",
+     "year": 1807,
+     "why": "Prose retellings of Shakespeare's plays. Read 'The Tempest' before or alongside the class reader.",
+     "ties": "ELA Module 1–2 (The Tempest)",
+     "prompts": [
+      "Read the Lambs' Tempest. What details did they leave out of the play?",
+      "Which version helps you understand Prospero better, and why?"
+     ],
+     "note": "",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/1286",
+       "type": "ebook"
+      }
+     ]
+    },
+    {
+     "id": "rl7-sawyer",
+     "module": 2,
+     "dates": "Nov 9 – Dec 11",
+     "role": "core",
+     "title": "The Adventures of Tom Sawyer",
+     "author": "Mark Twain",
+     "year": 1876,
+     "why": "A Mississippi River classic with rich long passages for evidence and inference practice.",
+     "ties": "ELA Module 2 (long-passage evidence and analysis); local connection to the Mississippi River",
+     "prompts": [
+      "How does Twain use humor in the fence-whitewashing scene to reveal Tom's character?",
+      "Track one long passage: what is the central conflict, and how does it develop?"
+     ],
+     "note": "Uses period racial slurs and stereotypes (including of Injun Joe). Preview and discuss historical context before reading.",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/74",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/74/pg74-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl7-odysseus",
+     "module": 3,
+     "dates": "Dec 14 – Jan 22",
+     "role": "core",
+     "title": "The Adventures of Odysseus and the Tale of Troy",
+     "author": "Padraic Colum",
+     "year": 1918,
+     "why": "A readable retelling of Homer for the Ancient Greece module.",
+     "ties": "Social Studies Module 3 (Ancient Greece, mythology); ELA pronoun clarity in writing",
+     "prompts": [
+      "Which Greek value (hospitality, cleverness, loyalty) does Odysseus show most? Give evidence.",
+      "How do the gods affect events? What does this tell you about Greek beliefs?"
+     ],
+     "note": "",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/16867",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/16867/pg16867-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl7-caesar",
+     "module": 4,
+     "dates": "Jan 25 – Feb 19",
+     "role": "core",
+     "title": "Julius Caesar",
+     "author": "William Shakespeare",
+     "year": 1599,
+     "why": "Shakespeare's play about the end of the Republic; Antony's funeral speech is a model text for purpose and viewpoint.",
+     "ties": "Social Studies Module 4 (Republic vs. Empire); ELA purpose, viewpoint, and craft",
+     "prompts": [
+      "Compare Brutus's and Antony's funeral speeches. Which persuasive techniques does each use?",
+      "Was Brutus a hero or a traitor? Argue with evidence from Act 3."
+     ],
+     "note": "Read with a free audio version (LibriVox) or the Lambs' prose summary first.",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/1522",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/1522/pg1522-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl7-arabian",
+     "module": 5,
+     "dates": "Feb 22 – Mar 26",
+     "role": "core",
+     "title": "The Arabian Nights Entertainments",
+     "author": "Andrew Lang (ed.)",
+     "year": 1898,
+     "why": "Selected tales (Aladdin, Ali Baba, Sindbad) for the Islamic Golden Age and trade modules.",
+     "ties": "Social Studies Module 5 (Islamic Golden Age, trade); ELA modifiers in descriptive writing",
+     "prompts": [
+      "What do the Sindbad voyages show about trade and travel in the Golden Age?",
+      "Highlight five vivid adjectives or adverbs in one tale and explain their effect."
+     ],
+     "note": "Choose tales in advance; Lang's edition is family-friendly but long.",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/128",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/128/pg128-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl7-westafrica",
+     "module": 6,
+     "dates": "Mar 29 – Apr 23",
+     "role": "core",
+     "title": "West African Folk-Tales",
+     "author": "W. H. Barker & Cecilia Sinclair",
+     "year": 1917,
+     "why": "Anansi and other oral tales from the region of the Ghana and Mali empires, for the West African kingdoms module.",
+     "ties": "Social Studies Module 6 (West African kingdoms, trans-Saharan trade); ELA sentence structure",
+     "prompts": [
+      "What role do storytellers (griots) play in preserving history? Compare with a written source.",
+      "Combine three short sentences from a tale into one precise sentence."
+     ],
+     "note": "The introduction reflects 1917 colonial attitudes; pair with a modern source on Mali and Mansa Musa.",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/66923",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/66923/pg66923-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl7-otto",
+     "module": 7,
+     "dates": "Apr 26 – May 21",
+     "role": "core",
+     "title": "Otto of the Silver Hand",
+     "author": "Howard Pyle",
+     "year": 1888,
+     "why": "A short medieval novel about robber barons and a monastery childhood, matching feudalism and the medieval Church.",
+     "ties": "Social Studies Module 7 (feudalism, medieval Church); ELA comparing sources and claims",
+     "prompts": [
+      "Compare life in the castle and the monastery. What does each show about feudal society?",
+      "Is Pyle's picture of the Middle Ages accurate? Check two claims against your history reader."
+     ],
+     "note": "",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/2865",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/2865/pg2865-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl7-hughes",
+     "module": 7,
+     "dates": "Apr 26 – May 21",
+     "role": "companion",
+     "title": "The Weary Blues (selected poems)",
+     "author": "Langston Hughes",
+     "year": 1926,
+     "why": "Hughes's first collection, in the public domain since 2022, to read with the Harlem Renaissance ELA unit.",
+     "ties": "ELA Module 7 (The Genius of the Harlem Renaissance)",
+     "prompts": [
+      "Read 'Mother to Son' and 'Dream Variations.' How does Hughes use rhythm from blues and jazz?",
+      "Compare a Hughes poem with a reader passage about the same era."
+     ],
+     "note": "Teacher-selected poems recommended; a few poems describe nightlife and cabarets.",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/74745",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/74745/pg74745-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl7-trumpeter",
+     "module": 8,
+     "dates": "May 24 – Jun 18",
+     "role": "core",
+     "title": "The Trumpeter of Krakow",
+     "author": "Eric P. Kelly",
+     "year": 1928,
+     "why": "1929 Newbery Medal winner set in 15th-century Kraków, with alchemy and early science, for the Renaissance and Scientific Revolution.",
+     "ties": "Social Studies Module 8 (Renaissance, Scientific Revolution); ELA punctuation in dialogue",
+     "prompts": [
+      "How does the alchemist Kreutz show the line between superstition and science?",
+      "Find a dialogue-heavy page and explain three punctuation choices."
+     ],
+     "note": "",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/72600",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/72600/pg72600-images.html",
+       "type": "web"
+      }
+     ]
+    },
+    {
+     "id": "rl7-treasure",
+     "module": 9,
+     "dates": "Jun 21 – Jul 16",
+     "role": "core",
+     "title": "Treasure Island",
+     "author": "Robert Louis Stevenson",
+     "year": 1883,
+     "why": "The original novel for the Age of Exploration module and summer reading.",
+     "ties": "Social Studies Module 9 (Age of Exploration); ELA style, tone, and portfolio",
+     "prompts": [
+      "How does Stevenson build suspense in the first five chapters?",
+      "Is Long John Silver a villain? Write a short argument for your portfolio."
+     ],
+     "note": "",
+     "access": "Free · public domain",
+     "links": [
+      {
+       "label": "Read free (Project Gutenberg)",
+       "url": "https://www.gutenberg.org/ebooks/27780",
+       "type": "ebook"
+      },
+      {
+       "label": "Read online",
+       "url": "https://www.gutenberg.org/cache/epub/27780/pg27780-images.html",
+       "type": "web"
+      }
+     ]
+    }
+   ],
+   "library": [
+    {
+     "id": "lb7-rollofthunder",
+     "title": "Roll of Thunder, Hear My Cry",
+     "author": "Mildred D. Taylor",
+     "why": "Newbery winner set in Mississippi in 1933; essential Mississippi history through a family's eyes.",
+     "modules": [
+      2,
+      9
+     ],
+     "note": "Depicts racism and racial violence; read and discuss together.",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=Roll%20of%20Thunder%2C%20Hear%20My%20Cry%20Mildred%20D.%20Taylor",
+       "type": "library"
+      }
+     ]
+    },
+    {
+     "id": "lb7-hatchet",
+     "title": "Hatchet",
+     "author": "Gary Paulsen",
+     "why": "Wilderness survival story to pair with The Call of the Wild.",
+     "modules": [
+      1
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=Hatchet%20Gary%20Paulsen",
+       "type": "library"
+      }
+     ]
+    },
+    {
+     "id": "lb7-singleshard",
+     "title": "A Single Shard",
+     "author": "Linda Sue Park",
+     "why": "Newbery winner set in 12th-century Korea; connects to medieval Asia and trade.",
+     "modules": [
+      6
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=A%20Single%20Shard%20Linda%20Sue%20Park",
+       "type": "library"
+      }
+     ]
+    },
+    {
+     "id": "lb7-longwalk",
+     "title": "A Long Walk to Water",
+     "author": "Linda Sue Park",
+     "why": "Two Sudanese stories, past and present; supports African geography and Earth's resources.",
+     "modules": [
+      6,
+      7
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=A%20Long%20Walk%20to%20Water%20Linda%20Sue%20Park",
+       "type": "library"
+      }
+     ]
+    },
+    {
+     "id": "lb7-inquisitor",
+     "title": "The Inquisitor's Tale",
+     "author": "Adam Gidwitz",
+     "why": "Medieval France told by many narrators; perfect for feudalism and the medieval Church.",
+     "modules": [
+      7
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=The%20Inquisitor%27s%20Tale%20Adam%20Gidwitz",
+       "type": "library"
+      }
+     ]
+    },
+    {
+     "id": "lb7-browngirl",
+     "title": "Brown Girl Dreaming",
+     "author": "Jacqueline Woodson",
+     "why": "A memoir in verse; pairs with Langston Hughes and the Harlem Renaissance unit.",
+     "modules": [
+      7
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=Brown%20Girl%20Dreaming%20Jacqueline%20Woodson",
+       "type": "library"
+      }
+     ]
+    },
+    {
+     "id": "lb7-hiddenfigures",
+     "title": "Hidden Figures (Young Readers' Edition)",
+     "author": "Margot Lee Shetterly",
+     "why": "The Black women mathematicians behind NASA's space race; supports astronomy and space exploration.",
+     "modules": [
+      6
+     ],
+     "note": "",
+     "access": "Free with a library card (print, Libby or Hoopla)",
+     "links": [
+      {
+       "label": "Find at your library",
+       "url": "https://search.worldcat.org/search?q=Hidden%20Figures%20%28Young%20Readers%27%20Edition%29%20Margot%20Lee%20Shetterly",
+       "type": "library"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "platforms": [
+  {
+   "id": "pf-commonlit",
+   "title": "CommonLit",
+   "url": "https://www.commonlit.org/",
+   "grades": "3–12",
+   "what": "Free leveled passages with questions and paired texts. Use it to add short readings to 'compare sources' weeks.",
+   "access": "Free teacher account"
+  },
+  {
+   "id": "pf-readworks",
+   "title": "ReadWorks",
+   "url": "https://www.readworks.org/",
+   "grades": "K–12",
+   "what": "Free nonfiction articles and 'Article-A-Day' science and social studies sets with audio.",
+   "access": "Free teacher account"
+  },
+  {
+   "id": "pf-storyweaver",
+   "title": "StoryWeaver",
+   "url": "https://storyweaver.org.in/",
+   "grades": "K–5",
+   "what": "Thousands of openly licensed illustrated stories in English and Spanish, by reading level.",
+   "access": "Free, no account needed"
+  },
+  {
+   "id": "pf-gutenberg",
+   "title": "Project Gutenberg",
+   "url": "https://www.gutenberg.org/",
+   "grades": "All",
+   "what": "70,000+ public-domain e-books in EPUB, Kindle, and web formats.",
+   "access": "Free, no account needed"
+  },
+  {
+   "id": "pf-librivox",
+   "title": "LibriVox",
+   "url": "https://librivox.org/",
+   "grades": "All",
+   "what": "Free volunteer-read audiobooks of public-domain books, including most titles on this list.",
+   "access": "Free, no account needed"
+  },
+  {
+   "id": "pf-openlibrary",
+   "title": "Open Library",
+   "url": "https://openlibrary.org/",
+   "grades": "All",
+   "what": "Borrow digital copies of modern books for free from the Internet Archive.",
+   "access": "Free account"
+  },
+  {
+   "id": "pf-mshistory",
+   "title": "Mississippi History Now",
+   "url": "https://mshistory.mdah.ms.gov/",
+   "grades": "4–12",
+   "what": "Free Mississippi history articles and lesson plans from the Department of Archives and History.",
+   "access": "Free, no account needed"
+  }
+ ]
+}

@@ -1,0 +1,1263 @@
+{
+ "resources": {
+  "ck-g6-cells-sr": {
+   "title": "Cells and Systems - Student Reader - Publisher Grade 6",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2022/11/CKSci_G6U6_Cells-and-Systems_SR_Web.pdf",
+   "provider": "Core Knowledge Foundation (CKSci, adapted from OpenSciEd)",
+   "kind": "Printable book / reader",
+   "access": "Free printable PDF",
+   "note": "Bones, muscles, nerve cells and healing; written for middle school.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "ck-g6-cells-swp": {
+   "title": "Cells and Systems - Student Work Pages - Publisher Grade 6",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2022/11/CKSci_G6U6_Cells-and-Systems_SWP_Web.pdf",
+   "provider": "Core Knowledge Foundation (CKSci, adapted from OpenSciEd)",
+   "kind": "Printable workbook",
+   "access": "Free printable PDF",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "ck-g6-cells-tg": {
+   "title": "Cells and Systems - Teacher Guide - Publisher Grade 6",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2022/11/CKSci_G6U6_Cells-and-Systems_TG_Web.pdf",
+   "provider": "Core Knowledge Foundation (CKSci, adapted from OpenSciEd)",
+   "kind": "Teacher guide",
+   "access": "Free printable PDF",
+   "note": "",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "kh68-bones": {
+   "title": "Bones, Muscles, and Joints (Grades 6–8 teacher's guide + handouts)",
+   "url": "https://Classroom.KidsHealth.org/classroom/6to8/body/parts/bones.pdf",
+   "provider": "KidsHealth in the Classroom (Nemours)",
+   "kind": "Teacher lesson + printable handouts",
+   "access": "Free printable PDF",
+   "note": "Paper-skeleton activity, joint types, injury-prevention flyer, quiz and key.",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "ck-g8-forces-sr": {
+   "title": "Contact Forces - Student Reader - Publisher Grade 8",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2022/04/CKSci_G8_Unit1_Contact-Forces_SR.pdf",
+   "provider": "Core Knowledge Foundation (CKSci, adapted from OpenSciEd)",
+   "kind": "Printable book / reader",
+   "access": "Free printable PDF",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "ck-g8-forces-tg": {
+   "title": "Contact Forces - Teacher Guide - Publisher Grade 8",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2022/04/CKSci_G8_Unit1_Contact-Forces_TG.pdf",
+   "provider": "Core Knowledge Foundation (CKSci, adapted from OpenSciEd)",
+   "kind": "Teacher guide",
+   "access": "Free printable PDF",
+   "note": "",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "ck-g8-sound-sr": {
+   "title": "Sound Waves - Student Reader - Publisher Grade 8",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2022/05/CKSci_G8U2_SR_Web.pdf",
+   "provider": "Core Knowledge Foundation (CKSci, adapted from OpenSciEd)",
+   "kind": "Printable book / reader",
+   "access": "Free printable PDF",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "ck-g8-sound-tg": {
+   "title": "Sound Waves - Teacher Guide - Publisher Grade 8",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2022/05/CKSci_G8U2_TG_Web.pdf",
+   "provider": "Core Knowledge Foundation (CKSci, adapted from OpenSciEd)",
+   "kind": "Teacher guide",
+   "access": "Free printable PDF",
+   "note": "",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "ck-g8-space-sr": {
+   "title": "Earth in Space - Student Reader - Publisher Grade 8",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2022/11/CKSci_G8U4_Earth-in-Space_SR_Web.pdf",
+   "provider": "Core Knowledge Foundation (CKSci, adapted from OpenSciEd)",
+   "kind": "Printable book / reader",
+   "access": "Free printable PDF",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "ck-g8-space-tg": {
+   "title": "Earth in Space - Teacher Guide - Publisher Grade 8",
+   "url": "https://www.coreknowledge.org/wp-content/uploads/2022/11/CKSci_G8U4_Earth-in-Space_TG_Web.pdf",
+   "provider": "Core Knowledge Foundation (CKSci, adapted from OpenSciEd)",
+   "kind": "Teacher guide",
+   "access": "Free printable PDF",
+   "note": "",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "te-levers": {
+   "title": "Levers That Lift (lesson, grades 7–9)",
+   "url": "https://www.teachengineering.org/lessons/view/cub_simp_machines_lesson03",
+   "provider": "TeachEngineering (University of Colorado Boulder)",
+   "kind": "Teacher lesson",
+   "access": "Free",
+   "note": "Lever, pulley and wheel-and-axle with mechanical-advantage formulas (effort arm ÷ load arm).",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "phet-balance": {
+   "title": "Balancing Act: lever and torque simulation",
+   "url": "https://phet.colorado.edu/en/simulations/balancing-act",
+   "provider": "PhET Interactive Simulations",
+   "kind": "Simulation",
+   "access": "Free; runs in the browser",
+   "note": "Place masses on a lever to find the balance rule; use for mechanical advantage.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "te-wheeling": {
+   "title": "Wheeling It In! Design a wheel-and-axle vehicle (grade 4)",
+   "url": "https://www.teachengineering.org/sprinkles/view/cub_wheeling",
+   "provider": "TeachEngineering (University of Colorado Boulder)",
+   "kind": "Hands-on design activity",
+   "access": "Free; household materials",
+   "note": "50 minutes; wheels, axles and a carton body to carry a load.",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "te-goflow": {
+   "title": "Go with the Flow: conductors and insulators (lesson, grade 4)",
+   "url": "https://www.teachengineering.org/lessons/view/cub_electricity_lesson04",
+   "provider": "TeachEngineering (University of Colorado Boulder)",
+   "kind": "Teacher lesson + activity",
+   "access": "Free",
+   "note": "Build a conductivity tester, sort household objects, then design a simple switch.",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "kh35-germs": {
+   "title": "Germs (Grades 3–5 teacher's guide + handouts)",
+   "url": "https://Classroom.KidsHealth.org/classroom/3to5/personal/hygiene/germs.pdf",
+   "provider": "KidsHealth in the Classroom (Nemours)",
+   "kind": "Teacher lesson + printable handouts",
+   "access": "Free printable PDF",
+   "note": "Infectious illness: how germs spread and prevention. Survey, Germ Art activity, quiz and key.",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "kh35-immune": {
+   "title": "Immune System (Grades 3–5 teacher's guide + handouts)",
+   "url": "https://Classroom.KidsHealth.org/classroom/3to5/body/systems/immune.pdf",
+   "provider": "KidsHealth in the Classroom (Nemours)",
+   "kind": "Teacher lesson + printable handouts",
+   "access": "Free printable PDF",
+   "note": "",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "bens-state": {
+   "title": "State Government (Ben's Guide, ages 9–13)",
+   "url": "https://bensguide.gpo.gov/j-state-government",
+   "provider": "U.S. Government Publishing Office",
+   "kind": "Article / activity",
+   "access": "Free",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "mshn-gov": {
+   "title": "The Government of Mississippi: How It Functions",
+   "url": "https://mshistory.mdah.ms.gov/issue/government-of-mississippi-how-it-functions",
+   "provider": "Mississippi History Now (MDAH)",
+   "kind": "Article",
+   "access": "Free",
+   "note": "Written for older students: read the branch sections together and summarize.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "msu-local": {
+   "title": "Political Process and Local Government Administration: City and County Government",
+   "url": "https://extension.msstate.edu/sites/default/files/publications/IS1132_web.pdf",
+   "provider": "Mississippi State University Extension",
+   "kind": "Teacher background reading",
+   "access": "Free printable PDF",
+   "note": "Boards of supervisors, mayors and aldermen in plain language; read aloud short sections.",
+   "teacher_only": true,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "natgeo-regions": {
+   "title": "United States Regions (maps + questions)",
+   "url": "https://education.nationalgeographic.org/resource/united-states-regions",
+   "provider": "National Geographic Education",
+   "kind": "Map / activity",
+   "access": "Free",
+   "note": "Five-region map with and without state labels, plus five questions with answers.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl4-arthur": {
+   "title": "Stories of King Arthur's Knights, Told to the Children (Mary Macgregor) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/25654",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl4-verses": {
+   "title": "A Child's Garden of Verses (Robert Louis Stevenson) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/136",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl4-beauty": {
+   "title": "Black Beauty (Young Folks' Edition) (Anna Sewell) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/11860",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl4-legends": {
+   "title": "Old Indian Legends (Zitkala-Ša) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/338",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "Dakota (Sioux) legends from the Great Plains, not Mississippi nations; use them to compare oral traditions.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl4-pooh": {
+   "title": "Winnie-the-Pooh (A. A. Milne) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/67098",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl4-justso": {
+   "title": "Just So Stories (Rudyard Kipling) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/2781",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl4-peterpan": {
+   "title": "Peter Pan (Peter and Wendy) (J. M. Barrie) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/16",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "Contains outdated, stereotyped descriptions of Native characters (the 'Piccaninny' tribe chapters). Preview the chapters with that tribe (such as \"The Happy Home\") and talk about why the portrayal is hurtful.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl4-oz": {
+   "title": "The Wonderful Wizard of Oz (L. Frank Baum) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/55",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl4-smoky": {
+   "title": "Smoky the Cow Horse (Will James) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/69798",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "Written in cowboy dialect, so read the first chapters aloud together.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl4-poohcorner": {
+   "title": "The House at Pooh Corner (A. A. Milne) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/73011",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl4-westafrica": {
+   "title": "West African Folk-Tales (W. H. Barker & Cecilia Sinclair) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/66923",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "The introduction reflects 1917 colonial attitudes; start with the stories themselves.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl7-wild": {
+   "title": "The Call of the Wild (Jack London) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/215",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "Includes realistic animal violence and fighting.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl7-lamb": {
+   "title": "Tales from Shakespeare (Charles & Mary Lamb) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/1286",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl7-sawyer": {
+   "title": "The Adventures of Tom Sawyer (Mark Twain) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/74",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "Uses period racial slurs and stereotypes (including of Injun Joe). Preview and discuss historical context before reading.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl7-odysseus": {
+   "title": "The Adventures of Odysseus and the Tale of Troy (Padraic Colum) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/16867",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl7-caesar": {
+   "title": "Julius Caesar (William Shakespeare) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/1522",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "Read with a free audio version (LibriVox) or the Lambs' prose summary first.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl7-arabian": {
+   "title": "The Arabian Nights Entertainments (Andrew Lang (ed.)) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/128",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "Choose tales in advance; Lang's edition is family-friendly but long.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl7-westafrica": {
+   "title": "West African Folk-Tales (W. H. Barker & Cecilia Sinclair) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/66923",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "The introduction reflects 1917 colonial attitudes; pair with a modern source on Mali and Mansa Musa.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl7-otto": {
+   "title": "Otto of the Silver Hand (Howard Pyle) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/2865",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl7-hughes": {
+   "title": "The Weary Blues (selected poems) (Langston Hughes) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/74745",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "Teacher-selected poems recommended; a few poems describe nightlife and cabarets.",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl7-trumpeter": {
+   "title": "The Trumpeter of Krakow (Eric P. Kelly) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/72600",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  },
+  "rl7-treasure": {
+   "title": "Treasure Island (Robert Louis Stevenson) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/27780",
+   "provider": "Project Gutenberg (public domain)",
+   "kind": "Ebook · 2026–27 reading list",
+   "access": "Free e-book (EPUB, Kindle, web)",
+   "note": "",
+   "teacher_only": false,
+   "reviewed": "2026-10-23",
+   "review": "Publisher page opened and contents checked 2026-10-23"
+  }
+ },
+ "weeks": {
+  "4-2-2": {
+   "science": {
+    "resources": [
+     "germs"
+    ],
+    "teacher_resources": [
+     "kh35-germs",
+     "kh35-immune"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl4-beauty"
+    ]
+   }
+  },
+  "4-4-2": {
+   "science": {
+    "resources": [
+     "circuit"
+    ],
+    "teacher_resources": [
+     "te-goflow"
+    ]
+   },
+   "social": {
+    "resources": [
+     "bens-state"
+    ],
+    "teacher_resources": [
+     "msu-local"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl4-justso"
+    ]
+   }
+  },
+  "4-4-3": {
+   "science": {
+    "resources": [
+     "circuit"
+    ],
+    "teacher_resources": [
+     "te-goflow"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl4-justso"
+    ]
+   }
+  },
+  "4-4-4": {
+   "science": {
+    "resources": [
+     "circuit"
+    ],
+    "teacher_resources": [
+     "te-goflow"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl4-justso"
+    ]
+   }
+  },
+  "4-5-4": {
+   "science": {
+    "resources": [
+     "phet-balance"
+    ],
+    "teacher_resources": [
+     "te-wheeling",
+     "te-levers"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl4-peterpan"
+    ]
+   }
+  },
+  "4-4-1": {
+   "social": {
+    "resources": [
+     "bens-state",
+     "mshn-gov"
+    ],
+    "teacher_resources": [
+     "msu-local"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl4-justso"
+    ]
+   }
+  },
+  "4-6-1": {
+   "social": {
+    "resources": [
+     "natgeo-regions",
+     "states"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl4-oz"
+    ]
+   }
+  },
+  "4-6-2": {
+   "social": {
+    "resources": [
+     "natgeo-regions",
+     "states"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl4-oz"
+    ]
+   }
+  },
+  "4-6-3": {
+   "social": {
+    "resources": [
+     "natgeo-regions",
+     "states"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl4-oz"
+    ]
+   }
+  },
+  "4-7-1": {
+   "social": {
+    "resources": [
+     "natgeo-regions",
+     "states"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl4-smoky"
+    ]
+   }
+  },
+  "4-7-4": {
+   "social": {
+    "resources": [
+     "natgeo-regions",
+     "states"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl4-smoky"
+    ]
+   }
+  },
+  "4-8-1": {
+   "social": {
+    "resources": [
+     "natgeo-regions",
+     "states"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl4-poohcorner"
+    ]
+   }
+  },
+  "7-2-1": {
+   "science": {
+    "resources": [
+     "ck-g6-cells-sr"
+    ],
+    "teacher_resources": [
+     "ck-g6-cells-tg"
+    ],
+    "readings": [
+     {
+      "resource_id": "ck-g6-cells-sr",
+      "section": "Collection 2 — Inside the Body",
+      "printed": [
+       14,
+       23
+      ],
+      "session": 0,
+      "note": "Cells, tissues, organs and imaging; grade-level companion to this week's reader."
+     }
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl7-sawyer"
+    ]
+   }
+  },
+  "7-2-3": {
+   "science": {
+    "resources": [
+     "ck-g6-cells-sr",
+     "ck-g6-cells-swp",
+     "kh68-bones"
+    ],
+    "teacher_resources": [
+     "ck-g6-cells-tg"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl7-sawyer"
+    ]
+   }
+  },
+  "7-2-4": {
+   "science": {
+    "resources": [
+     "ck-g6-cells-sr",
+     "ck-g6-cells-swp"
+    ],
+    "teacher_resources": [
+     "ck-g6-cells-tg"
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl7-sawyer"
+    ]
+   }
+  },
+  "7-5-1": {
+   "science": {
+    "resources": [
+     "ck-g8-forces-sr"
+    ],
+    "teacher_resources": [
+     "ck-g8-forces-tg"
+    ],
+    "readings": [
+     {
+      "resource_id": "ck-g8-forces-sr",
+      "section": "Collection 1 — Collisions",
+      "printed": [
+       4,
+       13
+      ],
+      "session": 0,
+      "note": "Grade-level reading added Oct 2026 (Core Knowledge Grade 8 science, OpenSciEd-based)."
+     }
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl7-arabian"
+    ]
+   }
+  },
+  "7-5-2": {
+   "science": {
+    "resources": [
+     "phet-balance",
+     "ck-g8-forces-sr"
+    ],
+    "teacher_resources": [
+     "te-levers"
+    ],
+    "readings": [
+     {
+      "resource_id": "ck-g8-forces-sr",
+      "section": "Collection 5 — Structures and Forces",
+      "printed": [
+       44,
+       53
+      ],
+      "session": 0,
+      "note": "Grade-level reading added Oct 2026 (Core Knowledge Grade 8 science, OpenSciEd-based). Pair with Levers That Lift for mechanical advantage."
+     }
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl7-arabian"
+    ]
+   }
+  },
+  "7-5-3": {
+   "science": {
+    "resources": [
+     "ck-g8-sound-sr"
+    ],
+    "teacher_resources": [
+     "ck-g8-sound-tg"
+    ],
+    "readings": [
+     {
+      "resource_id": "ck-g8-sound-sr",
+      "section": "Collection 4 — Compression Waves",
+      "printed": [
+       36,
+       45
+      ],
+      "session": 0,
+      "note": "Grade-level reading added Oct 2026 (Core Knowledge Grade 8 science, OpenSciEd-based)."
+     }
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl7-arabian"
+    ]
+   }
+  },
+  "7-6-1": {
+   "science": {
+    "resources": [
+     "ck-g8-space-sr"
+    ],
+    "teacher_resources": [
+     "ck-g8-space-tg"
+    ],
+    "readings": [
+     {
+      "resource_id": "ck-g8-space-sr",
+      "section": "Collection 1 — Sky Watching Since Days of Old",
+      "printed": [
+       4,
+       13
+      ],
+      "session": 0,
+      "note": "Grade-level reading added Oct 2026 (Core Knowledge Grade 8 science, OpenSciEd-based)."
+     }
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl7-westafrica"
+    ]
+   }
+  },
+  "7-6-2": {
+   "science": {
+    "resources": [
+     "ck-g8-space-sr"
+    ],
+    "teacher_resources": [
+     "ck-g8-space-tg"
+    ],
+    "readings": [
+     {
+      "resource_id": "ck-g8-space-sr",
+      "section": "Around the World, Across Time (orbits and gravity timeline)",
+      "printed": [
+       10,
+       13
+      ],
+      "session": 0,
+      "note": "Grade-level reading added Oct 2026 (Core Knowledge Grade 8 science, OpenSciEd-based)."
+     }
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl7-westafrica"
+    ]
+   }
+  },
+  "7-6-3": {
+   "science": {
+    "resources": [
+     "ck-g8-space-sr"
+    ],
+    "teacher_resources": [
+     "ck-g8-space-tg"
+    ],
+    "readings": [
+     {
+      "resource_id": "ck-g8-space-sr",
+      "section": "Collection 3 — Imaging and Imagining Space",
+      "printed": [
+       24,
+       37
+      ],
+      "session": 0,
+      "note": "Grade-level reading added Oct 2026 (Core Knowledge Grade 8 science, OpenSciEd-based)."
+     }
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl7-westafrica"
+    ]
+   }
+  },
+  "7-6-4": {
+   "science": {
+    "resources": [
+     "ck-g8-space-sr"
+    ],
+    "teacher_resources": [
+     "ck-g8-space-tg"
+    ],
+    "readings": [
+     {
+      "resource_id": "ck-g8-space-sr",
+      "section": "Collection 2 — Reaching for the Moon",
+      "printed": [
+       14,
+       23
+      ],
+      "session": 0,
+      "note": "Grade-level reading added Oct 2026 (Core Knowledge Grade 8 science, OpenSciEd-based)."
+     }
+    ]
+   },
+   "ela": {
+    "resources": [
+     "rl7-westafrica"
+    ]
+   }
+  },
+  "4-1-1": {
+   "ela": {
+    "resources": [
+     "rl4-arthur",
+     "rl4-verses"
+    ]
+   }
+  },
+  "4-1-2": {
+   "ela": {
+    "resources": [
+     "rl4-arthur",
+     "rl4-verses"
+    ]
+   }
+  },
+  "4-1-3": {
+   "ela": {
+    "resources": [
+     "rl4-arthur",
+     "rl4-verses"
+    ]
+   }
+  },
+  "4-1-4": {
+   "ela": {
+    "resources": [
+     "rl4-arthur",
+     "rl4-verses"
+    ]
+   }
+  },
+  "4-2-1": {
+   "ela": {
+    "resources": [
+     "rl4-beauty"
+    ]
+   }
+  },
+  "4-2-3": {
+   "ela": {
+    "resources": [
+     "rl4-beauty"
+    ]
+   }
+  },
+  "4-2-4": {
+   "ela": {
+    "resources": [
+     "rl4-beauty"
+    ]
+   }
+  },
+  "4-3-1": {
+   "ela": {
+    "resources": [
+     "rl4-legends",
+     "rl4-pooh"
+    ]
+   }
+  },
+  "4-3-2": {
+   "ela": {
+    "resources": [
+     "rl4-legends",
+     "rl4-pooh"
+    ]
+   }
+  },
+  "4-3-3": {
+   "ela": {
+    "resources": [
+     "rl4-legends",
+     "rl4-pooh"
+    ]
+   }
+  },
+  "4-3-4": {
+   "ela": {
+    "resources": [
+     "rl4-legends",
+     "rl4-pooh"
+    ]
+   }
+  },
+  "4-5-1": {
+   "ela": {
+    "resources": [
+     "rl4-peterpan"
+    ]
+   }
+  },
+  "4-5-2": {
+   "ela": {
+    "resources": [
+     "rl4-peterpan"
+    ]
+   }
+  },
+  "4-5-3": {
+   "ela": {
+    "resources": [
+     "rl4-peterpan"
+    ]
+   }
+  },
+  "4-6-4": {
+   "ela": {
+    "resources": [
+     "rl4-oz"
+    ]
+   }
+  },
+  "4-7-2": {
+   "ela": {
+    "resources": [
+     "rl4-smoky"
+    ]
+   }
+  },
+  "4-7-3": {
+   "ela": {
+    "resources": [
+     "rl4-smoky"
+    ]
+   }
+  },
+  "4-8-2": {
+   "ela": {
+    "resources": [
+     "rl4-poohcorner"
+    ]
+   }
+  },
+  "4-8-3": {
+   "ela": {
+    "resources": [
+     "rl4-poohcorner"
+    ]
+   }
+  },
+  "4-8-4": {
+   "ela": {
+    "resources": [
+     "rl4-poohcorner"
+    ]
+   }
+  },
+  "4-9-1": {
+   "ela": {
+    "resources": [
+     "rl4-westafrica"
+    ]
+   }
+  },
+  "4-9-2": {
+   "ela": {
+    "resources": [
+     "rl4-westafrica"
+    ]
+   }
+  },
+  "4-9-3": {
+   "ela": {
+    "resources": [
+     "rl4-westafrica"
+    ]
+   }
+  },
+  "4-9-4": {
+   "ela": {
+    "resources": [
+     "rl4-westafrica"
+    ]
+   }
+  },
+  "7-1-1": {
+   "ela": {
+    "resources": [
+     "rl7-wild",
+     "rl7-lamb"
+    ]
+   }
+  },
+  "7-1-2": {
+   "ela": {
+    "resources": [
+     "rl7-wild",
+     "rl7-lamb"
+    ]
+   }
+  },
+  "7-1-3": {
+   "ela": {
+    "resources": [
+     "rl7-wild",
+     "rl7-lamb"
+    ]
+   }
+  },
+  "7-1-4": {
+   "ela": {
+    "resources": [
+     "rl7-wild",
+     "rl7-lamb"
+    ]
+   }
+  },
+  "7-2-2": {
+   "ela": {
+    "resources": [
+     "rl7-sawyer"
+    ]
+   }
+  },
+  "7-3-1": {
+   "ela": {
+    "resources": [
+     "rl7-odysseus"
+    ]
+   }
+  },
+  "7-3-2": {
+   "ela": {
+    "resources": [
+     "rl7-odysseus"
+    ]
+   }
+  },
+  "7-3-3": {
+   "ela": {
+    "resources": [
+     "rl7-odysseus"
+    ]
+   }
+  },
+  "7-3-4": {
+   "ela": {
+    "resources": [
+     "rl7-odysseus"
+    ]
+   }
+  },
+  "7-4-1": {
+   "ela": {
+    "resources": [
+     "rl7-caesar"
+    ]
+   }
+  },
+  "7-4-2": {
+   "ela": {
+    "resources": [
+     "rl7-caesar"
+    ]
+   }
+  },
+  "7-4-3": {
+   "ela": {
+    "resources": [
+     "rl7-caesar"
+    ]
+   }
+  },
+  "7-4-4": {
+   "ela": {
+    "resources": [
+     "rl7-caesar"
+    ]
+   }
+  },
+  "7-5-4": {
+   "ela": {
+    "resources": [
+     "rl7-arabian"
+    ]
+   }
+  },
+  "7-7-1": {
+   "ela": {
+    "resources": [
+     "rl7-otto",
+     "rl7-hughes"
+    ]
+   }
+  },
+  "7-7-2": {
+   "ela": {
+    "resources": [
+     "rl7-otto",
+     "rl7-hughes"
+    ]
+   }
+  },
+  "7-7-3": {
+   "ela": {
+    "resources": [
+     "rl7-otto",
+     "rl7-hughes"
+    ]
+   }
+  },
+  "7-7-4": {
+   "ela": {
+    "resources": [
+     "rl7-otto",
+     "rl7-hughes"
+    ]
+   }
+  },
+  "7-8-1": {
+   "ela": {
+    "resources": [
+     "rl7-trumpeter"
+    ]
+   }
+  },
+  "7-8-2": {
+   "ela": {
+    "resources": [
+     "rl7-trumpeter"
+    ]
+   }
+  },
+  "7-8-3": {
+   "ela": {
+    "resources": [
+     "rl7-trumpeter"
+    ]
+   }
+  },
+  "7-8-4": {
+   "ela": {
+    "resources": [
+     "rl7-trumpeter"
+    ]
+   }
+  },
+  "7-9-1": {
+   "ela": {
+    "resources": [
+     "rl7-treasure"
+    ]
+   }
+  },
+  "7-9-2": {
+   "ela": {
+    "resources": [
+     "rl7-treasure"
+    ]
+   }
+  },
+  "7-9-3": {
+   "ela": {
+    "resources": [
+     "rl7-treasure"
+    ]
+   }
+  },
+  "7-9-4": {
+   "ela": {
+    "resources": [
+     "rl7-treasure"
+    ]
+   }
+  }
+ }
+}

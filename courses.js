@@ -36,8 +36,26 @@
       if (today && !today.done) todo.push({ c, text: `${c.name}: ${st.current?.topic || "today's lesson"}`, date: ctx.today });
       else if (st.overdue) todo.push({ c, text: `${c.name}: ${st.overdue} past lesson${st.overdue === 1 ? "" : "s"} to mark`, date: "" });
     }
+    // Teacher-created assignments: due soon or missing (student), turned in and waiting (parent).
+    const asUrl = (a) => `/assignments${ctx.me.role === "parent" ? "?student=" + encodeURIComponent(ctx.student.id) : ""}#a${a.id}`;
+    const week = new Date(ctx.today + "T12:00:00Z"); week.setUTCDate(week.getUTCDate() + 7);
+    const weekEnd = week.toISOString().slice(0, 10);
+    const asTodo = [];
+    for (const a of ctx.assignments || []) {
+      if (!a.published) continue;
+      const st = L.assignmentState(ctx, a);
+      if (ctx.me.role === "parent" ? st.code === "submitted" : ["late", "today"].includes(st.code) || (st.code === "open" && a.due_date <= weekEnd)) {
+        asTodo.push({ a, text: `${L.NAMES[a.subject] || a.subject}: ${a.title}`, chip: ctx.me.role === "parent" ? "To grade" : st.code === "open" ? `Due ${L.fmt(a.due_date, { weekday: "short" })}` : st.label });
+      }
+    }
     const t = $("lmsTodo");
     t.replaceChildren();
+    for (const item of asTodo.slice(0, 6)) {
+      const li = el("li");
+      const a = el("a", item.text); a.href = asUrl(item.a);
+      li.append(a, el("span", item.chip, "lms-chip" + (item.chip === "Missing" ? " as-late" : "")));
+      t.append(li);
+    }
     for (const item of todo.slice(0, 10)) {
       const li = el("li");
       const a = el("a", item.text);
@@ -45,7 +63,7 @@
       li.append(a, el("span", item.date ? "Today" : "Past", "lms-chip"));
       t.append(li);
     }
-    if (!todo.length) t.append(el("li", ctx.daily[ctx.today]?.[ctx.student.grade] ? "Everything for today is done." : "No lessons scheduled today.", "muted"));
+    if (!todo.length && !asTodo.length) t.append(el("li", ctx.daily[ctx.today]?.[ctx.student.grade] ? "Everything for today is done." : "No lessons scheduled today.", "muted"));
 
     const soon = [];
     const horizon = new Date(ctx.today + "T12:00:00Z");
@@ -56,6 +74,7 @@
       const rec = ctx.daily[date]?.[ctx.student.grade], as = L.assessOn(ctx, date);
       if (as) soon.push({ date, text: `${L.assessLabel(as)} · Module ${rec?.module ?? ""}`, kind: "Test" });
     }
+    for (const a of ctx.assignments || []) if (a.published && a.due_date > ctx.today && a.due_date <= end) soon.push({ date: a.due_date, text: `${a.title} (${L.NAMES[a.subject] || a.subject})`, kind: "Due" });
     for (const e of ctx.events) if (e.date >= ctx.today && e.date <= end && (e.grade === "both" || String(e.grade) === String(ctx.student.grade))) soon.push({ date: e.date, text: e.title, kind: e.type === "field trip" ? "Trip" : "Event" });
     soon.sort((a, b) => a.date.localeCompare(b.date));
     const s = $("lmsSoon");

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Library · VenvLearning</title>
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/family.css?v=ui-20261020">
+<link rel="stylesheet" href="/brand.css?v=brand-5">
+<link rel="stylesheet" href="/lms.css?v=lms-7">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <p class="eyebrow">FAMILY HOMESCHOOL</p>
+    <h1>Library</h1>
+  </div>
+  <nav></nav>
+</header>
+<main class="lms-dash lib-page">
+  <section class="hero lib-hero">
+    <div>
+      <p class="eyebrow">2026–2027 SCHOOL YEAR</p>
+      <h2>Books, readings and family documents in one place.</h2>
+      <p class="muted" id="libIntro">Free e-books for every module, the workbooks and readers in the lesson plans, and documents your teacher has shared.</p>
+    </div>
+  </section>
+  <div class="lib-bar">
+    <div class="lms-tabs" role="group" aria-label="Library sections">
+      <button type="button" data-tab="reading" aria-pressed="true">Reading list</button>
+      <button type="button" data-tab="books" aria-pressed="false">Curriculum books</button>
+      <button type="button" data-tab="docs" aria-pressed="false">Documents</button>
+    </div>
+    <div class="lib-controls">
+      <label id="libGradeWrap">Grade
+        <select id="libGrade"><option value="4">Grade 4</option><option value="7">Grade 7</option></select>
+      </label>
+      <label>Search
+        <input id="libSearch" type="search" placeholder="Title, author or topic">
+      </label>
+      <button type="button" class="secondary" id="libPrint">Print list</button>
+    </div>
+  </div>
+  <p id="status" role="status" class="family-status">Loading…</p>
+  <div id="view"></div>
+</main>
+<script src="/lms.js?v=lms-6" defer></script>
+<script src="/files.js?v=vf-1" defer></script>
+<script src="/library.js?v=lib-1" defer></script>
+<script src="/account-nav.js?v=lms-6" defer></script>
+<script src="/ux.js?v=ux-1" defer></script>
+</body>
+</html>

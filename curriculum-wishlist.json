@@ -1,5 +1,5 @@
 {
-  "about": "Curricula and books suggested for purchase. Status and notes are saved per family in the database; edit this file to add suggestions.",
+  "about": "Curricula and books suggested for purchase. Status and notes are saved per family in the database; edit this file to add suggestions. An item's optional 'status' sets its starting status (considering, buy, bought, skip) until the parent changes it.",
   "subjects": {
     "art": "Art",
     "life": "Human & Life Sciences",
@@ -39,7 +39,8 @@
       "link": "https://cathyduffyreviews.com/homeschool-extras/critical-thinking-logic/philosophy-for-kids-40-fun-questions-that-help-you-wonder-about-everything",
       "why": "Fills the philosophy weeks of the Human Development, Philosophy & Worldviews block (May 10 – Jun 18). 40 discussion lessons in four groups (values, knowledge, reality, critical thinking), each tied to a philosopher, with teaching tips; no philosophy background needed. Pick about 6 questions for the block.",
       "notes": "Works best as a discussion with a parent; there are no separate student books or answer keys. Neutral: it doesn't promote a particular philosophy. Sequel 'The Examined Life' (about $37) is harder.",
-      "added": "2026-10-23"
+      "added": "2026-10-23",
+      "status": "buy"
     },
     {
       "id": "dk-what-do-you-believe",

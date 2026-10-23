@@ -1,5 +1,5 @@
 window.LMS = (() => {
-  const NAMES = { math: "Math", ela: "ELA", science: "Physical Sciences", social: "Social Studies", spanish: "Spanish", art: "Art", life: "Human Sciences", computer: "Computer Science", skills: "Life Skills" };
+  const NAMES = { math: "Math", ela: "ELA", science: "Science", social: "Social Studies", spanish: "Spanish", art: "Art", life: "Human Sciences", computer: "Computer Science", skills: "Life Skills" };
   const ORDER = ["math", "ela", "science", "social", "spanish", "art", "life", "computer", "skills"];
   const CORE = ["math", "ela", "science", "social"];
   const el = (tag, text = "", cls = "") => {

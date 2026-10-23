@@ -69,8 +69,8 @@ export async function homeAssistantApi(request, env, assetJson) {
         const task = taskForSubject(day,subject);
         const assigned=readingsForDay(plan,date).map(r=>{const b=readingLink(r,library.resources);return b?`${b.title}: ${readingText(b)}\n${b.url}${b.note?'\n'+b.note:''}`:''}).join('\n\n');
         const links = plan.resources.map(id => library.resources[id]).filter(Boolean).map(resource => `${resource.title}: ${resource.url}`).join('\n');
-        student.items.push({uid, student_id: student.id, date, subject, summary: `${student.display_name} · ${labels[subject] || subject}: ${plan.topic}`, completed: done.has(uid+'|'+curriculumForDay(day)),
-          description: `${task || day.tasks}\n\n${day.integration||''}\n\nAssigned reading:\n${assigned}\n\n${links}\n\nAgenda: ${url.origin}/agenda?date=${date}\nWorksheets: ${url.origin}/daily-print?date=${date}&grade=${student.grade}&kind=work\nLesson guide: ${url.origin}/daily-print?date=${date}&grade=${student.grade}&kind=guide`});
+        student.items.push({uid, student_id: student.id, date, subject, summary: `${student.display_name} · ${plan.display_name || labels[subject] || subject}: ${plan.topic}`, completed: done.has(uid+'|'+curriculumForDay(day)),
+          description: `${day.lesson_context||''}\n${task || day.tasks}\n\n${day.integration||''}\n\nAssigned reading:\n${assigned}\n\n${links}\n\nAgenda: ${url.origin}/agenda?date=${date}\nWorksheets: ${url.origin}/daily-print?date=${date}&grade=${student.grade}&kind=work\nLesson guide: ${url.origin}/daily-print?date=${date}&grade=${student.grade}&kind=guide`});
       }
     }
     await addSchoolExtras(request, env, assetJson, students, today(), url.origin);

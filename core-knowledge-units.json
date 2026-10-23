@@ -1,377 +1,389 @@
 {
- "source": "https://www.coreknowledge.org/download-free-curriculum/",
- "verified": "2026-10-21",
- "license": {
-  "name": "CC BY-NC-SA 4.0",
-  "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-  "credit": "Core Knowledge Foundation"
- },
- "units": [
-  {
-   "grade": 4,
-   "subject": "history",
-   "title": "CKHG Unit 1: Using Maps",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-01-using-maps/"
+  "source": "https://www.coreknowledge.org/download-free-curriculum/",
+  "verified": "2026-10-21",
+  "license": {
+    "name": "CC BY-NC-SA 4.0",
+    "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "credit": "Core Knowledge Foundation"
   },
-  {
-   "grade": 4,
-   "subject": "history",
-   "title": "CKHG Unit 2: World Mountains",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-02-world-mountains/"
-  },
-  {
-   "grade": 4,
-   "subject": "history",
-   "title": "CKHG Unit 3: Medieval Europe",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-03-medieval-europe/"
-  },
-  {
-   "grade": 4,
-   "subject": "history",
-   "title": "CKHG Unit 4: Medieval Islamic Empires",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-04-medieval-islamic-empires/"
-  },
-  {
-   "grade": 4,
-   "subject": "history",
-   "title": "CKHG Unit 5: Early and Medieval African Kingdoms",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-05-early-medieval-african-kingdoms/"
-  },
-  {
-   "grade": 4,
-   "subject": "history",
-   "title": "CKHG Unit 6: Dynasties of China",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-06-dynasties-china/"
-  },
-  {
-   "grade": 4,
-   "subject": "history",
-   "title": "CKHG Unit 7: The American Revolution",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-07-american-revolution/"
-  },
-  {
-   "grade": 4,
-   "subject": "history",
-   "title": "CKHG Unit 8: The United States Constitution",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-08-united-states-constitution/"
-  },
-  {
-   "grade": 4,
-   "subject": "history",
-   "title": "CKHG Unit 9: Early Presidents",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-09-early-presidents/"
-  },
-  {
-   "grade": 4,
-   "subject": "history",
-   "title": "CKHG Unit 10: American Reformers",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-10-american-reformers/"
-  },
-  {
-   "grade": 4,
-   "subject": "history",
-   "title": "CKHG Unit 11: Understanding Civics",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-11-understanding-civics/"
-  },
-  {
-   "grade": 4,
-   "subject": "ela",
-   "title": "CKLA Unit 1: Brown Girl Dreaming",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-1-brown-girl-dreaming/"
-  },
-  {
-   "grade": 4,
-   "subject": "ela",
-   "title": "CKLA Unit 2: The Middle Ages",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-2-middle-ages/"
-  },
-  {
-   "grade": 4,
-   "subject": "ela",
-   "title": "CKLA Unit 3: King Arthur and the Round Table",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-3-king-arthur-and-the-round-table/"
-  },
-  {
-   "grade": 4,
-   "subject": "ela",
-   "title": "CKLA Unit 4: Listen, My Children (poetry)",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-4-listen-my-children-poetry/"
-  },
-  {
-   "grade": 4,
-   "subject": "ela",
-   "title": "CKLA Unit 5: Geology",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-5-geology/"
-  },
-  {
-   "grade": 4,
-   "subject": "ela",
-   "title": "CKLA Unit 6: American Revolution",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-6-american-revolution/"
-  },
-  {
-   "grade": 4,
-   "subject": "ela",
-   "title": "CKLA Unit 7: The United States Constitution",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-7-united-states-constitution/"
-  },
-  {
-   "grade": 4,
-   "subject": "ela",
-   "title": "CKLA Unit 8: Treasure Island",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-8-treasure-island/"
-  },
-  {
-   "grade": 4,
-   "subject": "science",
-   "title": "CKSci Unit 1: Energy Transfer and Transformation",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-1-energy-transfer-and-transformation/"
-  },
-  {
-   "grade": 4,
-   "subject": "science",
-   "title": "CKSci Unit 2: Investigating Waves",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-2-investigating-waves/"
-  },
-  {
-   "grade": 4,
-   "subject": "science",
-   "title": "CKSci Unit 3: Structures and Functions of Living Things",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-3-structures-and-functions/"
-  },
-  {
-   "grade": 4,
-   "subject": "science",
-   "title": "CKSci Unit 4: Processes That Shape Earth",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-4-processes-that-shape-earth/"
-  },
-  {
-   "grade": 4,
-   "subject": "science",
-   "title": "CKSci Unit 5: Using Natural Resources for Energy",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-5-using-natural-resources-for-energy/"
-  },
-  {
-   "grade": 4,
-   "subject": "science",
-   "title": "CKSci Unit 6: Human Respiration and Circulation",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-6-human-respiration-and-circulation/"
-  },
-  {
-   "grade": 4,
-   "subject": "science",
-   "title": "CKSci Unit 7: Problem-Solving and Computers",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-7-problem-solving-and-computers/"
-  },
-  {
-   "grade": 4,
-   "subject": "science",
-   "title": "CKSci Unit 8: Making Sense of Science",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-8-making-sense-of-science/"
-  },
-  {
-   "grade": 4,
-   "subject": "math",
-   "title": "CKMath Unit 1: Factors and Multiples",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-1-factors-and-multiples/"
-  },
-  {
-   "grade": 4,
-   "subject": "math",
-   "title": "CKMath Unit 2: Fraction Equivalence and Comparison",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-2-fraction-equivalence-and-comparison/"
-  },
-  {
-   "grade": 4,
-   "subject": "math",
-   "title": "CKMath Unit 3: Extending Operations to Fractions",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-3-extending-operations-to-fractions/"
-  },
-  {
-   "grade": 4,
-   "subject": "math",
-   "title": "CKMath Unit 4: From Hundredths to Hundred-Thousands",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-4-from-hundredths-to-hundred-thousands/"
-  },
-  {
-   "grade": 4,
-   "subject": "math",
-   "title": "CKMath Unit 5: Multiplicative Comparison and Measurement",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-5-multiplicative-comparison-and-measurement/"
-  },
-  {
-   "grade": 4,
-   "subject": "math",
-   "title": "CKMath Unit 6: Multiplying and Dividing Multi-digit Numbers",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-6-multiplying-and-dividing-multi-digit-numbers/"
-  },
-  {
-   "grade": 4,
-   "subject": "math",
-   "title": "CKMath Unit 7: Angles and Angle Measurement",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-7-angles-and-angle-measurement/"
-  },
-  {
-   "grade": 4,
-   "subject": "math",
-   "title": "CKMath Unit 8: Properties of Two-Dimensional Shapes",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-8-properties-of-two-dimensional-shapes/"
-  },
-  {
-   "grade": 4,
-   "subject": "math",
-   "title": "CKMath Unit 9: Putting It All Together",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-9-grade-4-putting-it-all-together/"
-  },
-  {
-   "grade": 7,
-   "subject": "history",
-   "title": "CKHG: A History of the United States (Volumes 1 and 2)",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-a-history-of-the-united-states/"
-  },
-  {
-   "grade": 7,
-   "subject": "history",
-   "title": "CKHG: Civics and Economics in U.S. History",
-   "url": "https://www.coreknowledge.org/free-resource/ckhg-civics-and-economics-in-u-s-history/"
-  },
-  {
-   "grade": 7,
-   "subject": "ela",
-   "title": "CKLA Unit 1: Hello, Universe",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-1-hello-universe/"
-  },
-  {
-   "grade": 7,
-   "subject": "ela",
-   "title": "CKLA Unit 2: The Tempest",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-2-the-tempest/"
-  },
-  {
-   "grade": 7,
-   "subject": "ela",
-   "title": "CKLA Unit 3: Strange Case of Dr. Jekyll and Mr. Hyde",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-3-strange-case-of-dr-jekyll-and-mr-hyde/"
-  },
-  {
-   "grade": 7,
-   "subject": "ela",
-   "title": "CKLA Unit 4: The Time Machine",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-4-the-time-machine/"
-  },
-  {
-   "grade": 7,
-   "subject": "ela",
-   "title": "CKLA Unit 5: Realms of Gold, Volume 2",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-5-realms-of-gold-volume-2/"
-  },
-  {
-   "grade": 7,
-   "subject": "ela",
-   "title": "CKLA Unit 6: The Genius of the Harlem Renaissance, Volume 1",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-6-the-genius-of-the-harlem-renaissance-volume-1/"
-  },
-  {
-   "grade": 7,
-   "subject": "ela",
-   "title": "CKLA Unit 7: Anne Frank’s Tales from the Secret Annex",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-7-anne-franks-tales-from-the-secret-annex/"
-  },
-  {
-   "grade": 7,
-   "subject": "ela",
-   "title": "CKLA Unit 8: Code Talker",
-   "url": "https://www.coreknowledge.org/free-resource/ckla-unit-8-code-talker/"
-  },
-  {
-   "grade": 7,
-   "subject": "science",
-   "title": "CKSci Unit 1: Chemical Reactions and Matter",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-1-chemical-reactions-and-matter/"
-  },
-  {
-   "grade": 7,
-   "subject": "science",
-   "title": "CKSci Unit 2: Chemical Reactions and Energy",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-2-chemical-reactions-and-energy/"
-  },
-  {
-   "grade": 7,
-   "subject": "science",
-   "title": "CKSci Unit 3: Metabolic Reactions",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-3-metabolic-reactions/"
-  },
-  {
-   "grade": 7,
-   "subject": "science",
-   "title": "CKSci Unit 4: Matter Cycling and Photosynthesis",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-4-matter-cycling-and-photosynthesis/"
-  },
-  {
-   "grade": 7,
-   "subject": "science",
-   "title": "CKSci Unit 5: Ecosystem Dynamics",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-5-ecosystem-dynamics/"
-  },
-  {
-   "grade": 7,
-   "subject": "science",
-   "title": "CKSci Unit 6: Earth’s Resources and Human Impact",
-   "url": "https://www.coreknowledge.org/free-resource/cksci-unit-6-earths-resources-and-human-impact/"
-  },
-  {
-   "grade": 7,
-   "subject": "math",
-   "title": "CKMath Unit 1: Scale Drawings",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-1-scale-drawings/"
-  },
-  {
-   "grade": 7,
-   "subject": "math",
-   "title": "CKMath Unit 2: Introducing Proportional Relationships",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-2-introducing-proportional-relationships/"
-  },
-  {
-   "grade": 7,
-   "subject": "math",
-   "title": "CKMath Unit 3: Measuring Circles",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-3-measuring-circles/"
-  },
-  {
-   "grade": 7,
-   "subject": "math",
-   "title": "CKMath Unit 4: Proportional Relationships and Percentages",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-4-proportional-relationships-and-percentages/"
-  },
-  {
-   "grade": 7,
-   "subject": "math",
-   "title": "CKMath Unit 5: Rational Number Arithmetic",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-5-rational-number-arithmetic/"
-  },
-  {
-   "grade": 7,
-   "subject": "math",
-   "title": "CKMath Unit 6: Expressions, Equations, and Inequalities",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-6-expressions-equations-and-inequalities/"
-  },
-  {
-   "grade": 7,
-   "subject": "math",
-   "title": "CKMath Unit 7: Angles, Triangles, and Prisms",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-7-angles-triangles-and-prisms/"
-  },
-  {
-   "grade": 7,
-   "subject": "math",
-   "title": "CKMath Unit 8: Probability and Sampling",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-8-probability-and-sampling/"
-  },
-  {
-   "grade": 7,
-   "subject": "math",
-   "title": "CKMath Unit 9: Putting It All Together",
-   "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-9-grade-7-putting-it-all-together/"
-  }
- ]
+  "units": [
+    {
+      "grade": 4,
+      "subject": "history",
+      "title": "CKHG Unit 1: Using Maps",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-01-using-maps/"
+    },
+    {
+      "grade": 4,
+      "subject": "history",
+      "title": "CKHG Unit 2: World Mountains",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-02-world-mountains/"
+    },
+    {
+      "grade": 4,
+      "subject": "history",
+      "title": "CKHG Unit 3: Medieval Europe",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-03-medieval-europe/"
+    },
+    {
+      "grade": 4,
+      "subject": "history",
+      "title": "CKHG Unit 4: Medieval Islamic Empires",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-04-medieval-islamic-empires/"
+    },
+    {
+      "grade": 4,
+      "subject": "history",
+      "title": "CKHG Unit 5: Early and Medieval African Kingdoms",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-05-early-medieval-african-kingdoms/"
+    },
+    {
+      "grade": 4,
+      "subject": "history",
+      "title": "CKHG Unit 6: Dynasties of China",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-06-dynasties-china/"
+    },
+    {
+      "grade": 4,
+      "subject": "history",
+      "title": "CKHG Unit 7: The American Revolution",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-07-american-revolution/"
+    },
+    {
+      "grade": 4,
+      "subject": "history",
+      "title": "CKHG Unit 8: The United States Constitution",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-08-united-states-constitution/"
+    },
+    {
+      "grade": 4,
+      "subject": "history",
+      "title": "CKHG Unit 9: Early Presidents",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-09-early-presidents/"
+    },
+    {
+      "grade": 4,
+      "subject": "history",
+      "title": "CKHG Unit 10: American Reformers",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-10-american-reformers/"
+    },
+    {
+      "grade": 4,
+      "subject": "history",
+      "title": "CKHG Unit 11: Understanding Civics",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-unit-11-understanding-civics/"
+    },
+    {
+      "grade": 4,
+      "subject": "ela",
+      "title": "CKLA Unit 1: Brown Girl Dreaming",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-1-brown-girl-dreaming/"
+    },
+    {
+      "grade": 4,
+      "subject": "ela",
+      "title": "CKLA Unit 2: The Middle Ages",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-2-middle-ages/"
+    },
+    {
+      "grade": 4,
+      "subject": "ela",
+      "title": "CKLA Unit 3: King Arthur and the Round Table",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-3-king-arthur-and-the-round-table/"
+    },
+    {
+      "grade": 4,
+      "subject": "ela",
+      "title": "CKLA Unit 4: Listen, My Children (poetry)",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-4-listen-my-children-poetry/"
+    },
+    {
+      "grade": 4,
+      "subject": "ela",
+      "title": "CKLA Unit 5: Geology",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-5-geology/"
+    },
+    {
+      "grade": 4,
+      "subject": "ela",
+      "title": "CKLA Unit 6: American Revolution",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-6-american-revolution/"
+    },
+    {
+      "grade": 4,
+      "subject": "ela",
+      "title": "CKLA Unit 7: The United States Constitution",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-7-united-states-constitution/"
+    },
+    {
+      "grade": 4,
+      "subject": "ela",
+      "title": "CKLA Unit 8: Treasure Island",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-8-treasure-island/"
+    },
+    {
+      "grade": 4,
+      "subject": "science",
+      "title": "CKSci Unit 1: Energy Transfer and Transformation",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-1-energy-transfer-and-transformation/"
+    },
+    {
+      "grade": 4,
+      "subject": "science",
+      "title": "CKSci Unit 2: Investigating Waves",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-2-investigating-waves/"
+    },
+    {
+      "grade": 4,
+      "subject": "science",
+      "title": "CKSci Unit 3: Structures and Functions of Living Things",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-3-structures-and-functions/"
+    },
+    {
+      "grade": 4,
+      "subject": "science",
+      "title": "CKSci Unit 4: Processes That Shape Earth",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-4-processes-that-shape-earth/"
+    },
+    {
+      "grade": 4,
+      "subject": "science",
+      "title": "CKSci Unit 5: Using Natural Resources for Energy",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-5-using-natural-resources-for-energy/"
+    },
+    {
+      "grade": 4,
+      "subject": "science",
+      "title": "CKSci Unit 6: Human Respiration and Circulation",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-6-human-respiration-and-circulation/"
+    },
+    {
+      "grade": 4,
+      "subject": "science",
+      "title": "CKSci Unit 7: Problem-Solving and Computers",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-7-problem-solving-and-computers/"
+    },
+    {
+      "grade": 4,
+      "subject": "science",
+      "title": "CKSci Unit 8: Making Sense of Science",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-8-making-sense-of-science/"
+    },
+    {
+      "grade": 4,
+      "subject": "math",
+      "title": "CKMath Unit 1: Factors and Multiples",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-1-factors-and-multiples/"
+    },
+    {
+      "grade": 4,
+      "subject": "math",
+      "title": "CKMath Unit 2: Fraction Equivalence and Comparison",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-2-fraction-equivalence-and-comparison/"
+    },
+    {
+      "grade": 4,
+      "subject": "math",
+      "title": "CKMath Unit 3: Extending Operations to Fractions",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-3-extending-operations-to-fractions/"
+    },
+    {
+      "grade": 4,
+      "subject": "math",
+      "title": "CKMath Unit 4: From Hundredths to Hundred-Thousands",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-4-from-hundredths-to-hundred-thousands/"
+    },
+    {
+      "grade": 4,
+      "subject": "math",
+      "title": "CKMath Unit 5: Multiplicative Comparison and Measurement",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-5-multiplicative-comparison-and-measurement/"
+    },
+    {
+      "grade": 4,
+      "subject": "math",
+      "title": "CKMath Unit 6: Multiplying and Dividing Multi-digit Numbers",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-6-multiplying-and-dividing-multi-digit-numbers/"
+    },
+    {
+      "grade": 4,
+      "subject": "math",
+      "title": "CKMath Unit 7: Angles and Angle Measurement",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-7-angles-and-angle-measurement/"
+    },
+    {
+      "grade": 4,
+      "subject": "math",
+      "title": "CKMath Unit 8: Properties of Two-Dimensional Shapes",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-8-properties-of-two-dimensional-shapes/"
+    },
+    {
+      "grade": 4,
+      "subject": "math",
+      "title": "CKMath Unit 9: Putting It All Together",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-9-grade-4-putting-it-all-together/"
+    },
+    {
+      "grade": 7,
+      "subject": "history",
+      "title": "CKHG: A History of the United States (Volumes 1 and 2)",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-a-history-of-the-united-states/"
+    },
+    {
+      "grade": 7,
+      "subject": "history",
+      "title": "CKHG: Civics and Economics in U.S. History",
+      "url": "https://www.coreknowledge.org/free-resource/ckhg-civics-and-economics-in-u-s-history/"
+    },
+    {
+      "grade": 7,
+      "subject": "ela",
+      "title": "CKLA Unit 1: Hello, Universe",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-1-hello-universe/"
+    },
+    {
+      "grade": 7,
+      "subject": "ela",
+      "title": "CKLA Unit 2: The Tempest",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-2-the-tempest/"
+    },
+    {
+      "grade": 7,
+      "subject": "ela",
+      "title": "CKLA Unit 3: Strange Case of Dr. Jekyll and Mr. Hyde",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-3-strange-case-of-dr-jekyll-and-mr-hyde/"
+    },
+    {
+      "grade": 7,
+      "subject": "ela",
+      "title": "CKLA Unit 4: The Time Machine",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-4-the-time-machine/"
+    },
+    {
+      "grade": 7,
+      "subject": "ela",
+      "title": "CKLA Unit 5: Realms of Gold, Volume 2",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-5-realms-of-gold-volume-2/"
+    },
+    {
+      "grade": 7,
+      "subject": "ela",
+      "title": "CKLA Unit 6: The Genius of the Harlem Renaissance, Volume 1",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-6-the-genius-of-the-harlem-renaissance-volume-1/"
+    },
+    {
+      "grade": 7,
+      "subject": "ela",
+      "title": "CKLA Unit 7: Anne Frank’s Tales from the Secret Annex",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-7-anne-franks-tales-from-the-secret-annex/"
+    },
+    {
+      "grade": 7,
+      "subject": "ela",
+      "title": "CKLA Unit 8: Code Talker",
+      "url": "https://www.coreknowledge.org/free-resource/ckla-unit-8-code-talker/"
+    },
+    {
+      "grade": 7,
+      "subject": "science",
+      "title": "CKSci Unit 1: Chemical Reactions and Matter",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-1-chemical-reactions-and-matter/"
+    },
+    {
+      "grade": 7,
+      "subject": "science",
+      "title": "CKSci Unit 2: Chemical Reactions and Energy",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-2-chemical-reactions-and-energy/"
+    },
+    {
+      "grade": 7,
+      "subject": "science",
+      "title": "CKSci Unit 3: Metabolic Reactions",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-3-metabolic-reactions/"
+    },
+    {
+      "grade": 7,
+      "subject": "science",
+      "title": "CKSci Unit 4: Matter Cycling and Photosynthesis",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-4-matter-cycling-and-photosynthesis/"
+    },
+    {
+      "grade": 7,
+      "subject": "science",
+      "title": "CKSci Unit 5: Ecosystem Dynamics",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-5-ecosystem-dynamics/"
+    },
+    {
+      "grade": 7,
+      "subject": "science",
+      "title": "CKSci Unit 6: Earth’s Resources and Human Impact",
+      "url": "https://www.coreknowledge.org/free-resource/cksci-unit-6-earths-resources-and-human-impact/"
+    },
+    {
+      "grade": 7,
+      "subject": "math",
+      "title": "CKMath Unit 1: Scale Drawings",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-1-scale-drawings/"
+    },
+    {
+      "grade": 7,
+      "subject": "math",
+      "title": "CKMath Unit 2: Introducing Proportional Relationships",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-2-introducing-proportional-relationships/"
+    },
+    {
+      "grade": 7,
+      "subject": "math",
+      "title": "CKMath Unit 3: Measuring Circles",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-3-measuring-circles/"
+    },
+    {
+      "grade": 7,
+      "subject": "math",
+      "title": "CKMath Unit 4: Proportional Relationships and Percentages",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-4-proportional-relationships-and-percentages/"
+    },
+    {
+      "grade": 7,
+      "subject": "math",
+      "title": "CKMath Unit 5: Rational Number Arithmetic",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-5-rational-number-arithmetic/"
+    },
+    {
+      "grade": 7,
+      "subject": "math",
+      "title": "CKMath Unit 6: Expressions, Equations, and Inequalities",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-6-expressions-equations-and-inequalities/"
+    },
+    {
+      "grade": 7,
+      "subject": "math",
+      "title": "CKMath Unit 7: Angles, Triangles, and Prisms",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-7-angles-triangles-and-prisms/"
+    },
+    {
+      "grade": 7,
+      "subject": "math",
+      "title": "CKMath Unit 8: Probability and Sampling",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-8-probability-and-sampling/"
+    },
+    {
+      "grade": 7,
+      "subject": "math",
+      "title": "CKMath Unit 9: Putting It All Together",
+      "url": "https://www.coreknowledge.org/free-resource/ckmath-unit-9-grade-7-putting-it-all-together/"
+    },
+    {
+      "grade": 4,
+      "subject": "art",
+      "title": "CK Visual Arts: Grade 4 - student activity book and teacher guide",
+      "url": "https://www.coreknowledge.org/free-resource/ck-visual-arts-grade-4/"
+    },
+    {
+      "grade": 7,
+      "subject": "art",
+      "title": "CK Visual Arts: Grade 7 - student activity book and teacher guide",
+      "url": "https://www.coreknowledge.org/free-resource/ck-visual-arts-grade-7/"
+    }
+  ]
 }

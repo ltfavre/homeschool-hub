@@ -1,0 +1,109 @@
+{
+  "version": "core-electives-v1",
+  "effective": "2026-10-26",
+  "instructional_week_count": 34,
+  "blocks": [
+    {
+      "number": 1,
+      "subject": "art",
+      "title": "Art & Art History",
+      "start": "2026-10-26",
+      "end": "2026-12-11",
+      "weeks": 6,
+      "planned_weeks": 6,
+      "partial": false,
+      "note": "Six instructional weeks; school breaks do not count."
+    },
+    {
+      "number": 2,
+      "subject": "computer",
+      "title": "Computer Foundations & Digital Citizenship",
+      "start": "2026-12-14",
+      "end": "2027-02-05",
+      "weeks": 6,
+      "planned_weeks": 6,
+      "partial": false,
+      "note": "Six instructional weeks; school breaks do not count."
+    },
+    {
+      "number": 3,
+      "subject": "skills",
+      "title": "Cooking, Nutrition & Household Skills",
+      "start": "2027-02-08",
+      "end": "2027-03-26",
+      "weeks": 6,
+      "planned_weeks": 6,
+      "partial": false,
+      "note": "Six instructional weeks; school breaks do not count."
+    },
+    {
+      "number": 4,
+      "subject": "art",
+      "title": "Music, Drama & Performance",
+      "start": "2027-03-29",
+      "end": "2027-05-07",
+      "weeks": 6,
+      "planned_weeks": 6,
+      "partial": false,
+      "note": "Six instructional weeks; school breaks do not count."
+    },
+    {
+      "number": 5,
+      "subject": "life",
+      "title": "Human Development, Philosophy & Worldviews",
+      "start": "2027-05-10",
+      "end": "2027-06-18",
+      "weeks": 6,
+      "planned_weeks": 6,
+      "partial": false,
+      "note": "Six instructional weeks; school breaks do not count."
+    },
+    {
+      "number": 6,
+      "subject": "computer",
+      "title": "Coding & Game Design",
+      "start": "2027-06-21",
+      "end": "2027-07-16",
+      "weeks": 4,
+      "planned_weeks": 6,
+      "partial": true,
+      "note": "Final block begins this year; two teaching weeks remain for continuation. Existing year-end and breaks are preserved."
+    }
+  ],
+  "weekly_pattern": {
+    "Monday": [
+      "Math",
+      "ELA",
+      "Science",
+      "Current elective"
+    ],
+    "Tuesday": [
+      "Math",
+      "ELA + beginner Spanish",
+      "Social Studies",
+      "Current elective"
+    ],
+    "Wednesday": [
+      "Math",
+      "ELA",
+      "Science",
+      "Current elective"
+    ],
+    "Thursday": [
+      "Math",
+      "ELA + beginner Spanish",
+      "Social Studies",
+      "Current elective"
+    ],
+    "Friday": [
+      "Taught-work checks",
+      "Projects / field trips / catch-up"
+    ]
+  },
+  "notes": [
+    "Daily Math and ELA assignments are divided into guided learning, application, writing, and revision; daily frequency does not double the previous workload.",
+    "Six-week blocks count instructional weeks only. Thanksgiving, winter, spring, and year-end dates stay unchanged.",
+    "Art is a curated six-week survey using original Core Knowledge Grade 4 and Grade 7 books; it does not claim to complete all publisher lessons.",
+    "The last rotation has four teaching weeks before the existing year end; the remaining two weeks are identified for continuation rather than silently extending school."
+  ]
+}

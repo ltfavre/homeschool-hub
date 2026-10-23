@@ -1,1 +1,1 @@
-{"_parts": ["/curriculum-data/planner-data-001.json", "/curriculum-data/planner-data-002.json", "/curriculum-data/planner-data-003.json", "/curriculum-data/planner-data-004.json", "/curriculum-data/planner-data-005.json", "/curriculum-data/planner-data-006.json"]}
+{"_gzip_parts": ["/curriculum-data/packed-planner-data-001.json"], "encoding": "gzip+base64", "source_sha256": "fe3cf60607b29617276545b40c77effc2fdc8c9f5f3e77a764ada261e429855c"}

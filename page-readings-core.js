@@ -2,7 +2,7 @@ export function cleanTaskText(text){return String(text||'').replace(/Open the li
 // Exact assignments use physical PDF pages; printed folios are shown when verified.
 export function readingsForDay(subject, date, teacher=false) {
  const day=new Date(date+'T12:00:00Z').getUTCDay(),session=day===1||day===2?1:day===3||day===4?2:0;
- return (subject?.[teacher?'teacher_readings':'readings']||[]).filter(r=>!session||!r.session||r.session===session);
+ return (subject?.[teacher?'teacher_readings':'readings']||[]).filter(r=>r.weekdays?r.weekdays.includes(day):!session||!r.session||r.session===session);
 }
 export function readingText(r) {
  const range=a=>a[0]===a[1]?String(a[0]):a.join('–');

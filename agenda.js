@@ -6,7 +6,7 @@ const node = (tag, text = "", cls = "") => {
   return element;
 };
 
-const names = {math:'Math',ela:'ELA',science:'Physical Sciences',social:'Social Studies',spanish:'Spanish',art:'Art',life:'Human Sciences',computer:'Computer Science',skills:'Life Skills',review:'Friday Review / Projects / Catch-up'};
+const names = {math:'Math',ela:'ELA',science:'Science',social:'Social Studies',spanish:'Spanish',art:'Art',life:'Human Sciences',computer:'Computer Science',skills:'Life Skills',review:'Friday Review / Projects / Catch-up'};
 
 let me;
 let today;
@@ -107,7 +107,7 @@ async function load() {
 
     $("printPacket").href = view.print_url+"&kind=work";$("lessonGuide").href=view.print_url+"&kind=guide";
     $("summary").append(
-      node("p", `Module ${view.module} · Week ${view.week}`),
+      node("p", view.lesson_context||`Module ${view.module} · Week ${view.week}`),
       node("p", "Read the assigned book with your parent, practice together, and use the supporting links when helpful.")
     );
 
@@ -128,7 +128,7 @@ async function load() {
 
     for (const subject of view.subjects) {
       const outer = node("article", "", `agenda-card${subject.completed ? " completed" : ""}`), disclosure=node('details','','lesson-disclosure'),heading=node('summary'),title=node('div'),card=node('div','','lesson-body');
-      title.append(node('span',names[subject.key]||subject.key,'subject-tag'),node('h2',subject.topic),node('span','Open lesson & reading','summary-hint'));heading.append(title);disclosure.append(heading,card);outer.append(disclosure);
+      title.append(node('span',subject.name||names[subject.key]||subject.key,'subject-tag'),node('h2',subject.topic),node('span','Open lesson & reading','summary-hint'));heading.append(title);disclosure.append(heading,card);outer.append(disclosure);
 
       const taskPrefix = {
         math: "Math:",
@@ -178,7 +178,7 @@ async function load() {
       const checkbox = node("input");
       checkbox.type = "checkbox";
       checkbox.checked = subject.completed;
-      label.append(checkbox, node("span", `I finished today’s ${names[subject.key]} activities`));
+      label.append(checkbox, node("span", `I finished today’s ${subject.name||names[subject.key]} activities`));
       checkbox.onchange = async () => {
         checkbox.disabled = true;
         try {

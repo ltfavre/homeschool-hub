@@ -6,7 +6,7 @@
     if (cls) n.className = cls;
     return n;
   };
-  const SUBJECTS = [["math", "Math"], ["ela", "ELA"], ["science", "Physical Sciences"], ["social", "Social Studies"]];
+  const SUBJECTS = [["math", "Math"], ["ela", "ELA"], ["science", "Science"], ["social", "Social Studies"]];
   const EXTRA = [["art", "Art"], ["life", "Human Sciences"], ["computer", "Computer Science"], ["skills", "Life Skills"]];
   const fmt = (iso, opts = { month: "short", day: "numeric" }) =>
     new Date(iso + "T12:00:00Z").toLocaleDateString("en-US", { timeZone: "UTC", ...opts });
@@ -36,14 +36,14 @@
       const rec = daily[date]?.[grade];
       if (!rec) continue;
       const key = `${rec.module}-${rec.week}`;
-      if (!weeks.has(key)) weeks.set(key, { module: rec.module, week: rec.week, days: [] });
-      weeks.get(key).days.push({ date, assessment: rec.assessment });
+      if (!weeks.has(key)) weeks.set(key, { module: rec.module, week: rec.week, days: [], elective: rec.elective, active_subjects: rec.subjects });
+      weeks.get(key).days.push({ date, assessment: rec.assessment, subjects:rec.subjects });
     }
     return [...weeks.values()].map((w) => {
       const mapping = library.weeks[`${grade}-${w.module}-${w.week}`] || {};
       w.start = w.days[0].date;
       w.end = w.days[w.days.length - 1].date;
-      w.mapping = mapping;
+      w.mapping = mapping;w.active_subjects=new Set(w.days.flatMap(d=>d.subjects||[]));
       w.assessments = w.days.filter((d) => d.assessment).map((d) => ({ date: d.date, id: d.assessment }));
       return w;
     });
@@ -76,7 +76,7 @@
         const t = w.mapping[id]?.topic;
         if (t) { const unit = unitName(w.mapping, id); ul.append(el("li", `${name}: ${t}${unit ? " (" + unit + ")" : ""}`)); }
       }
-      b.append(ul);
+      if(w.elective)ul.append(el("li",`Elective: ${w.elective.title} · ${w.elective.topic} · week ${w.elective.week}/6`));b.append(ul);
       if (w.assessments.length) b.append(el("p", w.assessments.map((a) => `${assessLabel(a)} ${fmt(a.date, { weekday: "short", month: "short", day: "numeric" })}`).join(" · "), "syl-test"));
       return b;
     };
@@ -88,7 +88,7 @@
     up.append(el("h3", "Coming up"));
     const ul = el("ul");
     for (const u of upcoming.slice(0, 5)) ul.append(el("li", u));
-    if (!upcoming.length) ul.append(el("li", "No tests or events scheduled."));
+    if (!upcoming.length) ul.append(el("li", "Friday taught-work checks and the active elective continue. No additional events scheduled."));
     up.append(ul);
     grid.append(up);
     now.append(grid);
@@ -125,7 +125,7 @@
     wk.replaceChildren(el("h2", `Grade ${grade} · Week by week`));
     const t2 = el("table", "", "syl-table syl-weeks");
     const h2 = el("tr");
-    for (const h of ["Week", "Dates", ...SUBJECTS.map((s) => s[1]), "Tests & events"]) h2.append(el("th", h));
+    for (const h of ["Week", "Dates", ...SUBJECTS.map((s) => s[1]), "Elective / Friday checks / events"]) h2.append(el("th", h));
     const th2 = el("thead"); th2.append(h2); t2.append(th2);
     const b2 = el("tbody");
     let prevEnd = "";
@@ -154,7 +154,7 @@
         }
         tr.append(td);
       }
-      const notes = el("td");
+      const notes = el("td");if(w.elective)notes.append(el("div",`${w.elective.title} · week ${w.elective.week}/6: ${w.elective.topic}`),el("div","Friday: taught-work check + elective reflection"));
       for (const a of w.assessments) notes.append(el("div", `${assessLabel(a)} · ${fmt(a.date, { weekday: "short", month: "short", day: "numeric" })}`, "syl-test"));
       for (const e of evs.filter((e) => e.date >= w.start && e.date <= w.end)) notes.append(el("div", `${e.type}: ${e.title} · ${fmt(e.date, { weekday: "short", month: "short", day: "numeric" })}`, "syl-event"));
       tr.append(notes);
@@ -165,10 +165,10 @@
 
     // Notes: other subjects
     const notes = $("sylNotes");
-    notes.replaceChildren(el("h2", "Other subjects (every week)"),
-      el("p", "Art, music & theatre, Human Sciences, Computer Science and Life Skills follow their own weekly booklet topics. See the daily lesson guide for each day's pages."));
+    notes.replaceChildren(el("h2", "Rotating electives"),
+      el("p", "From October 26, one elective meets Monday–Thursday in six-instructional-week blocks. Art & Art History is first. Daily guides list the active course and exact pages; inactive electives are not assigned or tested."));
     const ex = el("p", "", "muted");
-    ex.textContent = `Fridays are for the weekly quiz or module test plus a project, field trip, independent study or catch-up. Field trips, projects and no-school days appear above once they are added to school-events.json.`;
+    ex.textContent = `From October 26, Fridays check taught Math and ELA plus the active elective, with projects, field trips, independent study or catch-up. Daily Math and ELA replace the earlier alternating foundation schedule. Field trips, projects and no-school days appear above once they are added to school-events.json.`;
     notes.append(ex);
     $("status").textContent = `Grade ${grade}: ${weeks.length} weeks, ${weeks[0] ? fmt(weeks[0].start, { month: "short", day: "numeric", year: "numeric" }) : ""} to ${weeks.length ? fmt(weeks[weeks.length - 1].end, { month: "short", day: "numeric", year: "numeric" }) : ""}.`;
   }

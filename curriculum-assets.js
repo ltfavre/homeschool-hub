@@ -14,6 +14,14 @@ export async function curriculumAsset(request,env,rawAsset){
  const response=await rawAsset(request,env);
  if(!response.ok||!paths.has(new URL(request.url).pathname))return response;
  const data=await response.json();
+ if(data._gzip_parts){
+  if(!Array.isArray(data._gzip_parts)||data._gzip_parts.length>8||data._gzip_parts.some(p=>!/^\/curriculum-data\/packed-[a-z0-9-]+\.json$/.test(p)))throw Error('Invalid compressed curriculum manifest');
+  const parts=await Promise.all(data._gzip_parts.map(async path=>{const r=await rawAsset(new Request(new URL(path,request.url)),env);if(!r.ok)throw Error('Curriculum part unavailable');const p=await r.json();if(typeof p.data!=='string'||p.data.length>60000)throw Error('Invalid compressed curriculum part');return p.data;}));
+  const bytes=Uint8Array.from(atob(parts.join('')),c=>c.charCodeAt(0));
+  const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+  const expanded=await new Response(stream).text();if(expanded.length>4000000)throw Error('Curriculum asset exceeds size limit');
+  return Response.json(JSON.parse(expanded));
+ }
  if(!data._parts)return Response.json(data);
  if(!Array.isArray(data._parts)||data._parts.some(p=>!/^\/curriculum-data\/[a-z0-9-]+\.json$/.test(p)))throw Error('Invalid curriculum manifest');
  const result={};

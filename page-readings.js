@@ -2,7 +2,7 @@ function cleanTaskText(text){return String(text||'').replace(/Open the linked bo
 // Exact assignments use physical PDF pages; printed folios are shown when verified.
 function readingsForDay(subject, date, teacher=false) {
  const day=new Date(date+'T12:00:00Z').getUTCDay(),session=day===1||day===2?1:day===3||day===4?2:0;
- return (subject?.[teacher?'teacher_readings':'readings']||[]).filter(r=>!session||!r.session||r.session===session);
+ return (subject?.[teacher?'teacher_readings':'readings']||[]).filter(r=>r.weekdays?r.weekdays.includes(day):!session||!r.session||r.session===session);
 }
 function readingText(r) {
  const range=a=>a[0]===a[1]?String(a[0]):a.join('–');
@@ -15,5 +15,5 @@ window.PageReadings={clean:cleanTaskText,append(subject,library,parent,{date,tea
  const refs=date?readingsForDay(subject,date,teacher):subject?.[teacher?'teacher_readings':'readings']||[];
  if(!refs.length)return;
  const box=document.createElement('section');box.className='assigned-readings';const h=document.createElement('h4');h.textContent=teacher?'Parent preparation — exact pages':'Assigned reading — exact pages';box.append(h);
- for(const ref of refs){const r=readingLink(ref,library.resources);if(!r)continue;const item=document.createElement('div');item.className='reading-item';const a=document.createElement('a');a.href=r.url;a.target='_blank';a.rel='noopener';a.className='reading-open';a.textContent=r.section+' ↗';const book=document.createElement('p');book.className='reading-book';book.textContent=r.title;const pages=document.createElement('p');pages.className='reading-pages';const range=n=>n[0]===n[1]?String(n[0]):n.join('–');pages.textContent=(r.printed?'Printed '+range(r.printed)+' · ':'')+'PDF '+range(r.pdf);if(!date&&r.session)pages.textContent+=' · '+(r.session===1?'First meeting':'Second meeting');item.append(a,pages,book);if(r.note){const note=document.createElement('p');note.className='reading-note';note.textContent=r.note;item.append(note)}box.append(item);}parent.append(box);
+ for(const ref of refs){const r=readingLink(ref,library.resources);if(!r)continue;const item=document.createElement('div');item.className='reading-item';const a=document.createElement('a');a.href=r.url;a.target='_blank';a.rel='noopener';a.className='reading-open';a.textContent=r.section+' ↗';const book=document.createElement('p');book.className='reading-book';book.textContent=r.title;const pages=document.createElement('p');pages.className='reading-pages';const range=n=>n[0]===n[1]?String(n[0]):n.join('–');pages.textContent=(r.printed?'Printed '+range(r.printed)+' · ':'')+(r.pdf?'PDF '+range(r.pdf):'(printed page numbers)');if(!date&&r.weekdays)pages.textContent+=' · '+r.weekdays.map(d=>['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d]).join('/');if(!date&&r.session&&!r.weekdays)pages.textContent+=' · '+(r.session===1?'First meeting':'Second meeting');item.append(a,pages,book);if(r.note){const note=document.createElement('p');note.className='reading-note';note.textContent=r.note;item.append(note)}box.append(item);}parent.append(box);
 }};

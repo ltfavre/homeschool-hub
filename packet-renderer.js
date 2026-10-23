@@ -1,7 +1,7 @@
 // Shared model keeps student work, lesson directions, and teacher answers separate.
 window.PacketRenderer=(()=>{
  const node=(tag,text='',cls='')=>{const e=document.createElement(tag);e.textContent=text;e.className=cls;return e;};
- const labels={math:'Math',ela:'ELA + Spanish',science:'Physical Sciences',social:'Social Studies',spanish:'Spanish',art:'Art',life:'Human Sciences',computer:'Computer Science',skills:'Life Skills',review:'Friday review / projects'};
+ const labels={math:'Math',ela:'ELA + Spanish',science:'Science',social:'Social Studies',spanish:'Spanish',art:'Art',life:'Human Sciences',computer:'Computer Science',skills:'Life Skills',review:'Friday review / projects'};
  const prefixes={math:'Math:',ela:'ELA:',science:'Sci:',social:'SS:',spanish:'Sp:',art:'Art:',life:'Life:',computer:'CS:',skills:'Skills:',review:'Friday:'};
  const fmt=date=>new Date(date+'T12:00:00Z').toLocaleDateString('en-US',{timeZone:'UTC',weekday:'long',month:'short',day:'numeric',year:'numeric'});
  const range=n=>n[0]===n[1]?String(n[0]):n.join('–');
@@ -43,14 +43,14 @@ window.PacketRenderer=(()=>{
   const weekday=new Date(record.date+'T12:00:00Z').getUTCDay(),session=weekday===1||weekday===2?1:weekday===3||weekday===4?2:0;
   const selected=record.subjects||Object.keys(mapping);
   return {record,subjects:selected.filter(k=>mapping[k]).map(id=>{
-   const s=mapping[id],select=field=>(s[field]||[]).filter(r=>!session||!r.session||r.session===session).map(r=>reading(r,library.resources)).filter(Boolean);
+   const s=mapping[id],select=field=>(s[field]||[]).filter(r=>r.weekdays?r.weekdays.includes(weekday):!session||!r.session||r.session===session).map(r=>reading(r,library.resources)).filter(Boolean);
    const readings=select('readings'),preparation=parent?select('teacher_readings'):[],assigned=new Set(readings.map(r=>r.resource_id));
    let task=PageReadings.clean(record.tasks).split(/\s+(?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)/).find(t=>t.startsWith(prefixes[id]))||s.topic;
    if(task.startsWith(prefixes[id]))task=task.slice(prefixes[id].length).trim();if(task.startsWith(s.topic+' — '))task=task.slice(s.topic.length+3);
    task=task.replace(/Open the assigned chapters and exact pages listed in Materials\./g,'').replace(/Read the selected passage with your parent; model an example and complete guided practice\./g,'Read together and model an example, then complete the student worksheet.').trim();
-   task=specificTask(id,s.topic,task,{session,readings,practice:record.practice,extrasList:(s.resources||[]).filter(k=>!assigned.has(k)).map(k=>library.resources[k]).filter(r=>r&&r.title&&!r.teacher_only)});
+   task=record.curriculum==='core-electives-v1'?task:specificTask(id,s.topic,task,{session,readings,practice:record.practice,extrasList:(s.resources||[]).filter(k=>!assigned.has(k)).map(k=>library.resources[k]).filter(r=>r&&r.title&&!r.teacher_only)});
    const extras=(s.resources||[]).filter(k=>!assigned.has(k)).map(k=>({...library.resources[k],resource_id:k})).filter(r=>r.title&&!r.teacher_only);
-   return {id,name:labels[id]||id,topic:s.topic,task,readings,preparation,extras};
+   return {id,name:s.display_name||(id==='ela'&&record.curriculum==='core-electives-v1'?(weekday===2||weekday===4?'ELA + Spanish':'ELA'):labels[id])||id,topic:s.topic,task,readings,preparation,extras};
   })};
  }
  function questions(section,parent,teacher){
@@ -78,7 +78,7 @@ window.PacketRenderer=(()=>{
  function resourceRows(refs,parent){for(const r of refs){const row=node('div','','guide-resource');row.append(link(r.section+' ↗',r.url,'guide-resource-title'),node('p',r.pages,'guide-pages'),node('p',r.book,'guide-book'));if(r.note)row.append(node('p',r.note,'guide-note'));parent.append(row);}}
  function guide(record,library,options={}){
   const m=model(record,library,options),paper=node('article','','lesson-guide');paper.append(node('p',`GRADE ${record.grade} · MODULE ${record.module} · WEEK ${record.week}`,'eyebrow'),node('h1',fmt(record.date)),node('p','Lesson directions & resources','guide-subtitle'));
-  const overview=node('nav','','subject-jumps');overview.setAttribute('aria-label','Subjects for '+record.date);
+  if(record.lesson_context)paper.append(node('p',record.lesson_context,'guide-subtitle'));const overview=node('nav','','subject-jumps');overview.setAttribute('aria-label','Subjects for '+record.date);
   for(const s of m.subjects){const a=node('a',s.name);a.href=`#guide-${record.grade}-${record.date}-${s.id}`;overview.append(a);}paper.append(overview);
   const actions=node('div','','guide-actions');actions.append(link('Student worksheets PDF →',`/daily-print?date=${record.date}&grade=${record.grade}&kind=work`,'book-action'));paper.append(actions);
   const grid=node('div','','guide-grid');for(const s of m.subjects){const card=node('section','','guide-card');card.id=`guide-${record.grade}-${record.date}-${s.id}`;card.append(node('p',s.name.toUpperCase(),'subject-tag'),node('h2',s.topic));

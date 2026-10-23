@@ -21,7 +21,7 @@ export async function wishlistRoute(request, env, user, url, assetJson) {
     const state = new Map(((await db.prepare('SELECT * FROM family_wishlist_state').all()).results || []).map((r) => [r.item_id, r]));
     const custom = ((await db.prepare('SELECT * FROM family_wishlist_custom ORDER BY created_at').all()).results || [])
       .map((c) => ({ id: c.id, subject: c.subject, title: c.title, link: c.link, price: c.price, notes: c.notes, added: new Date(c.created_at * 1000).toISOString().slice(0, 10), custom: true }));
-    const items = [...(file.items || []), ...custom].map((i) => ({ ...i, status: state.get(i.id)?.status || 'considering', my_note: state.get(i.id)?.note || '' }));
+    const items = [...(file.items || []), ...custom].map((i) => ({ ...i, status: state.get(i.id)?.status || (STATUSES.includes(i.status) ? i.status : 'considering'), my_note: state.get(i.id)?.note || '' }));
     return json({ items, subjects: file.subjects || {} });
   }
   if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);

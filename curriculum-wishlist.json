@@ -1,6 +1,17 @@
 {
   "about": "Curricula and books suggested for purchase. Status and notes are saved per family in the database; edit this file to add suggestions.",
-  "subjects": { "art": "Art", "life": "Human & Life Sciences", "science": "Science", "math": "Math", "ela": "ELA", "social": "Social Studies", "computer": "Computer Science", "skills": "Life Skills", "music": "Music & Drama", "other": "Other" },
+  "subjects": {
+    "art": "Art",
+    "life": "Human & Life Sciences",
+    "science": "Science",
+    "math": "Math",
+    "ela": "ELA",
+    "social": "Social Studies",
+    "computer": "Computer Science",
+    "skills": "Life Skills",
+    "music": "Music & Drama",
+    "other": "Other"
+  },
   "items": [
     {
       "id": "art-fundamentals-letsdoschool",
@@ -14,6 +25,34 @@
       "link": "https://www.etsy.com/listing/1789569785/art-fundamentals-all-in-one-homeschool",
       "why": "Hands-on drawing and color skills that the Core Knowledge Art & Art History block is light on: line, pattern, shape, texture, value, color mixing and theory, positive and negative space, focal point. Short 20–30 minute lessons, each studying real artists.",
       "notes": "4.6 stars from 32 reviews; shop has 260 sales. Two reviewers said the binding is weak. Needs only pencils and colored pencils (plus sketchbooks).",
+      "added": "2026-10-23"
+    },
+    {
+      "id": "philosophy-for-kids-white",
+      "subject": "life",
+      "title": "Philosophy for Kids: 40 Fun Questions That Help You Wonder About Everything!",
+      "vendor": "David A. White (Prufrock Press); any bookstore",
+      "price": "about $12.99 each (Amazon price per Cathy Duffy; check current)",
+      "format": "Paperback book",
+      "grades": "4–12",
+      "for": "Ellie and Lillie (one copy each works best)",
+      "link": "https://cathyduffyreviews.com/homeschool-extras/critical-thinking-logic/philosophy-for-kids-40-fun-questions-that-help-you-wonder-about-everything",
+      "why": "Fills the philosophy weeks of the Human Development, Philosophy & Worldviews block (May 10 – Jun 18). 40 discussion lessons in four groups (values, knowledge, reality, critical thinking), each tied to a philosopher, with teaching tips; no philosophy background needed. Pick about 6 questions for the block.",
+      "notes": "Works best as a discussion with a parent; there are no separate student books or answer keys. Neutral: it doesn't promote a particular philosophy. Sequel 'The Examined Life' (about $37) is harder.",
+      "added": "2026-10-23"
+    },
+    {
+      "id": "dk-what-do-you-believe",
+      "subject": "life",
+      "title": "What Do You Believe? (DK)",
+      "vendor": "DK / Penguin Random House; any bookstore",
+      "price": "$12.99 list",
+      "format": "Paperback, 96 illustrated pages",
+      "grades": "Upper elementary to middle school (publisher doesn't state an age)",
+      "for": "Ellie and Lillie (one copy can be shared)",
+      "link": "https://www.dk.com/us/book/9781465443861-what-do-you-believe/",
+      "why": "Fills the world-religions weeks of the block: Christianity, Islam, Judaism, Hinduism and Buddhism, plus older beliefs, new movements, modern spirituality and atheism, with scriptures, places of worship, food and clothing. Matches the block's goal of comparing worldviews fairly.",
+      "notes": "The publisher describes it as unbiased; I couldn't find an independent review confirming that. For Lillie, Harvard's free Pluralism Project (pluralism.org) adds case studies and essays.",
       "added": "2026-10-23"
     }
   ]

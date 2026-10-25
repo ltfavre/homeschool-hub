@@ -1,6 +1,6 @@
 import {readingsForDay,readingLink,cleanTaskText} from './page-readings-core.js';
 import { subjectsForDay, curriculumForDay, taskForSubject, studentResourceLibrary } from './curriculum-schedule.js';
-import { curriculumAsset } from './curriculum-assets.js';
+import { curriculumAsset, curriculumJson } from './curriculum-assets.js';
 import { homeAssistantApi, manageHomeAssistant } from "./home-assistant-api.js";
 import { isTeacherToolsPath, teacherToolsRoute } from "./teacher-tools.js";
 import { isWishlistPath, wishlistRoute } from "./wishlist.js";
@@ -629,7 +629,7 @@ async function familyUser(request,env){
  }
 }
 async function sessionResponse(user,env){const t=randomToken();await env.DB.prepare('INSERT INTO family_sessions(token_hash,user_id,expires_at) VALUES(?,?,?)').bind(await digest(t),user.id,epoch()+604800).run();return familyJson({user:publicUser(user),redirect:user.role==='parent'?'/planner':'/agenda'},200,{'set-cookie':cookie(t,env)});}
-async function assetJson(request,env,path){const r=await fetchAsset(new Request(new URL(path,request.url)),env);if(!r.ok)throw Error('Curriculum unavailable');return r.json();}
+async function assetJson(request,env,path){return curriculumJson(new Request(new URL(path,request.url)),env,rawAsset);}
 function centralDate(){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());}
 function safeDate(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return false;const value=new Date(d+'T12:00:00Z');return !isNaN(value)&&value.toISOString().slice(0,10)===d;}
 async function rateLimit(request,env,username){

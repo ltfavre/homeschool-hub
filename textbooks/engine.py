@@ -48,7 +48,7 @@ def _sym(m):
 class Paragraph(_Paragraph):
     """Paragraph that draws symbols missing from the brand fonts (○ △ ☐ ✓ → ≈) with DejaVu Sans."""
     def __init__(self, text, *a, **k):
-        super().__init__(_SYM.sub(_sym, text), *a, **k)
+        super().__init__(text if text is None else _SYM.sub(_sym, text), *a, **k)
 
 
 # ---------------------------------------------------------------- brand

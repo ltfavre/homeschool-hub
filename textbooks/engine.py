@@ -687,3 +687,88 @@ def shape_pattern(theme, shapes, width=None, size=26):
                 c.setFillColor(WHITE); c.setDash(3, 2); c.rect(x, y, size, size, fill=1); c.setDash()
                 text(c, x + size / 2, y + size * 0.3, "?", "BodySemi", size * 0.55, theme.main, "c")
     return Draw(width, height, fn)
+
+
+# ---------------------------------------------------------------- fraction figures
+def frac_label(c, x, y, n, d, size=10, color=INK, font="MonoSemi"):
+    """Stacked fraction centred at x with its bar at y."""
+    text(c, x, y + 2.5, str(n), font, size, color, "c")
+    wbar = max(stringWidth(str(n), font, size), stringWidth(str(d), font, size)) + 3
+    c.setStrokeColor(color); c.setLineWidth(0.8); c.line(x - wbar / 2, y, x + wbar / 2, y)
+    text(c, x, y - size - 0.5, str(d), font, size, color, "c")
+
+
+def fraction_bar(theme, n, d, width=None, height=26, label=True, shade_color=None, unit_labels=False):
+    width = width or W * 0.75
+
+    def fn(c, w, h):
+        lw = 36 if label else 0; bw = w - lw - 4; pw = bw / d; y = (h - height) / 2
+        for k in range(d):
+            c.setFillColor((shade_color or theme.mid) if k < n else WHITE); c.setStrokeColor(theme.dark); c.setLineWidth(0.9)
+            c.rect(2 + k * pw, y, pw, height, fill=1, stroke=1)
+            if unit_labels and pw > 16: frac_label(c, 2 + (k + 0.5) * pw, y + height / 2 - 1, 1, d, 7.5, INK)
+        if label: frac_label(c, w - lw / 2, y + height / 2 - 1, n, d, 11, theme.dark)
+    return Draw(width, height + 8, fn)
+
+
+def fraction_bars(theme, fracs, width=None, bar_h=22, gap=6, unit_labels=False):
+    """A stack of bars of equal length to compare fractions. fracs: list of (n, d)."""
+    width = width or W * 0.75; height = len(fracs) * (bar_h + gap) + 4
+
+    def fn(c, w, h):
+        lw = 36; bw = w - lw - 4
+        for i, (n, d) in enumerate(fracs):
+            y = h - (i + 1) * (bar_h + gap); pw = bw / d
+            for k in range(d):
+                c.setFillColor(theme.mid if k < n else WHITE); c.setStrokeColor(theme.dark); c.setLineWidth(0.8)
+                c.rect(2 + k * pw, y, pw, bar_h, fill=1, stroke=1)
+                if unit_labels and pw > 16: frac_label(c, 2 + (k + 0.5) * pw, y + bar_h / 2 - 1, 1, d, 7, INK)
+            frac_label(c, w - lw / 2, y + bar_h / 2 - 1, n, d, 10.5, theme.dark)
+    return Draw(width, height, fn)
+
+
+def fraction_circle(theme, n, d, r=30, width=None):
+    width = width or 2 * r + 10
+
+    def fn(c, w, h):
+        cx, cy = w / 2, h / 2
+        for k in range(d):
+            c.setFillColor(theme.mid if k < n else WHITE); c.setStrokeColor(theme.dark); c.setLineWidth(0.9)
+            c.wedge(cx - r, cy - r, cx + r, cy + r, 90 - (k + 1) * 360 / d, 360 / d, fill=1, stroke=1)
+    return Draw(width, 2 * r + 8, fn)
+
+
+def frac_number_line(theme, d, whole_end=1, points=(), width=None, height=62, label_all=True, mixed=False):
+    """Number line from 0 to whole_end split into d parts per whole. points: (n, label_or_None)."""
+    width = width or W * 0.85
+
+    def fn(c, w, h):
+        y = 32; x0, x1 = 14, w - 14; c.setStrokeColor(INK); c.setLineWidth(1.2); c.line(x0, y, x1, y)
+        total = d * whole_end
+        for k in range(total + 1):
+            x = x0 + (x1 - x0) * k / total; whole = k % d == 0
+            c.setLineWidth(1.2 if whole else 0.7); c.line(x, y - (7 if whole else 5), x, y + (7 if whole else 5))
+            if whole: text(c, x, y - 20, str(k // d), "MonoSemi", 10, INK, "c")
+            elif label_all:
+                if mixed and k > d: frac_label(c, x, y - 15, k, d, 7.5, MUTED)
+                else: frac_label(c, x, y - 15, k, d, 7.5, MUTED)
+        for p in points:
+            k, lab = p[0], p[1]; x = x0 + (x1 - x0) * k / total
+            c.setFillColor(theme.main); c.circle(x, y, 4, fill=1, stroke=0)
+            if lab: text(c, x, y + 10, lab, "MonoSemi", 9, theme.main, "c")
+    return Draw(width, height, fn)
+
+
+def decimal_grid(theme, hundredths, size=110, tenths_only=False):
+    """10×10 grid with `hundredths` squares shaded (or columns if tenths_only)."""
+    def fn(c, w, h):
+        s = size / 10; x0, y0 = 2, 2
+        for i in range(10):
+            for j in range(10):
+                k = j * 10 + i
+                c.setFillColor(theme.mid if k < hundredths else WHITE); c.setStrokeColor(theme.dark if tenths_only and False else LINE); c.setLineWidth(0.4)
+                c.rect(x0 + j * s, y0 + (9 - i) * s, s, s, fill=1, stroke=1)
+        c.setStrokeColor(theme.dark); c.setLineWidth(1); c.rect(x0, y0, size, size, fill=0, stroke=1)
+        if tenths_only:
+            for j in range(1, 10): c.line(x0 + j * s, y0, x0 + j * s, y0 + size)
+    return Draw(size + 4, size + 4, fn)

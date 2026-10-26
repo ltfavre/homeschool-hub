@@ -57,5 +57,14 @@ def round_to(n, place):
     return (n + v // 2) // v * v
 
 
+def F(n, d):
+    """Inline fraction for Paragraph text."""
+    return f"<super>{n}</super>⁄<sub>{d}</sub>"
+
+
+def MX(w, n, d):
+    return f"{w}&nbsp;{F(n, d)}"
+
+
 def cmp(a, b):
     return ">" if a > b else "<" if a < b else "="

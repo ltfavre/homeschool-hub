@@ -79,6 +79,7 @@ def textbook_lesson(t, L, teacher=False):
     out += render_blocks(t, L.learn, teacher)
     out.append(Spacer(1, 4)); out.append(try_it_box(t, L, with_answers=teacher))
     if L.summary:
+        # keep the summary on the same page as the end of Try It when it fits
         out += [Spacer(1, 8), panel([P("LESSON SUMMARY", t.eyebrow), P(L.summary, t.boxt)], SAGE_WASH, left_bar=HUNTER)]
     return out
 
@@ -144,8 +145,9 @@ def build_textbook(book, path):
     story = [Spacer(1, 1)] + front_matter(t, book, doc, "textbook")
     for U in book.units:
         story += unit_opener(t, U, doc, "textbook") + unit_intro_student(t, U)
-        for L in U.lessons:
-            story += [PageBreak()] + textbook_lesson(t, L)
+        for i, L in enumerate(U.lessons):
+            # start each lesson on a new page unless the previous one left most of a page empty
+            story += ([PageBreak()] if i == 0 else [CondPageBreak(5.2 * inch), Spacer(1, 18)]) + textbook_lesson(t, L)
         story += study_guide(t, U)
     story += glossary(t, book)
     doc.multiBuild(story)

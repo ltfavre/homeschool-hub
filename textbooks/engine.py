@@ -103,10 +103,21 @@ def bullets(items, style):
 
 
 def panel(flowables, bg, border=None, pad=11, width=W, left_bar=None):
+    """Shaded box. Long boxes are built one row per item so they can continue onto the next page."""
+    if isinstance(flowables, list) and len(flowables) > 3:
+        rows = [[flowables[:2]]] + [[f] for f in flowables[2:]]
+        t = Table(rows, colWidths=[width])
+        st = [("BACKGROUND", (0, 0), (-1, -1), bg), ("LEFTPADDING", (0, 0), (-1, -1), pad + (4 if left_bar else 0)),
+              ("RIGHTPADDING", (0, 0), (-1, -1), pad), ("TOPPADDING", (0, 0), (-1, -1), 1), ("BOTTOMPADDING", (0, 0), (-1, -1), 1),
+              ("TOPPADDING", (0, 0), (-1, 0), pad - 3), ("BOTTOMPADDING", (0, -1), (-1, -1), pad - 5)]
+        if border: st.append(("BOX", (0, 0), (-1, -1), 0.8, border))
+        if left_bar: st.append(("LINEBEFORE", (0, 0), (0, -1), 4, left_bar))
+        t.setStyle(TableStyle(st))
+        return t
     t = Table([[flowables]], colWidths=[width])
     st = [("BACKGROUND", (0, 0), (-1, -1), bg), ("LEFTPADDING", (0, 0), (-1, -1), pad + (4 if left_bar else 0)),
           ("RIGHTPADDING", (0, 0), (-1, -1), pad), ("TOPPADDING", (0, 0), (-1, -1), pad - 3),
-          ("BOTTOMPADDING", (0, 0), (-1, -1), pad - 5)]
+          ("BOTTOMPADDING", (0, -1), (-1, -1), pad - 5)]
     if border: st.append(("BOX", (0, 0), (-1, -1), 0.8, border))
     if left_bar: st.append(("LINEBEFORE", (0, 0), (0, -1), 4, left_bar))
     t.setStyle(TableStyle(st))
@@ -249,6 +260,7 @@ def number_line(theme, start, end, step, label_step=None, points=(), width=W, he
                 hops=(), fmt_fn=fmt, tick_labels=True):
     """points: (value, label, color?) ; hops: (from, to, label) arcs above the line."""
     label_step = label_step or step
+    if hops: height = max(height, 52 + 16 * len(hops))
 
     def X(v, w):
         return 18 + float(v - start) / float(end - start) * (w - 36)
@@ -269,10 +281,11 @@ def number_line(theme, start, end, step, label_step=None, points=(), width=W, he
         if mid_mark is not None:
             x = X(mid_mark, w); c.setStrokeColor(theme.main); c.setDash(2, 2); c.line(x, y - 10, x, y + 22); c.setDash()
             text(c, x, y + 25, "halfway " + fmt_fn(mid_mark), "BodySemi", 7.5, theme.main, "c")
-        for a, b, lab in hops:
-            xa, xb = X(a, w), X(b, w); c.setStrokeColor(theme.main); c.setLineWidth(1)
-            p = c.beginPath(); p.moveTo(xa, y + 6); p.curveTo(xa, y + 30, xb, y + 30, xb, y + 6); c.drawPath(p, stroke=1, fill=0)
-            text(c, (xa + xb) / 2, y + 27, lab, "BodySemi", 8, theme.main, "c")
+        for i, (a, b, lab) in enumerate(hops):
+            xa, xb = X(a, w), X(b, w); c.setStrokeColor(theme.main); c.setLineWidth(1); top = 30 + 16 * i
+            p = c.beginPath(); p.moveTo(xa, y + 6); p.curveTo(xa, y + top, xb, y + top, xb, y + 6); c.drawPath(p, stroke=1, fill=0)
+            _arrow(c, xb, y + 6, -math.pi / 2, s=5, color=theme.main)
+            text(c, (xa + xb) / 2, y + top * 0.75 + 3, lab, "BodySemi", 8, theme.main, "c")
         for pt in points:
             v, lab = pt[0], pt[1]; col = pt[2] if len(pt) > 2 else theme.main
             x = X(v, w); c.setFillColor(col); c.circle(x, y, 4, fill=1, stroke=0)

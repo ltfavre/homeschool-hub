@@ -68,3 +68,21 @@ def MX(w, n, d):
 
 def cmp(a, b):
     return ">" if a > b else "<" if a < b else "="
+
+
+def RF(x, mixed=True):
+    """Format a Fraction (or int) with a true minus sign, as a mixed number when |x| > 1."""
+    from fractions import Fraction as _Fr
+    x = _Fr(x); neg = x < 0; x = abs(x)
+    if x.denominator == 1: body = f"{x.numerator:,}"
+    elif mixed and x > 1: body = MX(x.numerator // x.denominator, x.numerator % x.denominator, x.denominator)
+    else: body = F(x.numerator, x.denominator)
+    return ("−" if neg else "") + body
+
+
+def RD(x):
+    """Format a decimal-like number with a true minus sign and no trailing zeros."""
+    from decimal import Decimal as _D
+    d = _D(str(x)).normalize()
+    s = format(d, "f")
+    return s.replace("-", "−")

@@ -61,10 +61,10 @@ def passage_box(t, ps):
     rows = [["", head]]; n = 0
     for para in ps.paras:
         if para.startswith(">"):
-            rows.append(["", P(para[1:].strip().replace("\n", "<br/>"), verse)])
+            rows.append(["", P(para[1:].strip().replace("\\n", "<br/>").replace("\n", "<br/>"), verse)])
         else:
             n += 1
-            rows.append([P(str(n) if ps.numbered else "", num), P(para, body)])
+            rows.append([P(str(n) if ps.numbered else "", num), P(stage(para), body)])
     tb = Table(rows, colWidths=[26, W - 26])
     tb.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("BACKGROUND", (0, 0), (-1, -1), WHITE),
                             ("LINEABOVE", (0, 0), (-1, 0), 4, t.main), ("BOX", (0, 0), (-1, -1), 0.8, t.mid),
@@ -73,6 +73,11 @@ def passage_box(t, ps):
                             ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
                             ("TOPPADDING", (0, 0), (-1, 0), 10), ("BOTTOMPADDING", (0, -1), (-1, -1), 12)]))
     return tb
+
+
+def stage(text):
+    """Stage directions in drama, written as <i>(...)</i>, are set in the serif italic and muted."""
+    return text.replace("<i>(", "<font name='DisplayIt' color='#5F5B56'>(").replace(")</i>", ")</font>")
 
 
 def reader_box(t, r):

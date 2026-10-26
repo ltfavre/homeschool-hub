@@ -1225,3 +1225,23 @@ def grid_shape(theme, cells, cols, rows, size=12, width=None, color=None):
                 c.setFillColor((color or theme.mid) if (i, j) in cells else WHITE); c.setStrokeColor(GRID); c.setLineWidth(0.4)
                 c.rect(3 + i * size, 3 + j * size, size, size, fill=1, stroke=1)
     return Draw(width, height, fn)
+
+
+def ineq_line(theme, lo, hi, value, direction, closed, width=None, step=1, blank=False):
+    """Graph of x < v, x <= v, x > v, x >= v on a number line. direction: 'left' or 'right'."""
+    width = width or W * 0.75
+
+    def fn(c, w, h):
+        y = 26; x0, x1 = 14, w - 14
+        X = lambda v: x0 + (x1 - x0) * (v - lo) / (hi - lo)
+        c.setStrokeColor(INK); c.setLineWidth(1.1); c.line(x0 - 6, y, x1 + 6, y)
+        _arrow(c, x1 + 8, y, 0, s=5); _arrow(c, x0 - 8, y, math.pi, s=5)
+        k = lo
+        while k <= hi + 1e-9:
+            c.line(X(k), y - 4, X(k), y + 4); text(c, X(k), y - 14, sgn(int(k)) if float(k).is_integer() else str(k), "Mono", 7.5, INK, "c"); k += step
+        if blank: return
+        xv = X(value); c.setStrokeColor(theme.main); c.setLineWidth(3)
+        end = x1 + 6 if direction == "right" else x0 - 6
+        c.line(xv, y, end, y); _arrow(c, end + (4 if direction == "right" else -4), y, 0 if direction == "right" else math.pi, s=7, color=theme.main)
+        c.setLineWidth(1.6); c.setFillColor(theme.main if closed else WHITE); c.circle(xv, y, 4.5, fill=1, stroke=1)
+    return Draw(width, 46, fn)

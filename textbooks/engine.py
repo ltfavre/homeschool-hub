@@ -821,3 +821,143 @@ def money(theme, dollars=0, quarters=0, dimes=0, nickels=0, pennies=0, width=Non
                 c.setFillColor(colors.HexColor("#E9E6E0") if k != 5 else colors.HexColor("#E7C3A5")); c.setStrokeColor(MUTED)
                 c.circle(x + 15, 20, r, fill=1, stroke=1); text(c, x + 15, 17, lab, "BodySemi", 7, INK, "c"); x += 34
     return Draw(width, 40 * scale + 2, fn)
+
+
+# ---------------------------------------------------------------- geometry figures
+def _arrow(c, x, y, ang, s=7, color=INK):
+    c.setFillColor(color)
+    p = c.beginPath(); p.moveTo(x, y)
+    p.lineTo(x - s * math.cos(ang - 0.4), y - s * math.sin(ang - 0.4)); p.lineTo(x - s * math.cos(ang + 0.4), y - s * math.sin(ang + 0.4)); p.close()
+    c.drawPath(p, fill=1, stroke=0)
+
+
+def _dot(c, x, y, lab=None, color=INK, dx=0, dy=8):
+    c.setFillColor(color); c.circle(x, y, 2.6, fill=1, stroke=0)
+    if lab: text(c, x + dx, y + dy, lab, "BodySemi", 10, color, "c")
+
+
+def line_kind(theme, kind, labels=("A", "B"), width=170, height=46):
+    """kind: point, segment, ray, line."""
+    def fn(c, w, h):
+        y = h / 2 - 4; x1, x2 = 22, w - 22
+        c.setStrokeColor(theme.dark); c.setLineWidth(1.6)
+        if kind == "point": _dot(c, w / 2, y, labels[0], theme.dark); return
+        c.line(x1, y, x2, y)
+        if kind in ("ray", "line"): _arrow(c, x2 + 6, y, 0, color=theme.dark)
+        if kind == "line": _arrow(c, x1 - 6, y, math.pi, color=theme.dark)
+        _dot(c, x1 + (14 if kind == "line" else 0), y, labels[0], theme.dark)
+        _dot(c, x2 - (14 if kind in ("ray", "line") else 0), y, labels[1], theme.dark)
+    return Draw(width, height, fn)
+
+
+def line_pair(theme, kind, width=170, height=80):
+    """kind: parallel, perpendicular, intersecting."""
+    def fn(c, w, h):
+        c.setStrokeColor(theme.dark); c.setLineWidth(1.6); cx, cy = w / 2, h / 2
+        def L(x1, y1, x2, y2):
+            c.line(x1, y1, x2, y2); a = math.atan2(y2 - y1, x2 - x1)
+            _arrow(c, x2 + 5 * math.cos(a), y2 + 5 * math.sin(a), a, color=theme.dark); _arrow(c, x1 - 5 * math.cos(a), y1 - 5 * math.sin(a), a + math.pi, color=theme.dark)
+        if kind == "parallel": L(16, cy + 16, w - 16, cy + 16); L(16, cy - 16, w - 16, cy - 16)
+        elif kind == "perpendicular":
+            L(16, cy, w - 16, cy); L(cx, 10, cx, h - 10)
+            c.setLineWidth(1); c.rect(cx, cy, 9, 9, fill=0, stroke=1)
+        else: L(20, 12, w - 20, h - 12); L(20, h - 22, w - 20, 22)
+    return Draw(width, height, fn)
+
+
+def angle_fig(theme, deg, width=170, height=None, label=None, show=True, arm=None, start=0, ray_labels=None):
+    height = height or (60 if deg <= 90 else 80 if deg < 180 else 60)
+    arm = arm or 70
+
+    def fn(c, w, h):
+        vx = w / 2 - (arm / 2 if deg <= 90 else 0); vy = 14 if deg <= 180 else h / 2
+        a0 = math.radians(start); a1 = math.radians(start + deg)
+        c.setStrokeColor(theme.dark); c.setLineWidth(1.8)
+        for a in (a0, a1):
+            x2, y2 = vx + arm * math.cos(a), vy + arm * math.sin(a); c.line(vx, vy, x2, y2); _arrow(c, x2 + 4 * math.cos(a), y2 + 4 * math.sin(a), a, color=theme.dark)
+        _dot(c, vx, vy, None, theme.dark)
+        if deg == 90:
+            c.setLineWidth(1); s = 10
+            p = c.beginPath(); p.moveTo(vx + s * math.cos(a0), vy + s * math.sin(a0)); p.lineTo(vx + s * math.cos(a0) + s * math.cos(a1), vy + s * math.sin(a0) + s * math.sin(a1)); p.lineTo(vx + s * math.cos(a1), vy + s * math.sin(a1)); c.drawPath(p)
+        elif deg > 0:
+            c.setStrokeColor(theme.main); c.setLineWidth(1.2); r = 18
+            c.arc(vx - r, vy - r, vx + r, vy + r, start, deg)
+        if show:
+            am = math.radians(start + deg / 2); text(c, vx + 34 * math.cos(am), vy + 34 * math.sin(am) - 3, label if label is not None else f"{deg}°", "MonoSemi", 9.5, theme.main, "c")
+    return Draw(width, height, fn)
+
+
+def polygon_fig(theme, pts, width=150, height=110, labels=None, right_angles=(), sym=None, ticks=None, fill=True):
+    """pts: list of (x, y) in 0..1 coordinates. right_angles: vertex indexes. sym: ((x1,y1),(x2,y2)) dashed symmetry line.
+    ticks: list of (edge_index, count) for equal-side marks."""
+    def fn(c, w, h):
+        P_ = [(10 + x * (w - 20), 10 + y * (h - 20)) for x, y in pts]
+        p = c.beginPath(); p.moveTo(*P_[0])
+        for q in P_[1:]: p.lineTo(*q)
+        p.close(); c.setStrokeColor(theme.dark); c.setLineWidth(1.6); c.setFillColor(theme.wash); c.drawPath(p, fill=1 if fill else 0, stroke=1)
+        for i in right_angles:
+            a, b, d = P_[i], P_[i - 1], P_[(i + 1) % len(P_)]
+            u = [(b[0] - a[0]), (b[1] - a[1])]; v = [(d[0] - a[0]), (d[1] - a[1])]
+            nu = math.hypot(*u); nv = math.hypot(*v); s = 9
+            u = [u[0] / nu * s, u[1] / nu * s]; v = [v[0] / nv * s, v[1] / nv * s]
+            c.setLineWidth(0.9); q = c.beginPath(); q.moveTo(a[0] + u[0], a[1] + u[1]); q.lineTo(a[0] + u[0] + v[0], a[1] + u[1] + v[1]); q.lineTo(a[0] + v[0], a[1] + v[1]); c.drawPath(q)
+        for e, n in (ticks or []):
+            a, b = P_[e], P_[(e + 1) % len(P_)]; mx_, my_ = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2
+            ang = math.atan2(b[1] - a[1], b[0] - a[0]) + math.pi / 2
+            for k in range(n):
+                off = (k - (n - 1) / 2) * 4; ux, uy = math.cos(ang - math.pi / 2) * off, math.sin(ang - math.pi / 2) * off
+                c.setLineWidth(1); c.line(mx_ + ux - 4 * math.cos(ang), my_ + uy - 4 * math.sin(ang), mx_ + ux + 4 * math.cos(ang), my_ + uy + 4 * math.sin(ang))
+        if sym:
+            (x1, y1), (x2, y2) = sym; c.setStrokeColor(theme.main); c.setDash(4, 3); c.setLineWidth(1.3)
+            c.line(10 + x1 * (w - 20), 10 + y1 * (h - 20), 10 + x2 * (w - 20), 10 + y2 * (h - 20)); c.setDash()
+        if labels:
+            cx = sum(x for x, _ in P_) / len(P_); cy = sum(y for _, y in P_) / len(P_)
+            for (x, y), lab in zip(P_, labels):
+                dx, dy = x - cx, y - cy; d = math.hypot(dx, dy) or 1
+                text(c, x + dx / d * 9, y + dy / d * 9 - 3, lab, "BodySemi", 9, theme.dark, "c")
+    return Draw(width, height, fn)
+
+
+def protractor_fig(theme, deg, width=260):
+    """A protractor reading an angle of `deg` from the right-hand zero."""
+    R = width / 2 - 16
+
+    def fn(c, w, h):
+        cx, cy = w / 2, 14
+        c.setFillColor(colors.Color(theme.wash.red, theme.wash.green, theme.wash.blue, 0.7)); c.setStrokeColor(theme.dark); c.setLineWidth(1)
+        c.wedge(cx - R, cy - R, cx + R, cy + R, 0, 180, fill=1, stroke=1)
+        for k in range(0, 181, 5):
+            a = math.radians(k); L = 10 if k % 10 == 0 else 5
+            c.setLineWidth(0.8 if k % 10 == 0 else 0.5); c.line(cx + R * math.cos(a), cy + R * math.sin(a), cx + (R - L) * math.cos(a), cy + (R - L) * math.sin(a))
+            if k % 30 == 0:
+                text(c, cx + (R - 20) * math.cos(a), cy + (R - 20) * math.sin(a) - 3, str(k), "Mono", 7.5, INK, "c")
+        c.setStrokeColor(theme.main); c.setLineWidth(2)
+        c.line(cx, cy, cx + (R + 10), cy); a = math.radians(deg); c.line(cx, cy, cx + (R + 10) * math.cos(a), cy + (R + 10) * math.sin(a))
+        _dot(c, cx, cy, None, theme.main)
+    return Draw(width, R + 30, fn)
+
+
+def line_plot(theme, values, lo, hi, d, width=None, title=None, unit=""):
+    """values: list of Fractions; axis from lo to hi in steps of 1/d."""
+    from fractions import Fraction as _F
+    width = width or W * 0.8
+    counts = {}
+    for v in values: counts[_F(v)] = counts.get(_F(v), 0) + 1
+    tallest = max(counts.values()) if counts else 1
+    height = 46 + tallest * 13 + (14 if title else 0)
+
+    def fn(c, w, h):
+        y = 30; x0, x1 = 18, w - 18; c.setStrokeColor(INK); c.setLineWidth(1.2); c.line(x0, y, x1, y)
+        n = int((_F(hi) - _F(lo)) * d)
+        for k in range(n + 1):
+            v = _F(lo) + _F(k, d); x = x0 + (x1 - x0) * k / n; c.setLineWidth(1); c.line(x, y - 5, x, y + 5)
+            if v.denominator == 1: text(c, x, y - 18, str(v.numerator), "MonoSemi", 9, INK, "c")
+            else:
+                whole = v.numerator // v.denominator; num = v.numerator % v.denominator
+                lab_x = x
+                if whole: text(c, x - 6, y - 21, str(whole), "MonoSemi", 8.5, INK, "c"); lab_x = x + 4
+                frac_label(c, lab_x, y - 14, num, v.denominator, 6.8, MUTED)
+            for j in range(counts.get(v, 0)):
+                text(c, x, y + 9 + j * 13, "×", "BodySemi", 13, theme.main, "c")
+        if title: text(c, w / 2, h - 10, title, "BodySemi", 9, theme.dark, "c")
+    return Draw(width, height, fn)

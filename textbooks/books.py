@@ -60,7 +60,9 @@ def passage_box(t, ps):
     if ps.source: head.append(P(ps.source, ParagraphStyle("ps", parent=t.small, fontName="BodyMed", spaceAfter=4)))
     rows = [["", head]]; n = 0
     for para in ps.paras:
-        if para.startswith(">"):
+        if para.startswith("<b>") and para.endswith("</b>") and len(para) < 70:
+            rows.append(["", P(para[3:-4], ParagraphStyle("psh", parent=t.h3, fontSize=12.5, spaceBefore=2, spaceAfter=0))])
+        elif para.startswith(">"):
             rows.append(["", P(para[1:].strip().replace("\\n", "<br/>").replace("\n", "<br/>"), verse)])
         else:
             n += 1

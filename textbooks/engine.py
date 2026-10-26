@@ -1421,3 +1421,38 @@ def rect_semi(theme, l, w_, unit="", width=180, height=130):
         text(c, x0 + L / 2, y0 - 12, f"{l} {unit}".strip(), "MonoSemi", 9, theme.dark, "c")
         text(c, x0 + L + 4, y0 + H / 2 - 3, f"{w_} {unit}".strip(), "MonoSemi", 9, theme.dark, "l")
     return Draw(width, height, fn)
+
+
+def plot_arc(theme, labels, width=None, height=120):
+    """Plot mountain: exposition, rising action, climax, falling action, resolution."""
+    width = width or W * 0.85
+
+    def fn(c, w, h):
+        pts = [(10, 18), (w * 0.22, 18), (w * 0.6, h - 22), (w * 0.82, 40), (w - 10, 40)]
+        c.setStrokeColor(theme.main); c.setLineWidth(2.4)
+        p = c.beginPath(); p.moveTo(*pts[0])
+        for q in pts[1:]: p.lineTo(*q)
+        c.drawPath(p)
+        spots = [((pts[0][0] + pts[1][0]) / 2, 6, "c"), ((pts[1][0] + pts[2][0]) / 2 - 18, (pts[1][1] + pts[2][1]) / 2 + 4, "r"), (pts[2][0], h - 14, "c"),
+                 ((pts[2][0] + pts[3][0]) / 2 + 14, (pts[2][1] + pts[3][1]) / 2 + 4, "l"), ((pts[3][0] + pts[4][0]) / 2, 28, "c")]
+        for (x, y, al), lab in zip(spots, labels):
+            text(c, x, y, lab, "BodySemi", 8.5, theme.dark, al)
+        c.setFillColor(theme.main); c.circle(*pts[2], 4, fill=1, stroke=0)
+    return Draw(width, height, fn)
+
+
+def timeline_fig(theme, events, width=None, height=70):
+    """Horizontal timeline. events: list of (date label, description)."""
+    width = width or W * 0.95
+
+    def fn(c, w, h):
+        y = h / 2 + 4; x0, x1 = 16, w - 16; n = len(events)
+        c.setStrokeColor(theme.dark); c.setLineWidth(1.6); c.line(x0, y, x1, y)
+        for i, (d, desc) in enumerate(events):
+            x = x0 + (x1 - x0) * (i + 0.5) / n
+            c.setFillColor(theme.main); c.circle(x, y, 4, fill=1, stroke=0)
+            text(c, x, y + 10, d, "MonoSemi", 8, theme.dark, "c")
+            words = desc.split(); half = (len(words) + 1) // 2
+            text(c, x, y - 17, " ".join(words[:half]), "Body", 7.5, INK, "c")
+            if words[half:]: text(c, x, y - 27, " ".join(words[half:]), "Body", 7.5, INK, "c")
+    return Draw(width, height, fn)

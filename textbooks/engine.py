@@ -1006,3 +1006,209 @@ class SpaceTo(Flowable):
         self.h = max(0, ah - (PAGE_H - self.from_top - BM)); return aw, self.h
 
     def draw(self): pass
+
+
+# ---------------------------------------------------------------- grade 7 figures
+def sgn(n):
+    """Format a number with a true minus sign."""
+    s = f"{n:,}" if isinstance(n, int) else str(n)
+    return s.replace("-", "−")
+
+
+def coord_graph(theme, xmax, ymax, xstep=1, ystep=1, points=(), lines=(), width=220, height=200, xlabel="x", ylabel="y",
+                xmin=0, ymin=0, label_every=None, ylabel_every=None, point_labels=True):
+    """Coordinate grid. points: (x, y, label). lines: list of (slope, intercept) or [(x1,y1),(x2,y2)]."""
+    def fn(c, w, h):
+        L, B, R_, T = 30, 24, 10, 10
+        gw, gh = w - L - R_, h - B - T
+        X = lambda x: L + (x - xmin) / (xmax - xmin) * gw
+        Y = lambda y: B + (y - ymin) / (ymax - ymin) * gh
+        c.setStrokeColor(GRID); c.setLineWidth(0.5)
+        k = xmin
+        while k <= xmax + 1e-9: c.line(X(k), B, X(k), B + gh); k += xstep
+        k = ymin
+        while k <= ymax + 1e-9: c.line(L, Y(k), L + gw, Y(k)); k += ystep
+        c.setStrokeColor(INK); c.setLineWidth(1.2)
+        x0 = X(0) if xmin <= 0 <= xmax else L; y0 = Y(0) if ymin <= 0 <= ymax else B
+        c.line(x0, B, x0, B + gh); c.line(L, y0, L + gw, y0)
+        le = label_every or xstep; lye = ylabel_every or ystep
+        k = xmin
+        while k <= xmax + 1e-9:
+            if abs(round(k / le) * le - k) < 1e-9: text(c, X(k), y0 - 11, sgn(int(k)) if float(k).is_integer() else str(k), "Mono", 7, INK, "c")
+            k += xstep
+        k = ymin
+        while k <= ymax + 1e-9:
+            if abs(round(k / lye) * lye - k) < 1e-9 and k != 0: text(c, x0 - 4, Y(k) - 2.5, sgn(int(k)) if float(k).is_integer() else str(k), "Mono", 7, INK, "r")
+            k += ystep
+        text(c, L + gw, y0 - 20, xlabel, "BodySemi", 8, theme.dark, "r")
+        c.saveState(); c.translate(9, B + gh / 2); c.rotate(90); text(c, 0, 0, ylabel, "BodySemi", 8, theme.dark, "c"); c.restoreState()
+        c.setStrokeColor(theme.main); c.setLineWidth(1.6)
+        for ln in lines:
+            if isinstance(ln, tuple) and len(ln) == 2 and not isinstance(ln[0], tuple):
+                m, b = ln; xa, xb = xmin, xmax
+                ya, yb = m * xa + b, m * xb + b
+                if yb > ymax: xb = (ymax - b) / m; yb = ymax
+                c.line(X(xa), Y(ya), X(xb), Y(yb))
+            else:
+                (x1, y1), (x2, y2) = ln; c.line(X(x1), Y(y1), X(x2), Y(y2))
+        for pt in points:
+            x, y = pt[0], pt[1]; c.setFillColor(theme.main); c.circle(X(x), Y(y), 3, fill=1, stroke=0)
+            if point_labels and len(pt) > 2 and pt[2]: text(c, X(x) + 5, Y(y) + 4, pt[2], "MonoSemi", 7.5, theme.dark, "l")
+    return Draw(width, height, fn)
+
+
+def double_line(theme, top, bottom, top_label, bottom_label, width=None, blanks=()):
+    """Double number line. top/bottom: lists of values (strings or numbers). blanks: indexes shown as '?' on the bottom."""
+    width = width or W * 0.85
+
+    def fn(c, w, h):
+        n = len(top); x0, x1 = 70, w - 14
+        for y, vals, lab in ((h - 18, top, top_label), (16, bottom, bottom_label)):
+            c.setStrokeColor(INK); c.setLineWidth(1.2); c.line(x0, y, x1, y)
+            text(c, 4, y - 3, lab, "BodySemi", 8.5, theme.dark, "l")
+            for i, v in enumerate(vals):
+                x = x0 + (x1 - x0) * i / (n - 1); c.line(x, y - 5, x, y + 5)
+                s = "?" if (vals is bottom and i in blanks) else (sgn(v) if isinstance(v, int) else str(v))
+                text(c, x, y + (8 if y > h / 2 else -15), s, "MonoSemi", 9, theme.main if s == "?" else INK, "c")
+    return Draw(width, 62, fn)
+
+
+def percent_bar(theme, pct, whole_label=None, part_label=None, width=None, marks=10):
+    width = width or W * 0.8
+
+    def fn(c, w, h):
+        x0, x1, y = 6, w - 6, 16; bw = x1 - x0
+        c.setFillColor(WHITE); c.setStrokeColor(theme.dark); c.setLineWidth(1); c.rect(x0, y, bw, 22, fill=1, stroke=1)
+        c.setFillColor(theme.mid); c.rect(x0, y, bw * min(pct, 100) / 100, 22, fill=1, stroke=0)
+        c.setStrokeColor(theme.dark); c.rect(x0, y, bw, 22, fill=0, stroke=1)
+        for k in range(marks + 1):
+            x = x0 + bw * k / marks; c.setLineWidth(0.5); c.line(x, y, x, y + 22)
+            text(c, x, y - 11, f"{100 * k // marks}%", "Mono", 7, MUTED, "c")
+        if part_label: text(c, x0 + bw * min(pct, 100) / 200, y + 7, part_label, "MonoSemi", 9, INK, "c")
+        if whole_label: text(c, x1, y + 28, whole_label, "BodySemi", 8.5, theme.dark, "r")
+    return Draw(width, 58, fn)
+
+
+def chips(theme, pos, neg, zero_pairs=0, width=None, r=8):
+    """Integer chips: pos (+) and neg (−); zero_pairs are circled together."""
+    n = pos + neg; width = width or min(W, 20 + n * (2 * r + 6))
+
+    def fn(c, w, h):
+        x = 8; cy = h / 2
+        def chip(x, s):
+            c.setFillColor(theme.mid if s > 0 else colors.HexColor("#DCE6EF")); c.setStrokeColor(theme.dark if s > 0 else colors.HexColor("#2C5A85")); c.setLineWidth(1)
+            c.circle(x + r, cy, r, fill=1, stroke=1); text(c, x + r, cy - 4, "+" if s > 0 else "−", "BodyBold", 11, INK, "c")
+        for i in range(zero_pairs):
+            chip(x, 1); chip(x + 2 * r + 2, -1)
+            c.setStrokeColor(MUTED); c.setDash(2, 2); c.roundRect(x - 3, cy - r - 4, 4 * r + 8, 2 * r + 8, r, fill=0, stroke=1); c.setDash()
+            x += 4 * r + 14
+        for i in range(pos - zero_pairs): chip(x, 1); x += 2 * r + 5
+        for i in range(neg - zero_pairs): chip(x, -1); x += 2 * r + 5
+    return Draw(width, 2 * r + 16, fn)
+
+
+def dot_plot(theme, values, lo, hi, step=1, width=None, title=None, label_every=1):
+    width = width or W * 0.8
+    counts = {}
+    for v in values: counts[v] = counts.get(v, 0) + 1
+    tallest = max(counts.values()) if counts else 1
+    height = 40 + tallest * 11 + (14 if title else 0)
+
+    def fn(c, w, h):
+        y = 26; x0, x1 = 14, w - 14; c.setStrokeColor(INK); c.setLineWidth(1.1); c.line(x0, y, x1, y)
+        n = round((hi - lo) / step)
+        for k in range(n + 1):
+            v = lo + k * step; x = x0 + (x1 - x0) * k / n; c.line(x, y - 4, x, y + 4)
+            if k % label_every == 0: text(c, x, y - 14, sgn(v) if isinstance(v, int) else str(v), "Mono", 7.5, INK, "c")
+            for j in range(counts.get(v, 0)):
+                c.setFillColor(theme.main); c.circle(x, y + 10 + j * 11, 3.8, fill=1, stroke=0)
+        if title: text(c, w / 2, h - 10, title, "BodySemi", 8.5, theme.dark, "c")
+    return Draw(width, height, fn)
+
+
+def box_plot(theme, five, lo, hi, step=1, width=None, label=None, second=None, second_label=None, label_every=1):
+    """five = (min, q1, median, q3, max). Optional second box plot for comparison."""
+    width = width or W * 0.85; height = 66 if not second else 104
+
+    def fn(c, w, h):
+        x0, x1 = 60, w - 14; y = 20
+        X = lambda v: x0 + (x1 - x0) * (v - lo) / (hi - lo)
+        c.setStrokeColor(INK); c.setLineWidth(1.1); c.line(x0, y, x1, y)
+        k = lo; i = 0
+        while k <= hi + 1e-9:
+            c.line(X(k), y - 4, X(k), y + 4)
+            if i % label_every == 0: text(c, X(k), y - 13, sgn(k) if isinstance(k, int) else str(k), "Mono", 7.5, INK, "c")
+            k += step; i += 1
+        for idx, (f, lab) in enumerate([(five, label), (second, second_label)]):
+            if not f: continue
+            by = y + 22 + idx * 38; mn, q1, md, q3, mx = f
+            c.setStrokeColor(theme.dark); c.setLineWidth(1.2)
+            c.line(X(mn), by + 8, X(q1), by + 8); c.line(X(q3), by + 8, X(mx), by + 8)
+            c.line(X(mn), by + 3, X(mn), by + 13); c.line(X(mx), by + 3, X(mx), by + 13)
+            c.setFillColor(theme.wash); c.rect(X(q1), by, X(q3) - X(q1), 16, fill=1, stroke=1)
+            c.setStrokeColor(theme.main); c.setLineWidth(2); c.line(X(md), by, X(md), by + 16)
+            if lab: text(c, 4, by + 5, lab, "BodySemi", 8, theme.dark, "l")
+    return Draw(width, height, fn)
+
+
+def tree_diagram(theme, first, second, width=None):
+    """Two-stage tree: first = ['H','T'], second = ['1',...,'6']"""
+    width = width or W * 0.8; n = len(first) * len(second); height = max(80, n * 13 + 10)
+
+    def fn(c, w, h):
+        x0, x1, x2 = 10, w * 0.32, w * 0.62
+        rows = len(first) * len(second); gap = (h - 10) / rows
+        for i, a in enumerate(first):
+            ya = h - 5 - gap * (i * len(second) + len(second) / 2)
+            c.setStrokeColor(theme.dark); c.setLineWidth(0.9); c.line(x0, h / 2, x1, ya)
+            text(c, x1 + 4, ya - 3, a, "BodySemi", 9, theme.dark, "l")
+            for j, b in enumerate(second):
+                yb = h - 5 - gap * (i * len(second) + j + 0.5)
+                c.line(x1 + 16, ya, x2, yb); text(c, x2 + 4, yb - 3, b, "BodySemi", 8.5, INK, "l")
+                text(c, w - 6, yb - 3, f"{a}{b}", "Mono", 8, MUTED, "r")
+        c.setFillColor(theme.main); c.circle(x0, h / 2, 2.5, fill=1, stroke=0)
+    return Draw(width, height, fn)
+
+
+def circle_fig(theme, r_label=None, d_label=None, width=140, show="r"):
+    def fn(c, w, h):
+        cx, cy, r = w / 2, h / 2, min(w, h) / 2 - 8
+        c.setFillColor(theme.wash); c.setStrokeColor(theme.dark); c.setLineWidth(1.4); c.circle(cx, cy, r, fill=1, stroke=1)
+        _dot(c, cx, cy, None, theme.dark)
+        c.setStrokeColor(theme.main); c.setLineWidth(1.4)
+        if show == "r":
+            c.line(cx, cy, cx + r, cy)
+            if r_label: text(c, cx + r / 2, cy + 4, r_label, "MonoSemi", 9, theme.dark, "c")
+        else:
+            c.line(cx - r, cy, cx + r, cy)
+            if d_label: text(c, cx, cy + 4, d_label, "MonoSemi", 9, theme.dark, "c")
+    return Draw(width, width * 0.9, fn)
+
+
+def prism_fig(theme, l, w_, h_, unit="", width=200, height=130):
+    """Oblique drawing of a rectangular prism with labeled edges."""
+    def fn(c, ww, hh):
+        s = min((ww - 70) / (l + w_ * 0.5), (hh - 40) / (h_ + w_ * 0.5))
+        L, H, D = l * s, h_ * s, w_ * s * 0.5; x0, y0 = 16, 18
+        c.setStrokeColor(theme.dark); c.setLineWidth(1.3)
+        c.setFillColor(theme.wash); c.rect(x0, y0, L, H, fill=1, stroke=1)
+        p = c.beginPath(); p.moveTo(x0, y0 + H); p.lineTo(x0 + D, y0 + H + D); p.lineTo(x0 + L + D, y0 + H + D); p.lineTo(x0 + L, y0 + H); p.close()
+        c.setFillColor(theme.mid); c.drawPath(p, fill=1, stroke=1)
+        p = c.beginPath(); p.moveTo(x0 + L, y0); p.lineTo(x0 + L + D, y0 + D); p.lineTo(x0 + L + D, y0 + H + D); p.lineTo(x0 + L, y0 + H); p.close()
+        c.setFillColor(theme.main); c.drawPath(p, fill=1, stroke=1)
+        text(c, x0 + L / 2, y0 - 12, f"{l} {unit}".strip(), "MonoSemi", 9, theme.dark, "c")
+        text(c, x0 + L + D + 4, y0 + H / 2 + D / 2, f"{h_} {unit}".strip(), "MonoSemi", 9, theme.dark, "l")
+        text(c, x0 + L + D / 2 + 4, y0 + D / 2 - 8, f"{w_} {unit}".strip(), "MonoSemi", 9, theme.dark, "l")
+    return Draw(width, height, fn)
+
+
+def grid_shape(theme, cells, cols, rows, size=12, width=None, color=None):
+    """Shape drawn on a grid: cells is a list of (col, row) squares to shade (row 0 at bottom)."""
+    width = width or cols * size + 6; height = rows * size + 6
+
+    def fn(c, w, h):
+        for i in range(cols):
+            for j in range(rows):
+                c.setFillColor((color or theme.mid) if (i, j) in cells else WHITE); c.setStrokeColor(GRID); c.setLineWidth(0.4)
+                c.rect(3 + i * size, 3 + j * size, size, size, fill=1, stroke=1)
+    return Draw(width, height, fn)

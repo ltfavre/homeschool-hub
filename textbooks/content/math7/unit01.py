@@ -1,0 +1,373 @@
+"""Grade 7 Math · Unit 1: Proportional Relationships (Oct 12 – Nov 6, 2026)."""
+from fractions import Fraction as Fr
+from engine import *
+from content.mathkit import c, F, MX
+from content.te import TE, flow
+from content.sched import schedule
+
+CW = 205
+x, y, k = "<i>x</i>", "<i>y</i>", "<i>k</i>"
+
+
+def S(title, problems, intro=None, cols=2):
+    return Section(title, problems, intro, cols)
+
+
+def money(v):
+    return f"${v:,.2f}"
+
+
+def tbl(t, head, rows, w=None):
+    data = [head] + rows
+    n = len(head)
+    return table(t, data, [w or (0.75 * inch)] * n, width=(w or 0.75 * inch) * n)
+
+
+L1 = Lesson("1.1", "Ratios and Rates",
+    "I can write ratios and rates and explain what they mean.", "7.RP.1 (review of 6.RP.1–3)",
+    [("ratio", "A comparison of two quantities, written 3 to 2, 3:2, or 3/2.".replace("3/2", F(3, 2))),
+     ("rate", "A ratio that compares two quantities with different units, like 120 miles per 2 hours."),
+     ("equivalent ratios", "Ratios that make the same comparison, like 3:2 and 6:4.")],
+    "A trail mix recipe uses 3 cups of peanuts for every 2 cups of raisins. If you want a bigger batch, how much of each could you use?",
+    [Text("A <b>ratio</b> compares two amounts. The recipe's ratio of peanuts to raisins is 3:2. To make more, multiply both quantities by the same number. That keeps the taste the same."),
+     Figure(lambda t: double_line(t, [0, 3, 6, 9, 12], [0, 2, 4, 6, 8], "peanuts", "raisins")),
+     Text("A <b>rate</b> compares quantities with different units, such as miles and hours or dollars and pounds."),
+     Example("Equivalent ratios", "Is 9 cups of peanuts to 6 cups of raisins the same mix as 3:2?", ["3 × 3 = 9 and 2 × 3 = 6.", "Both parts were multiplied by 3."], "Yes, 9:6 is equivalent to 3:2."),
+     Example("Write a rate", "A car travels 150 miles in 3 hours. Write the rate.", ["Compare miles to hours: 150 miles : 3 hours."], "150 miles per 3 hours (50 miles per hour)"),
+     KeyIdea("Equivalent ratios come from multiplying or dividing both quantities by the same nonzero number.")],
+    [Problem("Write the ratio of 4 dogs to 7 cats three ways.", "4 to 7, 4:7, " + F(4, 7)), Problem("Is 10:15 equivalent to 2:3?", "Yes (÷ 5)"),
+     Problem("A recipe uses 2 eggs per 3 cups of flour. How many eggs for 12 cups of flour?", "8 eggs")],
+    [S("Warm-Up", [Problem("12 × 4", "48"), Problem(f"Simplify {F(18, 24)}", F(3, 4))]),
+     S("Write two equivalent ratios", [Problem(r, ans) for r, ans in [("2:5", "e.g. 4:10, 6:15"), ("7:3", "e.g. 14:6, 21:9"), ("12:16", "e.g. 3:4, 6:8"), ("1:4", "e.g. 2:8, 5:20")]]),
+     S("Complete the double number line", [Problem("Lemonade: 4 lemons for every 3 cups of water. How much water for 16 lemons?", "12 cups",
+                                                   fig=lambda t: double_line(t, [0, 4, 8, 12, 16], [0, 3, 6, 9, "?"], "lemons", "cups", width=W - 60), space=0, wide=True)], cols=1),
+     S("Solve", [Problem("A team won 12 games and lost 8. What is the ratio of wins to games played?", "12:20 = 3:5", space=30),
+                 Problem("A printer prints 45 pages in 3 minutes. How many pages in 10 minutes?", "150 pages", space=30)]),
+     S("Exit Ticket", [Problem("Explain why 6:8 and 9:12 are equivalent.", "Both simplify to 3:4 (÷ 2 and ÷ 3).", lines=2, space=0, wide=True)], cols=1)],
+    TE("Students write ratios and rates and generate equivalent ratios.", "Review of ratio concepts; prepares for computing unit rates (7.RP.1).", "Workbook Lesson 1.1, measuring cups (optional)",
+       flow("12 × 4; simplify 18/24.", "Read Let's Explore.", ["Build the double number line together.", "Say: Scale both quantities by the same factor.", "Work both examples."], "Try It 1–3."),
+       ["Adding the same number to both parts (3:2 → 5:4)."], ["Use a double number line or table."], ["Find a real ratio on a food label."]),
+    summary="Ratios compare quantities; rates compare different units. Multiply or divide both parts by the same number to get equivalent ratios.")
+
+L2 = Lesson("1.2", "Unit Rates",
+    "I can find a unit rate and use it to solve problems.", "7.RP.1",
+    [("unit rate", "A rate for 1 unit of the second quantity, like 55 miles per 1 hour or $3 per pound.")],
+    "A 12-pack of water costs $4.20. How much does one bottle cost?",
+    [Text("A <b>unit rate</b> tells how much for <b>one</b>. Divide the first quantity by the second."),
+     Example("Price per item", "$4.20 for 12 bottles", ["4.20 ÷ 12 = 0.35."], "$0.35 per bottle"),
+     Example("Speed", "A cyclist rides 54 miles in 4.5 hours. Find the speed.", ["54 ÷ 4.5 = 12."], "12 miles per hour"),
+     Example("Use a unit rate", "At $0.35 per bottle, how much do 30 bottles cost?", ["30 × 0.35 = 10.50."], "$10.50"),
+     KeyIdea("Unit rate = first quantity ÷ second quantity. Then multiply the unit rate to scale up.")],
+    [Problem("$18 for 6 notebooks: unit price?", "$3 per notebook"), Problem("390 miles on 15 gallons: miles per gallon?", "26 mpg"), Problem("Type 210 words in 5 minutes: words per minute?", "42 wpm")],
+    [S("Warm-Up", [Problem("4.20 ÷ 12", "0.35"), Problem("54 ÷ 6", "9")]),
+     S("Find the unit rate", [Problem("$7.50 for 3 pounds", "$2.50 per pound"), Problem("120 km in 2.5 hours", "48 km per hour"), Problem("96 heartbeats in 1.5 minutes", "64 beats per minute"),
+                              Problem("$13.44 for 16 ounces", "$0.84 per ounce"), Problem("8 laps in 20 minutes", "0.4 lap per minute (or 2.5 minutes per lap)"), Problem("$52 for 8 hours of work", "$6.50 per hour")]),
+     S("Solve", [Problem("Lillie earns $11.50 per hour babysitting. How much for 6 hours?", "$69", space=30), Problem("A car uses 3 gallons per 84 miles. How far on 10 gallons?", "280 miles", space=30)]),
+     S("Exit Ticket", [Problem("A 5-pound bag of rice costs $6.25. What is the price per pound? How much would 12 pounds cost?", "$1.25 per pound; $15.00", space=40, wide=True)], cols=1)],
+    TE("Students compute and apply unit rates.", "Compute unit rates associated with ratios of fractions, including ratios of lengths, areas, and other quantities.", "Grocery receipts or ads (optional), workbook Lesson 1.2",
+       flow("Division warm-up.", "Read Let's Explore.", ["Work all three examples. Say: Unit rate means per one."], "Try It 1–3."),
+       ["Dividing in the wrong order (12 ÷ 4.20)."], ["Label units on every number."], ["Compare unit prices on two real products."]),
+    summary="A unit rate is the amount per one unit. Divide to find it; multiply to use it.")
+
+L3 = Lesson("1.3", "Unit Rates with Fractions",
+    f"I can find unit rates when the quantities are fractions, like {F(1, 2)} mile in {F(1, 4)} hour.", "7.RP.1",
+    [("complex fraction", f"A fraction with a fraction in its numerator, denominator, or both.")],
+    f"Ellie walks {F(1, 2)} mile in {F(1, 6)} hour. How fast does she walk in miles per hour?",
+    [Text(f"Find the unit rate the same way: divide. {F(1, 2)} ÷ {F(1, 6)} asks “how many miles in 1 whole hour?”"),
+     Example("Divide fractions", f"{F(1, 2)} mile in {F(1, 6)} hour", [f"{F(1, 2)} ÷ {F(1, 6)} = {F(1, 2)} × {F(6, 1)} = {F(6, 2)} = 3."], "3 miles per hour"),
+     Example("Think with a table", f"A painter covers {F(2, 3)} of a wall in {F(1, 3)} hour. How much per hour?", [f"In {F(1, 3)} hour: {F(2, 3)} wall. In 1 hour (3 times as long): 3 × {F(2, 3)} = 2."], "2 walls per hour"),
+     KeyIdea("To divide by a fraction, multiply by its reciprocal: a ÷ b/c = a × c/b.".replace("b/c", F("b", "c")).replace("c/b", F("c", "b")))],
+    [Problem(f"{F(3, 4)} cup of sugar per {F(1, 2)} batch. Cups per batch?", MX(1, 1, 2) + " cups"), Problem(f"{F(1, 3)} mile in {F(1, 12)} hour. mph?", "4 mph"), Problem(f"$2.50 for {F(1, 2)} pound. Price per pound?", "$5.00")],
+    [S("Warm-Up", [Problem(f"{F(1, 2)} ÷ {F(1, 4)}", "2"), Problem(f"{F(2, 3)} × 3", "2")]),
+     S("Find the unit rate", [Problem(f"{F(1, 4)} mile in {F(1, 8)} hour", "2 miles per hour"), Problem(f"{F(2, 5)} pound for {F(1, 5)} dollar", "2 pounds per dollar"),
+                              Problem(f"{F(3, 4)} page in {F(1, 4)} minute", "3 pages per minute"), Problem(f"{F(5, 6)} cup for {F(2, 3)} batch", MX(1, 1, 4) + " cups per batch"),
+                              Problem(f"{MX(1, 1, 2)} miles in {F(1, 2)} hour", "3 mph"), Problem(f"{F(3, 8)} gallon for {F(3, 4)} acre", F(1, 2) + " gallon per acre")]),
+     S("Solve", [Problem(f"A snail moves {F(1, 10)} meter in {F(1, 5)} minute. How far in 1 minute? In 30 minutes?", F(1, 2) + " meter per minute; 15 meters", space=40, wide=True)], cols=1),
+     S("Exit Ticket", [Problem(f"Lillie mows {F(3, 5)} of a lawn in {F(3, 4)} hour. How much lawn per hour?", F(4, 5) + " lawn per hour", space=30, wide=True)], cols=1)],
+    TE("Students compute unit rates involving fractions.", "Compute unit rates associated with ratios of fractions (e.g., 1/2 mile per 1/4 hour).", "Workbook Lesson 1.3",
+       flow("Fraction division warm-up.", "Read Let's Explore.", ["Work both examples. Show the table method alongside division."], "Try It 1–3."),
+       ["Multiplying instead of dividing.", "Flipping the wrong fraction."], ["Table reasoning before the algorithm."], ["Make up a complex-fraction rate problem."]),
+    summary="Divide the quantities even when they are fractions; multiply by the reciprocal.")
+
+L4 = Lesson("1.4", "Comparing Unit Rates",
+    "I can use unit rates to decide which deal or option is better.", "7.RP.1, 7.RP.3",
+    [("unit price", "The cost for one unit, such as dollars per ounce.")],
+    "A 16-ounce box of cereal costs $3.84. A 24-ounce box costs $5.28. Which is the better buy?",
+    [Example("Better buy", "16 oz for $3.84 vs 24 oz for $5.28", ["3.84 ÷ 16 = 0.24 per ounce.", "5.28 ÷ 24 = 0.22 per ounce."], "The 24-ounce box ($0.22/oz)"),
+     Example("Faster runner", "Ellie runs 2 miles in 18 minutes. Lillie runs 3 miles in 26 minutes. Who is faster?", ["Ellie: 18 ÷ 2 = 9 minutes per mile.", "Lillie: 26 ÷ 3 ≈ 8.67 minutes per mile."], "Lillie (fewer minutes per mile)"),
+     KeyIdea("Compare like rates: dollars per ounce with dollars per ounce. For time per mile, smaller is faster.")],
+    [Problem("12 eggs for $3.00 or 18 eggs for $4.14?", "18 eggs ($0.23 vs $0.25 each)"), Problem("Car A: 300 mi on 12 gal. Car B: 270 mi on 10 gal. Better mileage?", "Car B (27 vs 25 mpg)"),
+     Problem("Who types faster: 150 words in 3 min or 200 words in 5 min?", "150 in 3 min (50 vs 40 wpm)")],
+    [S("Warm-Up", [Problem("3.84 ÷ 16", "0.24"), Problem("5.28 ÷ 24", "0.22")]),
+     S("Which is the better buy?", [Problem("8 oz for $2.40 or 12 oz for $3.24", "12 oz ($0.27 vs $0.30 per oz)"), Problem("3 lb for $4.50 or 5 lb for $7.25", "5 lb ($1.45 vs $1.50 per lb)"),
+                                    Problem("6 pencils for $1.50 or 10 for $2.30", "10 for $2.30 ($0.23 vs $0.25)"), Problem("2 L for $1.80 or 3 L for $2.85", "2 L ($0.90 vs $0.95 per L)")]),
+     S("Solve", [Problem("Dad's truck goes 342 miles on 18 gallons. Mom's car goes 406 miles on 14 gallons. Whose vehicle gets better gas mileage, and by how many mpg?", "Mom's car: 29 vs 19 mpg, 10 mpg better", space=50, wide=True)], cols=1),
+     S("Exit Ticket", [Problem("Explain why a bigger package is not always the better buy.", "Compare unit prices; the bigger package can cost more per unit.", lines=2, space=0, wide=True)], cols=1)],
+    TE("Students compare unit rates to make decisions.", "Use proportional relationships to solve multistep ratio problems.", "Store ads or receipts, workbook Lesson 1.4",
+       flow("Division warm-up.", "Read Let's Explore. Guess first.", ["Work both examples. Discuss which rate is ‘better’ in context."], "Try It 1–3. Weekly Check tomorrow."),
+       ["Comparing totals instead of unit rates."], ["Make a 2-column table."], ["Compare real unit prices at the grocery store."]),
+    summary="Find unit rates, then compare them. Think about whether bigger or smaller is better.")
+
+L5 = Lesson("1.5", "What Is a Proportional Relationship?",
+    "I can tell when two quantities are in a proportional relationship.", "7.RP.2a",
+    [("proportional relationship", "A relationship where the ratio of two quantities is always the same: one is always the same multiple of the other.")],
+    "Tickets cost $8 each. Is the total cost proportional to the number of tickets? What if there is also a $5 parking fee?",
+    [Text("Two quantities are <b>proportional</b> when one is always the same number times the other. Every ratio in the table is equivalent."),
+     Figure(lambda t: Table([[tbl(t, ["Tickets", "Cost"], [["1", "$8"], ["2", "$16"], ["3", "$24"], ["5", "$40"]], 0.9 * inch),
+                              tbl(t, ["Tickets", "Cost + parking"], [["1", "$13"], ["2", "$21"], ["3", "$29"], ["5", "$45"]], 1.1 * inch)]], colWidths=[W / 2] * 2)),
+     Text("In the first table, cost ÷ tickets is always 8: proportional. In the second, 13 ÷ 1 = 13 but 21 ÷ 2 = 10.5: <b>not</b> proportional. The $5 fee breaks the pattern."),
+     KeyIdea("Proportional: y ÷ x is the same for every pair, and 0 of one quantity means 0 of the other.")],
+    [Problem("Is distance proportional to time at a steady 60 mph?", "Yes"), Problem("Is a $20 gym fee plus $5 per visit proportional?", "No"), Problem("x: 2, 4, 6 → y: 7, 14, 21. Proportional?", "Yes (y ÷ x = 3.5)")],
+    [S("Warm-Up", [Problem("21 ÷ 6", "3.5"), Problem("Is 4:10 equivalent to 6:15?", "Yes")]),
+     S("Proportional or not? Explain.", [Problem("x: 1, 2, 3, 4 → y: 5, 10, 15, 20", "Yes; y ÷ x = 5"), Problem("x: 1, 2, 3, 4 → y: 3, 5, 7, 9", "No; ratios differ"),
+                                          Problem("x: 2, 5, 8 → y: 3, 7.5, 12", "Yes; y ÷ x = 1.5"), Problem("x: 3, 6, 9 → y: 1, 2, 4", "No")]),
+     S("Real situations", [Problem("Pay of $12 per hour", "proportional"), Problem("A taxi: $3 plus $2 per mile", "not proportional"), Problem("Area of a square vs its side length", "not proportional"),
+                           Problem("Cost of apples at $1.50 per pound", "proportional")]),
+     S("Exit Ticket", [Problem("Make a table that is NOT proportional. Explain why.", "Answers vary.", lines=3, space=0, wide=True)], cols=1)],
+    TE("Students decide whether two quantities are proportional.", "Decide whether two quantities are in a proportional relationship by testing for equivalent ratios in a table.", "Workbook Lesson 1.5",
+       flow("21 ÷ 6.", "Read Let's Explore.", ["Compare the two tables. Say: Divide y by x for every pair."], "Try It 1–3."), ["Checking only one pair."], ["Add a y ÷ x column."], ["Find proportional and non-proportional situations at home."]),
+    summary="If y ÷ x is the same for every pair, the relationship is proportional.")
+
+L6 = Lesson("1.6", "The Constant of Proportionality",
+    f"I can find the constant of proportionality {k} from a table.", "7.RP.2b",
+    [("constant of proportionality", f"The number {k} that y is always multiplied from x by: {k} = y ÷ x. It is the unit rate.")],
+    "A pancake recipe uses 2.5 cups of milk for every 2 cups of flour. How much milk per 1 cup of flour?",
+    [Text(f"In a proportional relationship, {y} ÷ {x} is always the same number. That number is the <b>constant of proportionality</b>, {k}. It is the same as the unit rate."),
+     Figure(lambda t: tbl(t, ["Flour (cups)", "Milk (cups)", "Milk ÷ Flour"], [["2", "2.5", "1.25"], ["4", "5", "1.25"], ["6", "7.5", "1.25"], ["1", "1.25", "1.25"]], 1.3 * inch)),
+     Example("Find k", "x: 3, 5, 8 → y: 12, 20, 32", ["12 ÷ 3 = 4, 20 ÷ 5 = 4, 32 ÷ 8 = 4."], f"{k} = 4"),
+     KeyIdea(f"{k} = {y} ÷ {x}. It tells how much {y} for 1 of {x}.")],
+    [Problem("x: 2, 6, 10 → y: 9, 27, 45. Find k.", "4.5"), Problem("Hours 3 → $36 pay. k?", "$12 per hour"), Problem(f"x: 4, 8 → y: 1, 2. k?", F(1, 4) + " (0.25)")],
+    [S("Warm-Up", [Problem("7.5 ÷ 6", "1.25"), Problem("45 ÷ 10", "4.5")]),
+     S("Find the constant of proportionality", [Problem(f"x: {a} → y: {b}", kk) for a, b, kk in [("1, 3, 5", "7, 21, 35", "7"), ("2, 4, 10", "3, 6, 15", "1.5"), ("5, 10, 20", "2, 4, 8", "0.4"), ("6, 9, 12", "4, 6, 8", F(2, 3))]]),
+     S("Complete the proportional table", [Problem("x: 1, 2, 5, 8 → y: 6, ___, ___, ___", "12, 30, 48"), Problem("x: 4, 10, 15 → y: 10, ___, ___", "25, 37.5")]),
+     S("Exit Ticket", [Problem("A car travels 165 miles in 3 hours at a steady speed. What is k? What does it mean?", "k = 55: 55 miles per hour", lines=2, space=0, wide=True)], cols=1)],
+    TE("Students identify the constant of proportionality in tables.", "Identify the constant of proportionality (unit rate) in tables.", "Workbook Lesson 1.6",
+       flow("Division warm-up.", "Read Let's Explore.", ["Add a y ÷ x column to the table. Name k."], "Try It 1–3."), ["Computing x ÷ y instead of y ÷ x."], ["Label: y per 1 x."], ["Find k for x ÷ y too; how do the two relate?"]),
+    summary="The constant of proportionality k = y ÷ x is the unit rate.")
+
+L7 = Lesson("1.7", "Equations for Proportional Relationships",
+    f"I can write an equation {y} = {k}{x} for a proportional relationship.", "7.RP.2c",
+    [("equation", "A statement that two expressions are equal.")],
+    "Strawberries cost $3.50 per pound. Write a rule for the cost of any number of pounds.",
+    [Text(f"If {y} is always {k} times {x}, the equation is <b>{y} = {k}{x}</b>. For strawberries: cost = 3.50 × pounds, or {y} = 3.5{x}."),
+     Example("From a table", "x: 2, 5, 9 → y: 16, 40, 72", ["k = 16 ÷ 2 = 8."], f"{y} = 8{x}"),
+     Example("Use the equation", f"Use {y} = 3.5{x} to find the cost of 6 pounds.", ["y = 3.5 × 6 = 21."], "$21"),
+     KeyIdea(f"Proportional equation: {y} = {k}{x}, where {k} is the unit rate.")],
+    [Problem("A plane flies 480 mph. Equation for distance d in t hours?", "d = 480t"), Problem("x: 3, 6 → y: 2, 4. Equation?", f"y = {F(2, 3)}x"), Problem("y = 12x. Find y when x = 7.5.", "90")],
+    [S("Warm-Up", [Problem("16 ÷ 2", "8"), Problem("3.5 × 6", "21")]),
+     S("Write the equation", [Problem("k = 9", "y = 9x"), Problem("x: 4, 8 → y: 10, 20", "y = 2.5x"), Problem("$0.65 per ounce", "c = 0.65w"), Problem("15 pages per hour", "p = 15h")]),
+     S("Use the equation", [Problem("y = 6x; x = 12", "72"), Problem("y = 0.8x; x = 25", "20"), Problem("y = 4x; y = 52, find x", "13"), Problem(f"y = {F(3, 4)}x; x = 20", "15")]),
+     S("Solve", [Problem("Lillie earns $11.50 per hour. Write an equation. How much for 14 hours?", "e = 11.5h; $161", space=40, wide=True)], cols=1),
+     S("Exit Ticket", [Problem("Explain what k means in y = 45x if x is hours and y is miles.", "45 miles per hour", lines=2, space=0, wide=True)], cols=1)],
+    TE("Students write and use equations y = kx.", "Represent proportional relationships by equations.", "Workbook Lesson 1.7",
+       flow("Warm-up.", "Read Let's Explore.", ["Work both examples. Connect k from Lesson 1.6 to the equation."], "Try It 1–3."), ["Writing y = x + k."], ["Check the equation against each table pair."], ["Write an equation for a real-life rate."]),
+    summary="A proportional relationship can be written y = kx.")
+
+L8 = Lesson("1.8", "Is It Proportional? Tables and Equations",
+    "I can decide if a table or equation represents a proportional relationship.", "7.RP.2a",
+    [],
+    "Which of these is proportional: y = 4x, y = x + 4, or y = 4?",
+    [Text(f"Only equations of the form {y} = {k}{x} are proportional. Adding a number (like {y} = {x} + 4) breaks the pattern, because when {x} = 0, {y} would not be 0."),
+     Figure(lambda t: table(t, [["Equation", "Proportional?", "Why"], ["y = 4x", "Yes", "form y = kx"], ["y = x + 4", "No", "adds 4"], ["y = 4", "No", "y never changes"], ["y = 0.5x", "Yes", "k = 0.5"]],
+                            [1.5 * inch, 1.3 * inch, 2.4 * inch], width=5.2 * inch)),
+     Example("Table test", "x: 0, 2, 4, 6 → y: 3, 7, 11, 15", ["When x = 0, y = 3 (not 0).", "7 ÷ 2 = 3.5 but 11 ÷ 4 = 2.75."], "Not proportional"),
+     KeyIdea("Proportional: y = kx, ratios all equal, and (0, 0) fits.")],
+    [Problem("y = 7x", "proportional"), Problem("y = 2x − 1", "not proportional"), Problem("x: 0, 3, 6 → y: 0, 2, 4", "proportional (k = " + F(2, 3) + ")")],
+    [S("Warm-Up", [Problem("y = 7x when x = 0", "0"), Problem("y = 2x − 1 when x = 0", "−1")]),
+     S("Proportional or not?", [Problem(e, a) for e, a in [("y = 9x", "yes"), ("y = x + 9", "no"), ("y = " + F(1, 3) + "x", "yes"), ("y = 3x + 0", "yes"), ("y = 10 − x", "no"), ("y = 2.4x", "yes")]]),
+     S("Tables", [Problem("x: 1, 2, 3 → y: 4, 8, 13", "no"), Problem("x: 0, 5, 10 → y: 0, 3, 6", "yes; k = 0.6")]),
+     S("Exit Ticket", [Problem("A phone plan costs $25 plus $10 per GB. Is the cost proportional to GB? Explain.", "No; the $25 fee means 0 GB still costs $25.", lines=2, space=0, wide=True)], cols=1)],
+    TE("Students identify proportional relationships from tables and equations.", "Decide whether two quantities are proportional.", "Workbook Lesson 1.8",
+       flow("Evaluate at x = 0.", "Read Let's Explore.", ["Sort equation cards into proportional/not."], "Try It 1–3. Weekly Check tomorrow."), ["Thinking any linear equation is proportional."], ["Test x = 0."], ["Write 3 non-proportional real situations."]),
+    summary="Proportional relationships have the form y = kx and pass through (0, 0).")
+
+L9 = Lesson("1.9", "Graphing Proportional Relationships",
+    "I can graph a proportional relationship on a coordinate plane.", "7.RP.2a",
+    [("coordinate plane", "A grid formed by a horizontal x-axis and a vertical y-axis."), ("origin", "The point (0, 0) where the axes cross.")],
+    "Ellie earns $5 per hour. How could a graph show her earnings for 0 to 8 hours?",
+    [Text("Make a table, write each pair as a point (x, y), and plot the points."),
+     Figure(lambda t: Table([[tbl(t, ["Hours (x)", "Dollars (y)"], [["0", "0"], ["2", "10"], ["4", "20"], ["6", "30"], ["8", "40"]], 1.0 * inch),
+                              coord_graph(t, 8, 40, 1, 5, points=[(0, 0, ""), (2, 10, "(2, 10)"), (4, 20, ""), (6, 30, ""), (8, 40, "")], lines=[(5, 0)], xlabel="hours", ylabel="dollars", ylabel_every=10)]],
+                            colWidths=[W * 0.4, W * 0.6])),
+     Text("The points lie on a <b>straight line</b> through the <b>origin</b>. That is what every proportional graph looks like."),
+     KeyIdea("A proportional relationship graphs as a straight line through the origin (0, 0).")],
+    [Problem("Plot y = 3x for x = 0, 1, 2, 3. Name the points.", "(0, 0), (1, 3), (2, 6), (3, 9)"), Problem("Does the graph of y = 3x pass through (0, 0)?", "Yes"), Problem("Is (5, 15) on y = 3x?", "Yes")],
+    [S("Warm-Up", [Problem("y = 5x when x = 6", "30"), Problem("Name the point 4 right, 20 up", "(4, 20)")]),
+     S("Make a table and graph", [Problem("y = 2x for x = 0 to 5", "(0,0), (1,2), (2,4), (3,6), (4,8), (5,10)", fig=lambda t: coord_graph(t, 5, 10, 1, 1, width=CW, height=170, label_every=1, ylabel_every=2), space=0),
+                                  Problem("y = 0.5x for x = 0 to 8", "(0,0), (2,1), (4,2), (6,3), (8,4)", fig=lambda t: coord_graph(t, 8, 5, 1, 1, width=CW, height=170), space=0)]),
+     S("Exit Ticket", [Problem("What do all proportional graphs have in common?", "Straight line through the origin.", lines=2, space=0, wide=True)], cols=1)],
+    TE("Students graph proportional relationships.", "Graph proportional relationships; decide whether quantities are proportional by graphing.", "Graph paper, ruler, workbook Lesson 1.9",
+       flow("Evaluate and name points.", "Read Let's Explore.", ["Build the table, plot points, draw the line with a ruler."], "Try It 1–3."), ["Swapping x and y when plotting."], ["Say: over, then up."], ["Graph two jobs' pay on one grid."]),
+    summary="Proportional relationships graph as straight lines through the origin.")
+
+L10 = Lesson("1.10", "Recognizing Proportional Graphs",
+    "I can tell from a graph whether a relationship is proportional.", "7.RP.2a",
+    [],
+    "Two graphs are straight lines. One starts at (0, 0) and one starts at (0, 4). Are both proportional?",
+    [Figure(lambda t: Table([[coord_graph(t, 6, 12, 1, 2, lines=[(2, 0)], width=190, height=150, ylabel_every=4), coord_graph(t, 6, 12, 1, 2, lines=[(1, 4)], width=190, height=150, ylabel_every=4),
+                              coord_graph(t, 6, 12, 1, 2, lines=[[(0, 0), (3, 9)], [(3, 9), (6, 10)]], width=190, height=150, ylabel_every=4)],
+                             [P("proportional", t.small), P("not: does not go through (0, 0)", t.small), P("not: not a straight line", t.small)]], colWidths=[W / 3] * 3)),
+     KeyIdea("Proportional graph = straight line AND passes through the origin. Both are required.")],
+    [Problem("A straight line through (0, 0) and (3, 12). Proportional? k?", "Yes; k = 4"), Problem("A curved graph through (0, 0). Proportional?", "No"), Problem("A straight line through (0, 2) and (1, 5). Proportional?", "No")],
+    [S("Warm-Up", [Problem("12 ÷ 3", "4"), Problem("Is (0, 0) the origin?", "Yes")]),
+     S("Proportional or not?", [Problem("", "yes", fig=lambda t: coord_graph(t, 6, 12, 1, 2, lines=[(1.5, 0)], width=CW, height=150, ylabel_every=4), space=0),
+                                Problem("", "no", fig=lambda t: coord_graph(t, 6, 12, 1, 2, lines=[(1, 3)], width=CW, height=150, ylabel_every=4), space=0)]),
+     S("Points on a line", [Problem("A proportional line goes through (4, 10). Name two more points on it.", "e.g. (2, 5), (8, 20)"), Problem("Does a line through (2, 6) and (5, 15) show a proportional relationship?", "Yes; k = 3 both times")]),
+     S("Exit Ticket", [Problem("Sketch a graph that is a straight line but not proportional.", "Line not through origin", space=60, wide=True)], cols=1)],
+    TE("Students identify proportional relationships from graphs.", "Decide whether quantities are proportional by graphing on a coordinate plane and observing a straight line through the origin.", "Workbook Lesson 1.10",
+       flow("Warm-up.", "Read Let's Explore.", ["Compare the three graphs. Two tests: straight? through origin?"], "Try It 1–3."), ["Accepting any straight line."], ["Two-question checklist."], ["Find a real graph online that is proportional."]),
+    summary="A graph is proportional only if it is a straight line through the origin.")
+
+L11 = Lesson("1.11", "Interpreting Points on Proportional Graphs",
+    f"I can explain what a point (x, y) means on a proportional graph, including (0, 0) and (1, {k}).", "7.RP.2d",
+    [],
+    "On a graph of gallons and miles, what does the point (1, 28) tell you?",
+    [Figure(lambda t: coord_graph(t, 5, 140, 1, 20, points=[(0, 0, "(0, 0)"), (1, 28, "(1, 28)"), (3, 84, "(3, 84)")], lines=[(28, 0)], xlabel="gallons", ylabel="miles", ylabel_every=40, width=260, height=190)),
+     Bullets([f"<b>(0, 0)</b>: 0 gallons, 0 miles.", f"<b>(1, 28)</b>: 1 gallon goes 28 miles. The unit rate {k} = 28 is the y-value when x = 1.", "<b>(3, 84)</b>: 3 gallons go 84 miles."]),
+     KeyIdea(f"On a proportional graph, the point (1, {k}) shows the unit rate.")],
+    [Problem("(1, 7.5) on a graph of hours and dollars means…", "$7.50 per hour"), Problem("If (1, 12) is on a proportional graph, what is y when x = 5?", "60"), Problem("What does (0, 0) mean for pages read vs minutes?", "0 minutes, 0 pages")],
+    [S("Warm-Up", [Problem("28 × 3", "84"), Problem("84 ÷ 3", "28")]),
+     S("Interpret", [Problem("A graph of cost vs pounds goes through (1, 4.5). What does it mean?", "$4.50 per pound", lines=1, space=0, wide=True),
+                     Problem("A graph of distance vs hours goes through (4, 260). Find k and explain.", "k = 65; 65 miles per hour", lines=1, space=0, wide=True),
+                     Problem("A graph of cups of flour vs batches goes through (2, 5). What is the unit rate?", "2.5 cups per batch", lines=1, space=0, wide=True)], cols=1),
+     S("Exit Ticket", [Problem("Write a story for a proportional graph through (1, 15).", "e.g. $15 per hour", lines=2, space=0, wide=True)], cols=1)],
+    TE("Students interpret points on proportional graphs.", "Explain what a point (x, y) on the graph of a proportional relationship means in context, with special attention to (0, 0) and (1, r).", "Workbook Lesson 1.11",
+       flow("28 × 3.", "Read Let's Explore.", ["Read each labeled point aloud with units."], "Try It 1–3."), ["Ignoring units."], ["Always say units."], ["Make a graph of your own unit rate."]),
+    summary="(0, 0) means none of each; (1, k) shows the unit rate.")
+
+L12 = Lesson("1.12", "Comparing Proportional Relationships",
+    "I can compare proportional relationships shown as tables, graphs, equations, and words.", "7.RP.2",
+    [],
+    "Ellie earns y = 9x. Lillie's table shows 3 hours → $30. Who earns more per hour?",
+    [Text(f"Find {k} in each representation, then compare. Ellie: {k} = 9. Lillie: 30 ÷ 3 = 10. Lillie earns more per hour."),
+     Figure(lambda t: table(t, [["Representation", "How to find k"], ["Equation y = kx", "the number times x"], ["Table", "y ÷ x"], ["Graph", "y-value at x = 1"], ["Words", "the unit rate (per 1)"]],
+                            [2.0 * inch, 3.0 * inch], width=5.0 * inch)),
+     KeyIdea(f"Change every representation to its {k} (unit rate), then compare.")],
+    [Problem("Car A: y = 32x. Car B: 150 miles on 5 gallons. Better mileage?", "Car A (32 vs 30 mpg)"), Problem("Graph through (1, 2.75) vs y = 2.5x. Greater k?", "the graph (2.75)"),
+     Problem("Store A: $4 per pound. Store B: (5, 18). Cheaper?", "Store B ($3.60/lb)")],
+    [S("Warm-Up", [Problem("30 ÷ 3", "10"), Problem("18 ÷ 5", "3.6")]),
+     S("Compare", [Problem("Pump 1: 12 gallons per minute. Pump 2: y = 14x. Faster?", "Pump 2"), Problem("Runner A: table 3 mi in 24 min. Runner B: y = 7.5x (min per mile). Faster?", "Runner B (7.5 vs 8 min/mi)"),
+                   Problem("Recipe A: 2 cups sugar per 5 cups flour. Recipe B: y = 0.35x (sugar per flour). Sweeter?", "Recipe A (0.4 vs 0.35)"), Problem("Plan A: $45 for 3 months. Plan B: graph through (1, 16). Cheaper?", "Plan A ($15 vs $16 per month)")]),
+     S("Exit Ticket", [Problem("Explain how to compare a table and a graph that both show proportional relationships.", "Find k for each (y ÷ x; y at x = 1) and compare.", lines=2, space=0, wide=True)], cols=1)],
+    TE("Students compare proportional relationships across representations.", "Recognize and represent proportional relationships between quantities.", "Workbook Lesson 1.12",
+       flow("Warm-up.", "Read Let's Explore.", ["Use the table of ways to find k."], "Try It 1–3. Weekly Check tomorrow."), ["Comparing totals instead of k."], ["Find k first, always."], ["Compare three phone plans."]),
+    summary="Find k in every representation, then compare.")
+
+L13 = Lesson("1.13", "Solving Proportions",
+    "I can solve problems with proportions using unit rates, scale factors, or equations.", "7.RP.3",
+    [("proportion", f"An equation saying two ratios are equal, like {F(3, 4)} = {F(9, 12)}.")],
+    "If 5 notebooks cost $8.75, how much do 12 notebooks cost?",
+    [Example("Unit rate method", "5 notebooks for $8.75; 12 notebooks?", ["8.75 ÷ 5 = 1.75 per notebook.", "12 × 1.75 = 21."], "$21"),
+     Example("Equation method", f"{F(5, '8.75')} = {F(12, '<i>c</i>')}", ["Equivalent ratios: c = 8.75 × 12 ÷ 5.", "c = 105 ÷ 5 = 21."], "$21"),
+     Example("Scale factor", "3 cups of flour make 24 cookies. How much flour for 96 cookies?", ["96 ÷ 24 = 4, so multiply by 4.", "3 × 4 = 12."], "12 cups"),
+     KeyIdea("Use whichever method fits the numbers: unit rate, scale factor, or an equation.")],
+    [Problem("4 tickets cost $34. Cost of 10 tickets?", "$85"), Problem(f"Solve {F(6, 15)} = {F('x', 25)}", "x = 10"), Problem("A map: 2 cm = 15 km. 7 cm = ?", "52.5 km")],
+    [S("Warm-Up", [Problem("8.75 ÷ 5", "1.75"), Problem("96 ÷ 24", "4")]),
+     S("Solve", [Problem(f"{F(3, 8)} = {F('x', 40)}", "15"), Problem(f"{F(7, 'x')} = {F(21, 33)}", "11"), Problem(f"{F('x', 12)} = {F(5, 4)}", "15"), Problem(f"{F('2.5', 4)} = {F('x', 10)}", "6.25")]),
+     S("Word problems", [Problem("6 bags of mulch cover 72 sq ft. How many bags for 300 sq ft?", "25 bags", space=40), Problem("A 20-oz bottle has 240 calories. How many calories in 12 oz?", "144 calories", space=40),
+                         Problem("Ellie reads 45 pages in 1.5 hours. How long for 120 pages?", "4 hours", space=40), Problem("Paint: 2 gallons per 700 sq ft. Gallons for 1,750 sq ft?", "5 gallons", space=40)]),
+     S("Exit Ticket", [Problem("Solve two ways: 8 lemons make 3 quarts. How many lemons for 12 quarts?", "32 lemons", space=50, wide=True)], cols=1)],
+    TE("Students solve proportions with multiple methods.", "Use proportional relationships to solve multistep ratio and percent problems.", "Workbook Lesson 1.13",
+       flow("Warm-up.", "Read Let's Explore.", ["Show all three methods. Discuss which is fastest for which numbers."], "Try It 1–3."), ["Setting up the proportion with mismatched units."], ["Label every ratio with units."], ["Use a real recipe and scale it."]),
+    summary="Solve proportions with unit rates, scale factors, or equations; keep units matched.")
+
+L14 = Lesson("1.14", "Proportional Reasoning in the Real World",
+    "I can solve real-world problems with proportional relationships, including recipes, maps, and speed.", "7.RP.3",
+    [],
+    "A recipe for 6 people uses 1½ cups of rice. How much for 10 people?".replace("1½", MX(1, 1, 2)),
+    [Example("Recipe", f"{MX(1, 1, 2)} cups for 6 people → 10 people", [f"Per person: {F(3, 2)} ÷ 6 = {F(1, 4)} cup.", f"10 × {F(1, 4)} = {MX(2, 1, 2)}."], MX(2, 1, 2) + " cups"),
+     Example("Map", "On a map, 1 inch = 25 miles. Jackson to Hattiesburg is 3.6 inches.", ["3.6 × 25 = 90."], "about 90 miles"),
+     Example("Time and distance", "At 60 mph, how long to drive 210 miles?", ["210 ÷ 60 = 3.5."], "3.5 hours"),
+     KeyIdea("Find the unit rate, then multiply or divide as needed. Check: does the answer make sense?")],
+    [Problem("A car uses 2 gallons per 54 miles. Gallons for 189 miles?", "7 gallons"), Problem("Map: 1 cm = 40 km. 6.5 cm = ?", "260 km"), Problem(f"{F(3, 4)} cup sugar for 12 cookies. For 30 cookies?", MX(1, 7, 8) + " cups")],
+    [S("Warm-Up", [Problem(f"{F(3, 2)} ÷ 6", F(1, 4)), Problem("3.6 × 25", "90")]),
+     S("Solve", [Problem("A recipe for 4 people uses 2 lb of chicken. How much for 14 people?", "7 lb", space=40, wide=True),
+                 Problem("A cyclist rides 18 miles in 1.5 hours. At that rate, how far in 4 hours?", "48 miles", space=40, wide=True),
+                 Problem("A model car is built at a scale of 1 in. : 18 in. The model is 9 in. long. How long is the real car in feet?", "162 in. = 13.5 ft", space=40, wide=True),
+                 Problem("Lillie earns $57 for 6 hours of work. How many hours to earn $133?", "14 hours", space=40, wide=True)], cols=1),
+     S("Exit Ticket", [Problem("Write and solve a recipe-scaling problem for your family.", "Answers vary.", lines=3, space=0, wide=True)], cols=1)],
+    TE("Students apply proportional reasoning to real-world problems.", "Use proportional relationships to solve multistep ratio problems.", "Recipes, a Mississippi map, workbook Lesson 1.14",
+       flow("Warm-up.", "Read Let's Explore.", ["Work the three examples. Measure a real distance on a map."], "Try It 1–3."), ["Forgetting to convert units."], ["Write the unit rate first."], ["Plan a road trip with distances and times."]),
+    summary="Find the unit rate, scale up or down, and check that the answer makes sense.")
+
+L15 = Lesson("1.15", "Multi-Step Ratio Problems",
+    "I can solve multi-step problems involving ratios and rates.", "7.RP.3",
+    [],
+    "Paint is mixed 3 parts blue to 2 parts white. You need 20 quarts of paint. How much of each color?",
+    [Example("Part-to-whole", "3 blue : 2 white, 20 quarts total", ["3 + 2 = 5 parts in the whole.", "20 ÷ 5 = 4 quarts per part.", "Blue: 3 × 4 = 12; white: 2 × 4 = 8."], "12 qt blue, 8 qt white"),
+     Example("Two rates", "Ellie drives 2 hours at 50 mph, then 3 hours at 65 mph. Average speed?", ["Distance: 100 + 195 = 295 miles.", "Time: 5 hours.", "295 ÷ 5 = 59."], "59 mph"),
+     KeyIdea("Use the total number of parts for part-to-whole problems. Average speed = total distance ÷ total time.")],
+    [Problem("Boys to girls 4:5; 36 students. How many girls?", "20"), Problem("Concrete mix 1:2:3 (cement:sand:gravel). 30 buckets total. Gravel?", "15 buckets"), Problem("Walk 1 hr at 3 mph, then jog 1 hr at 6 mph. Average speed?", "4.5 mph")],
+    [S("Warm-Up", [Problem("20 ÷ 5 × 3", "12"), Problem("100 + 195", "295")]),
+     S("Solve", [Problem("A bag has red and green marbles in a ratio of 5:3. There are 48 marbles. How many are red?", "30 red", space=40, wide=True),
+                 Problem("A drink mix uses 2 scoops per 3 cups of water. How many scoops for a 9-quart cooler? (1 qt = 4 cups)", "24 scoops", space=40, wide=True),
+                 Problem("Lillie saves $3 for every $5 she earns. She earned $85. How much did she save? Spend?", "$51 saved, $34 spent", space=40, wide=True),
+                 Problem("A train travels 180 miles in 3 hours, then 120 miles in 1 hour. Average speed for the whole trip?", "75 mph", space=40, wide=True)], cols=1),
+     S("Exit Ticket", [Problem("A ratio of cats to dogs at a shelter is 2:7. There are 63 animals. How many more dogs than cats?", "35 more dogs (49 vs 14)", space=40, wide=True)], cols=1)],
+    TE("Students solve multi-step ratio and rate problems.", "Use proportional relationships to solve multistep ratio problems.", "Workbook Lesson 1.15",
+       flow("Warm-up.", "Read Let's Explore.", ["Tape diagram for part-to-whole. Then the average-speed example."], "Try It 1–3."), ["Averaging the speeds (57.5) instead of using total distance ÷ total time."], ["Tape diagrams."], ["Mix paint or juice in a real ratio."]),
+    summary="Use parts of the whole for ratio totals; use totals for average rates.")
+
+L16 = Lesson("1.16", "Proportional Relationships Problem Solving",
+    "I can choose the best representation to solve proportional relationship problems.", "7.RP.1–3",
+    [],
+    "Three phone plans: Plan A is y = 0.12x (dollars per text). Plan B: 50 texts for $5.50. Plan C: a graph through (1, 0.10). Which is cheapest per text?",
+    [Example("Compare plans", "Find k for each.", ["A: 0.12.", "B: 5.50 ÷ 50 = 0.11.", "C: 0.10."], "Plan C"),
+     KeyIdea("Tables, graphs, equations, and words all show the same idea: a constant rate k.")],
+    [Problem("y = 18x: what is k?", "18"), Problem("Is y = x + 18 proportional?", "No"), Problem("Table: 4 → 14, 10 → 35. Equation?", "y = 3.5x")],
+    [S("Warm-Up", [Problem("5.50 ÷ 50", "0.11"), Problem("0.12 × 100", "12")]),
+     S("Mixed practice", [Problem(f"{F(1, 2)} mile in {F(1, 8)} hour. mph?", "4 mph"), Problem("Better buy: 15 oz for $3.30 or 20 oz for $4.20?", "20 oz ($0.21 vs $0.22)"),
+                          Problem("x: 2, 3, 7 → y: 5, 7.5, 17.5. Equation?", "y = 2.5x"), Problem("A graph passes through (3, 7). Proportional? Need more information?", "Need to know it's a straight line through (0, 0)."),
+                          Problem("Ratio 3:4, total 56. Larger part?", "32"), Problem("$42 for 3.5 hours. Hourly rate?", "$12")]),
+     S("Exit Ticket", [Problem("Which representation do you find most useful for proportional relationships? Why?", "Answers vary.", lines=3, space=0, wide=True)], cols=1)],
+    TE("Students solve mixed proportional problems.", "7.RP review.", "Workbook Lesson 1.16, Unit 1 Review",
+       flow("Warm-up.", "Read Let's Explore.", ["Work the example."], "Try It 1–3.", "Workbook Lesson 1.16 and the Unit 1 Review.", "Check. Tomorrow: Unit 1 Test."), ["Mixing up representations."], ["Find k first."], ["Research real phone or streaming plans."]),
+    summary="Find k in any representation and use it to compare and solve.")
+
+C1 = Check("Weekly Check 1: Ratios and Unit Rates", [S("Show what you know", [Problem("Write two ratios equivalent to 4:9.", "e.g. 8:18, 12:27"), Problem("$11.40 for 6 pounds: unit price", "$1.90 per pound"),
+    Problem(f"{F(2, 3)} mile in {F(1, 6)} hour: mph", "4 mph"), Problem("Better buy: 10 oz for $2.50 or 16 oz for $3.84", "16 oz ($0.24 vs $0.25)"), Problem("A car goes 252 miles on 9 gallons. mpg?", "28 mpg"),
+    Problem("At 28 mpg, how far on 13 gallons?", "364 miles")])], minutes=20)
+C2 = Check("Weekly Check 2: Proportional Tables and Equations", [S("Show what you know", [Problem("x: 2, 5, 9 → y: 7, 17.5, 31.5. Proportional? k?", "Yes; k = 3.5"),
+    Problem("x: 1, 2, 3 → y: 5, 9, 13. Proportional?", "No"), Problem("Write the equation for k = 0.6.", "y = 0.6x"), Problem("y = 15x; x = 8", "120"), Problem("y = 4x; y = 30, find x", "7.5"),
+    Problem("Is y = 3x + 2 proportional? Why?", "No; y ≠ 0 when x = 0", lines=1, space=0)])], minutes=20)
+C3 = Check("Weekly Check 3: Proportional Graphs", [S("Show what you know", [Problem("Proportional?", "yes", fig=lambda t: coord_graph(t, 6, 12, 1, 2, lines=[(2, 0)], width=CW, height=140, ylabel_every=4), space=0),
+    Problem("Proportional?", "no", fig=lambda t: coord_graph(t, 6, 12, 1, 2, lines=[(1, 5)], width=CW, height=140, ylabel_every=4), space=0),
+    Problem("A proportional graph goes through (1, 6.5). What is k?", "6.5"), Problem("A proportional graph goes through (4, 18). What is y at x = 10?", "45"),
+    Problem("Compare: y = 11x vs table 5 → 57.5. Greater rate?", "table (11.5)"), Problem("What does (0, 0) mean on a graph of hours vs pay?", "0 hours, $0")])], minutes=20)
+
+REVIEW = Check("Unit 1 Review", [
+    S("Rates and proportions", [Problem("$9.60 for 12 cans: unit price", "$0.80"), Problem(f"{F(3, 4)} pound for {F(1, 2)} dollar: pounds per dollar", MX(1, 1, 2)),
+                                Problem(f"Solve {F(9, 12)} = {F('x', 20)}", "15"), Problem("Better buy: 6 for $4.50 or 10 for $7.20", "10 for $7.20 ($0.72 vs $0.75)")]),
+    S("Proportional relationships", [Problem("x: 3, 6, 12 → y: 2, 4, 8. Equation?", f"y = {F(2, 3)}x"), Problem("Is y = 5x − 5 proportional?", "No"),
+                                     Problem("A proportional graph passes through (1, 3.25). Write the equation.", "y = 3.25x"), Problem("Ratio 2:5; total 63. Smaller part?", "18")]),
+    S("Solve", [Problem("A recipe for 8 people uses 3 cups of broth. How much for 20 people?", "7.5 cups", space=40, wide=True)], cols=1)],
+    kind="review", minutes=40, teacher_note="Homework or a study session before the test.")
+
+TEST = Check("Unit 1 Test", [
+    S("Part A · Rates (1 point each)", [Problem("$13.75 for 5 pounds: unit price", "$2.75 per pound"), Problem(f"{F(1, 2)} cup per {F(2, 3)} batch: cups per batch", F(3, 4) + " cup"),
+        Problem("Better buy: 24 oz for $4.08 or 32 oz for $5.12", "32 oz ($0.16 vs $0.17)"), Problem("Write two ratios equivalent to 6:10.", "e.g. 3:5, 12:20")]),
+    S("Part B · Proportional relationships (1 point each)", [Problem("x: 4, 6, 10 → y: 10, 15, 25. Proportional? k?", "Yes; 2.5"), Problem("x: 2, 4, 6 → y: 3, 7, 11. Proportional?", "No"),
+        Problem("Write the equation: $8.25 per hour", "y = 8.25x"), Problem("y = 0.4x; x = 35", "14"), Problem("Is y = 7 + x proportional?", "No"),
+        Problem("A proportional graph passes through (5, 40). k?", "8"), Problem("Interpret (1, 12) on a graph of hours vs miles.", "12 miles per hour")]),
+    S("Part C · Problem solving (3 points each)", [
+        Problem("A car travels 196 miles on 7 gallons. Write an equation for miles m and gallons g. How far can it go on a full 15-gallon tank?", "m = 28g; 420 miles", space=70, wide=True, points=3),
+        Problem("Sunscreen: 3 oz for $7.20 or 8 oz for $17.60. Which is the better buy? By how much per ounce?", "8 oz; $2.20 vs $2.40 per oz, $0.20 less", space=70, wide=True, points=3),
+        Problem("Lemonade is 2 parts juice to 7 parts water. How much juice is in 45 cups of lemonade?", "10 cups", space=70, wide=True, points=3)], cols=1)],
+    kind="test", minutes=45, rubric=[["17–20 (85%+)", "Mastered."], ["14–16", "Proficient; correct missed items."], ["Below 14", "Reteach and retest."]])
+
+LESSONS = [L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, L11, L12, L13, L14, L15, L16]
+CHECKS = [C1, C2, C3]
+WEEKS = schedule(LESSONS, ["2026-10-12", "2026-10-19", "2026-10-26", "2026-11-02"], CHECKS, REVIEW, TEST)
+
+UNIT = Unit(1, "Proportional Relationships", "Ratios, unit rates, the constant of proportionality, and proportional tables, graphs, and equations.",
+    "Many real-world quantities grow together at a constant rate: pay and hours, miles and gallons, cost and pounds. In this unit you will find unit rates, recognize proportional relationships, and represent them with tables, graphs, and equations.",
+    ["Compute unit rates, including with fractions.", "Decide whether two quantities are proportional.", "Find the constant of proportionality and write y = kx.",
+     "Graph and interpret proportional relationships.", "Solve multistep ratio and rate problems."],
+    [("7.RP.1", "Compute unit rates associated with ratios of fractions."), ("7.RP.2", "Recognize and represent proportional relationships: tables, graphs, constant of proportionality, equations, interpreting points."),
+     ("7.RP.3", "Use proportional relationships to solve multistep ratio and percent problems.")],
+    [("ratio", "A comparison of two quantities."), ("unit rate", "Amount per one unit."), ("proportional relationship", "y ÷ x is always the same."), ("constant of proportionality", "k = y ÷ x.")],
+    ["Ratios and rates (Grade 6).", "Fraction and decimal operations.", "Plotting points in the first quadrant."], ["Graph paper", "Ruler", "Calculator for checking", "Store ads or receipts"],
+    LESSONS, CHECKS, REVIEW, TEST,
+    real_world="Unit prices at the store, gas mileage, hourly pay, recipe scaling, and map distances all use proportional reasoning.",
+    family_note="Have your student compute unit prices on your next grocery trip and decide which size is the better buy.",
+    weeks=WEEKS)

@@ -24,7 +24,8 @@ test('six-week art block excludes Thanksgiving, has exact daily publisher pages 
  const b=lib.rotation.blocks[0];assert.equal(b.start,'2026-10-26');assert.equal(b.end,'2026-12-11');assert.equal(b.weeks,6);assert.equal(days['2026-11-23'],undefined);
  let n=0;
  for(const [date,grades]of Object.entries(days))for(const [g,d]of Object.entries(grades))if(d.curriculum==='core-electives-v1'&&d.elective.block===1&&d.day<4){
-  const p=lib.weeks[`${g}-${d.module}-${d.week}`].art;const refs=readingsForDay(p,date);assert.equal(refs.length,2);
+  const p=lib.weeks[`${g}-${d.module}-${d.week}`].art;const all=readingsForDay(p,date),refs=all.filter(r=>!r.resource_id.startsWith('medieval-overview-'));assert.equal(refs.length,2);
+  if(all.length>refs.length){assert.equal(date+g,'2026-10-264');assert.ok(lib.resources[all[0].resource_id].url.startsWith('/downloads/integrated/grade4-art-medieval-'));}
   assert.match(refs[0].resource_id,/ckva-[47]-sab/);assert.ok(refs[0].pdf[0]>=8);assert.ok(refs[0].pdf[1]<=(g==='4'?86:94));
   assert.ok(readingsForDay(p,date,true).every(r=>lib.resources[r.resource_id].teacher_only));n++;
  }

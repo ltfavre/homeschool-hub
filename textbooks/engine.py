@@ -251,7 +251,7 @@ def number_line(theme, start, end, step, label_step=None, points=(), width=W, he
     label_step = label_step or step
 
     def X(v, w):
-        return 18 + (v - start) / (end - start) * (w - 36)
+        return 18 + float(v - start) / float(end - start) * (w - 36)
 
     def fn(c, w, h):
         y = 30
@@ -772,3 +772,52 @@ def decimal_grid(theme, hundredths, size=110, tenths_only=False):
         if tenths_only:
             for j in range(1, 10): c.line(x0 + j * s, y0, x0 + j * s, y0 + size)
     return Draw(size + 4, size + 4, fn)
+
+
+def decimal_chart(theme, value=None, width=None, places=("Tens", "Ones", "Tenths", "Hundredths"), highlight=None):
+    """Place-value chart with a decimal point column. value as string like '3.45' (digits fill from the point)."""
+    width = width or 330
+    whole_cols = [p for p in places if p in ("Thousands", "Hundreds", "Tens", "Ones")]
+    frac_cols = [p for p in places if p in ("Tenths", "Hundredths")]
+    w_digits, f_digits = ("", "")
+    if value is not None:
+        a, _, b = str(value).partition("."); w_digits, f_digits = a, b
+
+    def fn(c, w, h):
+        dot_w = 16; cw = (w - dot_w) / (len(whole_cols) + len(frac_cols)); top = h - 2; x = 0
+        cols = [(p, "w", i) for i, p in enumerate(whole_cols)] + [(".", "dot", 0)] + [(p, "f", i) for i, p in enumerate(frac_cols)]
+        for p, kind, i in cols:
+            if kind == "dot":
+                text(c, x + dot_w / 2, top - 52, ".", "MonoSemi", 26, theme.main, "c"); x += dot_w; continue
+            hl = highlight == p
+            c.setFillColor(theme.mid if hl else theme.wash); c.setStrokeColor(theme.main); c.setLineWidth(0.8)
+            c.rect(x, top - 24, cw, 24, fill=1, stroke=1)
+            text(c, x + cw / 2, top - 15.5, p, "BodySemi", 8, theme.dark, "c")
+            c.setFillColor(WHITE); c.rect(x, top - 62, cw, 38, fill=1, stroke=1)
+            if kind == "w":
+                d = w_digits.rjust(len(whole_cols))[i].strip() if w_digits else ""
+            else:
+                d = f_digits[i] if i < len(f_digits) else ""
+            text(c, x + cw / 2, top - 52, d, "MonoSemi", 21, theme.main if hl else INK, "c")
+            x += cw
+    return Draw(width, 66, fn)
+
+
+def money(theme, dollars=0, quarters=0, dimes=0, nickels=0, pennies=0, width=None):
+    """Simple drawing of bills and coins."""
+    items = [("$1", 1)] * dollars + [("25¢", 2)] * quarters + [("10¢", 3)] * dimes + [("5¢", 4)] * nickels + [("1¢", 5)] * pennies
+    natural = 8 + sum(64 if k == 1 else 34 for _, k in items)
+    width = width or min(W, natural)
+    scale = min(1.0, width / natural)
+
+    def fn(c, w, h):
+        c.scale(scale, scale); x = 4
+        for lab, k in items:
+            if k == 1:
+                c.setFillColor(colors.HexColor("#DCE8D5")); c.setStrokeColor(HUNTER); c.roundRect(x, 6, 58, 28, 3, fill=1, stroke=1)
+                text(c, x + 29, 15, "$1", "BodySemi", 11, HUNTER, "c"); x += 64
+            else:
+                r = {2: 14, 3: 10.5, 4: 12, 5: 11}[k]
+                c.setFillColor(colors.HexColor("#E9E6E0") if k != 5 else colors.HexColor("#E7C3A5")); c.setStrokeColor(MUTED)
+                c.circle(x + 15, 20, r, fill=1, stroke=1); text(c, x + 15, 17, lab, "BodySemi", 7, INK, "c"); x += 34
+    return Draw(width, 40 * scale + 2, fn)

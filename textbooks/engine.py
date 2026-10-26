@@ -64,6 +64,15 @@ SUBJECTS = {
                 wash=colors.HexColor("#E7EEF6"), mid=colors.HexColor("#9DB8D4")),
 }
 
+LABELS = {
+    "math": dict(explore="LET'S EXPLORE", example="WORKED EXAMPLE", answer="Answer", try_="TRY IT",
+                 try_note="Work these in your notebook or on scrap paper. Then check with your teacher.", real="MATH IN REAL LIFE",
+                 study="Study the <b>Worked Examples</b> step by step, and try the <b>Try It</b> problems."),
+    "ela": dict(explore="GET READY", example="MODEL", answer="Model answer", try_="YOUR TURN",
+                try_note="Answer in your notebook in complete sentences. Then check with your teacher.", real="WHY IT MATTERS",
+                study="Read the <b>Model</b> boxes to see how a strong reader thinks, then answer the <b>Your Turn</b> questions."),
+}
+
 PAGE_W, PAGE_H = letter
 LM, RM, TM, BM = 1.0 * inch, 0.75 * inch, 0.85 * inch, 0.8 * inch   # wide left margin for 3-hole binders
 W = PAGE_W - LM - RM
@@ -91,6 +100,7 @@ class Theme:
         self.bullet = ParagraphStyle("bullet", parent=self.body, leftIndent=16, bulletIndent=3, spaceAfter=3)
         self.say = ParagraphStyle("say", parent=self.cell, fontName="BodyMed", textColor=self.dark)
         self.answer = ParagraphStyle("answer", parent=self.cell, fontName="BodySemi", textColor=self.main)
+        self.lab = LABELS[subject]
 
 
 # ---------------------------------------------------------------- helpers
@@ -385,8 +395,8 @@ class Problem:
 
 
 class Section:
-    def __init__(self, title, problems, intro=None, cols=2):
-        self.title, self.problems, self.intro, self.cols = title, problems, intro, cols
+    def __init__(self, title, problems, intro=None, cols=2, passage=None):
+        self.title, self.problems, self.intro, self.cols, self.passage = title, problems, intro, cols, passage
 
 
 # Learn blocks
@@ -405,6 +415,15 @@ class Example:
         self.title, self.problem, self.steps, self.answer, self.fig = title, problem, steps, answer, fig
 class Bullets:
     def __init__(self, items): self.items = items
+class Passage:
+    """A reading passage printed with numbered paragraphs. paras: list of strings (a string starting with '>' is a
+    poem/verse line block kept unnumbered)."""
+    def __init__(self, title, paras, source=None, genre=None, numbered=True):
+        self.title, self.paras, self.source, self.genre, self.numbered = title, paras, source, genre, numbered
+class ReaderAssign:
+    """'Read in your Reader' assignment: book, section (chapter), and what to notice while reading."""
+    def __init__(self, book, section, focus=None, pages=None):
+        self.book, self.section, self.focus, self.pages = book, section, focus, pages
 class Vocab:
     def __init__(self, items): self.items = items
 

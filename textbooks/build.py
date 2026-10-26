@@ -16,6 +16,8 @@ def units(key):
 BOOKS = {
     "math4": lambda: Book("math", 4, "Grade 4 Mathematics", units("math4")),
     "math7": lambda: Book("math", 7, "Grade 7 Mathematics", units("math7")),
+    "ela4": lambda: Book("ela", 4, "Grade 4 English Language Arts", units("ela4")),
+    "ela7": lambda: Book("ela", 7, "Grade 7 English Language Arts", units("ela7")),
 }
 
 if __name__ == "__main__":

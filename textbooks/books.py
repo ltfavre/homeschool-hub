@@ -43,16 +43,51 @@ def render_blocks(t, blocks, teacher=False):
             out.append(Spacer(1, 4)); out.append(example_box(t, b)); out.append(Spacer(1, 8))
         elif isinstance(b, Vocab):
             out.append(vocab_panel(t, b.items)); out.append(Spacer(1, 8))
+        elif isinstance(b, Passage):
+            out += [Spacer(1, 4), passage_box(t, b), Spacer(1, 10)]
+        elif isinstance(b, ReaderAssign):
+            out += [Spacer(1, 2), reader_box(t, b), Spacer(1, 8)]
     return out
 
 
+def passage_box(t, ps):
+    """Reading passage with numbered paragraphs; one row per paragraph so it can run across pages."""
+    num = ParagraphStyle("pn", parent=t.small, alignment=TA_RIGHT, textColor=t.main, fontName="Mono", fontSize=8, leading=17)
+    body = ParagraphStyle("pb", parent=t.body, fontSize=11.5, leading=17.5, spaceAfter=0, firstLineIndent=0)
+    verse = ParagraphStyle("pv", parent=body, leftIndent=18, leading=16)
+    head = [P(ps.genre.upper() if ps.genre else "READ", t.eyebrow),
+            P(ps.title, ParagraphStyle("pt", parent=t.h2, fontSize=17, leading=21, spaceBefore=0, spaceAfter=2))]
+    if ps.source: head.append(P(ps.source, ParagraphStyle("ps", parent=t.small, fontName="BodyMed", spaceAfter=4)))
+    rows = [["", head]]; n = 0
+    for para in ps.paras:
+        if para.startswith(">"):
+            rows.append(["", P(para[1:].strip().replace("\n", "<br/>"), verse)])
+        else:
+            n += 1
+            rows.append([P(str(n) if ps.numbered else "", num), P(para, body)])
+    tb = Table(rows, colWidths=[26, W - 26])
+    tb.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("BACKGROUND", (0, 0), (-1, -1), WHITE),
+                            ("LINEABOVE", (0, 0), (-1, 0), 4, t.main), ("BOX", (0, 0), (-1, -1), 0.8, t.mid),
+                            ("LEFTPADDING", (0, 0), (0, -1), 2), ("RIGHTPADDING", (0, 0), (0, -1), 8),
+                            ("LEFTPADDING", (1, 0), (1, -1), 2), ("RIGHTPADDING", (1, 0), (1, -1), 16),
+                            ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
+                            ("TOPPADDING", (0, 0), (-1, 0), 10), ("BOTTOMPADDING", (0, -1), (-1, -1), 12)]))
+    return tb
+
+
+def reader_box(t, r):
+    lines = [P("READ IN YOUR READER", t.eyebrow), P(f"<b>{r.book}</b> · {r.section}" + (f" · {r.pages}" if r.pages else ""), t.boxt)]
+    if r.focus: lines.append(P(f"<b>As you read:</b> {r.focus}", t.boxt))
+    return panel(lines, IVORY, left_bar=GOLD)
+
+
 def example_box(t, ex):
-    inner = [P(f"WORKED EXAMPLE  ·  {ex.title.upper()}", t.eyebrow), P(ex.problem, ParagraphStyle("exq", parent=t.boxt, fontName="BodySemi"))]
+    inner = [P(f"{t.lab['example']}  ·  {ex.title.upper()}", t.eyebrow), P(ex.problem, ParagraphStyle("exq", parent=t.boxt, fontName="BodySemi"))]
     if ex.fig: inner += [Spacer(1, 3), centered(ex.fig(t), W - 30), Spacer(1, 3)]
     num = ParagraphStyle("st", parent=t.boxt, leftIndent=22, bulletIndent=0)
     for i, s in enumerate(ex.steps, 1):
         inner.append(Paragraph(s, num, bulletText=f"{i}"))
-    inner.append(P(f"<b>Answer:</b> {ex.answer}", ParagraphStyle("exa", parent=t.boxt, textColor=t.dark, spaceBefore=3)))
+    inner.append(P(f"<b>{t.lab['answer']}:</b> {ex.answer}", ParagraphStyle("exa", parent=t.boxt, textColor=t.dark, spaceBefore=3)))
     # one row per paragraph so a long example can continue on the next page
     head = [inner[0], inner[1]]
     rows = [[head]] + [[f] for f in inner[2:]]
@@ -65,8 +100,7 @@ def example_box(t, ex):
 
 
 def try_it_box(t, L, with_answers=False):
-    inner = [P("TRY IT", t.eyebrow), P("Work these in your notebook or on scrap paper. Then check with your teacher." if not with_answers
-                                        else "Answers are shown in red.", t.small)]
+    inner = [P(t.lab["try_"], t.eyebrow), P(t.lab["try_note"] if not with_answers else "Answers are shown in red.", t.small)]
     for i, pr in enumerate(L.try_it, 1):
         row = [P(f"<b>{i}.</b>  {pr.prompt}", t.boxt)]
         if pr.fig: row += [centered(pr.fig(t), W - 40)]
@@ -82,7 +116,7 @@ def textbook_lesson(t, L, teacher=False):
     out = lesson_header(t, L)
     out.append(P(L.i_can, t.ican))
     if L.vocab: out += [vocab_panel(t, L.vocab), Spacer(1, 8)]
-    out.append(panel([P("LET'S EXPLORE", t.eyebrow), P(L.launch, t.boxt)], IVORY, border=LINE)); out.append(Spacer(1, 8))
+    out.append(panel([P(t.lab["explore"], t.eyebrow), P(L.launch, t.boxt)], IVORY, border=LINE)); out.append(Spacer(1, 8))
     out += render_blocks(t, L.learn, teacher)
     out.append(Spacer(1, 4)); out.append(try_it_box(t, L, with_answers=teacher))
     if L.summary:
@@ -103,7 +137,7 @@ def unit_opener(t, U, doc, kind):
 
 def unit_intro_student(t, U):
     out = [P(U.overview, t.body), P("In this unit you will…", t.h3)] + bullets(U.big_ideas, t.bullet)
-    if U.real_world: out += [Spacer(1, 6), panel([P("MATH IN REAL LIFE" if t.subject == "math" else "WHY IT MATTERS", t.eyebrow), P(U.real_world, t.boxt)], t.wash, left_bar=t.main)]
+    if U.real_world: out += [Spacer(1, 6), panel([P(t.lab["real"], t.eyebrow), P(U.real_world, t.boxt)], t.wash, left_bar=t.main)]
     out += [Spacer(1, 8), vocab_panel(t, U.vocab, "Unit Vocabulary"), Spacer(1, 8), P("Lessons in this unit", t.h3)]
     rows = [["Lesson", "Title"]] + [[L.num, L.title] for L in U.lessons]
     out.append(table(t, rows, [0.8 * inch, W - 0.8 * inch]))
@@ -122,9 +156,9 @@ def front_matter(t, book, doc, kind):
     out = [NextPageTemplate("body"), PageBreak()]
     intro = {
         "textbook": ["How to use this book",
-                     "Each lesson starts with an <b>I can</b> goal and a <b>Let's Explore</b> question. Read the lesson with your teacher, "
-                     "study the <b>Worked Examples</b> step by step, and try the <b>Try It</b> problems. Your practice pages are in your "
-                     "<b>Student Workbook</b>, labeled with the same lesson number.",
+                     f"Each lesson starts with an <b>I can</b> goal and a <b>{t.lab['explore'].title()}</b> question. Read the lesson with your teacher. "
+                     f"{t.lab['study']} Your practice pages are in your <b>Student Workbook</b>, labeled with the same lesson number."
+                     + (" When a lesson says <b>Read in Your Reader</b>, read that chapter in your Core Knowledge Reader first." if t.subject == "ela" else ""),
                      ["<b>Key Idea</b> boxes hold the most important rule or fact. Learn these.",
                       "<b>Watch Out</b> boxes warn you about common mistakes.",
                       "Every Friday there is a short <b>Weekly Check</b> in your workbook. The last Friday of a unit is the <b>Unit Test</b>."]],
@@ -237,6 +271,9 @@ def section_grid(t, sec, start, show_answer=False):
     head = [P(sec.title, t.h3)]
     if sec.intro: head.append(P(sec.intro, t.body))
     out = []
+    if getattr(sec, "passage", None) and not show_answer:
+        out += [KeepTogether(head[:1] + [Spacer(1, 2)]), passage_box(t, sec.passage), Spacer(1, 10)]
+        head = head[1:]
     n = start; row = []; rows = []
     cols = sec.cols; cw = W / cols
     for pr in sec.problems:
@@ -364,7 +401,7 @@ def teacher_lesson(t, L):
     out.append(P(L.i_can, t.ican))
     out.append(info_table(t, [("Objective", T["objective"]), ("Standard", L.standard + " — " + T.get("standard_text", "")),
                               ("Date", L.date or "—"), ("Time", T.get("time", "About 50 minutes")),
-                              ("Materials", T["materials"]), ("Get ready", T.get("prep", "Read the student lesson and work the Try It problems."))]))
+                              ("Materials", T["materials"]), ("Get ready", T.get("prep", "Read the student lesson and work the Try It problems." if t.subject == "math" else "Read the student lesson and any assigned Reader chapter; answer the Your Turn questions."))]))
     out += [Spacer(1, 8), P("Lesson Flow", t.h3), flow_table(t, T["flow"])]
     side = []
     if T.get("misconceptions"):
@@ -387,7 +424,7 @@ def teacher_lesson(t, L):
 
 def textbook_lesson_compact(t, L):
     out = [P(f"Lesson {L.num}: {L.title}", t.h2)]
-    out.append(panel([P("LET'S EXPLORE", t.eyebrow), P(L.launch, t.boxt)], IVORY, border=LINE)); out.append(Spacer(1, 6))
+    out.append(panel([P(t.lab["explore"], t.eyebrow), P(L.launch, t.boxt)], IVORY, border=LINE)); out.append(Spacer(1, 6))
     out += render_blocks(t, L.learn, True)
     out.append(try_it_box(t, L, with_answers=True))
     return out

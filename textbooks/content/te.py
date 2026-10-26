@@ -14,3 +14,10 @@ def flow(warm, launch, teach, guided, independent="Workbook lesson pages: Warm-U
     L = lambda x: x if isinstance(x, list) else [x]
     return [("Warm-Up", 5, L(warm)), ("Launch", 5, L(launch)), ("Teach", 15, L(teach)),
             ("Guided Practice", 10, L(guided)), ("Independent", 12, L(independent)), ("Exit Ticket", 3, L(exit_))]
+
+
+def eflow(warm, read, teach, guided, independent="Workbook lesson pages: Warm-Up through Think Deeper.", exit_="Student completes the Exit Ticket alone. Check it before the next lesson."):
+    """Standard 50-minute ELA lesson flow."""
+    L = lambda x: x if isinstance(x, list) else [x]
+    return [("Warm-Up", 5, L(warm)), ("Read", 15, L(read)), ("Mini-Lesson", 10, L(teach)),
+            ("Guided Practice", 7, L(guided)), ("Independent", 10, L(independent)), ("Exit Ticket", 3, L(exit_))]

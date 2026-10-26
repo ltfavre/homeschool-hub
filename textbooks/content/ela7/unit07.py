@@ -21,8 +21,8 @@ P_LANG = Passage("A Note on Historical Language", [
 
 P_MASK = Passage("We Wear the Mask", [
     "> We wear the mask that grins and lies,\\nIt hides our cheeks and shades our eyes,—\\nThis debt we pay to human guile;\\nWith torn and bleeding hearts we smile,\\nAnd mouth with myriad subtleties.",
-    "> Why should the world be over-wise,\\nIn counting all our tears and sighs?\\nNay, let them only see us, while\\n        We wear the mask.",
-    "> We smile, but, O great Christ, we cry\\nTo thee from tortured souls arise.\\nWe sing, but oh the clay is vile\\nBeneath our feet, and long the mile;\\nBut let the world dream otherwise,\\n        We wear the mask!",
+    "> Why should the world be over-wise,\\nIn counting all our tears and sighs?\\nNay, let them only see us, while\\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We wear the mask.",
+    "> We smile, but, O great Christ, we cry\\nTo thee from tortured souls arise.\\nWe sing, but oh the clay is vile\\nBeneath our feet, and long the mile;\\nBut let the world dream otherwise,\\n&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;We wear the mask!",
 ], source="Paul Laurence Dunbar (1895). Public domain.", genre="Poem", numbered=False)
 
 P_DUNBAR_A = Passage("Source A: A Voice Ahead of His Time", [

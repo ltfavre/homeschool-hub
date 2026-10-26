@@ -825,7 +825,7 @@ async function familyFetch(request,env,ctx){
   if(path==='/daily-packets.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).map(([date,g])=>[date,{[user.grade]:g[user.grade]}])));}
   if(path==='/assessment-student.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).filter(([,e])=>String(e.grade)===user.grade)));}
   const pdf=path.match(/^\/assessments\/(?:(?:khan|eight)-)?g([47])-m[1-9]-(?:w[1-3]-quiz|test)-student\.pdf$/);
-  const booklet=path.match(/^\/downloads\/integrated\/grade([47])-(?:art|life|computer|skills)-student\.pdf$/);
+  const booklet=path.match(/^\/downloads\/integrated\/grade([47])-(?:art|life|computer|skills)(?:-[a-z0-9]+)?-student\.pdf$/);
   if(!allowed.includes(path)&&!(pdf&&pdf[1]===user.grade)&&!(booklet&&booklet[1]===user.grade))return familyJson({error:'Parent access required'},403);
   if(/^\/daily-print(?:\.html)?$/.test(path)&&(url.searchParams.get('key')==='1'||url.searchParams.get('kind')==='keys'||url.searchParams.get('grade')!==user.grade)){url.searchParams.delete('key');if(url.searchParams.get('kind')==='keys')url.searchParams.set('kind','work');url.searchParams.set('grade',user.grade);return new Response(null,{status:302,headers:{location:url.pathname+url.search,'cache-control':'no-store'}});}
  }

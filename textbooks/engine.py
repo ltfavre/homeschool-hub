@@ -961,3 +961,37 @@ def line_plot(theme, values, lo, hi, d, width=None, title=None, unit=""):
                 text(c, x, y + 9 + j * 13, "×", "BodySemi", 13, theme.main, "c")
         if title: text(c, w / 2, h - 10, title, "BodySemi", 9, theme.dark, "c")
     return Draw(width, height, fn)
+
+
+def rect_fig(theme, l, w, unit="", grid=False, width=None, height=None, label_l=None, label_w=None, max_w=None):
+    """Rectangle l × w with side labels; grid draws unit squares (only for small sizes)."""
+    max_w = max_w or 200
+    s = min(max_w / l, 90 / w, 26)
+    rw, rh = l * s, w * s
+    width = width or rw + 70; height = height or rh + 40
+
+    def fn(c, ww, hh):
+        x0 = (ww - rw) / 2; y0 = 18
+        c.setFillColor(theme.wash); c.setStrokeColor(theme.dark); c.setLineWidth(1.4); c.rect(x0, y0, rw, rh, fill=1, stroke=1)
+        if grid:
+            c.setStrokeColor(theme.mid); c.setLineWidth(0.5)
+            for i in range(1, int(l)): c.line(x0 + i * s, y0, x0 + i * s, y0 + rh)
+            for j in range(1, int(w)): c.line(x0, y0 + j * s, x0 + rw, y0 + j * s)
+        lt = label_l if label_l is not None else f"{l} {unit}".strip(); wt = label_w if label_w is not None else f"{w} {unit}".strip()
+        text(c, x0 + rw / 2, y0 - 13, lt, "MonoSemi", 9.5, theme.dark, "c")
+        text(c, x0 + rw + 5, y0 + rh / 2 - 3, wt, "MonoSemi", 9.5, theme.dark, "l")
+    return Draw(width, height, fn)
+
+
+def l_shape(theme, a, b, cdim, d, unit="", width=220, height=120):
+    """L-shaped figure: full width a, full height b; top part width cdim, bottom part height d."""
+    def draw(c, ww, hh):
+        s = min((ww - 70) / a, (hh - 36) / b); x0 = 20; y0 = 18
+        pts = [(0, 0), (a, 0), (a, d), (cdim, d), (cdim, b), (0, b)]
+        p = c.beginPath(); p.moveTo(x0, y0)
+        for x, y in pts[1:]: p.lineTo(x0 + x * s, y0 + y * s)
+        p.close(); c.setFillColor(theme.wash); c.setStrokeColor(theme.dark); c.setLineWidth(1.4); c.drawPath(p, fill=1, stroke=1)
+        def lab(x, y, t_, al="c"): text(c, x, y, t_, "MonoSemi", 9, theme.dark, al)
+        lab(x0 + a * s / 2, y0 - 13, f"{a} {unit}".strip()); lab(x0 - 4, y0 + b * s / 2, f"{b} {unit}".strip(), "r")
+        lab(x0 + cdim * s / 2, y0 + b * s + 4, f"{cdim} {unit}".strip()); lab(x0 + a * s + 4, y0 + d * s / 2 - 3, f"{d} {unit}".strip(), "l")
+    return Draw(width, height, draw)

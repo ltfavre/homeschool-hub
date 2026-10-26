@@ -3,6 +3,13 @@ from engine import *
 
 
 # ================================================================ shared pieces
+
+def check_tag(C):
+    """Eyebrow label for a check page."""
+    if "Year-End" in C.title:
+        return "YEAR-END TEST" if C.kind == "test" else "YEAR-END REVIEW"
+    return {"test": "UNIT TEST", "review": "UNIT REVIEW"}.get(C.kind, "WEEKLY CHECK")
+
 def lesson_header(t, L, kind_note=None):
     out = [P(f"UNIT {L.num.split('.')[0]}  ·  LESSON {L.num}  ·  {L.standard}" + (f"  ·  {kind_note}" if kind_note else ""), t.eyebrow),
            toc_heading(f"Lesson {L.num}: {L.title}", t.h1, 1, running=f"Lesson {L.num} · {L.title}")]
@@ -265,7 +272,7 @@ def workbook_lesson(t, L):
 
 
 def check_pages(t, C, show_answer=False, teacher=False):
-    tag = "UNIT TEST" if C.kind == "test" else ("UNIT REVIEW" if C.kind == "review" else "WEEKLY CHECK")
+    tag = check_tag(C)
     out = [P(f"{tag}" + (f"  ·  {C.date}" if C.date else "") + (f"  ·  ABOUT {C.minutes} MINUTES" if C.minutes else ""), t.eyebrow),
            toc_heading(C.title + (" — Answer Key" if teacher else ""), ParagraphStyle("ch", parent=t.h2, spaceBefore=0), 1, running=C.title)]
     if not teacher: out += [name_date(t), Spacer(1, 6)]
@@ -418,7 +425,7 @@ def build_teacher(book, path):
 
 
 def check_teacher(t, C):
-    tag = {"test": "UNIT TEST", "review": "UNIT REVIEW"}.get(C.kind, "WEEKLY CHECK")
+    tag = check_tag(C)
     out = [P(tag + (f"  ·  {C.date}" if C.date else ""), t.eyebrow),
            toc_heading(C.title + " — Answer Key", ParagraphStyle("ch", parent=t.h2, spaceBefore=0), 1, running=C.title + " Key")]
     if C.teacher_note: out.append(P(C.teacher_note, t.body))

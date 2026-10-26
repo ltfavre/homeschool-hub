@@ -1,0 +1,402 @@
+"""Grade 4 ELA · Unit 8: Grammar and Conventions — nouns and pronouns, verbs and complete sentences, capitalization and punctuation, and editing.
+Anchor reading: King Arthur and the Round Table Reader, Chapters 17–20 (May 24 – Jun 18, 2027)."""
+from engine import *
+from content.te import TE, eflow
+from content.sched import schedule
+from content.ela4.unit01 import S, MC, OR, SA, READER
+
+
+def te(obj, std, mat, warm, read, teach, guided, mis, sup, ext, **k):
+    return TE(obj, std, mat, eflow(warm, read, teach, guided, **k), mis, sup, ext)
+
+
+def rules(rows, widths=(1.7, 3.9)):
+    return Figure(lambda t: table(t, rows, [w * inch for w in widths], width=sum(widths) * inch))
+
+
+P_EDIT1 = Passage("Edit Me: A Feast at Camelot", [
+    "last saturday sir gawain and sir kay rode to camelot for a feast. the kings hall was filled with knights ladys and musicians.",
+    "“where is sir lancelot” asked the queen. nobody new. their was an empty seat at the round table.",
+], source="A passage with mistakes for editing practice", genre="Editing passage", numbered=True)
+
+P_EDIT_TEST = Passage("Edit Me: A Letter from Camelot", [
+    "dear sir percival,",
+    "the knights of the round table is planning a tournament on june 12. we hope you and you're squire will come. their will be prizes for the best rider the strongest archer and the bravest knight.",
+    "queen guinevere said “bring your finest horse.” we cant wait to see you",
+    "your friend, sir gareth",
+], source="A letter with mistakes for editing", genre="Editing passage", numbered=True)
+
+# ================================================================= Week 1 · Nouns, pronouns, and agreement (Chapter 17)
+L1 = Lesson("8.1", "Nouns: Common, Proper, and Plural",
+    "I can identify common and proper nouns and spell plural nouns correctly.", "L.4.1, L.4.2a, L.4.2d",
+    [("noun", "A word that names a person, place, thing, or idea."), ("proper noun", "Names a specific person, place, or thing; begins with a capital letter."),
+     ("common noun", "Names a general person, place, or thing."), ("plural", "More than one.")],
+    "How many nouns can you find in this sentence: “Arthur rode his horse to Camelot with three knights”?",
+    [ReaderAssign(READER, "Chapter 17: The Queen and the Poisoned Apple", "Notice the proper nouns: names of people and places."),
+     rules([["Rule for plurals", "Examples"], ["Most nouns: add -s", "knight → knights"], ["Ends in s, x, z, ch, sh: add -es", "box → boxes, sword → swords, bench → benches"],
+            ["Consonant + y: change y to i, add -es", "lady → ladies, story → stories"], ["Vowel + y: add -s", "day → days, key → keys"],
+            ["Some f/fe: change to v, add -es", "knife → knives, wolf → wolves"], ["Irregular", "man → men, child → children, foot → feet, mouse → mice"]], (2.8, 2.8)),
+     Example("Find and sort nouns", "“Arthur rode his horse to Camelot with three knights.”", ["Proper: Arthur, Camelot (specific, capitalized).", "Common: horse, knights."], "4 nouns: Arthur, horse, Camelot, knights"),
+     KeyIdea("Proper nouns are capitalized. Follow the spelling rules for plurals, and learn irregular plurals.")],
+    [Problem("Plural of <i>lady</i>", "ladies"), Problem("Plural of <i>wolf</i>", "wolves"), Problem("Proper noun for “a queen” in King Arthur", "Guinevere")],
+    [S("Warm-Up", [SA("A noun names…", "a person, place, thing, or idea"), SA("Proper nouns begin with…", "a capital letter")], cols=2),
+     S("Write the Plural", [SA(w, p) for w, p in [("castle", "castles"), ("bench", "benches"), ("berry", "berries"), ("monkey", "monkeys"), ("leaf", "leaves"), ("tooth", "teeth"),
+                                                  ("fox", "foxes"), ("child", "children"), ("princess", "princesses"), ("goose", "geese")]], cols=2),
+     S("Common or Proper?", [SA(w, a) for w, a in [("river", "common"), ("Mississippi River", "proper"), ("Saturday", "proper"), ("knight", "common"), ("Lancelot", "proper"), ("kingdom", "common")]], cols=2),
+     S("Exit Ticket", [OR("Write a sentence about Chapter 17 with two proper nouns and one irregular plural.", "Answers vary.", lines=2)])],
+    te("Students identify nouns and spell plurals.", "Demonstrate command of grammar and usage; spell grade-appropriate words correctly.", "King Arthur Reader (Chapter 17), workbook Lesson 8.1",
+       "Noun hunt sentence.", "Read Chapter 17.", ["Teach plural rules.", "Model sorting nouns."], "Your Turn 1–3.",
+       ["Writing ladys or wolfs."], ["Rule chart on the desk."], ["Find ten irregular plurals."]),
+    summary="Proper nouns are capitalized; follow plural spelling rules.")
+
+L2 = Lesson("8.2", "Possessive Nouns",
+    "I can use apostrophes to show possession.", "L.4.2, L.4.1",
+    [("possessive noun", "A noun that shows ownership, using an apostrophe.")],
+    "What's the difference between <i>knights</i>, <i>knight's</i>, and <i>knights'</i>?",
+    [rules([["Possessive rule", "Example"], ["Singular noun: add 's", "the knight's sword (one knight)"], ["Plural noun ending in s: add '", "the knights' swords (many knights)"],
+            ["Plural noun not ending in s: add 's", "the children's toys, the men's horses"]], (2.8, 2.8)),
+     Example("Choose the form", "The swords of all the knights", ["Plural owner: knights (ends in s).", "Add only an apostrophe."], "the knights' swords"),
+     WatchOut("Don't use an apostrophe to make a word plural. <i>Three knight's</i> is wrong; <i>three knights</i> is correct."),
+     KeyIdea("Singular: 's. Plural ending in s: '. Plural not ending in s: 's.")],
+    [Problem("The crown of the queen", "the queen's crown"), Problem("The horses of the soldiers", "the soldiers' horses"), Problem("The games of the children", "the children's games")],
+    [S("Warm-Up", [SA("Possessive shows…", "ownership"), SA("Plural of knight", "knights")], cols=2),
+     S("Write the Possessive", [SA(q, a) for q, a in [("the cloak of Merlin", "Merlin's cloak"), ("the shields of the knights", "the knights' shields"), ("the toys of the puppies", "the puppies' toys"),
+                                                      ("the boots of the men", "the men's boots"), ("the castle of the king", "the king's castle"), ("the tails of the mice", "the mice's tails")]], cols=2),
+     S("Plural or Possessive?", [MC(q, ch, k) for q, ch, k in [("Three ___ rode into the forest.", ["knight's", "knights", "knights'"], 1),
+                                                                ("The ___ armor was shiny.", ["knights", "knight's", "knightes"], 1), ("All the ___ horses were tired.", ["knights'", "knight's", "knights"], 0)]]),
+     S("Exit Ticket", [OR("Write a sentence with a singular possessive and a sentence with a plural possessive.", "Answers vary.", lines=2)])],
+    te("Students form possessives.", "Use correct capitalization and punctuation; demonstrate command of conventions.", "Workbook Lesson 8.2",
+       "knights/knight's/knights'.", "Reread a Chapter 17 paragraph for possessives.", ["Teach the three rules."], "Your Turn 1–3.",
+       ["Apostrophes in plurals."], ["Ask: Does it own something?"], ["Correct a sign with apostrophe errors."]),
+    summary="Use apostrophes for possession, not for plurals.")
+
+L3 = Lesson("8.3", "Pronouns and Relative Pronouns",
+    "I can use pronouns, including relative pronouns, correctly.", "L.4.1a",
+    [("pronoun", "A word that takes the place of a noun: he, she, it, they, him, her, them."), ("relative pronoun", "Who, whom, whose, which, or that; connects a describing part to a noun.")],
+    "How would a story sound if the author never used pronouns? “Arthur took Arthur's sword and Arthur rode away.”",
+    [Text("Pronouns replace nouns so writing isn't repetitive. <b>Relative pronouns</b> begin a clause that tells more about a noun."),
+     rules([["Relative pronoun", "Use for", "Example"], ["who", "people (as subject)", "The knight who won was Lancelot."], ["whom", "people (as object)", "The squire, whom Owen trusted, held the reins."],
+            ["whose", "ownership", "The girl whose kite crashed tried again."], ["which", "things (extra information)", "Excalibur, which was magic, shone brightly."], ["that", "things or people", "This is the map that Grandfather drew."]],
+           (1.3, 1.8, 2.7)),
+     Example("Choose the relative pronoun", "The lady ___ gave Arthur the sword lived in the lake.", ["Refers to a person.", "She is the subject of “gave.”"], "who"),
+     KeyIdea("Who for people, which for things, that for either, whose for ownership.")],
+    [Problem("The sword, ___ was magic, was called Excalibur.", "which"), Problem("Pip, ___ grandfather made maps, found the room.", "whose"), Problem("The boy ___ pulled the sword became king.", "who")],
+    [S("Warm-Up", [SA("Pronoun for Merlin", "he / him"), SA("Pronoun for the knights", "they / them")], cols=2),
+     S("Choose the Relative Pronoun", [SA(q, a) for q, a in [("The knight ___ horse was white rode first.", "whose"), ("The castle ___ stood on the hill was old.", "that / which"),
+                                                             ("Ada, ___ saw the cracked post, warned everyone.", "who"), ("This is the book ___ I love.", "that"), ("The girl ___ won the prize smiled.", "who"),
+                                                             ("Camelot, ___ was Arthur's home, was beautiful.", "which")]], cols=1),
+     S("Replace with Pronouns", [OR("Rewrite with pronouns: “Arthur took Arthur's sword, and Arthur rode to meet Arthur's knights.”", "Arthur took his sword, and he rode to meet his knights.", lines=2)]),
+     S("Exit Ticket", [OR("Combine with a relative pronoun: Lancelot was a great knight. Lancelot came from France.", "Lancelot, who came from France, was a great knight.", lines=2)])],
+    te("Students use pronouns and relative pronouns.", "Use relative pronouns (who, whose, whom, which, that).", "Workbook Lesson 8.3",
+       "No-pronoun story.", "Find pronouns in Chapter 17.", ["Teach the chart.", "Model choosing who."], "Your Turn 1–3.",
+       ["Using which for people."], ["People → who."], ["Combine five sentence pairs."]),
+    summary="Pronouns replace nouns; relative pronouns connect describing clauses.")
+
+L4 = Lesson("8.4", "Agreement: Subjects, Verbs, and Pronouns",
+    "I can make subjects and verbs agree and pronouns agree with the nouns they replace.", "L.4.1",
+    [("subject-verb agreement", "A singular subject takes a singular verb; a plural subject takes a plural verb."), ("antecedent", "The noun a pronoun replaces.")],
+    "Which sounds right: “The knights rides” or “The knights ride”?",
+    [rules([["Rule", "Example"], ["Singular subject → verb usually ends in -s", "The knight rides."], ["Plural subject → no -s", "The knights ride."], ["Two subjects joined by and → plural", "Arthur and Kay ride."],
+            ["Pronoun matches its antecedent", "The knights polished their swords. (not his)"]], (2.9, 2.7)),
+     Example("Fix agreement", "Each of the knights have a horse.", ["Subject: Each (singular), not knights.", "Singular verb: has."], "Each of the knights has a horse."),
+     KeyIdea("Find the real subject; match the verb. Match each pronoun to its antecedent.")],
+    [Problem("The queen and the king ___ (walk/walks).", "walk"), Problem("The box of swords ___ (is/are) heavy.", "is"), Problem("Every squire cleaned ___ (his/their) knight's armor.", "his (or his or her)")],
+    [S("Warm-Up", [SA("The dog ___ (bark/barks).", "barks"), SA("The dogs ___ (bark/barks).", "bark")], cols=2),
+     S("Choose the Verb", [SA(q, a) for q, a in [("The flowers in the garden ___ (bloom/blooms).", "bloom"), ("My brother ___ (play/plays) chess.", "plays"), ("Jim and Ben ___ (search/searches).", "search"),
+                                                 ("The team ___ (win/wins) often.", "wins"), ("One of the maps ___ (is/are) torn.", "is"), ("The pirates ___ (was/were) angry.", "were")]], cols=2),
+     S("Fix the Pronoun", [SA(q, a) for q, a in [("The girls packed his bags.", "The girls packed their bags."), ("Ellie lost their mitten.", "Ellie lost her mitten."),
+                                                 ("The castle had their own well.", "The castle had its own well."), ("The boys said she were tired.", "The boys said they were tired.")]], cols=1),
+     S("Exit Ticket", [OR("Write a sentence with two subjects joined by <i>and</i> and the correct verb.", "Answers vary.", lines=2)])],
+    te("Students apply agreement rules.", "Demonstrate command of grammar and usage.", "Workbook Lesson 8.4",
+       "rides or ride?", "Review Chapter 17 sentences.", ["Teach rules; model “Each of”."], "Your Turn 1–3. Weekly Check tomorrow.",
+       ["Matching the verb to a nearby noun instead of the subject."], ["Cross out prepositional phrases first."], ["Write agreement trick sentences for a sibling."]),
+    summary="Subjects and verbs agree; pronouns match antecedents.")
+
+# ================================================================= Week 2 · Verbs and sentence completeness (Chapter 18)
+L5 = Lesson("8.5", "Verb Tenses and Irregular Verbs",
+    "I can use past, present, and future tenses, including irregular verbs.", "L.4.1",
+    [("tense", "The time a verb shows: past, present, or future."), ("irregular verb", "A verb that does not add -ed in the past tense.")],
+    "What's wrong with “Yesterday Arthur drawed his sword”?",
+    [ReaderAssign(READER, "Chapter 18: Sir Meliagraunce", "Notice the past-tense verbs the author uses to tell the story."),
+     rules([["Present", "Past", "Past with has/have"], ["draw", "drew", "drawn"], ["ride", "rode", "ridden"], ["take", "took", "taken"], ["swim", "swam", "swum"], ["bring", "brought", "brought"],
+            ["fly", "flew", "flown"], ["write", "wrote", "written"], ["fall", "fell", "fallen"]], (1.8, 1.8, 2.0)),
+     Example("Fix the verb", "Yesterday Arthur drawed his sword.", ["Time: yesterday → past.", "Draw is irregular: drew."], "Yesterday Arthur drew his sword."),
+     KeyIdea("Keep tenses consistent; memorize irregular past forms.")],
+    [Problem("Past of <i>ride</i>", "rode"), Problem("Has ___ (write)", "written"), Problem("Future of <i>sail</i>", "will sail")],
+    [S("Warm-Up", [SA("Past of walk", "walked"), SA("Past of run", "ran")], cols=2),
+     S("Write the Past Tense", [SA(v, p) for v, p in [("throw", "threw"), ("catch", "caught"), ("speak", "spoke"), ("break", "broke"), ("sing", "sang"), ("think", "thought"), ("begin", "began"), ("know", "knew")]], cols=2),
+     S("Fix the Tense", [SA(q, a) for q, a in [("Last week we swimmed in the lake.", "Last week we swam in the lake."), ("She has wrote three letters.", "She has written three letters."),
+                                               ("Tomorrow the knights rode to battle.", "Tomorrow the knights will ride to battle."), ("Jim seen the pirates.", "Jim saw the pirates.")]], cols=1),
+     S("Exit Ticket", [OR("Write two sentences about Chapter 18 in the past tense using two irregular verbs.", "Answers vary.", lines=2)])],
+    te("Students use tenses and irregular verbs.", "Form and use verb tenses; recognize inappropriate shifts.", "King Arthur Reader (Chapter 18), workbook Lesson 8.5",
+       "drawed?", "Read Chapter 18.", ["Teach the irregular chart."], "Your Turn 1–3.",
+       ["Adding -ed to irregular verbs.", "Using seen without has."], ["Irregular verb flashcards."], ["Write a past-tense story with ten irregular verbs."]),
+    summary="Use consistent tenses and correct irregular forms.")
+
+L6 = Lesson("8.6", "Progressive Tenses",
+    "I can use progressive verb tenses to show ongoing action.", "L.4.1b",
+    [("progressive tense", "A verb form that shows action continuing over time: am/is/are/was/were/will be + -ing.")],
+    "What's the difference between “I read” and “I was reading when the phone rang”?",
+    [rules([["Tense", "Form", "Example"], ["Present progressive", "am / is / are + -ing", "The knights are riding now."], ["Past progressive", "was / were + -ing", "Jim was hiding when Silver spoke."],
+            ["Future progressive", "will be + -ing", "We will be sailing at dawn."]], (1.7, 1.7, 2.4)),
+     Example("Choose the form", "When the storm hit, Nell ___ (read) by the fire.", ["An ongoing action interrupted in the past.", "Past progressive: was + -ing."], "was reading"),
+     KeyIdea("Progressive tenses show ongoing action: am/is/are, was/were, or will be + -ing.")],
+    [Problem("Present progressive of <i>swim</i> (they)", "are swimming"), Problem("Past progressive of <i>sleep</i> (I)", "was sleeping"), Problem("Future progressive of <i>wait</i> (we)", "will be waiting")],
+    [S("Warm-Up", [SA("Helping verb for past progressive (he)", "was"), SA("Helping verbs for future progressive", "will be")], cols=2),
+     S("Write the Progressive Form", [SA(q, a) for q, a in [("Right now, the birds ___ (sing).", "are singing"), ("At 9:00 last night, I ___ (sleep).", "was sleeping"),
+                                                            ("Tomorrow at noon, we ___ (travel).", "will be traveling"), ("The pirates ___ (dig) when Jim arrived.", "were digging"),
+                                                            ("She ___ (practice) piano every day this week.", "is practicing"), ("Next week, Pip ___ (work) at the library.", "will be working")]], cols=1),
+     S("Exit Ticket", [OR("Write a sentence using the past progressive to show one action interrupted by another.", "e.g. I was eating dinner when the lights went out.", lines=2)])],
+    te("Students use progressive tenses.", "Form and use the progressive verb tenses.", "Workbook Lesson 8.6",
+       "read vs was reading.", "Find -ing verbs in Chapter 18.", ["Teach the chart."], "Your Turn 1–3.",
+       ["Dropping the helping verb (“I running”)."], ["Helping verb + -ing formula."], ["Act out and narrate actions."]),
+    summary="Progressive tenses: helping verb + -ing for ongoing action.")
+
+L7 = Lesson("8.7", "Modal Auxiliaries",
+    "I can use modal verbs such as can, may, and must to show ability, permission, and necessity.", "L.4.1c",
+    [("modal auxiliary", "A helping verb that shows ability, permission, possibility, or necessity: can, could, may, might, must, should, will, would.")],
+    "What's the difference between “You can go,” “You may go,” and “You must go”?",
+    [rules([["Modal", "Shows", "Example"], ["can / could", "ability", "Arthur can pull the sword."], ["may / might", "permission or possibility", "You may enter. It might rain."], ["must", "necessity", "Knights must be loyal."],
+            ["should", "advice", "You should rest."], ["will / would", "future / polite request or wish", "I will help. Would you hold this?"]], (1.4, 2.0, 2.4)),
+     Example("Choose the modal", "Sailors ___ watch the stars to know their latitude. (ability)", ["Ability → can."], "can"),
+     KeyIdea("Choose the modal that matches the meaning: ability, permission, possibility, necessity, or advice.")],
+    [Problem("Permission: “___ I borrow your pencil?”", "May"), Problem("Necessity: “You ___ wear a helmet.”", "must"), Problem("Advice: “You ___ study for the test.”", "should")],
+    [S("Warm-Up", [SA("Modal for ability", "can"), SA("Modal for necessity", "must")], cols=2),
+     S("Choose the Modal", [SA(q, a) for q, a in [("Birds ___ fly. (ability)", "can"), ("It ___ snow tomorrow. (possibility)", "might / may"), ("Students ___ raise their hands. (necessity)", "must"),
+                                                  ("You ___ drink more water. (advice)", "should"), ("___ you please pass the salt? (polite request)", "Would / Could"), ("___ I go outside? (permission)", "May")]], cols=1),
+     S("Exit Ticket", [OR("Write three rules for a knight using must, should, and may.", "Answers vary.", lines=3)])],
+    te("Students use modal auxiliaries.", "Use modal auxiliaries to convey various conditions.", "Workbook Lesson 8.7",
+       "can/may/must.", "Find modals in Chapter 18.", ["Teach the chart."], "Your Turn 1–3.",
+       ["Using can for permission in formal writing."], ["Meaning first, then modal."], ["Write a family rules poster with modals."]),
+    summary="Modals show ability, permission, possibility, necessity, and advice.")
+
+L8 = Lesson("8.8", "Complete Sentences, Fragments, and Run-Ons",
+    "I can write complete sentences and fix fragments and run-ons.", "L.4.1f",
+    [("complete sentence", "Has a subject and a predicate and expresses a complete thought."), ("fragment", "An incomplete sentence missing a subject, a predicate, or a complete thought."),
+     ("run-on", "Two or more sentences joined without correct punctuation.")],
+    "Is “Ran across the drawbridge.” a complete sentence?",
+    [rules([["Problem", "Example", "Fix"], ["Fragment (no subject)", "Ran across the drawbridge.", "The squire ran across the drawbridge."], ["Fragment (incomplete thought)", "When the trumpet sounded.", "When the trumpet sounded, the joust began."],
+            ["Run-on", "The fog was thick we could not see.", "The fog was thick. We could not see. / The fog was thick, so we could not see."]], (1.6, 2.0, 2.4)),
+     KeyIdea("Every sentence needs a subject, a predicate, and a complete thought. Fix run-ons with a period, or with a comma and a conjunction.")],
+    [Problem("Fragment or sentence: “Because the bridge cracked.”", "fragment"), Problem("Fix the run-on: “Ada ran she warned the farmer.”", "Ada ran. She warned the farmer. (or Ada ran, and she warned the farmer.)"), Problem("Sentence or fragment: “The dragon slept.”", "sentence")],
+    [S("Warm-Up", [SA("A sentence needs a subject and a…", "predicate"), SA("Run-on means…", "sentences joined without correct punctuation")], cols=2),
+     S("Sentence, Fragment, or Run-On?", [SA(q, a) for q, a in [("The knights.", "fragment"), ("Merlin waved his staff.", "sentence"), ("It was late we went home.", "run-on"),
+                                                               ("After the feast ended.", "fragment"), ("The horse galloped away it never came back.", "run-on"), ("Pip opened the door.", "sentence")]], cols=2),
+     S("Fix It", [SA(q, a) for q, a in [("Under the old bridge.", "e.g. A troll lived under the old bridge."), ("The wind howled the ship rocked.", "The wind howled, and the ship rocked."),
+                                        ("Because she was brave.", "e.g. Nell lit the lamp because she was brave."), ("We packed our bags we left at dawn.", "We packed our bags. We left at dawn.")]], cols=1),
+     S("Exit Ticket", [OR("Write a fragment, then fix it into a complete sentence.", "Answers vary.", lines=2)])],
+    te("Students fix fragments and run-ons.", "Produce complete sentences, recognizing and correcting inappropriate fragments and run-ons.", "Workbook Lesson 8.8",
+       "Complete or not?", "Reread a Chapter 18 paragraph.", ["Teach the chart."], "Your Turn 1–3. Weekly Check tomorrow.",
+       ["Fixing run-ons with only a comma (comma splice)."], ["Read aloud; pause = period."], ["Fix a run-on paragraph."]),
+    summary="Complete sentences have a subject, predicate, and complete thought.")
+
+# ================================================================= Week 3 · Punctuation and capitalization (Chapter 19)
+L9 = Lesson("8.9", "Capitalization",
+    "I can capitalize words correctly.", "L.4.2a",
+    [],
+    "Find the capitalization mistakes: “on monday, jim and i visited the admiral benbow inn in england.”",
+    [ReaderAssign(READER, "Chapter 19: The Civil War", "What divides the Round Table in this chapter?"),
+     rules([["Capitalize", "Examples"], ["the first word of a sentence", "The knights rode."], ["the pronoun I", "Jim and I"], ["names of people and pets", "Arthur, Pip, Captain (a pelican)"],
+            ["specific places", "Camelot, England, Lake Michigan"], ["days, months, holidays", "Monday, June, Thanksgiving"], ["titles before names", "King Arthur, Sir Kay, Dr. Livesey"],
+            ["important words in titles", "Treasure Island, The Secret of Hollow Hill"]], (2.6, 3.0)),
+     Example("Fix capitals", "on monday, jim and i visited the admiral benbow inn in england.", ["First word: On.", "Day: Monday.", "Names: Jim, I.", "Place names: Admiral Benbow Inn, England."], "On Monday, Jim and I visited the Admiral Benbow Inn in England."),
+     WatchOut("Don't capitalize seasons (summer) or titles used without a name (the king rode out)."),
+     KeyIdea("Capitalize sentence beginnings, I, names, specific places, days, months, holidays, titles with names, and important words in book titles.")],
+    [Problem("Capitalize: queen guinevere lived in camelot.", "Queen Guinevere lived in Camelot."), Problem("Capitalize: in july we visited texas.", "In July we visited Texas."), Problem("Should “summer” be capitalized?", "No")],
+    [S("Warm-Up", [SA("Capitalize: i", "I"), SA("Capitalize days?", "Yes")], cols=2),
+     S("Fix the Capitals", [SA(q, a) for q, a in [("sir lancelot came from france.", "Sir Lancelot came from France."), ("my birthday is in october.", "My birthday is in October."),
+                                                  ("we read treasure island by robert louis stevenson.", "We read Treasure Island by Robert Louis Stevenson."), ("the king spoke to merlin.", "The king spoke to Merlin."),
+                                                  ("on thanksgiving we ate turkey.", "On Thanksgiving we ate turkey."), ("dr. livesey and i sailed in the spring.", "Dr. Livesey and I sailed in the spring.")]], cols=1),
+     S("Exit Ticket", [OR("Write a sentence with a title before a name, a place, and a month.", "Answers vary.", lines=2)])],
+    te("Students capitalize correctly.", "Use correct capitalization.", "King Arthur Reader (Chapter 19), workbook Lesson 8.9",
+       "Find mistakes.", "Read Chapter 19.", ["Teach the chart and Watch Out."], "Your Turn 1–3.",
+       ["Capitalizing seasons or common nouns."], ["Ask: Is it a specific name?"], ["Capitalize a list of book titles."]),
+    summary="Capitalize sentence starts, I, names, places, days, months, holidays, and titles.")
+
+L10 = Lesson("8.10", "Punctuating Dialogue",
+    "I can use commas and quotation marks correctly in dialogue.", "L.4.2b",
+    [("quotation marks", "Marks (“ ”) that go around the exact words a person says.")],
+    "Where do the commas and quotation marks go? Merlin said follow me",
+    [rules([["Pattern", "Example"], ["Speaker first", "Merlin said, “Follow me.”"], ["Speaker after", "“Follow me,” said Merlin."], ["Question or exclamation", "“Where are you going?” asked Kay. / “Stop!” shouted Arthur."],
+            ["Speaker in the middle", "“Follow me,” said Merlin, “and do not look back.”"]], (1.9, 3.7)),
+     Example("Punctuate", "where is the sword asked arthur", ["Exact words: Where is the sword?", "Question mark inside the closing quotation mark.", "Speaker after: asked Arthur."], "“Where is the sword?” asked Arthur."),
+     KeyIdea("Quotation marks go around exact words. Commas and end marks go inside the closing quotation mark. Start a new paragraph for each new speaker.")],
+    [Problem("Punctuate: Kay said I lost my sword", "Kay said, “I lost my sword.”"), Problem("Punctuate: run shouted Jim", "“Run!” shouted Jim."), Problem("Where does the comma go in “Hurry,” said Will?", "inside the closing quotation mark")],
+    [S("Warm-Up", [SA("Quotation marks go around…", "exact words"), SA("End marks go ___ the closing quotation mark.", "inside")], cols=2),
+     S("Punctuate the Dialogue", [SA(q, a) for q, a in [("the queen said welcome to camelot", "The queen said, “Welcome to Camelot.”"), ("is anyone there whispered pip", "“Is anyone there?” whispered Pip."),
+                                                        ("watch out yelled the farmer", "“Watch out!” yelled the farmer."), ("I will help said Ben Gunn if you bring cheese", "“I will help,” said Ben Gunn, “if you bring cheese.”"),
+                                                        ("mother asked did you finish your chores", "Mother asked, “Did you finish your chores?”")]], cols=1),
+     S("Exit Ticket", [OR("Write a two-line conversation between two knights. Start a new line for each speaker.", "Answers vary; correct punctuation.", lines=3)])],
+    te("Students punctuate dialogue.", "Use commas and quotation marks to mark direct speech and quotations.", "Workbook Lesson 8.10",
+       "Merlin said follow me.", "Find dialogue in Chapter 19.", ["Teach the four patterns."], "Your Turn 1–3.",
+       ["Punctuation outside the quotation marks."], ["Pattern cards."], ["Write a comic strip with captions converted to dialogue."]),
+    summary="Quotation marks around exact words; punctuation inside.")
+
+L11 = Lesson("8.11", "Commas in Compound Sentences and Lists",
+    "I can use commas before conjunctions in compound sentences and in lists.", "L.4.2c",
+    [("compound sentence", "Two complete sentences joined by a comma and a coordinating conjunction."), ("coordinating conjunction", "for, and, nor, but, or, yet, so (FANBOYS).")],
+    "How could you join “The fog was thick” and “We could not see the ship” into one sentence?",
+    [rules([["Rule", "Example"], ["Compound sentence: comma before FANBOYS", "The fog was thick, so we could not see the ship."], ["Lists of three or more: commas between items", "Pip packed bread, a candle, and a compass."],
+            ["After introductory words", "However, the map was old. / Yes, I will come."]], (2.5, 3.1)),
+     Example("Join with a conjunction", "Jim wanted to sail. His mother was worried.", ["Both are complete sentences.", "Contrast → but.", "Comma before but."], "Jim wanted to sail, but his mother was worried."),
+     KeyIdea("Comma + FANBOYS joins two sentences. Commas separate items in a list.")],
+    [Problem("Join: I was tired. I kept walking. (contrast)", "I was tired, but I kept walking."), Problem("Add commas: We saw owls hawks and eagles.", "We saw owls, hawks, and eagles."), Problem("What does FANBOYS stand for?", "for, and, nor, but, or, yet, so")],
+    [S("Warm-Up", [SA("A FANBOYS conjunction", "and, but, so, or"), SA("Commas in a list separate…", "items")], cols=2),
+     S("Combine with a Comma and Conjunction", [SA(q, a) for q, a in [("It rained. The game went on.", "It rained, but the game went on."), ("Nell lit the lamp. The ship turned.", "Nell lit the lamp, so the ship turned."),
+                                                                     ("You can ride. You can walk.", "You can ride, or you can walk."), ("The bees shivered. The hive stayed warm.", "The bees shivered, and the hive stayed warm.")]], cols=1),
+     S("Add Commas", [SA(q, a) for q, a in [("Arthur Kay and Merlin rode north.", "Arthur, Kay, and Merlin rode north."), ("However the treasure was gone.", "However, the treasure was gone."),
+                                            ("We packed apples cheese and bread.", "We packed apples, cheese, and bread."), ("Yes I found the key.", "Yes, I found the key.")]], cols=1),
+     S("Exit Ticket", [OR("Write a compound sentence with <i>so</i> and a sentence with a list.", "Answers vary.", lines=2)])],
+    te("Students use commas in compound sentences and lists.", "Use a comma before a coordinating conjunction in a compound sentence.", "Workbook Lesson 8.11",
+       "Join the fog sentences.", "Find compound sentences in Chapter 19.", ["Teach FANBOYS and comma rules."], "Your Turn 1–3.",
+       ["Comma before every and (even between two nouns)."], ["Check: complete sentence on both sides?"], ["Combine sentences in your own writing."]),
+    summary="Comma + FANBOYS joins sentences; commas separate list items.")
+
+L12 = Lesson("8.12", "Order of Adjectives and Prepositional Phrases",
+    "I can order adjectives correctly and use prepositional phrases.", "L.4.1d, L.4.1e",
+    [("preposition", "A word that shows how a noun relates to another word, such as in, on, under, beside, through."), ("prepositional phrase", "A preposition and the words that follow it: under the bridge.")],
+    "Which sounds right: “a red big old ship” or “a big old red ship”?",
+    [rules([["Usual order", "Example"], ["1. number", "two"], ["2. opinion", "beautiful"], ["3. size", "big"], ["4. age", "old"], ["5. shape", "round"], ["6. color", "red"], ["7. origin", "Spanish"], ["8. material", "wooden"],
+            ["Together", "two beautiful big old wooden ships"]], (1.8, 3.6)),
+     Text("<b>Prepositional phrases</b> add where, when, or how: <i>under the bridge, after the storm, with a smile</i>. They can make sentences more precise."),
+     Example("Order adjectives", "a (wooden, old, small) chest", ["size: small, age: old, material: wooden."], "a small old wooden chest"),
+     KeyIdea("Adjectives go in order: number, opinion, size, age, shape, color, origin, material. Prepositional phrases add detail.")],
+    [Problem("Order: a (red, silk, beautiful) banner", "a beautiful red silk banner"), Problem("Find the prepositional phrase: The map was hidden under the floor.", "under the floor"), Problem("Add a phrase: The knight rode ___.", "e.g. through the forest")],
+    [S("Warm-Up", [SA("A preposition", "in, on, under, with"), SA("Size before color?", "Yes")], cols=2),
+     S("Order the Adjectives", [SA(q, a) for q, a in [("a (gray, huge, stone) castle", "a huge gray stone castle"), ("three (brown, little) puppies", "three little brown puppies"),
+                                                      ("an (old, interesting, leather) book", "an interesting old leather book"), ("a (round, shiny, silver) shield", "a shiny round silver shield")]], cols=1),
+     S("Prepositional Phrases", [SA(q, a) for q, a in [("Underline: Pip walked through the tunnel.", "through the tunnel"), ("Underline: After dinner, we read by the fire.", "After dinner; by the fire"),
+                                                       ("Add a when-phrase: The ship sailed ___.", "e.g. at dawn"), ("Add a where-phrase: Ben Gunn lived ___.", "e.g. on the island")]], cols=1),
+     S("Exit Ticket", [OR("Write a sentence describing an object with three adjectives in the correct order and one prepositional phrase.", "Answers vary.", lines=2)])],
+    te("Students order adjectives and use prepositional phrases.", "Order adjectives within sentences according to conventional patterns; form and use prepositional phrases.", "Workbook Lesson 8.12",
+       "red big old?", "Collect adjectives from Chapter 19.", ["Teach the order chart."], "Your Turn 1–3. Weekly Check tomorrow.",
+       ["Unusual adjective order."], ["Say it aloud; it should sound natural."], ["Describe ten objects in the house."]),
+    summary="Order adjectives conventionally; add prepositional phrases for detail.")
+
+# ================================================================= Week 4 · Conventions and word-study editing (Chapter 20)
+L13 = Lesson("8.13", "Frequently Confused Words",
+    "I can correctly use frequently confused words.", "L.4.1g",
+    [("homophones", "Words that sound the same but have different spellings and meanings.")],
+    "Which is right: “Their going to the castle” or “They're going to the castle”?",
+    [ReaderAssign(READER, "Chapter 20: The Departure of Sir Lancelot", "Watch for any of this lesson's confusing words in the chapter."),
+     rules([["Word", "Meaning", "Example"], ["to / too / two", "toward / also, very / 2", "Two knights went to the castle too."], ["there / their / they're", "place / belongs to them / they are", "They're polishing their swords over there."],
+            ["your / you're", "belongs to you / you are", "You're holding your map."], ["its / it's", "belongs to it / it is", "It's a ship; its sails are torn."], ["new / knew", "not old / did know", "Pip knew the room was new to her."]],
+           (1.4, 2.0, 2.4)),
+     Example("Choose the word", "___ going to the castle.", ["Means “They are” → they're."], "They're going to the castle."),
+     KeyIdea("Test contractions by expanding them: you're = you are, it's = it is, they're = they are.")],
+    [Problem("___ (Its/It's) raining.", "It's"), Problem("The cat licked ___ (its/it's) paw.", "its"), Problem("I want to come ___ (to/too/two).", "too")],
+    [S("Warm-Up", [SA("They're =", "they are"), SA("It's =", "it is")], cols=2),
+     S("Choose the Word", [SA(q, a) for q, a in [("Put the books over ___.", "there"), ("___ coming with us?", "You're"), ("The knights fed ___ horses.", "their"), ("I have ___ dollars.", "two"),
+                                                 ("The ship lost ___ anchor.", "its"), ("Is this ___ helmet?", "your"), ("She ___ the answer.", "knew"), ("This shirt is too big ___.", "too")]], cols=2),
+     S("Edit", [SA("Their going too the fair. Its going to be fun!", "They're going to the fair. It's going to be fun!")], cols=1),
+     S("Exit Ticket", [OR("Write one sentence using there, their, and they're correctly.", "e.g. They're putting their bags over there.", lines=2)])],
+    te("Students use frequently confused words.", "Correctly use frequently confused words.", "King Arthur Reader (Chapter 20), workbook Lesson 8.13",
+       "Their/They're.", "Read Chapter 20.", ["Teach the chart; expansion test."], "Your Turn 1–3.",
+       ["its/it's confusion."], ["Expand contractions to test."], ["Make memory tricks for each pair."]),
+    summary="Expand contractions to test; learn the meaning of each homophone.")
+
+L14 = Lesson("8.14", "Spelling Patterns and Checking Spelling",
+    "I can use spelling patterns and reference tools to spell words correctly.", "L.4.2d",
+    [],
+    "What do you do when you're not sure how to spell a word?",
+    [rules([["Pattern", "Examples"], ["Drop silent e before -ing or -ed", "ride → riding, hope → hoped"], ["Double final consonant (short vowel + one consonant) before -ing/-ed", "stop → stopped, swim → swimming"],
+            ["Change y to i before -ed or -es (consonant + y)", "carry → carried, try → tries"], ["i before e, except after c", "believe, field, receive"], ["Silent letters", "knight, knife, write, climb"]], (3.0, 2.6)),
+     Text("When unsure, sound out the word, check a word wall or the glossary, or look it up in a dictionary or spell checker (and check that it picked the right word)."),
+     KeyIdea("Learn patterns; check uncertain spellings with a reference.")],
+    [Problem("Add -ing: swim", "swimming"), Problem("Add -ed: carry", "carried"), Problem("Add -ing: hope", "hoping")],
+    [S("Warm-Up", [SA("Silent letter in knight", "k (and gh)"), SA("i before e except after…", "c")], cols=2),
+     S("Add the Ending", [SA(q, a) for q, a in [("make + ing", "making"), ("plan + ed", "planned"), ("cry + ed", "cried"), ("hop + ing", "hopping"), ("bake + ed", "baked"), ("study + es", "studies"),
+                                                ("shine + ing", "shining"), ("drop + ed", "dropped")]], cols=2),
+     S("Find and Fix the Misspelling", [SA(q, a) for q, a in [("The night rode a horse.", "knight"), ("She recieved a letter.", "received"), ("We were runing late.", "running"), ("He hopped we would come.", "hoped")]], cols=2),
+     S("Exit Ticket", [OR("Write three words you often misspell and the correct spelling of each.", "Answers vary.", lines=2)])],
+    te("Students apply spelling patterns.", "Spell grade-appropriate words correctly, consulting references as needed.", "Dictionary, workbook Lesson 8.14",
+       "Unsure spellings.", "Find pattern words in Chapter 20.", ["Teach the pattern chart."], "Your Turn 1–3.",
+       ["Doubling consonants after long vowels (hopping vs hoping)."], ["Short-vowel check."], ["Personal spelling list."]),
+    summary="Use spelling patterns; check references.")
+
+L15 = Lesson("8.15", "Punctuation and Words for Effect",
+    "I can choose punctuation and precise words for effect.", "L.4.3a, L.4.3b",
+    [],
+    "How does “The door creaked open.” feel different from “The door creaked open…”?",
+    [Text("Writers use punctuation to create effects: an exclamation point shows strong feeling, an ellipsis (…) shows a pause or trailing off, and a dash adds drama. Choose words that are precise and fit the mood."),
+     Figure(lambda t: table(t, [["Plain", "For effect"], ["The ship was coming.", "The ship was coming. Closer. Closer."], ["She was surprised.", "She gasped. “The treasure!”"], ["He waited.", "He waited… and waited… and waited."],
+                                ["It was a big storm.", "It was a storm — the worst in a hundred years."]], [2.5 * inch, 3.1 * inch], width=5.6 * inch)),
+     KeyIdea("Use punctuation and precise words on purpose, not everywhere."),
+     WatchOut("Too many exclamation points lose their power!!! Use them only for real excitement.")],
+    [Problem("Punctuation to show trailing off", "ellipsis (…)"), Problem("Punctuation for strong feeling", "exclamation point"), Problem("Revise for effect: “The dragon was scary.”", "e.g. The dragon roared — a sound that shook the mountain.")],
+    [S("Warm-Up", [SA("What is an ellipsis?", "… (shows a pause or trailing off)"), SA("A dash can add…", "drama")], cols=2),
+     S("Revise for Effect", [OR(f"“{q}”", "Answers vary; uses punctuation and/or precise words for effect.", lines=2) for q in ["The knight was brave.", "The cave was dark.", "We won the game.", "The bridge fell."]]),
+     S("Exit Ticket", [OR("Rewrite one sentence from your synthesis essay (Unit 7) for effect.", "Answers vary.", lines=2)])],
+    te("Students choose punctuation and words for effect.", "Choose words and phrases to convey ideas precisely; choose punctuation for effect.", "Workbook Lesson 8.15",
+       "Door creaked.", "Find punctuation for effect in Chapter 20.", ["Teach the chart; the Watch Out."], "Your Turn 1–3.",
+       ["Overusing exclamation points."], ["Limit: one per paragraph."], ["Revise a paragraph from a past piece."]),
+    summary="Punctuation and precise words create effects; use them on purpose.")
+
+L16 = Lesson("8.16", "Editing a Whole Passage",
+    "I can edit a passage for capitalization, punctuation, grammar, and spelling.", "L.4.1, L.4.2, W.4.5",
+    [("proofread", "Read carefully to find and fix mistakes.")],
+    "How many mistakes can you find in a short paragraph?",
+    [Text("Edit in passes: first <b>capitals</b>, then <b>punctuation</b>, then <b>grammar</b> (agreement, tense), then <b>spelling and confused words</b>."),
+     P_EDIT1,
+     Example("Edit paragraph 1", "last saturday sir gawain and sir kay rode to camelot for a feast. the kings hall was filled with knights ladys and musicians.",
+             ["Capitals: Last Saturday Sir Gawain Sir Kay Camelot The.", "Possessive: king's.", "List commas: knights, ladies, and musicians.", "Spelling: ladies."],
+             "Last Saturday Sir Gawain and Sir Kay rode to Camelot for a feast. The king's hall was filled with knights, ladies, and musicians."),
+     KeyIdea("Edit in passes: capitals → punctuation → grammar → spelling.")],
+    [Problem("Edit paragraph 2", "“Where is Sir Lancelot?” asked the queen. Nobody knew. There was an empty seat at the Round Table."), Problem("How many passes should you make?", "four (one per kind of error)"), Problem("Which error type is new/knew?", "confused words")],
+    [S("Warm-Up", [SA("Proofread means…", "read carefully to fix mistakes"), SA("First editing pass", "capitals")], cols=2),
+     S("Edit the Passage", [OR("Rewrite paragraph 2 of “Edit Me: A Feast at Camelot” correctly.", "“Where is Sir Lancelot?” asked the queen. Nobody knew. There was an empty seat at the Round Table.", lines=3)], passage=P_EDIT1),
+     S("Edit Your Own Writing", [OR("Choose a piece you wrote this year. Edit it in four passes. List three mistakes you fixed.", "Answers vary.", lines=4)])],
+    te("Students edit whole passages.", "Demonstrate command of conventions; edit writing.", "Workbook Lesson 8.16, Unit 8 Review",
+       "Mistake hunt.", "Read the editing passage.", ["Model editing paragraph 1 in passes."], "Edit paragraph 2.",
+       ["Trying to find everything in one read."], ["One color per pass."], ["Edit a sibling's writing (kindly)."], independent="Edit; then the Unit 8 Review.", exit_="Tomorrow: Unit 8 Test."),
+    summary="Edit in passes: capitals, punctuation, grammar, spelling.")
+
+# ================================================================= checks
+C1 = Check("Weekly Check 22: Nouns and Pronouns", [S("Show what you know", [
+    SA("Plural of <i>half</i>", "halves"), SA("Plural of <i>mouse</i>", "mice"), SA("Possessive: the hats of the ladies", "the ladies' hats"), SA("Possessive: the bone of the dog", "the dog's bone"),
+    SA("The knight ___ shield was dented fought on. (relative pronoun)", "whose"), SA("The castle, ___ was old, had a moat.", "which"),
+    SA("The boys and their dad ___ (go/goes) fishing.", "go"), SA("Each of the girls ___ (has/have) a kite.", "has")], cols=2)], minutes=15)
+C2 = Check("Weekly Check 23: Verbs and Sentences", [S("Show what you know", [
+    SA("Past of <i>bring</i>", "brought"), SA("Has ___ (fly)", "flown"), SA("Past progressive: We ___ (sail) when the storm hit.", "were sailing"), SA("Modal for permission: ___ I leave?", "May"),
+    SA("Fragment or sentence: “Before the sun rose.”", "fragment"), SA("Fix: The bell rang we ran inside.", "The bell rang, and we ran inside."),
+    SA("Future progressive of <i>wait</i> (I)", "will be waiting"), SA("Modal for necessity", "must")], cols=2)], minutes=15)
+C3 = Check("Weekly Check 24: Capitals and Punctuation", [S("Show what you know", [
+    SA("Capitalize: we visited lake erie in may.", "We visited Lake Erie in May."), SA("Punctuate: help shouted the squire", "“Help!” shouted the squire."),
+    SA("Combine: I was hungry. I ate lunch. (so)", "I was hungry, so I ate lunch."), SA("Add commas: Bring a map a lamp and a rope.", "Bring a map, a lamp, and a rope."),
+    SA("Order: a (wooden, small, brown) boat", "a small brown wooden boat"), SA("Find the prepositional phrase: The cat slept on the rug.", "on the rug")], cols=1)], minutes=15)
+
+REVIEW = Check("Unit 8 Review", [
+    S("Grammar", [SA("Plural of <i>knife</i>", "knives"), SA("Possessive: the toys of the children", "the children's toys"), SA("Past of <i>swim</i>", "swam"), SA("Relative pronoun for people", "who"),
+                  SA("Fix: Their going to the fair.", "They're going to the fair."), SA("Fix: Its a nice day.", "It's a nice day.")], cols=2),
+    S("Editing", [OR("Edit: on friday jim said i found the map", "On Friday, Jim said, “I found the map.”", lines=2), OR("Edit: the pirates was angry they wanted there treasure", "The pirates were angry. They wanted their treasure.", lines=2)])],
+    kind="review", minutes=40, teacher_note="Homework or a study session before the test.")
+
+TEST = Check("Unit 8 Test", [
+    S("Part A · Grammar (1 point each)", [
+        SA("Plural of <i>story</i>", "stories"), SA("Plural of <i>foot</i>", "feet"), SA("Possessive: the swords of the knights", "the knights' swords"), SA("The girl ___ bike was red rode away.", "whose"),
+        SA("The basket of apples ___ (is/are) full.", "is"), SA("Past of <i>catch</i>", "caught"), SA("Past progressive: She ___ (read) when I called.", "was reading"), SA("Modal for advice: You ___ wear a coat.", "should")], cols=2),
+    S("Part B · Sentences and words (1 point each)", [
+        SA("Fix the run-on: The wind blew the sails filled.", "The wind blew, and the sails filled."), SA("Fix the fragment: Under the old oak tree.", "e.g. We rested under the old oak tree."),
+        SA("Order: a (silk, blue, lovely) ribbon", "a lovely blue silk ribbon"), SA("Choose: ___ (Your/You're) late!", "You're")], cols=1),
+    S("Part C · Edit the letter (6 points)", [OR("Rewrite the letter correctly. Fix capitals, punctuation, agreement, and confused words.",
+                                                "Dear Sir Percival, / The Knights of the Round Table are planning a tournament on June 12. We hope you and your squire will come. There will be prizes for the best rider, the strongest archer, and the bravest knight. / Queen Guinevere said, “Bring your finest horse.” We can't wait to see you! / Your friend, Sir Gareth",
+                                                lines=12, points=6, note="1 point each: capitals; agreement (are); your/there; list commas; dialogue punctuation; can't + end mark.")], passage=P_EDIT_TEST)],
+    kind="test", minutes=40, rubric=[["16–18 (85%+)", "Mastered."], ["13–15", "Proficient; review missed rules."], ["Below 13", "Reteach and retest."]])
+
+LESSONS = [L1, L2, L3, L4, L5, L6, L7, L8, L9, L10, L11, L12, L13, L14, L15, L16]
+CHECKS = [C1, C2, C3]
+WEEKS = schedule(LESSONS, ["2027-05-24", "2027-05-31", "2027-06-07", "2027-06-14"], CHECKS, REVIEW, TEST)
+
+UNIT = Unit(8, "Grammar and Conventions", "Nouns, pronouns, verbs, complete sentences, capitalization, punctuation, confused words, and editing, with King Arthur Chapters 17–20.",
+    "Clear writing follows rules that readers expect. In this unit you'll master the grammar and conventions of fourth grade, from plurals and possessives to progressive tenses, dialogue punctuation, and tricky homophones, and you'll become a sharp-eyed editor of your own writing.",
+    ["Form plurals and possessives; use pronouns and relative pronouns; make words agree.", "Use verb tenses, progressive tenses, and modals; write complete sentences.",
+     "Capitalize and punctuate correctly, including dialogue and compound sentences.", "Use confused words and spelling patterns correctly; edit whole passages."],
+    [("L.4.1a–g", "Demonstrate command of grammar and usage: relative pronouns, progressive tenses, modals, adjective order, prepositional phrases, complete sentences, confused words."),
+     ("L.4.2a–d", "Demonstrate command of capitalization, punctuation, and spelling."), ("L.4.3a–b", "Choose words and punctuation for effect."), ("W.4.5", "Edit writing.")],
+    [("noun", "A person, place, thing, or idea."), ("pronoun", "A word that replaces a noun."), ("tense", "When a verb's action happens."), ("fragment", "An incomplete sentence."),
+     ("run-on", "Sentences joined without correct punctuation."), ("homophones", "Words that sound alike but differ in meaning and spelling.")],
+    ["Writing complete sentences and paragraphs."], ["King Arthur and the Round Table Reader (Chapters 17–20)", "Colored pencils for editing passes", "Dictionary"],
+    LESSONS, CHECKS, REVIEW, TEST,
+    real_world="Letters, emails, applications, and signs all depend on correct grammar and punctuation to be understood and taken seriously.",
+    family_note="Play “Spot the Mistake”: look for grammar or spelling errors on signs, menus, or packages together.",
+    weeks=WEEKS)

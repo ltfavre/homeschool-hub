@@ -1175,10 +1175,12 @@ def tree_diagram(theme, first, second, width=None):
             ya = h - 5 - gap * (i * len(second) + len(second) / 2)
             c.setStrokeColor(theme.dark); c.setLineWidth(0.9); c.line(x0, h / 2, x1, ya)
             text(c, x1 + 4, ya - 3, a, "BodySemi", 9, theme.dark, "l")
+            xs = x1 + 8 + stringWidth(a, "BodySemi", 9)
             for j, b in enumerate(second):
                 yb = h - 5 - gap * (i * len(second) + j + 0.5)
-                c.line(x1 + 16, ya, x2, yb); text(c, x2 + 4, yb - 3, b, "BodySemi", 8.5, INK, "l")
-                text(c, w - 6, yb - 3, f"{a}{b}", "Mono", 8, MUTED, "r")
+                c.line(xs, ya, x2, yb); text(c, x2 + 4, yb - 3, b, "BodySemi", 8.5, INK, "l")
+                combo = f"{a}{b}" if len(a) == 1 and len(b) == 1 else f"{a}, {b}"
+                text(c, w - 6, yb - 3, combo, "Mono", 8, MUTED, "r")
         c.setFillColor(theme.main); c.circle(x0, h / 2, 2.5, fill=1, stroke=0)
     return Draw(width, height, fn)
 
@@ -1245,3 +1247,19 @@ def ineq_line(theme, lo, hi, value, direction, closed, width=None, step=1, blank
         c.line(xv, y, end, y); _arrow(c, end + (4 if direction == "right" else -4), y, 0 if direction == "right" else math.pi, s=7, color=theme.main)
         c.setLineWidth(1.6); c.setFillColor(theme.main if closed else WHITE); c.circle(xv, y, 4.5, fill=1, stroke=1)
     return Draw(width, 46, fn)
+
+
+def spinner(theme, labels, width=110, colors=None):
+    """Spinner with equal sections, one label per section."""
+    def fn(c, w, h):
+        cx, cy, r = w / 2, h / 2, min(w, h) / 2 - 4
+        n = len(labels); pal = colors or [theme.wash, WHITE]
+        for i, lab in enumerate(labels):
+            a0 = 90 - 360 * (i + 1) / n
+            c.setFillColor(pal[i % len(pal)]); c.setStrokeColor(INK); c.setLineWidth(1)
+            c.wedge(cx - r, cy - r, cx + r, cy + r, a0, 360 / n, fill=1, stroke=1)
+            am = math.radians(a0 + 180 / n)
+            text(c, cx + 0.62 * r * math.cos(am), cy + 0.62 * r * math.sin(am) - 3, str(lab), "BodyBold", 9, INK, "c")
+        c.setStrokeColor(theme.main); c.setLineWidth(2); c.line(cx, cy, cx + 0.3 * r, cy + 0.3 * r)
+        c.setFillColor(theme.main); c.circle(cx, cy, 3, fill=1, stroke=0)
+    return Draw(width, width, fn)

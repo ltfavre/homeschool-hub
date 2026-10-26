@@ -4,8 +4,17 @@ HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 from engine import Book
 from books import build_textbook, build_workbook, build_teacher
 
+import importlib, glob
+
+
+def units(key):
+    """Every content/<key>/unitNN.py that defines UNIT, in order."""
+    mods = sorted(os.path.basename(f)[:-3] for f in glob.glob(os.path.join(HERE, "content", key, "unit[0-9][0-9].py")))
+    return [importlib.import_module(f"content.{key}.{m}").UNIT for m in mods]
+
+
 BOOKS = {
-    "math4": lambda: Book("math", 4, "Grade 4 Mathematics", [__import__("content.math4.unit01", fromlist=["UNIT"]).UNIT]),
+    "math4": lambda: Book("math", 4, "Grade 4 Mathematics", units("math4")),
 }
 
 if __name__ == "__main__":

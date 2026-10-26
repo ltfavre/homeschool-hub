@@ -523,3 +523,107 @@ class SetOpenerNum(Flowable):
     def __init__(self, doc_ref, n): super().__init__(); self.doc_ref, self.n = doc_ref, n
     def wrap(self, aw, ah): self.doc_ref.opener_num = self.n; return 0, 0
     def draw(self): pass
+
+
+# ---------------------------------------------------------------- multiplication / division figures
+def parts_of(n):
+    s = str(n); return [int(d) * 10 ** (len(s) - 1 - i) for i, d in enumerate(s) if d != "0"]
+
+
+def area_model(theme, a, b, width=None, show_products=True, height=None):
+    """Rectangle for a × b, split by the place-value parts of each factor (a across the top, b down the side)."""
+    pa, pb = parts_of(a), parts_of(b)
+    width = width or min(W, 120 + 110 * len(pa)); height = height or (40 + 46 * len(pb))
+
+    def fn(c, w, h):
+        x0, y_top = 40, h - 22; cw = (w - x0 - 6) / len(pa); rh = (y_top - 4) / len(pb)
+        for i, x in enumerate(pa):
+            text(c, x0 + (i + 0.5) * cw, y_top + 7, fmt(x), "MonoSemi", 10, theme.dark, "c")
+        for j, y in enumerate(pb):
+            text(c, x0 - 6, y_top - (j + 0.5) * rh - 4, fmt(y), "MonoSemi", 10, theme.dark, "r")
+            for i, x in enumerate(pa):
+                c.setFillColor(theme.wash if (i + j) % 2 == 0 else WHITE); c.setStrokeColor(theme.main); c.setLineWidth(1)
+                c.rect(x0 + i * cw, y_top - (j + 1) * rh, cw, rh, fill=1, stroke=1)
+                if show_products:
+                    text(c, x0 + (i + 0.5) * cw, y_top - (j + 0.5) * rh - 4, fmt(x * y), "MonoSemi", 11, INK, "c")
+    return Draw(width, height, fn)
+
+
+def array_dots(theme, rows, cols, width=None, r=4.2, gap=13):
+    width = width or cols * gap + 10; height = rows * gap + 8
+
+    def fn(c, w, h):
+        c.setFillColor(theme.main)
+        for i in range(rows):
+            for j in range(cols):
+                c.circle(6 + j * gap, h - 6 - i * gap, r, fill=1, stroke=0)
+    return Draw(width, height, fn)
+
+
+def mult_layout(theme, a, b, mode="partial", show_answer=True, size=15, width=None):
+    """Vertical multiplication. mode: 'partial' lists partial products with labels; 'standard' shows only the product;
+    'blank' shows only the problem."""
+    rows = []
+    if mode == "partial":
+        if b < 10:
+            rows = [(b * p, f"{b} × {fmt(p)}") for p in reversed(parts_of(a))]
+        else:
+            for q in reversed(parts_of(b)):
+                for p in reversed(parts_of(a)):
+                    rows.append((q * p, f"{fmt(q)} × {fmt(p)}"))
+    prod = a * b
+    n = max(len(fmt(x)) for x in [a, b, prod] + [r[0] for r in rows]) + 1
+    cw = stringWidth("0", "Mono", size)
+    lab_w = 80 if rows else 0
+    wd = width or (n + 1) * cw + 14 + lab_w
+    line_h = size * 1.2
+    hh = line_h * (2 + len(rows) + (1 if (show_answer and rows) or mode != "blank" else 1)) + 18
+
+    def fn(c, w, h):
+        xr = w - 4; y = h - size - 4
+        text(c, xr, y, fmt(a), "Mono", size, INK, "r"); y -= line_h
+        text(c, xr, y, fmt(b), "Mono", size, INK, "r"); text(c, xr - n * cw, y, "×", "Mono", size, INK, "l")
+        c.setStrokeColor(INK); c.setLineWidth(1.1); c.line(xr - n * cw, y - size * 0.3, xr, y - size * 0.3); y -= line_h
+        if mode == "blank": return
+        for v, lab in rows:
+            if show_answer:
+                text(c, xr, y, fmt(v), "Mono", size, theme.dark, "r")
+                text(c, xr - n * cw - 8, y + 1, lab, "Body", size * 0.55, MUTED, "r")
+            y -= line_h
+        if rows:
+            c.line(xr - n * cw, y + size * 0.85, xr, y + size * 0.85)
+        if show_answer: text(c, xr, y, fmt(prod), "MonoSemi", size, theme.main, "r")
+    return Draw(wd, hh, fn)
+
+
+def long_div(theme, dividend, divisor, show_answer=True, size=16, width=None):
+    """Division bracket layout: quotient (and remainder) above dividend."""
+    q, r = divmod(dividend, divisor)
+    cw = stringWidth("0", "Mono", size); n = len(str(dividend))
+    wd = width or (n + len(str(divisor)) + 6) * cw + 20; hh = size * 3.4
+
+    def fn(c, w, h):
+        x0 = 8 + len(str(divisor)) * cw + 8; y = h - size * 2.2
+        text(c, x0 - 6, y, str(divisor), "Mono", size, INK, "r")
+        c.setStrokeColor(INK); c.setLineWidth(1.2)
+        p = c.beginPath(); p.moveTo(x0 - 3, y - size * 0.35); p.curveTo(x0 + 2, y, x0 + 2, y + size * 0.6, x0 - 1, y + size * 1.05); c.drawPath(p)
+        c.line(x0 - 1, y + size * 1.05, x0 + (n + 0.6) * cw, y + size * 1.05)
+        text(c, x0 + 3, y, str(dividend), "Mono", size, INK, "l")
+        if show_answer:
+            qs = str(q); text(c, x0 + 3 + (n - len(qs)) * cw, y + size * 1.3, qs + (f" R{r}" if r else ""), "MonoSemi", size, theme.main, "l")
+    return Draw(wd, hh, fn)
+
+
+def dot_groups(theme, groups, per, width=None):
+    """Equal groups drawn as circles holding dots."""
+    width = width or min(W, groups * 70 + 10); height = 66
+
+    def fn(c, w, h):
+        gw = (w - 10) / groups
+        for g in range(groups):
+            cx = 5 + gw * (g + 0.5); cy = h / 2
+            c.setStrokeColor(theme.main); c.setFillColor(theme.wash); c.circle(cx, cy, min(gw / 2 - 4, 28), fill=1, stroke=1)
+            for k in range(per):
+                ang = 2 * math.pi * k / max(per, 1); rr = 0 if per == 1 else min(gw / 2 - 14, 16)
+                c.setFillColor(theme.main); c.circle(cx + rr * math.cos(ang), cy + rr * math.sin(ang), 3.6, fill=1, stroke=0)
+    return Draw(width, height, fn)

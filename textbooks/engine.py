@@ -1456,3 +1456,89 @@ def timeline_fig(theme, events, width=None, height=70):
             text(c, x, y - 17, " ".join(words[:half]), "Body", 7.5, INK, "c")
             if words[half:]: text(c, x, y - 27, " ".join(words[half:]), "Body", 7.5, INK, "c")
     return Draw(width, height, fn)
+
+
+def bar_graph(theme, labels, values, title=None, ylabel=None, step=None, width=None, height=170):
+    """Vertical bar graph with gridlines and value axis."""
+    width = width or W * 0.75
+    top = max(values); step = step or max(1, round(top / 5))
+    ymax = step * math.ceil(top / step)
+
+    def fn(c, w, h):
+        L, B, R, T = 44, 30, w - 10, h - (22 if title else 8)
+        if title: text(c, (L + R) / 2, h - 12, title, "BodySemi", 9.5, theme.dark, "c")
+        v = 0
+        while v <= ymax + 1e-9:
+            y = B + (T - B) * v / ymax
+            c.setStrokeColor(GRID); c.setLineWidth(0.5); c.line(L, y, R, y)
+            text(c, L - 5, y - 3, f"{v:,}", "Mono", 7.5, INK, "r"); v += step
+        n = len(values); slot = (R - L) / n; bw = slot * 0.55
+        for i, (lab, val) in enumerate(zip(labels, values)):
+            x = L + slot * i + (slot - bw) / 2; y = B + (T - B) * val / ymax
+            c.setFillColor(theme.main); c.rect(x, B, bw, y - B, fill=1, stroke=0)
+            text(c, x + bw / 2, B - 12, lab, "Body", 8, INK, "c")
+        c.setStrokeColor(INK); c.setLineWidth(1); c.line(L, B, R, B); c.line(L, B, L, T)
+        if ylabel:
+            c.saveState(); c.translate(10, (B + T) / 2); c.rotate(90); text(c, 0, 0, ylabel, "Body", 8, MUTED, "c"); c.restoreState()
+    return Draw(width, height, fn)
+
+
+def ship_diagram(theme, width=None, height=200):
+    """Side view of a two-masted schooner with labeled parts."""
+    width = width or W * 0.9
+
+    def fn(c, w, h):
+        wl = 46; x0, x1 = w * 0.16, w * 0.80
+        c.setStrokeColor(theme.mid); c.setLineWidth(1)
+        for k in range(4): c.line(10, wl - 6 - k * 7, w - 10, wl - 6 - k * 7)
+        hull = c.beginPath(); hull.moveTo(x0 - 18, wl + 26); hull.lineTo(x1 + 30, wl + 26); hull.lineTo(x1, wl - 10); hull.lineTo(x0 + 10, wl - 10); hull.close()
+        c.setFillColor(theme.dark); c.setStrokeColor(INK); c.drawPath(hull, fill=1, stroke=1)
+        c.setStrokeColor(WHITE); c.setLineWidth(0.8); c.line(x0 - 12, wl + 20, x1 + 24, wl + 20)
+        c.setFillColor(INK); c.rect(x0 - 26, wl - 12, 8, 30, fill=1, stroke=0)  # rudder at stern
+        masts = [x0 + (x1 - x0) * 0.33, x0 + (x1 - x0) * 0.68]
+        c.setStrokeColor(INK); c.setLineWidth(2.2)
+        for m in masts: c.line(m, wl + 26, m, h - 14)
+        c.setFillColor(theme.wash); c.setStrokeColor(theme.dark); c.setLineWidth(1)
+        for m in masts:
+            s = c.beginPath(); s.moveTo(m + 3, h - 20); s.lineTo(m + 3, wl + 34); s.lineTo(m - 52, wl + 34); s.close(); c.drawPath(s, fill=1, stroke=1)
+        jib = c.beginPath(); jib.moveTo(masts[1] + 4, h - 22); jib.lineTo(x1 + 52, wl + 30); jib.lineTo(masts[1] + 4, wl + 34); jib.close(); c.drawPath(jib, fill=1, stroke=1)
+        c.setStrokeColor(MUTED); c.setLineWidth(0.6); c.line(masts[1], h - 14, x1 + 52, wl + 28)  # rigging line
+        labels = [((x1 + 40, wl + 2), "bow →", "l"), ((x0 - 30, wl + 30), "← stern", "r"), ((x0 - 30, wl - 4), "rudder", "r"), ((masts[0] + 6, h - 12), "mast", "l"),
+                  ((masts[0] - 40, wl + 70), "sail", "c"), (((x0 + x1) / 2, wl + 4), "hull", "c"), ((x1 + 56, wl + 60), "jib", "l"), ((masts[0] + (masts[1] - 52 - masts[0]) / 2, wl + 30), "deck", "c"),
+                  ((masts[1] + 46, h - 40), "rigging", "l")]
+        for (x, y), lab, al in labels:
+            text(c, x, y, lab, "BodySemi", 8.5, WHITE if lab == "hull" else theme.dark, al)
+    return Draw(width, height, fn)
+
+
+def island_map(theme, width=None, height=210):
+    """A simple treasure-island style map with a compass rose, key, and scale."""
+    width = width or W * 0.8
+
+    def fn(c, w, h):
+        c.setFillColor(theme.wash); c.setStrokeColor(theme.mid); c.rect(0, 0, w, h, fill=1, stroke=1)
+        pts = [(0.18, 0.30), (0.30, 0.15), (0.55, 0.12), (0.75, 0.22), (0.82, 0.45), (0.72, 0.72), (0.50, 0.85), (0.28, 0.78), (0.15, 0.55)]
+        p = c.beginPath(); p.moveTo(pts[0][0] * w, pts[0][1] * h)
+        for x, y in pts[1:]: p.lineTo(x * w, y * h)
+        p.close(); c.setFillColor(colors.HexColor("#F3E9D2")); c.setStrokeColor(INK); c.setLineWidth(1.4); c.drawPath(p, fill=1, stroke=1)
+        # hill (triangles), stockade (square), swamp (dashes), anchorage (anchor letter)
+        for hx in (0.48, 0.55):
+            t = c.beginPath(); t.moveTo(hx * w, 0.62 * h); t.lineTo(hx * w + 10, 0.62 * h); t.lineTo(hx * w + 5, 0.62 * h + 12); t.close(); c.setFillColor(MUTED); c.drawPath(t, fill=1, stroke=0)
+        c.setStrokeColor(theme.dark); c.setLineWidth(1.2); c.rect(0.30 * w, 0.40 * h, 12, 12, fill=0, stroke=1)
+        c.setStrokeColor(colors.HexColor("#6B8E5A"))
+        for k in range(4): c.line(0.62 * w, (0.33 + k * 0.03) * h, 0.62 * w + 16, (0.33 + k * 0.03) * h)
+        text(c, 0.65 * w, 0.58 * h, "X", "BodyBold", 14, theme.main, "c")
+        text(c, 0.12 * w, 0.18 * h, "⚓", "Sym", 12, theme.dark, "c")
+        # compass rose
+        cx, cy = w - 34, h - 40
+        c.setStrokeColor(INK); c.setLineWidth(1); c.line(cx, cy - 18, cx, cy + 18); c.line(cx - 18, cy, cx + 18, cy)
+        for lab, dx, dy in (("N", 0, 24), ("S", 0, -30), ("E", 26, -3), ("W", -26, -3)): text(c, cx + dx, cy + dy, lab, "BodySemi", 8, INK, "c")
+        # key
+        kx, ky = 10, h - 14
+        text(c, kx, ky, "KEY", "BodySemi", 8, theme.dark, "l")
+        for i, lab in enumerate(["▲ hills", "□ stockade", "≡ swamp", "X treasure", "⚓ anchorage"]):
+            text(c, kx, ky - 11 * (i + 1), lab, "Sym", 7.5, INK, "l")
+        # scale bar
+        c.setStrokeColor(INK); c.line(w - 110, 14, w - 50, 14); c.line(w - 110, 11, w - 110, 17); c.line(w - 50, 11, w - 50, 17)
+        text(c, w - 80, 20, "1 mile", "Body", 7.5, INK, "c")
+    return Draw(width, height, fn)

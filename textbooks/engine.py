@@ -995,3 +995,14 @@ def l_shape(theme, a, b, cdim, d, unit="", width=220, height=120):
         lab(x0 + a * s / 2, y0 - 13, f"{a} {unit}".strip()); lab(x0 - 4, y0 + b * s / 2, f"{b} {unit}".strip(), "r")
         lab(x0 + cdim * s / 2, y0 + b * s + 4, f"{cdim} {unit}".strip()); lab(x0 + a * s + 4, y0 + d * s / 2 - 3, f"{d} {unit}".strip(), "l")
     return Draw(width, height, draw)
+
+
+class SpaceTo(Flowable):
+    """Vertical space that ends at a fixed distance from the top of the page."""
+    def __init__(self, from_top):
+        super().__init__(); self.from_top = from_top
+
+    def wrap(self, aw, ah):
+        self.h = max(0, ah - (PAGE_H - self.from_top - BM)); return aw, self.h
+
+    def draw(self): pass

@@ -87,9 +87,9 @@ def unit_opener(t, U, doc, kind):
     w = ParagraphStyle("ow", parent=t.h1, textColor=WHITE, fontSize=36, leading=40)
     e = ParagraphStyle("oe", parent=t.eyebrow, textColor=BLUSH, fontSize=10)
     s = ParagraphStyle("os", parent=t.body, textColor=IVORY, fontSize=13, leading=18)
-    out = [NextPageTemplate("opener"), PageBreak(), SetOpenerNum(doc, U.num), Running(f"Unit {U.num} · {U.title}"),
+    out = [NextPageTemplate("opener"), SetOpenerNum(doc, U.num), PageBreak(), Running(f"Unit {U.num} · {U.title}"),
            Spacer(1, 0.25 * inch), P(f"UNIT {U.num}" + ("  ·  TEACHER OVERVIEW" if kind == "teacher" else ""), e),
-           toc_heading(U.title, w, 0), P(U.subtitle, s), Spacer(1, 1.05 * inch), NextPageTemplate("body")]
+           toc_heading(U.title, w, 0), P(U.subtitle, s), SpaceTo(3.65 * inch), NextPageTemplate("body")]
     return out
 
 

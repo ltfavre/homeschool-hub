@@ -23,5 +23,15 @@ if __name__ == "__main__":
     os.makedirs(out, exist_ok=True)
     book = BOOKS[key]()
     stem = f"grade{book.grade}-{book.subject}"
-    for kind, fn in (("textbook", build_textbook), ("workbook", build_workbook), ("teacher", build_teacher)):
-        path = os.path.join(out, f"{stem}-{kind}.pdf"); fn(book, path); print("wrote", os.path.relpath(path))
+    kinds = (("textbook", build_textbook), ("workbook", build_workbook), ("teacher", build_teacher))
+    if "--units" not in sys.argv or "--all" in sys.argv:
+        for kind, fn in kinds:
+            path = os.path.join(out, f"{stem}-{kind}.pdf"); fn(book, path); print("wrote", os.path.relpath(path))
+    if "--units" in sys.argv:
+        # one printable booklet per unit, for binders
+        for U in book.units:
+            part = Book(book.subject, book.grade, f"{book.title} · Unit {U.num}", [U])
+            for kind, fn in kinds:
+                path = os.path.join(out, "units", f"{stem}-unit{U.num:02d}-{kind}.pdf"); os.makedirs(os.path.dirname(path), exist_ok=True)
+                fn(part, path)
+            print("wrote unit", U.num)

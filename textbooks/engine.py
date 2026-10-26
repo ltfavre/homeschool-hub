@@ -900,7 +900,7 @@ def angle_fig(theme, deg, width=170, height=None, label=None, show=True, arm=Non
     return Draw(width, height, fn)
 
 
-def polygon_fig(theme, pts, width=150, height=110, labels=None, right_angles=(), sym=None, ticks=None, fill=True):
+def polygon_fig(theme, pts, width=150, height=110, labels=None, right_angles=(), sym=None, ticks=None, fill=True, edge_labels=None):
     """pts: list of (x, y) in 0..1 coordinates. right_angles: vertex indexes. sym: ((x1,y1),(x2,y2)) dashed symmetry line.
     ticks: list of (edge_index, count) for equal-side marks."""
     def fn(c, w, h):
@@ -928,6 +928,14 @@ def polygon_fig(theme, pts, width=150, height=110, labels=None, right_angles=(),
             for (x, y), lab in zip(P_, labels):
                 dx, dy = x - cx, y - cy; d = math.hypot(dx, dy) or 1
                 text(c, x + dx / d * 9, y + dy / d * 9 - 3, lab, "BodySemi", 9, theme.dark, "c")
+        if edge_labels:
+            cx = sum(x for x, _ in P_) / len(P_); cy = sum(y for _, y in P_) / len(P_)
+            for i, lab in enumerate(edge_labels):
+                if not lab: continue
+                a, b = P_[i], P_[(i + 1) % len(P_)]; mx_, my_ = (a[0] + b[0]) / 2, (a[1] + b[1]) / 2
+                nx, ny = -(b[1] - a[1]), b[0] - a[0]; d = math.hypot(nx, ny) or 1; nx, ny = nx / d, ny / d
+                if (mx_ - cx) * nx + (my_ - cy) * ny < 0: nx, ny = -nx, -ny
+                text(c, mx_ + nx * 10, my_ + ny * 10 - 3, lab, "Mono", 8.5, INK, "c")
     return Draw(width, height, fn)
 
 
@@ -1263,3 +1271,77 @@ def spinner(theme, labels, width=110, colors=None):
         c.setStrokeColor(theme.main); c.setLineWidth(2); c.line(cx, cy, cx + 0.3 * r, cy + 0.3 * r)
         c.setFillColor(theme.main); c.circle(cx, cy, 3, fill=1, stroke=0)
     return Draw(width, width, fn)
+
+
+
+def grid_poly(theme, pts, cols, rows, size=11, width=None, labels=None):
+    """Polygon with integer grid vertices drawn over a square grid (for scaled copies)."""
+    width = width or cols * size + 8; height = rows * size + 8
+
+    def fn(c, w, h):
+        c.setStrokeColor(colors.HexColor("#CFC7B8")); c.setLineWidth(0.5)
+        for i in range(cols + 1): c.line(4 + i * size, 4, 4 + i * size, 4 + rows * size)
+        for j in range(rows + 1): c.line(4, 4 + j * size, 4 + cols * size, 4 + j * size)
+        if not pts: return
+        p = c.beginPath(); p.moveTo(4 + pts[0][0] * size, 4 + pts[0][1] * size)
+        for x, y in pts[1:]: p.lineTo(4 + x * size, 4 + y * size)
+        p.close(); c.setFillColor(theme.wash); c.setStrokeColor(theme.dark); c.setLineWidth(1.6); c.drawPath(p, fill=1, stroke=1)
+        if labels:
+            cx = sum(x for x, _ in pts) / len(pts); cy = sum(y for _, y in pts) / len(pts)
+            for (x, y), lab in zip(pts, labels):
+                dx, dy = x - cx, y - cy; d = math.hypot(dx, dy) or 1
+                text(c, 4 + x * size + dx / d * 8, 4 + y * size + dy / d * 8 - 3, lab, "BodySemi", 8.5, theme.dark, "c")
+    return Draw(width, height, fn)
+
+
+def solid_fig(theme, kind, cut=None, width=120, height=120):
+    """Solid with an optional shaded cross section. kind: prism, pyramid, cylinder, cone. cut: 'h' (parallel to base) or 'v' (perpendicular to base)."""
+    def fn(c, w, h):
+        x0, y0 = 14, 14; a = w * 0.52; dx, dy = w * 0.26, h * 0.18; H = h * 0.55
+        c.setLineWidth(1.3); c.setStrokeColor(theme.dark)
+
+        def poly(pts, fill=None, dash=False):
+            p = c.beginPath(); p.moveTo(*pts[0])
+            for q in pts[1:]: p.lineTo(*q)
+            p.close()
+            if dash: c.setDash(3, 2)
+            if fill is not None: c.setFillColor(fill)
+            c.drawPath(p, fill=1 if fill is not None else 0, stroke=1); c.setDash()
+        sec = theme.mid
+        if kind == "prism":
+            F_ = [(x0, y0), (x0 + a, y0), (x0 + a, y0 + H), (x0, y0 + H)]
+            Bk = [(x + dx, y + dy) for x, y in F_]
+            c.setDash(3, 2); c.line(*Bk[0], *Bk[1]); c.line(*Bk[0], *Bk[3]); c.line(*F_[0], *Bk[0]); c.setDash()
+            if cut == "h":
+                ym = y0 + H / 2; poly([(x0, ym), (x0 + a, ym), (x0 + a + dx, ym + dy), (x0 + dx, ym + dy)], sec)
+            if cut == "v":
+                poly([(x + dx / 2, y + dy / 2) for x, y in F_], sec)
+            poly(F_); c.line(*F_[1], *Bk[1]); c.line(*F_[2], *Bk[2]); c.line(*F_[3], *Bk[3]); c.line(*Bk[1], *Bk[2]); c.line(*Bk[2], *Bk[3])
+        elif kind == "pyramid":
+            B = [(x0, y0), (x0 + a, y0), (x0 + a + dx, y0 + dy), (x0 + dx, y0 + dy)]
+            A = (x0 + (a + dx) / 2, y0 + dy / 2 + H * 1.15)
+            c.setDash(3, 2); c.line(*B[2], *B[3]); c.line(*B[3], *B[0]); c.line(*B[3], *A); c.setDash()
+            if cut == "h":
+                poly([(x + 0.5 * (A[0] - x), y + 0.5 * (A[1] - y)) for x, y in B], sec)
+            if cut == "v":
+                m03 = ((B[0][0] + B[3][0]) / 2, (B[0][1] + B[3][1]) / 2); m12 = ((B[1][0] + B[2][0]) / 2, (B[1][1] + B[2][1]) / 2)
+                poly([m03, m12, A], sec)
+            c.line(*B[0], *B[1]); c.line(*B[1], *B[2]); c.line(*B[0], *A); c.line(*B[1], *A); c.line(*B[2], *A)
+        else:
+            cx = w / 2; rx, ry = w * 0.32, h * 0.08; yb = y0 + ry; top = yb + H * 1.1
+            if kind == "cylinder":
+                if cut == "v": poly([(cx - rx, yb), (cx + rx, yb), (cx + rx, top), (cx - rx, top)], sec)
+                c.setDash(3, 2); c.arc(cx - rx, yb - ry, cx + rx, yb + ry, 0, 180); c.setDash()
+                c.arc(cx - rx, yb - ry, cx + rx, yb + ry, 180, 180)
+                if cut == "h":
+                    ym = (yb + top) / 2; c.setFillColor(sec); c.ellipse(cx - rx, ym - ry, cx + rx, ym + ry, fill=1, stroke=1)
+                c.line(cx - rx, yb, cx - rx, top); c.line(cx + rx, yb, cx + rx, top)
+                c.setFillColor(WHITE); c.ellipse(cx - rx, top - ry, cx + rx, top + ry, fill=0, stroke=1)
+            else:
+                if cut == "v": poly([(cx - rx, yb), (cx + rx, yb), (cx, top)], sec)
+                c.setDash(3, 2); c.arc(cx - rx, yb - ry, cx + rx, yb + ry, 0, 180); c.setDash()
+                c.arc(cx - rx, yb - ry, cx + rx, yb + ry, 180, 180)
+                if cut == "h":
+                    ym = (yb + top) / 2; c.setFillColor(sec); c.ellipse(cx - rx / 2, ym - ry / 2, cx + rx / 2, ym + ry / 2, fill=1, stroke=1)
+                c.line(cx - rx, yb, cx, top); c.line(cx + rx, yb, cx, top)
+    return Draw(width, height, fn)

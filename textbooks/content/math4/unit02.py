@@ -16,7 +16,7 @@ def M(a, b, mode="blank", **kw):
 
 
 def Mp(a, b):  # practice: blank vertical problem with answer
-    return Problem(f"{c(a)} × {c(b)}", c(a * b), space=0, fig=M(a, b))
+    return Problem(f"{c(a)} × {c(b)}", c(a * b), space=(70 if b >= 10 else 30), fig=M(a, b))
 
 
 # ------------------------------------------------------------------ 2.1

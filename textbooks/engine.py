@@ -28,9 +28,28 @@ for name, file in [("Display", "DMSerifDisplay-Regular"), ("DisplayIt", "DMSerif
                    ("BodyBold", "Outfit-Bold"), ("Mono", "IBMPlexMono-Regular"), ("MonoMed", "IBMPlexMono-Medium"),
                    ("MonoSemi", "IBMPlexMono-SemiBold")]:
     pdfmetrics.registerFont(TTFont(name, os.path.join(F, file + ".ttf")))
+pdfmetrics.registerFont(TTFont("Sym", os.path.join(F, "DejaVuSans.ttf")))   # fallback for symbols the brand fonts lack
 registerFontFamily("Body", normal="Body", bold="BodySemi", italic="BodyMed", boldItalic="BodyBold")
 registerFontFamily("Display", normal="Display", bold="Display", italic="DisplayIt", boldItalic="DisplayIt")
 registerFontFamily("Mono", normal="Mono", bold="MonoSemi", italic="Mono", boldItalic="MonoSemi")
+
+import re as _re
+from reportlab.platypus import Paragraph as _Paragraph
+from fontTools.ttLib import TTFont as _FT
+_BODY_CMAP = set(_FT(os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts", "Outfit-Regular.ttf")).getBestCmap())
+_SYM = _re.compile("([\u2190-\u21ff\u2200-\u22ff\u25a0-\u25ff\u2600-\u27bf])")
+
+
+def _sym(m):
+    ch = m.group(1)
+    return ch if ord(ch) in _BODY_CMAP else f'<font name="Sym">{ch}</font>'
+
+
+class Paragraph(_Paragraph):
+    """Paragraph that draws symbols missing from the brand fonts (○ △ ☐ ✓ → ≈) with DejaVu Sans."""
+    def __init__(self, text, *a, **k):
+        super().__init__(_SYM.sub(_sym, text), *a, **k)
+
 
 # ---------------------------------------------------------------- brand
 HUNTER = colors.HexColor("#234638"); FOREST = colors.HexColor("#142B23"); INK = colors.HexColor("#171717")
@@ -626,4 +645,45 @@ def dot_groups(theme, groups, per, width=None):
             for k in range(per):
                 ang = 2 * math.pi * k / max(per, 1); rr = 0 if per == 1 else min(gw / 2 - 14, 16)
                 c.setFillColor(theme.main); c.circle(cx + rr * math.cos(ang), cy + rr * math.sin(ang), 3.6, fill=1, stroke=0)
+    return Draw(width, height, fn)
+
+
+def hundred_chart(theme, marked=(), circled=(), width=None, start=1, rows=10, cols=10, blank=False):
+    width = width or 300; cell = width / cols; height = rows * cell + 4
+    marked, circled = set(marked), set(circled)
+
+    def fn(c, w, h):
+        for i in range(rows):
+            for j in range(cols):
+                n = start + i * cols + j; x = j * cell; y = h - (i + 1) * cell - 2
+                c.setFillColor(theme.mid if n in marked else WHITE); c.setStrokeColor(LINE); c.setLineWidth(0.6)
+                c.rect(x, y, cell, cell, fill=1, stroke=1)
+                if not blank: text(c, x + cell / 2, y + cell * 0.32, str(n), "Mono", cell * 0.36, INK, "c")
+                if n in circled:
+                    c.setStrokeColor(theme.dark); c.setLineWidth(1.2); c.circle(x + cell / 2, y + cell / 2, cell * 0.42, fill=0, stroke=1)
+    return Draw(width, height, fn)
+
+
+def shape_pattern(theme, shapes, width=None, size=26):
+    """shapes: list of 'circle', 'square', 'triangle', 'star' or '?'"""
+    width = width or len(shapes) * (size + 12) + 10; height = size + 12
+
+    def fn(c, w, h):
+        for i, s in enumerate(shapes):
+            x = 6 + i * (size + 12); y = 6
+            c.setStrokeColor(theme.dark); c.setFillColor(theme.mid); c.setLineWidth(1)
+            if s == "circle": c.circle(x + size / 2, y + size / 2, size / 2, fill=1)
+            elif s == "square": c.rect(x, y, size, size, fill=1)
+            elif s == "triangle":
+                p = c.beginPath(); p.moveTo(x, y); p.lineTo(x + size, y); p.lineTo(x + size / 2, y + size); p.close(); c.drawPath(p, fill=1)
+            elif s == "star":
+                p = c.beginPath()
+                for k in range(10):
+                    r = size / 2 if k % 2 == 0 else size / 5; a = math.pi / 2 + k * math.pi / 5
+                    px, py = x + size / 2 + r * math.cos(a), y + size / 2 + r * math.sin(a)
+                    p.moveTo(px, py) if k == 0 else p.lineTo(px, py)
+                p.close(); c.setFillColor(GOLD); c.drawPath(p, fill=1)
+            elif s == "?":
+                c.setFillColor(WHITE); c.setDash(3, 2); c.rect(x, y, size, size, fill=1); c.setDash()
+                text(c, x + size / 2, y + size * 0.3, "?", "BodySemi", size * 0.55, theme.main, "c")
     return Draw(width, height, fn)

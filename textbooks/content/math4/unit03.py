@@ -16,7 +16,7 @@ def qr(a, b):
     return f"{c(q)}" + (f" R{r}" if r else "")
 
 
-def D(a, b, space=0):
+def D(a, b, space=80):
     return Problem(f"{c(a)} ÷ {b}", qr(a, b), space=space, fig=lambda t: long_div(t, a, b, show_answer=False))
 
 

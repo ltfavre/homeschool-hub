@@ -266,7 +266,7 @@ def problem_cell(t, pr, num, w, show_answer=False):
     inner_w = w - 26
     if pr.lines: body += [Spacer(1, 2), write_lines(t, inner_w, pr.lines)]
     elif pr.space: body += [Spacer(1, 3), work_space(t, inner_w, max(pr.space, 26))]
-    elif not pr.choices and not pr.fig: body += [Spacer(1, 2), answer_line(t, min(inner_w, 170))]
+    elif not pr.choices and not pr.fig: body += [Spacer(1, 2), answer_line(t, inner_w if t.subject == "ela" else min(inner_w, 170))]
     if show_answer: body.append(P(f"Answer: {pr.answer}", t.answer))
     tb = Table([[badge, body]], colWidths=[24, w - 24])
     tb.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),

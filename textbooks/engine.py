@@ -37,7 +37,7 @@ import re as _re
 from reportlab.platypus import Paragraph as _Paragraph
 from fontTools.ttLib import TTFont as _FT
 _BODY_CMAP = set(_FT(os.path.join(os.path.dirname(os.path.abspath(__file__)), "fonts", "Outfit-Regular.ttf")).getBestCmap())
-_SYM = _re.compile("([\u2190-\u21ff\u2200-\u22ff\u25a0-\u25ff\u2600-\u27bf])")
+_SYM = _re.compile("([\u0370-\u03ff\u2070-\u209f\u2190-\u21ff\u2200-\u22ff\u25a0-\u25ff\u2600-\u27bf])")
 
 
 def _sym(m):
@@ -450,6 +450,9 @@ class Doc(BaseDocTemplate):
         self.addPageTemplates([PageTemplate(id="cover", frames=[frame], onPage=self.cover_page),
                                PageTemplate(id="body", frames=[frame], onPage=self.body_page, onPageEnd=self.footer),
                                PageTemplate(id="opener", frames=[frame], onPage=self.opener_page, onPageEnd=self.footer)])
+
+    def beforeDocument(self):
+        self.running = ""   # multiBuild runs several passes; don't carry the last footer into the front matter
 
     def footer(self, c, doc):
         c.saveState(); text(c, LM, BM - 30, self.running, "Body", 8, MUTED); c.restoreState()
@@ -1344,4 +1347,58 @@ def solid_fig(theme, kind, cut=None, width=120, height=120):
                 if cut == "h":
                     ym = (yb + top) / 2; c.setFillColor(sec); c.ellipse(cx - rx / 2, ym - ry / 2, cx + rx / 2, ym + ry / 2, fill=1, stroke=1)
                 c.line(cx - rx, yb, cx, top); c.line(cx + rx, yb, cx, top)
+    return Draw(width, height, fn)
+
+
+def rays_fig(theme, dirs, labels, width=200, height=110, right=(), full=False):
+    """Rays from one vertex at the given directions (degrees). labels[i] names the sector from dirs[i] to dirs[i+1]
+    (wrapping around when full=True). right: sector indexes to mark as right angles."""
+    def fn(c, w, h):
+        vx, vy = w / 2, (h / 2 if full else 16); R = min(w / 2 - 12, h - 26) if not full else min(w, h) / 2 - 8
+        c.setStrokeColor(theme.dark); c.setLineWidth(1.6)
+        for d in dirs:
+            a = math.radians(d); x2, y2 = vx + R * math.cos(a), vy + R * math.sin(a)
+            c.line(vx, vy, x2, y2); _arrow(c, x2 + 4 * math.cos(a), y2 + 4 * math.sin(a), a, color=theme.dark)
+        _dot(c, vx, vy, None, theme.dark)
+        n = len(dirs) if full else len(dirs) - 1
+        for i in range(n):
+            d0 = dirs[i]; d1 = dirs[(i + 1) % len(dirs)] + (360 if full and i == len(dirs) - 1 else 0)
+            if i in right:
+                s = 10; a0, a1 = math.radians(d0), math.radians(d1); c.setStrokeColor(theme.main); c.setLineWidth(1)
+                p = c.beginPath(); p.moveTo(vx + s * math.cos(a0), vy + s * math.sin(a0)); p.lineTo(vx + s * math.cos(a0) + s * math.cos(a1), vy + s * math.sin(a0) + s * math.sin(a1)); p.lineTo(vx + s * math.cos(a1), vy + s * math.sin(a1)); c.drawPath(p)
+            else:
+                r = 14 + 4 * (i % 2); c.setStrokeColor(theme.main); c.setLineWidth(1.1); c.arc(vx - r, vy - r, vx + r, vy + r, d0, d1 - d0)
+            if i < len(labels) and labels[i]:
+                am = math.radians((d0 + d1) / 2); rr = 34 if (d1 - d0) > 30 else 46
+                text(c, vx + rr * math.cos(am), vy + rr * math.sin(am) - 3, labels[i], "MonoSemi", 9, theme.main, "c")
+    return Draw(width, height, fn)
+
+
+def tri_prism(theme, b, th, l, unit="", width=200, height=120, hyp=None):
+    """Oblique triangular prism: right-triangle base (legs b, th) extruded by length l."""
+    def fn(c, ww, hh):
+        s = min((ww - 100) / (b + l * 0.6), (hh - 34) / (th + l * 0.35))
+        B, T, Lx, Ly = b * s, th * s, l * s * 0.6, l * s * 0.35; x0, y0 = 44, 18
+        c.setStrokeColor(theme.dark); c.setLineWidth(1.3)
+        front = [(x0, y0), (x0 + B, y0), (x0, y0 + T)]; back = [(x + Lx, y + Ly) for x, y in front]
+        c.setDash(3, 2); c.line(*back[0], *back[1]); c.line(*back[0], *back[2]); c.line(*front[0], *back[0]); c.setDash()
+        p = c.beginPath(); p.moveTo(*front[1]); p.lineTo(*back[1]); p.lineTo(*back[2]); p.lineTo(*front[2]); p.close(); c.setFillColor(theme.mid); c.drawPath(p, fill=1, stroke=1)
+        p = c.beginPath(); p.moveTo(*front[0]); p.lineTo(*front[1]); p.lineTo(*front[2]); p.close(); c.setFillColor(theme.wash); c.drawPath(p, fill=1, stroke=1)
+        c.setLineWidth(0.9); q = 7; c.line(x0 + q, y0, x0 + q, y0 + q); c.line(x0, y0 + q, x0 + q, y0 + q)
+        text(c, x0 + B / 2, y0 - 12, f"{b} {unit}".strip(), "MonoSemi", 9, theme.dark, "c")
+        text(c, x0 - 4, y0 + T / 2, f"{th} {unit}".strip(), "MonoSemi", 9, theme.dark, "r")
+        text(c, x0 + B + Lx / 2 + 6, y0 + Ly / 2 - 6, f"{l} {unit}".strip(), "MonoSemi", 9, theme.dark, "l")
+    return Draw(width, height, fn)
+
+
+def rect_semi(theme, l, w_, unit="", width=180, height=130):
+    """Rectangle l (across) by w_ (up) with a semicircle on the top side."""
+    def fn(c, ww, hh):
+        s = min((ww - 40) / l, (hh - 30) / (w_ + l / 2)); L, H = l * s, w_ * s; x0, y0 = (ww - L) / 2, 16
+        c.setStrokeColor(theme.dark); c.setLineWidth(1.4); c.setFillColor(theme.wash)
+        p = c.beginPath(); p.moveTo(x0, y0); p.lineTo(x0 + L, y0); p.lineTo(x0 + L, y0 + H)
+        p.arcTo(x0, y0 + H - L / 2, x0 + L, y0 + H + L / 2, 0, 180); p.lineTo(x0, y0); p.close(); c.drawPath(p, fill=1, stroke=1)
+        c.setDash(3, 2); c.line(x0, y0 + H, x0 + L, y0 + H); c.setDash()
+        text(c, x0 + L / 2, y0 - 12, f"{l} {unit}".strip(), "MonoSemi", 9, theme.dark, "c")
+        text(c, x0 + L + 4, y0 + H / 2 - 3, f"{w_} {unit}".strip(), "MonoSemi", 9, theme.dark, "l")
     return Draw(width, height, fn)

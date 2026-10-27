@@ -11,6 +11,8 @@ export function curriculumForDay(day) { return day?.curriculum || 'khan-primary-
 export function taskForSubject(day, subject) {
   return cleanTaskText(String(day?.tasks || '').split(taskPattern).find(text => text.startsWith(taskPrefixes[subject])) || '');
 }
+// A textbook day names its lesson ("Lesson 1.9: Rounding with a Number Line"); other days fall back to the week's topic.
+export function topicForDay(subject, date) { return subject?.daily?.[date] || subject?.topic || ''; }
 export function studentResourceLibrary(library) {
   const resources = Object.fromEntries(Object.entries(library.resources).filter(([,r]) => !r.teacher_only));
   const weeks = Object.fromEntries(Object.entries(library.weeks).map(([id,mapping]) => [id,Object.fromEntries(Object.entries(mapping).map(([key,subject]) => {

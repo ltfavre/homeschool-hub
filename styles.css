@@ -44,6 +44,12 @@ main { max-width: 1180px; margin: auto; padding: 2rem 1rem 4rem; }
 .day { min-height:100px; padding:.7rem; border:1px solid #e6e8e3; border-radius:12px; background:#fcfcfa; }
 .day strong { display:block; margin-bottom:.45rem; }
 .dot { display:block; font-size:.74rem; padding:.24rem .4rem; background:#eef3ef; border-radius:7px; margin:.25rem 0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.textbook-today { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+.textbook-today.empty { display:block; }
+.textbook-col h4 { margin:.1rem 0 .5rem; }
+.textbook-col .meta a, .textbook-col .pill { white-space:nowrap; }
+.textbook-col .pill { align-self:flex-start; height:auto; }
+@media (max-width: 860px) { .textbook-today { grid-template-columns:1fr; } }
 dialog { border:0; border-radius:18px; padding:0; width:min(560px,calc(100% - 2rem)); box-shadow:0 24px 80px rgba(0,0,0,.22); }
 dialog::backdrop { background:rgba(24,35,31,.45); }
 form { padding:1.25rem; display:grid; gap:.9rem; }

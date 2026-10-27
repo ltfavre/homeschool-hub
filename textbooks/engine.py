@@ -531,6 +531,14 @@ class Doc(BaseDocTemplate):
 
     def beforeDocument(self):
         self.running = ""   # multiBuild runs several passes; don't carry the last footer into the front matter
+        self.toc_log = []   # (level, heading, page) from the final pass; written beside the PDF as <name>.toc.json
+
+    def multiBuild(self, story, *a, **k):
+        r = super().multiBuild(story, *a, **k)
+        import json as _json
+        side = self.filename[:-4] + ".toc.json"
+        _json.dump([{"level": l, "text": t_, "page": pg} for l, t_, pg in self.toc_log], open(side, "w"), ensure_ascii=False, indent=0)
+        return r
 
     def footer(self, c, doc):
         c.saveState(); text(c, LM, BM - 30, self.running, "Body", 8, MUTED); c.restoreState()
@@ -538,6 +546,7 @@ class Doc(BaseDocTemplate):
     def afterFlowable(self, f):
         if isinstance(f, Paragraph) and getattr(f, "_toc", None) is not None:
             self.notify("TOCEntry", (f._toc[0], f._toc[1], self.page))
+            self.toc_log.append((f._toc[0], f._toc[1], self.page))
         if getattr(f, "_running", None) is not None:
             self.running = f._running
 

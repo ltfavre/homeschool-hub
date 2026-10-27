@@ -1,0 +1,817 @@
+[
+{
+"level": 0,
+"text": "Proportional Relationships",
+"page": 8
+},
+{
+"level": 1,
+"text": "Lesson 1.1: Ratios and Rates",
+"page": 10
+},
+{
+"level": 1,
+"text": "Lesson 1.2: Unit Rates",
+"page": 11
+},
+{
+"level": 1,
+"text": "Lesson 1.3: Unit Rates with Fractions",
+"page": 12
+},
+{
+"level": 1,
+"text": "Lesson 1.4: Comparing Unit Rates",
+"page": 13
+},
+{
+"level": 1,
+"text": "Lesson 1.5: What Is a Proportional Relationship?",
+"page": 14
+},
+{
+"level": 1,
+"text": "Lesson 1.6: The Constant of Proportionality",
+"page": 16
+},
+{
+"level": 1,
+"text": "Lesson 1.7: Equations for Proportional Relationships",
+"page": 17
+},
+{
+"level": 1,
+"text": "Lesson 1.8: Is It Proportional? Tables and Equations",
+"page": 18
+},
+{
+"level": 1,
+"text": "Lesson 1.9: Graphing Proportional Relationships",
+"page": 19
+},
+{
+"level": 1,
+"text": "Lesson 1.10: Recognizing Proportional Graphs",
+"page": 20
+},
+{
+"level": 1,
+"text": "Lesson 1.11: Interpreting Points on Proportional Graphs",
+"page": 21
+},
+{
+"level": 1,
+"text": "Lesson 1.12: Comparing Proportional Relationships",
+"page": 22
+},
+{
+"level": 1,
+"text": "Lesson 1.13: Solving Proportions",
+"page": 23
+},
+{
+"level": 1,
+"text": "Lesson 1.14: Proportional Reasoning in the Real World",
+"page": 24
+},
+{
+"level": 1,
+"text": "Lesson 1.15: Multi-Step Ratio Problems",
+"page": 26
+},
+{
+"level": 1,
+"text": "Lesson 1.16: Proportional Relationships Problem Solving",
+"page": 27
+},
+{
+"level": 1,
+"text": "Unit 1 Study Guide",
+"page": 28
+},
+{
+"level": 0,
+"text": "Percents",
+"page": 29
+},
+{
+"level": 1,
+"text": "Lesson 2.1: What Is a Percent?",
+"page": 31
+},
+{
+"level": 1,
+"text": "Lesson 2.2: Percents, Fractions, and Decimals",
+"page": 32
+},
+{
+"level": 1,
+"text": "Lesson 2.3: Finding a Percent of a Number",
+"page": 33
+},
+{
+"level": 1,
+"text": "Lesson 2.4: Finding What Percent",
+"page": 35
+},
+{
+"level": 1,
+"text": "Lesson 2.5: Finding the Whole",
+"page": 36
+},
+{
+"level": 1,
+"text": "Lesson 2.6: The Percent Equation",
+"page": 37
+},
+{
+"level": 1,
+"text": "Lesson 2.7: Percents Greater Than 100% and Less Than 1%",
+"page": 38
+},
+{
+"level": 1,
+"text": "Lesson 2.8: Estimating with Percents",
+"page": 39
+},
+{
+"level": 1,
+"text": "Lesson 2.9: Discounts and Sale Prices",
+"page": 40
+},
+{
+"level": 1,
+"text": "Lesson 2.10: Markups and Sales Tax",
+"page": 41
+},
+{
+"level": 1,
+"text": "Lesson 2.11: Percent Increase and Decrease",
+"page": 42
+},
+{
+"level": 1,
+"text": "Lesson 2.12: Tips, Commissions, and Fees",
+"page": 43
+},
+{
+"level": 1,
+"text": "Lesson 2.13: Simple Interest",
+"page": 44
+},
+{
+"level": 1,
+"text": "Lesson 2.14: Percent Error",
+"page": 45
+},
+{
+"level": 1,
+"text": "Lesson 2.15: Multi-Step Percent Problems",
+"page": 46
+},
+{
+"level": 1,
+"text": "Lesson 2.16: Percent Problem Solving",
+"page": 47
+},
+{
+"level": 1,
+"text": "Unit 2 Study Guide",
+"page": 48
+},
+{
+"level": 0,
+"text": "Adding and Subtracting Integers",
+"page": 49
+},
+{
+"level": 1,
+"text": "Lesson 3.1: Integers, Opposites, and Absolute Value",
+"page": 51
+},
+{
+"level": 1,
+"text": "Lesson 3.2: Adding Integers with the Same Sign",
+"page": 52
+},
+{
+"level": 1,
+"text": "Lesson 3.3: Adding Integers with Different Signs",
+"page": 53
+},
+{
+"level": 1,
+"text": "Lesson 3.4: Additive Inverses",
+"page": 54
+},
+{
+"level": 1,
+"text": "Lesson 3.5: Adding Integers on a Number Line",
+"page": 55
+},
+{
+"level": 1,
+"text": "Lesson 3.6: Subtracting Integers",
+"page": 56
+},
+{
+"level": 1,
+"text": "Lesson 3.7: Subtraction as Distance",
+"page": 58
+},
+{
+"level": 1,
+"text": "Lesson 3.8: Distance Between Two Numbers",
+"page": 59
+},
+{
+"level": 1,
+"text": "Lesson 3.9: Integers: Temperature and Elevation",
+"page": 60
+},
+{
+"level": 1,
+"text": "Lesson 3.10: Integers and Money",
+"page": 61
+},
+{
+"level": 1,
+"text": "Lesson 3.11: Multi-Step Integer Problems",
+"page": 62
+},
+{
+"level": 1,
+"text": "Lesson 3.12: Properties and Mental Math with Integers",
+"page": 63
+},
+{
+"level": 1,
+"text": "Lesson 3.13: Integer Expressions",
+"page": 64
+},
+{
+"level": 1,
+"text": "Lesson 3.14: Explaining Integer Rules with Models",
+"page": 65
+},
+{
+"level": 1,
+"text": "Lesson 3.15: Finding and Fixing Integer Errors",
+"page": 66
+},
+{
+"level": 1,
+"text": "Lesson 3.16: Integer Problem Solving",
+"page": 67
+},
+{
+"level": 1,
+"text": "Unit 3 Study Guide",
+"page": 68
+},
+{
+"level": 0,
+"text": "Adding and Subtracting Rational Numbers",
+"page": 69
+},
+{
+"level": 1,
+"text": "Lesson 4.1: Rational Numbers on the Number Line",
+"page": 71
+},
+{
+"level": 1,
+"text": "Lesson 4.2: Adding Signed Fractions",
+"page": 72
+},
+{
+"level": 1,
+"text": "Lesson 4.3: Subtracting Signed Fractions",
+"page": 73
+},
+{
+"level": 1,
+"text": "Lesson 4.4: Adding and Subtracting Signed Mixed Numbers",
+"page": 74
+},
+{
+"level": 1,
+"text": "Lesson 4.5: Fractions as Decimals",
+"page": 75
+},
+{
+"level": 1,
+"text": "Lesson 4.6: Comparing and Ordering Rational Numbers",
+"page": 76
+},
+{
+"level": 1,
+"text": "Lesson 4.7: Adding Signed Decimals",
+"page": 77
+},
+{
+"level": 1,
+"text": "Lesson 4.8: Subtracting Signed Decimals",
+"page": 78
+},
+{
+"level": 1,
+"text": "Lesson 4.9: Rational Numbers and Money",
+"page": 79
+},
+{
+"level": 1,
+"text": "Lesson 4.10: Rational Numbers in Measurement",
+"page": 80
+},
+{
+"level": 1,
+"text": "Lesson 4.11: Properties for Rational Number Sums",
+"page": 81
+},
+{
+"level": 1,
+"text": "Lesson 4.12: Multi-Step Rational Number Problems",
+"page": 82
+},
+{
+"level": 1,
+"text": "Lesson 4.13: Distance Between Rational Numbers",
+"page": 83
+},
+{
+"level": 1,
+"text": "Lesson 4.14: Expressions with Rational Numbers",
+"page": 84
+},
+{
+"level": 1,
+"text": "Lesson 4.15: Error Analysis with Rational Numbers",
+"page": 85
+},
+{
+"level": 1,
+"text": "Lesson 4.16: Rational Number Problem Solving",
+"page": 86
+},
+{
+"level": 1,
+"text": "Unit 4 Study Guide",
+"page": 87
+},
+{
+"level": 0,
+"text": "Multiplying and Dividing Rational Numbers",
+"page": 88
+},
+{
+"level": 1,
+"text": "Lesson 5.1: Multiplying Integers: Patterns",
+"page": 90
+},
+{
+"level": 1,
+"text": "Lesson 5.2: Multiplying Integers: Rules and Reasons",
+"page": 91
+},
+{
+"level": 1,
+"text": "Lesson 5.3: Dividing Integers",
+"page": 92
+},
+{
+"level": 1,
+"text": "Lesson 5.4: Negative Fractions and Signs of Quotients",
+"page": 93
+},
+{
+"level": 1,
+"text": "Lesson 5.5: Multiplying Signed Fractions",
+"page": 94
+},
+{
+"level": 1,
+"text": "Lesson 5.6: Dividing Signed Fractions",
+"page": 95
+},
+{
+"level": 1,
+"text": "Lesson 5.7: Multiplying and Dividing Signed Decimals",
+"page": 96
+},
+{
+"level": 1,
+"text": "Lesson 5.8: Rational Number Operations Practice",
+"page": 97
+},
+{
+"level": 1,
+"text": "Lesson 5.9: Order of Operations with Rational Numbers",
+"page": 98
+},
+{
+"level": 1,
+"text": "Lesson 5.10: The Distributive Property with Rational Numbers",
+"page": 99
+},
+{
+"level": 1,
+"text": "Lesson 5.11: Repeated Change: Rate × Time",
+"page": 100
+},
+{
+"level": 1,
+"text": "Lesson 5.12: Choosing the Operation",
+"page": 101
+},
+{
+"level": 1,
+"text": "Lesson 5.13: Average Change",
+"page": 102
+},
+{
+"level": 1,
+"text": "Lesson 5.14: Rate Problems with Negatives",
+"page": 103
+},
+{
+"level": 1,
+"text": "Lesson 5.15: Multi-Step Rational Number Problems",
+"page": 104
+},
+{
+"level": 1,
+"text": "Lesson 5.16: Rational Number Operations Problem Solving",
+"page": 105
+},
+{
+"level": 1,
+"text": "Unit 5 Study Guide",
+"page": 106
+},
+{
+"level": 0,
+"text": "Expressions, Equations, and Inequalities",
+"page": 107
+},
+{
+"level": 1,
+"text": "Lesson 6.1: Writing Expressions",
+"page": 109
+},
+{
+"level": 1,
+"text": "Lesson 6.2: Evaluating Expressions",
+"page": 110
+},
+{
+"level": 1,
+"text": "Lesson 6.3: Combining Like Terms",
+"page": 111
+},
+{
+"level": 1,
+"text": "Lesson 6.4: Expressions in Context",
+"page": 112
+},
+{
+"level": 1,
+"text": "Lesson 6.5: The Distributive Property: Expanding",
+"page": 113
+},
+{
+"level": 1,
+"text": "Lesson 6.6: Factoring Expressions",
+"page": 114
+},
+{
+"level": 1,
+"text": "Lesson 6.7: Simplifying with Rational Coefficients",
+"page": 115
+},
+{
+"level": 1,
+"text": "Lesson 6.8: Equivalent Expressions",
+"page": 116
+},
+{
+"level": 1,
+"text": "Lesson 6.9: One-Step Equations",
+"page": 117
+},
+{
+"level": 1,
+"text": "Lesson 6.10: Two-Step Equations",
+"page": 118
+},
+{
+"level": 1,
+"text": "Lesson 6.11: Equations with Parentheses",
+"page": 119
+},
+{
+"level": 1,
+"text": "Lesson 6.12: Equation Word Problems",
+"page": 120
+},
+{
+"level": 1,
+"text": "Lesson 6.13: Writing and Graphing Inequalities",
+"page": 121
+},
+{
+"level": 1,
+"text": "Lesson 6.14: Solving One-Step Inequalities",
+"page": 123
+},
+{
+"level": 1,
+"text": "Lesson 6.15: Two-Step Inequalities",
+"page": 124
+},
+{
+"level": 1,
+"text": "Lesson 6.16: Inequality Word Problems",
+"page": 125
+},
+{
+"level": 1,
+"text": "Unit 6 Study Guide",
+"page": 126
+},
+{
+"level": 0,
+"text": "Statistics and Probability",
+"page": 127
+},
+{
+"level": 1,
+"text": "Lesson 7.1: Populations and Samples",
+"page": 129
+},
+{
+"level": 1,
+"text": "Lesson 7.2: Random Samples and Bias",
+"page": 130
+},
+{
+"level": 1,
+"text": "Lesson 7.3: Making Inferences from Samples",
+"page": 131
+},
+{
+"level": 1,
+"text": "Lesson 7.4: Variability in Samples",
+"page": 132
+},
+{
+"level": 1,
+"text": "Lesson 7.5: Measures of Center and Variability",
+"page": 133
+},
+{
+"level": 1,
+"text": "Lesson 7.6: Comparing Dot Plots",
+"page": 135
+},
+{
+"level": 1,
+"text": "Lesson 7.7: Comparing Box Plots",
+"page": 136
+},
+{
+"level": 1,
+"text": "Lesson 7.8: Comparing Populations",
+"page": 137
+},
+{
+"level": 1,
+"text": "Lesson 7.9: Probability and Likelihood",
+"page": 138
+},
+{
+"level": 1,
+"text": "Lesson 7.10: Theoretical Probability",
+"page": 139
+},
+{
+"level": 1,
+"text": "Lesson 7.11: Experimental Probability",
+"page": 140
+},
+{
+"level": 1,
+"text": "Lesson 7.12: Probability Models",
+"page": 141
+},
+{
+"level": 1,
+"text": "Lesson 7.13: Sample Spaces for Compound Events",
+"page": 143
+},
+{
+"level": 1,
+"text": "Lesson 7.14: Tree Diagrams",
+"page": 144
+},
+{
+"level": 1,
+"text": "Lesson 7.15: Probability of Compound Events",
+"page": 145
+},
+{
+"level": 1,
+"text": "Lesson 7.16: Simulations",
+"page": 147
+},
+{
+"level": 1,
+"text": "Unit 7 Study Guide",
+"page": 149
+},
+{
+"level": 0,
+"text": "Scale Drawings and Geometric Figures",
+"page": 150
+},
+{
+"level": 1,
+"text": "Lesson 8.1: Scaled Copies",
+"page": 152
+},
+{
+"level": 1,
+"text": "Lesson 8.2: Scale Factors",
+"page": 153
+},
+{
+"level": 1,
+"text": "Lesson 8.3: Scale Factors and Area",
+"page": 154
+},
+{
+"level": 1,
+"text": "Lesson 8.4: Scale Drawings",
+"page": 155
+},
+{
+"level": 1,
+"text": "Lesson 8.5: Finding Drawing Lengths",
+"page": 156
+},
+{
+"level": 1,
+"text": "Lesson 8.6: Area in Scale Drawings",
+"page": 157
+},
+{
+"level": 1,
+"text": "Lesson 8.7: Maps and Scale",
+"page": 158
+},
+{
+"level": 1,
+"text": "Lesson 8.8: Changing the Scale",
+"page": 159
+},
+{
+"level": 1,
+"text": "Lesson 8.9: Triangle Side Lengths",
+"page": 160
+},
+{
+"level": 1,
+"text": "Lesson 8.10: Triangle Angles",
+"page": 161
+},
+{
+"level": 1,
+"text": "Lesson 8.11: Drawing Triangles from Conditions",
+"page": 163
+},
+{
+"level": 1,
+"text": "Lesson 8.12: Drawing Quadrilaterals with Conditions",
+"page": 164
+},
+{
+"level": 1,
+"text": "Lesson 8.13: Cross Sections of Prisms",
+"page": 165
+},
+{
+"level": 1,
+"text": "Lesson 8.14: Cross Sections of Pyramids",
+"page": 167
+},
+{
+"level": 1,
+"text": "Lesson 8.15: Cross Sections of Cylinders and Cones",
+"page": 168
+},
+{
+"level": 1,
+"text": "Lesson 8.16: Scale Drawing Project",
+"page": 169
+},
+{
+"level": 1,
+"text": "Unit 8 Study Guide",
+"page": 170
+},
+{
+"level": 0,
+"text": "Angles, Circles, Area, and Volume",
+"page": 171
+},
+{
+"level": 1,
+"text": "Lesson 9.1: Angle Relationships",
+"page": 173
+},
+{
+"level": 1,
+"text": "Lesson 9.2: Solving for Unknown Angles",
+"page": 174
+},
+{
+"level": 1,
+"text": "Lesson 9.3: Circles and Circumference",
+"page": 175
+},
+{
+"level": 1,
+"text": "Lesson 9.4: Area of a Circle",
+"page": 177
+},
+{
+"level": 1,
+"text": "Lesson 9.5: Problems with Circles",
+"page": 178
+},
+{
+"level": 1,
+"text": "Lesson 9.6: Area of Composite Figures",
+"page": 179
+},
+{
+"level": 1,
+"text": "Lesson 9.7: Surface Area of Prisms",
+"page": 181
+},
+{
+"level": 1,
+"text": "Lesson 9.8: Volume of Prisms",
+"page": 182
+},
+{
+"level": 1,
+"text": "Lesson 9.9: Volume and Surface Area in Context",
+"page": 184
+},
+{
+"level": 1,
+"text": "Lesson 9.10: Composite Solids",
+"page": 185
+},
+{
+"level": 1,
+"text": "Lesson 9.11: Comparing Volume and Surface Area",
+"page": 186
+},
+{
+"level": 1,
+"text": "Lesson 9.12: Geometry Problem Solving",
+"page": 187
+},
+{
+"level": 1,
+"text": "Lesson 9.13: Year Review: Ratios, Proportions, and Percents",
+"page": 188
+},
+{
+"level": 1,
+"text": "Lesson 9.14: Year Review: Rational Numbers",
+"page": 189
+},
+{
+"level": 1,
+"text": "Lesson 9.15: Year Review: Expressions, Equations, and Inequalities",
+"page": 190
+},
+{
+"level": 1,
+"text": "Lesson 9.16: Year Review: Statistics, Probability, and Geometry",
+"page": 191
+},
+{
+"level": 1,
+"text": "Unit 9 Study Guide",
+"page": 192
+},
+{
+"level": 0,
+"text": "Glossary",
+"page": 193
+}
+]

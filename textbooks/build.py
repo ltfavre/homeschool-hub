@@ -33,7 +33,7 @@ _BOOKS = {
 
 # Student books are dated on the family's school calendar (see content/sched.py); the parent's book keeps its own pacing.
 from content.sched import pace
-BOOKS = {k: (f if k == "data" else (lambda f=f: pace(f()))) for k, f in _BOOKS.items()}
+BOOKS = {k: (f if k == "data" else (lambda f=f, k=k: pace(f(), k))) for k, f in _BOOKS.items()}
 
 if __name__ == "__main__":
     key = sys.argv[1] if len(sys.argv) > 1 else "math4"

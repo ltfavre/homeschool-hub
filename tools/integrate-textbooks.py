@@ -23,6 +23,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "tools")); sys.path.insert(0, os.path.join(ROOT, "textbooks"))
 from curriculum_pack import load, save
 from build import BOOKS
+from content import sched
 
 START = "2026-10-26"
 DL = "/downloads/textbooks"
@@ -43,7 +44,7 @@ def iso(label):
     m = re.match(r"\w{3} (\w{3}) (\d+)", label or "")
     if not m: return None
     mo = MONTHS[m.group(1)]
-    return dt.date(2026 if mo >= 8 else 2027, mo, int(m.group(2))).isoformat()
+    return dt.date(2026 if mo >= 9 else 2027, mo, int(m.group(2))).isoformat()   # school year Oct 2026 – Aug 2027
 
 
 def stem(book):
@@ -138,6 +139,59 @@ def is_spanish_resource(r):
     return bool(re.search(r"lightbulblanguages|spanishlearninglab|[Ss]panish", json.dumps(r)))
 
 
+def extend_year(days, lib, planner, ic, keys):
+    """Summer extension: school days after the original last day (Jul 16, 2027) through sched.LAST_DAY, so every textbook
+    lesson and unit test has a day. Core subjects only (no elective); module 9 continues as weeks 5, 6, 7."""
+    last = max(days)
+    planner["calendar"]["instructionEnd"] = planner["calendar"]["end"] = sched.LAST_DAY.isoformat()
+    planner["calendar"]["breaks"] = [b for b in planner["calendar"]["breaks"] if not b[2].startswith("Portfolio")]
+    d0 = dt.date.fromisoformat(last) + dt.timedelta(1); added = 0
+    while d0 <= sched.LAST_DAY:
+        if d0.weekday() < 5 and not sched._off(d0):
+            date, wd = d0.isoformat(), d0.weekday()
+            tmpl_date = (dt.date.fromisoformat(last) - dt.timedelta(4 - wd)).isoformat()
+            for g in ("4", "7"):
+                t = days[tmpl_date][g]; mod = t["module"]; last_mon = dt.date.fromisoformat(last) - dt.timedelta(dt.date.fromisoformat(last).weekday())
+                wk = t["week"] + ((d0 - dt.timedelta(wd)) - last_mon).days // 7
+                n_ext = wk - t["week"]
+                core = ["math", "ela", "science" if wd in (0, 2) else "social"] if wd < 4 else ["review"]
+                # Placeholders; days with a scheduled textbook lesson are rewritten below to name the lesson and pages.
+                filler = {"Math:": "Math: Year-end review - Rework missed problems from the unit reviews in the workbook and prepare for the year-end test.",
+                          "ELA:": "ELA: Year-end review - Finish and revise portfolio pieces and prepare for the year-end test.",
+                          "Sci:": "Sci: Catch-up - Finish any unfinished Science textbook lessons, or review the unit's vocabulary and investigations.",
+                          "SS:": "SS: Catch-up - Finish any unfinished Social Studies textbook lessons, or review the unit's maps, timeline, and vocabulary."}
+                segs = [filler["Math:"], filler["ELA:"], filler["Sci:" if wd in (0, 2) else "SS:"]] if wd < 4 else \
+                       ["Friday: Review this week's textbook work, finish and revise, or catch up."]
+                rec = copy.deepcopy(t) | {"date": date, "week": wk, "day": wd, "tasks": " ".join(segs), "subjects": core, "practice": [], "elective": None,
+                    "goals": "Summer extension: daily Math and ELA; Science Monday/Wednesday; Social Studies Tuesday/Thursday. No elective.",
+                    "integration": f"Summer extension week {n_ext} of 3: finish the year's textbook lessons and unit tests.",
+                    "lesson_context": "Summer extension · core textbooks"}
+                days.setdefault(date, {})[g] = rec
+                keys[date] = keys.get(date, {}) | {g: {k: v for k, v in rec.items()}}
+                wkey = f"{g}-{mod}-{wk}"
+                if wkey not in lib["weeks"]:
+                    src = lib["weeks"][f"{g}-{mod}-{t['week']}"]
+                    lib["weeks"][wkey] = {k: copy.deepcopy(v) for k, v in src.items() if k in ("math", "ela", "science", "social", "review")}
+                    plan = next(p for p in planner["plans"] if str(p["grade"]) == g and p["module"] == mod)
+                    pw = copy.deepcopy(plan["weeks"][-1])
+                    start = (d0 - dt.timedelta(wd)).isoformat()
+                    pw |= {"number": wk, "start": start, "goals": rec["goals"], "integration": rec["integration"], "elective": None, "assessment": None,
+                           "subjects_by_day": [["math", "ela", "science"], ["math", "ela", "social"], ["math", "ela", "science"], ["math", "ela", "social"], ["review"]]}
+                    plan["weeks"].append(pw)
+                    iw = copy.deepcopy(next(w for w in ic["weeks"] if str(w["grade"]) == g and w["module"] == mod and w["week"] == t["week"]))
+                    iw |= {"week": wk, "school_week": iw["school_week"] + n_ext, "start": start, "assessment": (d0 + dt.timedelta(4 - wd)).isoformat(),
+                           "integration": rec["integration"], "elective": None, "active_subjects": ["math", "ela", "science", "social", "review"],
+                           "subjects": {k: v for k, v in iw["subjects"].items() if k in ("math", "ela", "science", "social")}}
+                    ic["weeks"].append(iw)
+                pw = next(w for p in planner["plans"] if str(p["grade"]) == g and p["module"] == mod for w in p["weeks"] if w["number"] == wk)
+                pw["days"] = pw["days"] if isinstance(pw["days"], list) else []
+                while len(pw["days"]) < 5: pw["days"].append("")
+                pw["days"][wd] = rec["tasks"]; pw["subjects_by_day"][wd] = core
+            added += 1
+        d0 += dt.timedelta(1)
+    return added
+
+
 def main():
     days, lib = load("daily-packets.json"), load("planner-resources.json")
     planner, ic = load("planner-data.json"), load("integrated-curriculum.json")
@@ -146,6 +200,8 @@ def main():
         json.dump({"days": days, "lib": lib, "planner": planner, "ic": ic, "books": books_lib}, gzip.open(BASELINE, "wt"), ensure_ascii=False)
     base = json.load(gzip.open(BASELINE, "rt"))
     days, lib, planner, ic, books_lib = (copy.deepcopy(base[k]) for k in ("days", "lib", "planner", "ic", "books"))
+    keys = load("daily-practice-keys.json")
+    print("summer extension days:", extend_year(days, lib, planner, ic, keys))
 
     schedule = {"4": {}, "7": {}, "parent": {}}
     by_date = {}          # (grade, date) -> {subject: [(book, item)]}
@@ -209,12 +265,13 @@ def main():
                         if rid(b, k) not in m.setdefault("resources", []): m["resources"].insert(0 if k == "textbook" else 1, rid(b, k))
                     if rid(b, "teacher") not in m.setdefault("teacher_resources", []): m["teacher_resources"].insert(0, rid(b, "teacher"))
                     m["primary"] = rid(b, "textbook")
-                    for k, label in (("textbook", "Textbook"), ("workbook", "Workbook practice")):
-                        r = reading(b, k, it, wd, f"{label} · Lesson {it['num']}: {it['title']}")
-                        if r: m["readings"].append(r)
-                    t = reading(b, "teacher", it, wd, f"Teacher Edition · Lesson {it['num']} plan and answer key")
-                    if t: m["teacher_readings"].append(t)
-                    m.setdefault("daily", {})[date] = f"Lesson {it['num']}: {it['title']}"
+                    for _, li in lessons:            # usually one lesson; two when a pacing.json anchor doubles up
+                        for k, label in (("textbook", "Textbook"), ("workbook", "Workbook practice")):
+                            r = reading(b, k, li, wd, f"{label} · Lesson {li['num']}: {li['title']}")
+                            if r: m["readings"].append(r)
+                        t = reading(b, "teacher", li, wd, f"Teacher Edition · Lesson {li['num']} plan and answer key")
+                        if t: m["teacher_readings"].append(t)
+                    m.setdefault("daily", {})[date] = " + ".join(f"Lesson {li['num']}: {li['title']}" for _, li in lessons)
                     m["mode"] = "VenvLearning textbook" + (" + elective pages" if s == "art" and m.get("category") == "Elective" else "")
                     m["reading_instruction"] = ("Read the textbook lesson together, then complete the matching workbook pages. "
                                                 "Exact printed and PDF pages are listed for each day; the Teacher Edition pages are under Parent preparation.")
@@ -222,7 +279,7 @@ def main():
                     units = sorted({(x[1]["unit"], x[1]["unit_title"]) for dd in range(5) for x in by_date.get((g, (dt.date.fromisoformat(date) - dt.timedelta(wd - 1 - dd)).isoformat()), {}).get(s, [])})
                     if units and s != "art": m["topic"] = f"Unit {units[0][0]}: {units[0][1]}"
                     elif units and m.get("category") != "Elective": m["topic"] = f"Unit {units[0][0]}: {units[0][1]}"
-                    seg = lesson_task(s, b, it)
+                    seg = lesson_task(s, b, it) + "".join(" Also " + lesson_task(s, b, li)[len(PREFIX[s]) + 1:] for _, li in lessons[1:])
                     old = next((i for i, x in enumerate(segs) if x.startswith(PREFIX[s])), None)
                     if s == "art" and old is not None and mapping.get("art", {}).get("category") == "Elective":
                         segs[old] = segs[old] + " Art textbook: " + seg[len(PREFIX[s]) + 1:]
@@ -326,7 +383,7 @@ def main():
                               "access": r["access"], "teacher": kind == "teacher", "weeks": weeks, "note": r["note"]})
     books_lib["items"] = new_items + books_lib["items"]
 
-    save("daily-packets.json", days); save("planner-resources.json", lib); save("planner-data.json", planner); save("integrated-curriculum.json", ic)
+    save("daily-packets.json", days); save("planner-resources.json", lib); save("planner-data.json", planner); save("integrated-curriculum.json", ic); save("daily-practice-keys.json", keys)
     json.dump(books_lib, open(os.path.join(ROOT, "books-library.json"), "w"), ensure_ascii=False, indent=1)
     json.dump({"generated": "2026-10-27", "cover_pages": COVER_PAGES, "grades": schedule}, open(os.path.join(ROOT, "textbook-schedule.json"), "w"), ensure_ascii=False, separators=(",", ":"))
     n = {g: sum(len(v) for v in schedule[g].values()) for g in schedule}

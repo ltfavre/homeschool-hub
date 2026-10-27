@@ -23,6 +23,8 @@ BOOKS = {
     "sci7": lambda: Book("science", 7, "Grade 7 Science", units("sci7")),
     "ss4": lambda: Book("social", 4, "Grade 4 Social Studies", units("ss4")),
     "ss7": lambda: Book("social", 7, "Grade 7 Social Studies", units("ss7")),
+    "data": lambda: Book("data", "pro", "Data Science & Psychometrics", units("data"), audience="Professional Learning", kinds=("textbook", "workbook"),
+                         medal=("YEAR", "1"), tagline="A VenvLearning professional learning curriculum", year_label="Professional Learning"),
 }
 
 if __name__ == "__main__":
@@ -30,15 +32,16 @@ if __name__ == "__main__":
     out = sys.argv[sys.argv.index("--out") + 1] if "--out" in sys.argv else os.path.join(HERE, "..", "downloads", "textbooks", key)
     os.makedirs(out, exist_ok=True)
     book = BOOKS[key]()
-    stem = f"grade{book.grade}-{book.subject}"
-    kinds = (("textbook", build_textbook), ("workbook", build_workbook), ("teacher", build_teacher))
+    stem = f"grade{book.grade}-{book.subject}" if book.subject != "data" else "data-science-psychometrics"
+    kinds = tuple(k for k in (("textbook", build_textbook), ("workbook", build_workbook), ("teacher", build_teacher)) if k[0] in book.kinds)
     if "--units" not in sys.argv or "--all" in sys.argv:
         for kind, fn in kinds:
             path = os.path.join(out, f"{stem}-{kind}.pdf"); fn(book, path); attach(book, kind, path); print("wrote", os.path.relpath(path))
     if "--units" in sys.argv:
         # one printable booklet per unit, for binders
         for U in book.units:
-            part = Book(book.subject, book.grade, f"{book.title} · Unit {U.num}", [U])
+            part = Book(book.subject, book.grade, f"{book.title} · Unit {U.num}", [U], audience=book.audience, kinds=book.kinds, medal=book.medal,
+                        tagline=book.tagline, year_label=book.year_label)
             for kind, fn in kinds:
                 path = os.path.join(out, "units", f"{stem}-unit{U.num:02d}-{kind}.pdf"); os.makedirs(os.path.dirname(path), exist_ok=True)
                 fn(part, path); attach(part, kind, path)

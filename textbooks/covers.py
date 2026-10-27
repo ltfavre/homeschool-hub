@@ -13,8 +13,19 @@ from engine import (PAGE_W, PAGE_H, LM, RM, IVORY, INK, GOLD, BLUSH, HUNTER, MUT
 M = 0.7 * inch   # cover margin
 
 
-def a(alpha, rgb=(1, 1, 1)):
-    return colors.Color(*rgb, alpha=alpha)
+ART_RGB = [(1, 1, 1)]
+
+
+def a(alpha, rgb=None):
+    return colors.Color(*(rgb or ART_RGB[0]), alpha=alpha)
+
+
+# Covers default to white type on the subject color; Data Science uses the signature blush with dark type.
+def palette(book):
+    t = book.theme
+    if book.subject == "data":
+        return dict(bg=BLUSH, ink=HUNTER, sub=t.dark, art=(0.49, 0.21, 0.26), band=t.dark)
+    return dict(bg=t.main, ink=WHITE, sub=BLUSH, art=(1, 1, 1), band=t.dark)
 
 
 def stripe(c, y, h=8, color=INK, step=6):
@@ -23,8 +34,9 @@ def stripe(c, y, h=8, color=INK, step=6):
         c.rect(x, y, step / 2, h, fill=1, stroke=0); x += step
 
 
-SHORT = {"math": "Mathematics", "ela": "English Language Arts", "science": "Science", "social": "Social Studies"}
-TITLE_LINES = {"math": ["Mathematics"], "ela": ["English", "Language Arts"], "science": ["Science"], "social": ["Social", "Studies"]}
+SHORT = {"math": "Mathematics", "ela": "English Language Arts", "science": "Science", "social": "Social Studies", "data": "Data Science & Psychometrics"}
+TITLE_LINES = {"math": ["Mathematics"], "ela": ["English", "Language Arts"], "science": ["Science"], "social": ["Social", "Studies"],
+               "data": ["Data Science &", "Psychometrics"]}
 
 BLURB = {
     "math": "A full year of Grade {g} mathematics, taught one clear idea at a time. Every lesson opens with a question worth thinking about, "
@@ -33,8 +45,21 @@ BLURB = {
            "grammar, and writing instruction, so students learn to read carefully, think deeply, and write with purpose.",
     "science": "A full year of Grade {g} science built around questions, investigations, and evidence. Students observe, measure, model, "
                "and explain the natural world, then use what they learn to design solutions to real problems.",
+    "data": "A year of professional learning in statistics, data science, and psychometrics, built for a working professional: about 30 minutes a day, "
+            "Monday through Friday. Every lesson pairs a short reading with worked examples, a suggested video, and hands-on code in SAS, Python, and R, "
+            "using realistic assessment and survey data.",
     "social": "A full year of Grade {g} social studies. Students read maps, weigh primary and secondary sources, build timelines, and "
               "connect geography, history, government, and economics to the people and places that shaped our world.",
+}
+KIND_BLURB_DATA = {
+    "textbook": "This <b>Textbook</b> teaches every lesson: the big idea, key terms, worked examples, side-by-side code in SAS, Python, and R, "
+                "suggested videos, and On the Job notes that connect each skill to real work. It pairs with the Workbook.",
+    "workbook": "This <b>Workbook</b> holds the hands-on practice for every lesson, a quiz every Friday, unit exams, and a complete answer key "
+                "with code solutions at the back.",
+}
+INSIDE_DATA = {
+    "textbook": ["Four 30-minute lessons a week, Monday–Thursday", "Code It examples in SAS, Python, and R", "Watch lists: videos and free courses for each topic", "On the Job notes and a glossary"],
+    "workbook": ["Practice and coding exercises for every lesson", "A quiz every Friday", "Unit exams", "Answer key with code solutions"],
 }
 KIND_BLURB = {
     "textbook": "This <b>Student Textbook</b> teaches every lesson: the big idea, key vocabulary, models and examples, and a short set of practice "
@@ -171,7 +196,36 @@ def art_social(c, cx, cy, r):
     c.line(x - 6, y - 6, x + 6, y + 6); c.line(x - 6, y + 6, x + 6, y - 6)
 
 
-ART = {"math": art_math, "ela": art_ela, "science": art_science, "social": art_social}
+def art_data(c, cx, cy, r):
+    # scatter with regression line, an item characteristic curve, a bell curve, and code brackets
+    import random
+    rnd = random.Random(7)
+    c.setStrokeColor(a(0.18)); c.setLineWidth(1)
+    x0, y0, w, h = cx - r * 1.15, cy - r * 0.9, r * 2.3, r * 1.8
+    for i in range(7): c.line(x0, y0 + i * h / 6, x0 + w, y0 + i * h / 6)
+    c.setStrokeColor(a(0.5)); c.setLineWidth(2); c.line(x0, y0, x0, y0 + h); c.line(x0, y0, x0 + w, y0)
+    c.setFillColor(a(0.42))
+    for _ in range(46):
+        u = rnd.random(); v = 0.15 + 0.7 * u + rnd.gauss(0, 0.09)
+        c.circle(x0 + u * w, y0 + max(0.03, min(0.97, v)) * h, 3.2, fill=1, stroke=0)
+    c.setStrokeColor(a(0.7)); c.setLineWidth(2.6); c.line(x0, y0 + 0.15 * h, x0 + w, y0 + 0.85 * h)
+    # ICC (logistic) curve
+    c.setStrokeColor(a(0.55)); c.setLineWidth(2.2); p = c.beginPath()
+    for i in range(61):
+        t = -3 + 6 * i / 60; px = x0 + (t + 3) / 6 * w; py = y0 + h * (0.05 + 0.9 / (1 + math.exp(-1.7 * t)))
+        (p.moveTo if i == 0 else p.lineTo)(px, py)
+    c.setDash(5, 4); c.drawPath(p, stroke=1, fill=0); c.setDash()
+    # bell curve above
+    c.setStrokeColor(a(0.45)); c.setLineWidth(1.8); p = c.beginPath()
+    for i in range(61):
+        t = -3 + 6 * i / 60; px = cx - r * 0.9 + (t + 3) / 6 * r * 1.8; py = cy + r * 1.05 + r * 0.55 * math.exp(-t * t / 2)
+        (p.moveTo if i == 0 else p.lineTo)(px, py)
+    c.drawPath(p, stroke=1, fill=0)
+    c.setFillColor(a(0.32)); c.setFont("MonoSemi", 30); c.drawCentredString(cx + r * 1.2, cy + r * 1.25, "</>")
+    c.setFont("MonoSemi", 15); c.drawString(x0 - r * 0.35, y0 - 26, "proc means;   df.describe()   summary(x)")
+
+
+ART = {"data": art_data, "math": art_math, "ela": art_ela, "science": art_science, "social": art_social}
 
 
 # ---------------------------------------------------------------- pages
@@ -185,8 +239,8 @@ def kind_badge(c, x, y, kind, center=False):
 
 
 def front(c, book, kind):
-    t = book.theme; g = book.grade
-    c.setFillColor(t.main); c.rect(0, 0, PAGE_W, PAGE_H, fill=1, stroke=0)
+    t = book.theme; g = book.grade; pal = palette(book); ART_RGB[0] = pal["art"]
+    c.setFillColor(pal["bg"]); c.rect(0, 0, PAGE_W, PAGE_H, fill=1, stroke=0)
     # soft diagonal light
     c.setFillColor(a(0.05)); p = c.beginPath(); p.moveTo(PAGE_W * 0.35, PAGE_H); p.lineTo(PAGE_W, PAGE_H); p.lineTo(PAGE_W, PAGE_H * 0.25); p.close(); c.drawPath(p, fill=1, stroke=0)
     # teacher edition gets a gold spine band
@@ -195,7 +249,7 @@ def front(c, book, kind):
     else:
         c.setFillColor(t.dark); c.rect(0, 0, 0.32 * inch, PAGE_H, fill=1, stroke=0)
     # top: wordmark and badge
-    text(c, M + 0.2 * inch, PAGE_H - 0.95 * inch, "VENVLEARNING", "BodySemi", 12, WHITE)
+    text(c, M + 0.2 * inch, PAGE_H - 0.95 * inch, "VENVLEARNING", "BodySemi", 12, pal["ink"])
     c.setFillColor(GOLD); c.rect(M + 0.2 * inch, PAGE_H - 1.08 * inch, 60, 3, fill=1, stroke=0)
     lab = KIND_LABEL[kind].upper(); bw = stringWidth(lab, "BodyBold", 11) + 34
     kind_badge(c, PAGE_W - M - bw, PAGE_H - 1.08 * inch, kind)
@@ -208,38 +262,42 @@ def front(c, book, kind):
     maxw = mx - mr - 18 - x
     size = min(66 if len(lines) == 1 else 58, min(maxw / stringWidth(ln, "Display", 1) for ln in lines))
     for k, ln in enumerate(lines):
-        text(c, x, y - k * size * 0.98, ln, "Display", size, WHITE)
+        text(c, x, y - k * size * 0.98, ln, "Display", size, pal["ink"])
     yb = y - (len(lines) - 1) * size * 0.98
     # grade medallion
     c.setFillColor(IVORY); c.circle(mx, my, mr, fill=1, stroke=0)
     c.setStrokeColor(GOLD); c.setLineWidth(3); c.circle(mx, my, mr - 7, fill=0, stroke=1)
-    text(c, mx, my + 0.28 * inch, "GRADE", "BodyBold", 11, t.dark, "c")
-    text(c, mx, my - 0.5 * inch, str(g), "Display", 72, t.main, "c")
+    text(c, mx, my + 0.28 * inch, book.medal[0], "BodyBold", 11, t.dark, "c")
+    text(c, mx, my - 0.5 * inch, book.medal[1], "Display", 72, t.main, "c")
     # subtitle
     sub = {"textbook": "Lessons, examples, and practice for the whole year", "workbook": "Daily practice, weekly checks, and unit tests",
            "teacher": "Guided lessons, pacing, and complete answer keys"}[kind]
-    text(c, x, yb - 0.55 * inch, sub, "BodyMed", 14, BLUSH)
+    if book.subject == "data":
+        sub = {"textbook": "Statistics, coding, and measurement in 30 minutes a day", "workbook": "Practice, coding exercises, weekly quizzes, and answers"}[kind]
+    text(c, x, yb - 0.55 * inch, sub, "BodyMed", 14, pal["sub"])
     scope = f"{len(book.units)} units" if len(book.units) > 1 else f"Unit {book.units[0].num}: {book.units[0].title}"
-    text(c, x, yb - 0.85 * inch, f"{book.year} School Year  ·  {scope}", "Body", 11, a(0.8))
+    text(c, x, yb - 0.85 * inch, f"{book.year} {book.year_label}  ·  {scope}", "Body", 11, a(0.8, (1, 1, 1) if pal["ink"] == WHITE else (0.08, 0.17, 0.14)))
     # bottom band
     c.setFillColor(t.dark); c.rect(0, 0, PAGE_W, 0.95 * inch, fill=1, stroke=0)
     stripe(c, 0.95 * inch, 8, INK)
-    text(c, M + 0.2 * inch, 0.42 * inch, "A VenvLearning family homeschool curriculum", "Body", 10, a(0.85))
-    text(c, PAGE_W - M, 0.42 * inch, f"GRADE {g}  ·  {SHORT[book.subject].upper()}", "BodySemi", 9, GOLD, "r")
+    text(c, M + 0.2 * inch, 0.42 * inch, book.tagline, "Body", 10, colors.Color(1, 1, 1, alpha=0.85))
+    right = f"{book.audience.upper()}  ·  {SHORT[book.subject].upper()}" if book.subject != "data" else "SAS  ·  PYTHON  ·  R"
+    text(c, PAGE_W - M, 0.42 * inch, right, "BodySemi", 9, GOLD, "r")
+    ART_RGB[0] = (1, 1, 1)
 
 
 def mini_cover(c, x, y, w, h, book, kind, here):
-    t = book.theme
-    c.setFillColor(t.main); c.roundRect(x, y, w, h, 4, fill=1, stroke=0)
+    t = book.theme; pal = palette(book)
+    c.setFillColor(pal["bg"]); c.roundRect(x, y, w, h, 4, fill=1, stroke=0)
     c.setFillColor(GOLD if kind == "teacher" else t.dark); c.rect(x, y, 6, h, fill=1, stroke=0)
     c.setFillColor(t.dark); c.rect(x, y, w, h * 0.16, fill=1, stroke=0)
     c.setFillColor(IVORY); c.circle(x + w - 16, y + h * 0.42, 11, fill=1, stroke=0)
-    text(c, x + w - 16, y + h * 0.42 - 5, str(book.grade), "Display", 14, t.main, "c")
+    text(c, x + w - 16, y + h * 0.42 - 5, book.medal[1], "Display", 14, t.main, "c")
     words = TITLE_LINES[book.subject]
     fs = min(12, min((w - 40) / stringWidth(ln, "Display", 1) for ln in words))
     for k, ln in enumerate(words):
-        text(c, x + 12, y + h * 0.62 - k * (fs + 1), ln, "Display", fs, WHITE)
-    text(c, x + 12, y + h - 16, "VENVLEARNING", "BodySemi", 5.5, WHITE)
+        text(c, x + 12, y + h * 0.62 - k * (fs + 1), ln, "Display", fs, pal["ink"])
+    text(c, x + 12, y + h - 16, "VENVLEARNING", "BodySemi", 5.5, pal["ink"])
     lab = KIND_LABEL[kind].replace("Student ", "")
     text(c, x + w / 2, y - 14, lab, "BodySemi", 9, INK, "c")
     if here:
@@ -250,20 +308,23 @@ def mini_cover(c, x, y, w, h, book, kind, here):
 def back(c, book, kind):
     t = book.theme; g = book.grade
     c.setFillColor(IVORY); c.rect(0, 0, PAGE_W, PAGE_H, fill=1, stroke=0)
-    c.setFillColor(t.main); c.rect(0, PAGE_H - 1.55 * inch, PAGE_W, 1.55 * inch, fill=1, stroke=0)
+    pal = palette(book)
+    c.setFillColor(pal["bg"]); c.rect(0, PAGE_H - 1.55 * inch, PAGE_W, 1.55 * inch, fill=1, stroke=0)
     stripe(c, PAGE_H - 1.55 * inch - 8, 8, INK)
     c.setFillColor(GOLD if kind == "teacher" else t.dark); c.rect(PAGE_W - 0.32 * inch, 0, 0.32 * inch, PAGE_H, fill=1, stroke=0)
-    text(c, M, PAGE_H - 0.75 * inch, f"Grade {g} {SHORT[book.subject]}", "Display", 32, WHITE)
-    text(c, M, PAGE_H - 1.12 * inch, KIND_LABEL[kind] + "  ·  " + book.year, "BodyMed", 12, BLUSH)
+    head = f"Grade {g} {SHORT[book.subject]}" if book.subject != "data" else SHORT["data"]
+    text(c, M, PAGE_H - 0.75 * inch, head, "Display", 32, pal["ink"])
+    text(c, M, PAGE_H - 1.12 * inch, KIND_LABEL[kind] + "  ·  " + book.year + ("  ·  " + book.audience if book.subject == "data" else ""), "BodyMed", 12, pal["sub"])
 
     body = ParagraphStyle("b", fontName="Body", fontSize=11.5, leading=17, textColor=INK)
     y = PAGE_H - 2.05 * inch; wcol = PAGE_W - 2 * M - 0.3 * inch
-    for html in (BLURB[book.subject].format(g=g), KIND_BLURB[kind]):
+    for html in (BLURB[book.subject].format(g=g), (KIND_BLURB_DATA if book.subject == "data" else KIND_BLURB)[kind]):
         para = Paragraph(html, body); _, h = para.wrap(wcol, 400); para.drawOn(c, M, y - h); y -= h + 10
 
     # two columns: units | what's inside
     y -= 14
     text(c, M, y, "INSIDE THIS YEAR", "BodyBold", 9, t.main)
+    inside = (INSIDE_DATA if book.subject == "data" else INSIDE)[kind]
     colx = M + wcol * 0.56
     text(c, colx, y, "IN THIS BOOK", "BodyBold", 9, t.main)
     c.setFillColor(GOLD); c.rect(M, y - 7, 40, 2, fill=1, stroke=0); c.rect(colx, y - 7, 40, 2, fill=1, stroke=0)
@@ -273,7 +334,7 @@ def back(c, book, kind):
         text(c, M, yy, f"{u.num:02d}", "MonoSemi", 9.5, t.main)
         para = Paragraph(u.title, us); _, h = para.wrap(wcol * 0.5 - 28, 100); para.drawOn(c, M + 26, yy - h + 10); yy -= max(h, 13) + 5
     yi = y - 26
-    for item in INSIDE[kind]:
+    for item in inside:
         c.setFillColor(t.main); c.circle(colx + 4, yi + 3.5, 3, fill=1, stroke=0)
         para = Paragraph(item, us); _, h = para.wrap(wcol * 0.44 - 16, 100); para.drawOn(c, colx + 14, yi - h + 10); yi -= h + 7
 
@@ -285,25 +346,26 @@ def back(c, book, kind):
     text(c, M, ys, "THE COMPLETE SET", "BodyBold", 9, t.main)
     c.setFillColor(GOLD); c.rect(M, ys - 7, 40, 2, fill=1, stroke=0)
     gap = 0.45 * inch
-    for k, kd in enumerate(("textbook", "workbook", "teacher")):
+    for k, kd in enumerate(book.kinds):
         mini_cover(c, M + k * (w + gap), ys - 20 - h, w, h, book, kd, kd == kind)
     note = ParagraphStyle("n", fontName="Body", fontSize=9.5, leading=13, textColor=MUTED)
-    para = Paragraph("Each lesson has the same number in all three books, and every school day of the year is mapped to its lesson in the "
+    n = {2: "both", 3: "all three"}[len(book.kinds)]
+    para = Paragraph(f"Each lesson has the same number in {n} books, and every day of the year is mapped to its lesson in the "
                      "VenvLearning planner.", note)
-    sx = M + 3 * (w + gap); _, ph = para.wrap(PAGE_W - sx - M - 0.3 * inch, 200); para.drawOn(c, sx, ys - 20 - h / 2 - ph / 2)
+    sx = M + len(book.kinds) * (w + gap); _, ph = para.wrap(PAGE_W - sx - M - 0.3 * inch, 200); para.drawOn(c, sx, ys - 20 - h / 2 - ph / 2)
 
     # footer band
     c.setFillColor(t.dark); c.rect(0, 0, PAGE_W - 0.32 * inch, 0.95 * inch, fill=1, stroke=0)
     stripe(c, 0.95 * inch, 8, INK)
     text(c, M, 0.48 * inch, "VENVLEARNING", "BodySemi", 12, WHITE)
     c.setFillColor(GOLD); c.rect(M, 0.38 * inch, 54, 2.5, fill=1, stroke=0)
-    text(c, PAGE_W - M - 0.3 * inch, 0.48 * inch, f"Grade {g}  ·  {SHORT[book.subject]}  ·  {KIND_LABEL[kind]}", "Body", 9.5, a(0.85), "r")
+    text(c, PAGE_W - M - 0.3 * inch, 0.48 * inch, f"{book.audience}  ·  {SHORT[book.subject]}  ·  {KIND_LABEL[kind]}", "Body", 9.5, colors.Color(1, 1, 1, alpha=0.85), "r")
 
 
 def make_covers(book, kind, path=None):
     buf = path or io.BytesIO()
     c = _canvas.Canvas(buf, pagesize=(PAGE_W, PAGE_H))
-    c.setTitle(f"Grade {book.grade} {SHORT[book.subject]} · {KIND_LABEL[kind]} · Covers"); c.setAuthor("VenvLearning")
+    c.setTitle(f"{book.audience} {SHORT[book.subject]} · {KIND_LABEL[kind]} · Covers"); c.setAuthor("VenvLearning")
     front(c, book, kind); c.showPage(); back(c, book, kind); c.showPage(); c.save()
     return buf
 

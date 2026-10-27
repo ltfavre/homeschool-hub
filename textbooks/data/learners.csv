@@ -1,0 +1,361 @@
+learner_id,program,pre_score,post_score,study_hours,attendance_pct,passed
+L701,Standard,61,61,11.5,85,0
+L702,Tutoring,53,66,9.1,87,0
+L703,Online Modules,65,68,6.7,95,0
+L704,Standard,45,64,15.0,92,0
+L705,Tutoring,66,90,18.7,78,1
+L706,Standard,55,60,6.3,80,0
+L707,Standard,57,56,3.4,84,0
+L708,Standard,53,65,4.7,81,0
+L709,Standard,48,59,9.2,90,0
+L710,Online Modules,67,74,9.9,100,0
+L711,Tutoring,60,72,9.0,80,0
+L712,Standard,75,78,15.2,93,1
+L713,Tutoring,48,64,8.6,86,0
+L714,Tutoring,62,83,13.3,97,1
+L715,Online Modules,60,69,3.5,79,0
+L716,Tutoring,65,84,5.4,83,1
+L717,Tutoring,57,72,27.0,89,0
+L718,Tutoring,74,98,14.7,94,1
+L719,Tutoring,55,66,16.3,86,0
+L720,Standard,42,50,7.1,86,0
+L721,Standard,71,79,10.5,94,1
+L722,Tutoring,72,78,5.1,77,1
+L723,Online Modules,63,71,9.9,85,0
+L724,Standard,47,60,17.8,90,0
+L725,Tutoring,77,78,5.2,89,1
+L726,Standard,47,48,7.6,88,0
+L727,Tutoring,64,80,15.9,89,1
+L728,Tutoring,68,72,7.1,91,0
+L729,Online Modules,64,71,12.9,79,0
+L730,Standard,69,74,1.0,78,0
+L731,Standard,62,67,18.3,88,0
+L732,Standard,68,71,48.0,81,0
+L733,Standard,64,78,17.2,91,1
+L734,Tutoring,69,79,18.1,84,1
+L735,Tutoring,38,62,12.0,77,0
+L736,Online Modules,51,77,8.9,85,1
+L737,Tutoring,67,75,13.3,86,1
+L738,Online Modules,73,85,5.8,86,1
+L739,Online Modules,64,75,14.3,98,1
+L740,Online Modules,71,78,10.1,81,1
+L741,Standard,70,74,5.0,89,0
+L742,Standard,58,64,10.7,83,0
+L743,Online Modules,77,84,10.0,89,1
+L744,Standard,69,73,24.7,98,0
+L745,Standard,56,74,7.8,100,0
+L746,Tutoring,55,69,12.9,84,0
+L747,Tutoring,50,66,13.6,89,0
+L748,Standard,61,61,12.9,89,0
+L749,Online Modules,58,72,11.8,86,0
+L750,Standard,65,73,8.1,85,0
+L751,Tutoring,80,84,8.6,70,1
+L752,Standard,46,53,12.4,87,0
+L753,Standard,62,70,8.4,98,0
+L754,Tutoring,51,62,2.4,83,0
+L755,Tutoring,54,62,6.7,89,0
+L756,Online Modules,62,70,12.8,77,0
+L757,Tutoring,69,86,20.6,89,1
+L758,Tutoring,78,86,13.7,95,1
+L759,Standard,64,69,6.9,93,0
+L760,Online Modules,64,69,9.1,86,0
+L761,Tutoring,66,67,10.4,81,0
+L762,Standard,57,74,28.7,89,0
+L763,Tutoring,68,78,15.6,93,1
+L764,Tutoring,73,87,4.3,85,1
+L765,Online Modules,65,58,3.4,85,0
+L766,Standard,60,58,9.5,98,0
+L767,Tutoring,62,64,8.0,96,0
+L768,Standard,67,62,23.0,87,0
+L769,Online Modules,53,69,14.4,93,0
+L770,Online Modules,55,71,15.4,82,0
+L771,Standard,56,62,7.3,100,0
+L772,Tutoring,56,84,9.0,82,1
+L773,Online Modules,63,80,17.5,77,1
+L774,Standard,67,73,15.3,91,0
+L775,Tutoring,64,68,4.8,75,0
+L776,Online Modules,59,66,7.2,97,0
+L777,Tutoring,59,77,14.3,95,1
+L778,Standard,54,67,13.6,84,0
+L779,Standard,74,71,19.0,87,0
+L780,Online Modules,59,71,11.4,94,0
+L781,Online Modules,50,62,20.5,97,0
+L782,Online Modules,91,97,10.6,94,1
+L783,Tutoring,60,61,2.3,92,0
+L784,Online Modules,69,65,6.7,76,0
+L785,Standard,59,70,23.7,91,0
+L786,Tutoring,70,80,4.0,88,1
+L787,Standard,68,78,4.6,84,1
+L788,Tutoring,65,73,16.1,99,0
+L789,Tutoring,49,61,18.0,85,0
+L790,Tutoring,65,78,7.8,86,1
+L791,Standard,66,74,0.7,92,0
+L792,Tutoring,67,84,7.9,86,1
+L793,Online Modules,56,61,7.1,86,0
+L794,Tutoring,68,83,11.5,93,1
+L795,Standard,66,74,14.6,86,0
+L796,Tutoring,60,59,2.8,97,0
+L797,Standard,84,88,3.0,96,1
+L798,Standard,68,76,9.0,74,1
+L799,Online Modules,66,61,8.7,92,0
+L800,Tutoring,50,70,3.6,82,0
+L801,Online Modules,75,80,15.7,90,1
+L802,Standard,61,64,8.2,87,0
+L803,Online Modules,56,67,7.5,94,0
+L804,Tutoring,69,77,16.3,93,1
+L805,Standard,52,67,18.0,82,0
+L806,Tutoring,54,58,11.0,79,0
+L807,Tutoring,59,67,8.2,88,0
+L808,Standard,74,68,18.6,100,0
+L809,Standard,57,67,6.9,92,0
+L810,Standard,68,77,13.2,82,1
+L811,Standard,71,74,9.7,81,0
+L812,Online Modules,40,59,12.2,99,0
+L813,Standard,55,60,12.5,74,0
+L814,Tutoring,58,68,10.6,80,0
+L815,Tutoring,66,73,11.1,92,0
+L816,Standard,56,63,8.4,80,0
+L817,Standard,64,69,19.9,87,0
+L818,Tutoring,63,74,3.9,80,0
+L819,Standard,58,74,1.8,97,0
+L820,Tutoring,64,83,11.3,99,1
+L821,Tutoring,62,69,0.6,80,0
+L822,Online Modules,62,78,25.8,77,1
+L823,Tutoring,82,98,11.4,86,1
+L824,Tutoring,76,94,24.3,81,1
+L825,Tutoring,53,65,12.3,87,0
+L826,Tutoring,63,68,17.6,92,0
+L827,Tutoring,65,81,15.5,90,1
+L828,Standard,60,67,13.4,100,0
+L829,Tutoring,53,67,11.7,98,0
+L830,Online Modules,29,54,10.0,100,0
+L831,Online Modules,63,69,3.8,98,0
+L832,Tutoring,57,70,3.2,89,0
+L833,Standard,60,71,26.4,89,0
+L834,Standard,62,66,17.6,96,0
+L835,Standard,61,69,8.8,82,0
+L836,Online Modules,61,63,4.6,92,0
+L837,Tutoring,57,70,9.3,100,0
+L838,Online Modules,53,68,14.2,100,0
+L839,Standard,69,65,6.1,79,0
+L840,Tutoring,74,80,6.4,82,1
+L841,Tutoring,63,70,9.5,68,0
+L842,Online Modules,56,61,24.0,91,0
+L843,Standard,59,72,19.0,97,0
+L844,Standard,59,71,10.2,78,0
+L845,Standard,45,61,22.1,100,0
+L846,Standard,63,71,32.6,89,0
+L847,Standard,46,56,8.1,81,0
+L848,Tutoring,69,74,6.0,84,0
+L849,Tutoring,67,83,19.3,79,1
+L850,Standard,61,68,9.5,82,0
+L851,Tutoring,64,76,12.6,89,1
+L852,Online Modules,65,72,1.9,83,0
+L853,Standard,59,69,11.0,83,0
+L854,Tutoring,82,88,22.9,81,1
+L855,Online Modules,51,69,6.8,88,0
+L856,Standard,67,77,21.3,100,1
+L857,Online Modules,79,86,9.5,88,1
+L858,Tutoring,62,68,17.5,90,0
+L859,Tutoring,78,79,17.1,75,1
+L860,Standard,62,60,16.7,86,0
+L861,Standard,59,72,18.6,76,0
+L862,Tutoring,67,75,2.7,76,1
+L863,Standard,64,81,17.2,94,1
+L864,Tutoring,65,78,6.2,98,1
+L865,Tutoring,69,81,7.4,79,1
+L866,Standard,63,69,15.0,92,0
+L867,Tutoring,57,69,20.3,79,0
+L868,Tutoring,62,69,8.9,91,0
+L869,Online Modules,67,67,20.3,83,0
+L870,Standard,41,55,17.1,85,0
+L871,Standard,51,64,17.2,92,0
+L872,Online Modules,58,75,8.2,82,1
+L873,Tutoring,64,83,5.0,85,1
+L874,Online Modules,62,64,16.6,87,0
+L875,Online Modules,43,62,8.4,90,0
+L876,Tutoring,61,69,5.1,90,0
+L877,Online Modules,77,91,43.8,95,1
+L878,Online Modules,76,75,12.4,59,1
+L879,Online Modules,61,63,19.8,91,0
+L880,Standard,62,63,19.7,79,0
+L881,Tutoring,54,77,15.8,98,1
+L882,Tutoring,65,78,3.5,83,1
+L883,Online Modules,52,71,9.7,83,0
+L884,Standard,49,67,25.2,73,0
+L885,Online Modules,64,64,13.3,81,0
+L886,Tutoring,45,54,4.7,87,0
+L887,Tutoring,50,55,2.2,77,0
+L888,Online Modules,60,70,25.5,84,0
+L889,Standard,74,63,13.8,76,0
+L890,Tutoring,72,79,3.8,96,1
+L891,Standard,68,73,22.6,93,0
+L892,Standard,74,81,5.8,72,1
+L893,Online Modules,48,51,5.7,91,0
+L894,Tutoring,73,89,11.8,79,1
+L895,Online Modules,49,60,13.0,96,0
+L896,Standard,74,81,29.5,100,1
+L897,Tutoring,65,75,20.8,91,1
+L898,Standard,62,70,6.1,100,0
+L899,Tutoring,60,73,13.0,92,0
+L900,Standard,66,88,24.6,90,1
+L901,Online Modules,63,58,4.7,93,0
+L902,Standard,67,68,7.3,87,0
+L903,Standard,64,70,6.4,87,0
+L904,Standard,62,72,14.1,78,0
+L905,Online Modules,72,82,19.1,89,1
+L906,Online Modules,50,60,8.7,93,0
+L907,Standard,54,65,9.8,81,0
+L908,Tutoring,60,80,10.3,90,1
+L909,Standard,75,77,19.7,87,1
+L910,Tutoring,53,69,7.2,84,0
+L911,Tutoring,65,69,3.0,96,0
+L912,Tutoring,65,78,11.8,71,1
+L913,Tutoring,60,68,24.1,86,0
+L914,Tutoring,49,76,32.0,97,1
+L915,Standard,56,54,14.6,98,0
+L916,Tutoring,50,59,7.7,100,0
+L917,Tutoring,68,89,14.6,95,1
+L918,Tutoring,74,80,7.3,79,1
+L919,Standard,59,66,19.0,92,0
+L920,Online Modules,61,78,5.7,97,1
+L921,Standard,58,75,13.3,81,1
+L922,Tutoring,54,73,25.0,87,0
+L923,Online Modules,72,74,18.2,86,0
+L924,Standard,72,75,13.8,93,1
+L925,Online Modules,62,60,3.1,82,0
+L926,Standard,57,64,7.1,80,0
+L927,Tutoring,44,64,22.9,89,0
+L928,Standard,66,75,10.7,85,1
+L929,Tutoring,56,75,16.0,94,1
+L930,Online Modules,82,86,9.2,84,1
+L931,Online Modules,70,81,15.8,81,1
+L932,Online Modules,46,63,12.2,82,0
+L933,Tutoring,72,87,21.5,79,1
+L934,Online Modules,51,58,18.6,98,0
+L935,Standard,59,75,21.5,85,1
+L936,Standard,46,46,8.2,80,0
+L937,Standard,69,77,7.6,85,1
+L938,Tutoring,78,96,5.4,89,1
+L939,Standard,61,72,25.8,87,0
+L940,Tutoring,81,92,8.6,85,1
+L941,Standard,55,61,5.9,92,0
+L942,Online Modules,61,74,15.5,100,0
+L943,Online Modules,50,63,1.8,100,0
+L944,Tutoring,54,61,8.5,79,0
+L945,Standard,70,63,10.8,91,0
+L946,Online Modules,74,84,3.6,89,1
+L947,Standard,56,69,11.6,92,0
+L948,Standard,41,50,6.8,99,0
+L949,Tutoring,79,98,21.5,77,1
+L950,Online Modules,68,75,19.7,94,1
+L951,Tutoring,71,64,18.7,77,0
+L952,Online Modules,63,78,10.0,92,1
+L953,Standard,69,73,11.2,88,0
+L954,Standard,63,66,14.2,91,0
+L955,Tutoring,66,70,11.6,94,0
+L956,Tutoring,63,71,4.4,87,0
+L957,Standard,60,66,7.8,78,0
+L958,Tutoring,58,67,11.1,81,0
+L959,Standard,75,70,10.8,91,0
+L960,Standard,69,81,8.1,93,1
+L961,Online Modules,68,65,26.4,94,0
+L962,Tutoring,52,70,15.6,83,0
+L963,Standard,53,66,13.8,82,0
+L964,Tutoring,67,75,5.6,88,1
+L965,Online Modules,55,55,2.8,95,0
+L966,Online Modules,55,63,9.4,83,0
+L967,Tutoring,54,75,16.4,80,1
+L968,Online Modules,80,80,4.9,81,1
+L969,Tutoring,59,71,15.6,90,0
+L970,Standard,71,80,12.5,90,1
+L971,Tutoring,53,64,6.0,86,0
+L972,Online Modules,86,85,12.0,90,1
+L973,Online Modules,62,56,13.3,76,0
+L974,Tutoring,66,78,18.0,86,1
+L975,Tutoring,69,80,19.1,95,1
+L976,Tutoring,66,74,16.8,96,0
+L977,Standard,60,62,6.7,84,0
+L978,Tutoring,54,51,13.8,80,0
+L979,Online Modules,61,68,12.2,95,0
+L980,Standard,70,77,21.2,100,1
+L981,Tutoring,67,69,12.9,99,0
+L982,Tutoring,61,74,6.9,81,0
+L983,Tutoring,64,93,11.0,90,1
+L984,Standard,69,85,7.2,81,1
+L985,Tutoring,61,74,13.8,89,0
+L986,Tutoring,52,62,22.1,79,0
+L987,Online Modules,71,82,4.5,88,1
+L988,Online Modules,68,69,8.3,99,0
+L989,Standard,52,56,2.7,98,0
+L990,Online Modules,61,63,5.4,81,0
+L991,Online Modules,54,55,8.8,91,0
+L992,Online Modules,48,65,13.1,94,0
+L993,Standard,56,61,16.6,100,0
+L994,Online Modules,63,75,9.7,91,1
+L995,Tutoring,62,84,20.0,81,1
+L996,Standard,77,68,10.0,84,0
+L997,Tutoring,62,76,19.4,94,1
+L998,Standard,60,70,22.5,98,0
+L999,Tutoring,62,74,8.3,75,0
+L1000,Standard,64,74,17.7,85,0
+L1001,Tutoring,66,72,15.8,79,0
+L1002,Online Modules,66,82,14.2,100,1
+L1003,Standard,50,70,23.3,95,0
+L1004,Standard,57,72,19.5,91,0
+L1005,Standard,53,57,19.6,95,0
+L1006,Tutoring,63,57,19.8,100,0
+L1007,Online Modules,48,65,16.2,87,0
+L1008,Standard,47,62,14.4,90,0
+L1009,Tutoring,55,75,11.1,83,1
+L1010,Online Modules,66,84,7.9,100,1
+L1011,Online Modules,61,74,18.9,100,0
+L1012,Online Modules,81,82,7.5,99,1
+L1013,Tutoring,81,86,6.0,82,1
+L1014,Tutoring,69,91,5.0,90,1
+L1015,Tutoring,64,74,7.1,93,0
+L1016,Online Modules,55,75,8.8,90,1
+L1017,Standard,63,79,4.2,87,1
+L1018,Tutoring,65,69,4.5,86,0
+L1019,Online Modules,37,60,26.6,84,0
+L1020,Online Modules,50,62,14.0,87,0
+L1021,Standard,37,45,13.9,94,0
+L1022,Tutoring,61,82,10.8,95,1
+L1023,Standard,74,77,2.7,100,1
+L1024,Online Modules,84,89,8.0,83,1
+L1025,Tutoring,39,49,8.7,90,0
+L1026,Standard,65,67,8.9,80,0
+L1027,Tutoring,67,82,15.8,80,1
+L1028,Standard,44,62,8.8,82,0
+L1029,Tutoring,51,71,11.6,93,0
+L1030,Standard,39,60,12.3,86,0
+L1031,Tutoring,60,78,12.5,75,1
+L1032,Online Modules,57,72,19.1,95,0
+L1033,Online Modules,65,76,18.6,100,1
+L1034,Online Modules,64,74,14.2,85,0
+L1035,Tutoring,62,78,4.9,91,1
+L1036,Tutoring,53,69,18.3,91,0
+L1037,Standard,67,66,7.4,95,0
+L1038,Standard,74,82,16.7,83,1
+L1039,Online Modules,79,83,8.3,76,1
+L1040,Tutoring,57,57,21.1,77,0
+L1041,Standard,62,69,33.5,97,0
+L1042,Tutoring,63,78,10.3,97,1
+L1043,Standard,74,72,11.9,79,0
+L1044,Online Modules,65,78,18.7,76,1
+L1045,Standard,59,74,15.3,91,0
+L1046,Standard,75,77,7.0,82,1
+L1047,Standard,76,86,13.9,87,1
+L1048,Tutoring,48,63,10.1,95,0
+L1049,Standard,70,77,8.2,86,1
+L1050,Online Modules,55,70,15.0,93,0
+L1051,Standard,60,73,26.3,79,0
+L1052,Online Modules,56,63,6.4,99,0
+L1053,Online Modules,59,61,7.6,78,0
+L1054,Standard,69,82,27.0,88,1
+L1055,Standard,53,72,17.3,93,0
+L1056,Standard,48,57,22.1,74,0
+L1057,Online Modules,50,51,8.9,71,0
+L1058,Online Modules,63,66,7.8,93,0
+L1059,Online Modules,64,67,7.1,84,0
+L1060,Standard,51,64,15.5,100,0

@@ -6,6 +6,9 @@ from engine import *
 
 def check_tag(C):
     """Eyebrow label for a check page."""
+    if "Quiz" in C.title: return "WEEKLY QUIZ"
+    if "Final Exam" in C.title: return "FINAL EXAM" if C.kind == "test" else "FINAL REVIEW"
+    if "Exam" in C.title: return "UNIT EXAM"
     if "Year-End" in C.title:
         return "YEAR-END TEST" if C.kind == "test" else "YEAR-END REVIEW"
     return {"test": "UNIT TEST", "review": "UNIT REVIEW"}.get(C.kind, "WEEKLY CHECK")
@@ -58,7 +61,53 @@ def render_blocks(t, blocks, teacher=False):
             out += [tb, Spacer(1, 8)]
         elif isinstance(b, Investigate):
             out += [Spacer(1, 4), investigate_box(t, b), Spacer(1, 8)]
+        elif isinstance(b, Code):
+            out += [Spacer(1, 4)] + code_box(t, b) + [Spacer(1, 8)]
+        elif isinstance(b, Watch):
+            out += [Spacer(1, 2), watch_box(t, b), Spacer(1, 8)]
+        elif isinstance(b, OnTheJob):
+            out += [Spacer(1, 2), panel([P("ON THE JOB", ParagraphStyle("otj", parent=t.eyebrow, textColor=HUNTER)), P(b.t, t.boxt)], SAGE_WASH, left_bar=HUNTER), Spacer(1, 8)]
     return out
+
+
+CODE_BG = colors.HexColor("#FBF4F5")
+LANG = [("sas", "SAS", colors.HexColor("#1F5FA0")), ("python", "PYTHON", colors.HexColor("#3B6E3B")), ("r", "R", colors.HexColor("#5B4A8C"))]
+
+
+def _code_para(src, size=8.4):
+    from reportlab.platypus import XPreformatted
+    esc = src.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    return XPreformatted(esc, ParagraphStyle("code", fontName="Mono", fontSize=size, leading=size * 1.32, textColor=INK))
+
+
+def code_box(t, cb):
+    """Header row, then one row per language (label pill + code) so a long block can continue onto the next page."""
+    rows = [[P(f"CODE IT  ·  {cb.title.upper()}", t.eyebrow), ""]]
+    styles = [("SPAN", (0, 0), (1, 0))]
+    for key, lab, col in LANG:
+        src = getattr(cb, key)
+        if not src: continue
+        pill = Table([[P(f"<b>{lab}</b>", ParagraphStyle("pl", parent=t.small, textColor=WHITE, alignment=TA_CENTER, fontSize=7.5, leading=9))]], colWidths=[46], rowHeights=[14])
+        pill.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), col), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("TOPPADDING", (0, 0), (-1, -1), 0),
+                                  ("BOTTOMPADDING", (0, 0), (-1, -1), 2), ("ROUNDEDCORNERS", [4, 4, 4, 4])]))
+        rows.append([pill, _code_para(src.strip("\n"))])
+    if cb.output:
+        rows.append([P("<b>OUTPUT</b>", ParagraphStyle("ol", parent=t.small, fontSize=7.5, textColor=MUTED)), _code_para(cb.output.strip("\n"), 8)])
+    if cb.note:
+        rows.append([P("", t.small), P(cb.note, ParagraphStyle("cn", parent=t.small, textColor=INK))]); 
+    tb = Table(rows, colWidths=[58, W - 58])
+    tb.setStyle(TableStyle(styles + [("VALIGN", (0, 0), (-1, -1), "TOP"), ("BOX", (0, 0), (-1, -1), 0.8, t.mid), ("BACKGROUND", (0, 0), (-1, -1), CODE_BG),
+                                     ("LINEABOVE", (0, 0), (-1, 0), 4, t.main), ("LINEBELOW", (0, 1), (-1, -2), 0.4, LINE),
+                                     ("LEFTPADDING", (0, 0), (-1, -1), 8), ("RIGHTPADDING", (0, 0), (-1, -1), 8), ("TOPPADDING", (0, 0), (-1, -1), 6), ("BOTTOMPADDING", (0, 0), (-1, -1), 6)]))
+    return [tb]
+
+
+def watch_box(t, wb):
+    inner = [P("WATCH AND EXPLORE", t.eyebrow)]
+    for title, src, extra in wb.items:
+        inner.append(Paragraph(f"<b>{title}</b> · {src}" + (f" <font color='#5F5B56'>({extra})</font>" if extra else ""), ParagraphStyle("wi", parent=t.boxt, leftIndent=14, bulletIndent=2), bulletText="•"))
+    if wb.note: inner.append(P(wb.note, t.small))
+    return panel(inner, IVORY, border=LINE, left_bar=t.mid)
 
 
 def investigate_box(t, iv):
@@ -191,12 +240,33 @@ def study_guide(t, U):
 PREP = {"math": "Read the student lesson and work the Try It problems.",
         "ela": "Read the student lesson and any assigned Reader chapter; answer the Your Turn questions.",
         "science": "Read the student lesson, gather and test the investigation materials, and answer the Check Your Understanding questions.",
-        "social": "Read the student lesson and its sources, preview the maps, and answer the Check Your Understanding questions."}
+        "social": "Read the student lesson and its sources, preview the maps, and answer the Check Your Understanding questions.",
+        "data": "Read the lesson and run the Code It examples."}
 ROUTINE = {"math": "Warm-Up 5 · Teach 15 · Guided Practice 10 · Independent Practice 15 · Exit Ticket 5",
            "ela": "Warm-Up 5 · Read 15 · Mini-Lesson 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3",
            "science": "Engage 5 · Investigate 15 · Explain 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3",
-           "social": "Warm-Up 5 · Read and Discuss 15 · Analyze 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3"}
-DAYS = {"math": "Monday–Thursday", "ela": "Monday–Thursday", "science": "Monday and Wednesday", "social": "Tuesday and Thursday"}
+           "social": "Warm-Up 5 · Read and Discuss 15 · Analyze 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3",
+           "data": "Read 10 · Watch or Code 15 · Quick Check 5"}
+DAYS = {"math": "Monday–Thursday", "ela": "Monday–Thursday", "science": "Monday and Wednesday", "social": "Tuesday and Thursday", "data": "Monday–Thursday"}
+
+
+DATA_INTRO = {
+    "textbook": ["How to use this book",
+                 "This is a year of professional learning built to fit inside a workday: about 30 minutes, Monday through Friday. "
+                 "Monday through Thursday is a lesson. Friday is a short quiz plus time to use the week's skill on real work.",
+                 ["<b>A 30-minute day:</b> Read 10 · Watch or Code 15 · Quick Check 5. If a day gets away from you, the Quick Check alone keeps you moving.",
+                  "<b>Code It</b> boxes show the same task in <b>SAS</b>, <b>Python</b>, and <b>R</b>. Run at least one language every day, and rotate so you build all three.",
+                  "<b>Watch and Explore</b> boxes suggest free videos and courses, plus optional DataCamp courses if you subscribe.",
+                  "<b>On the Job</b> boxes connect each skill to assessment, research, and reporting work.",
+                  "Every exercise uses the VenvLearning data pack (exam.csv, survey.csv, and more), so your results match the answer key.",
+                  "Your practice pages, Friday quizzes, unit exams, and answer key are in your <b>Workbook</b>."]],
+    "workbook": ["How to use this workbook",
+                 "Every lesson in your textbook has matching practice here: a warm-up, practice problems, a coding exercise, and an exit question. "
+                 "Fridays have a 15-minute quiz; the last Friday of each unit is the unit exam.",
+                 ["Work a problem before checking the <b>Answer Key</b> at the back.", "For coding exercises, write your code in SAS Studio, RStudio, or Jupyter, then record the key output here.",
+                  "If an answer doesn't match, compare your code with the solution line by line. Finding the difference is the fastest way to learn.",
+                  "Use the <b>Apply It</b> prompts on Fridays to try the week's skill on your own work data."]],
+}
 
 
 def front_matter(t, book, doc, kind):
@@ -226,6 +296,8 @@ def front_matter(t, book, doc, kind):
                      f"{DAYS[t.subject]} are lessons. Friday is the <b>Weekly Check</b> (about {15 if t.subject in ('science', 'social') else 20} minutes), then corrections or a project.",
                      "Dates match the VenvLearning lesson plans for the 2026–2027 school year."]],
     }[kind]
+    if t.subject == "data":
+        intro = DATA_INTRO[kind]
     out += [P(intro[0], t.h2), P(intro[1], t.body)] + bullets(intro[2], t.bullet)
     out += [Spacer(1, 10), P("Contents", t.h2), toc_flowable(t)]
     return out
@@ -387,7 +459,27 @@ def build_workbook(book, path):
                 story += [PageBreak()] + check_pages(t, week_checks[L.num])
         story += [PageBreak()] + check_pages(t, U.review)
         story += [PageBreak()] + check_pages(t, U.test)
+    if book.subject == "data":
+        story += answer_key_section(t, book, doc)
     doc.multiBuild(story)
+
+
+def answer_key_section(t, book, doc):
+    """Self-study answer key at the back of the workbook."""
+    out = [NextPageTemplate("opener"), SetOpenerNum(doc, ""), PageBreak(), Running("Answer Key"), Spacer(1, 0.25 * inch),
+           P("ANSWERS AND CODE SOLUTIONS", ParagraphStyle("ake", parent=t.eyebrow, textColor=BLUSH, fontSize=10)),
+           toc_heading("Answer Key", ParagraphStyle("akh", parent=t.h1, textColor=WHITE, fontSize=36, leading=40), 0),
+           P("Try every problem before you look. Code solutions show one good way; yours may differ and still be right if the output matches.",
+             ParagraphStyle("aks", parent=t.body, textColor=IVORY, fontSize=13, leading=18)), SpaceTo(3.65 * inch), NextPageTemplate("body")]
+    for U in book.units:
+        out += [P(f"Unit {U.num}: {U.title}", t.h2)]
+        week_checks = {c.after: c for c in U.checks}
+        for L in U.lessons:
+            out += problems_key(t, L.practice, f"Lesson {L.num}: {L.title}")
+            if L.num in week_checks:
+                out += check_teacher(t, week_checks[L.num])[1:]
+        out += check_teacher(t, U.review)[1:] + check_teacher(t, U.test)[1:]
+    return out
 
 
 # ================================================================ TEACHER EDITION

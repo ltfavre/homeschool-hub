@@ -66,9 +66,15 @@ SUBJECTS = {
                     wash=colors.HexColor("#E5F2E9"), mid=colors.HexColor("#97CBA9")),
     "social": dict(name="Social Studies", main=colors.HexColor("#B4561A"), dark=colors.HexColor("#7A3810"),
                    wash=colors.HexColor("#FBEDE2"), mid=colors.HexColor("#EBB68D")),
+    # signature blush: covers use the blush itself; text accents use a deeper rose so they stay readable
+    "data": dict(name="Data Science & Psychometrics", main=colors.HexColor("#B85C6C"), dark=colors.HexColor("#7E3542"),
+                 wash=colors.HexColor("#F8E8EA"), mid=colors.HexColor("#E8BFC4")),
 }
 
 LABELS = {
+    "data": dict(explore="WHY IT MATTERS AT WORK", example="WORKED EXAMPLE", answer="Result", try_="QUICK CHECK",
+                 try_note="Answer from memory first, then check the answer key at the back of your workbook.", real="ON THE JOB",
+                 study="Read the lesson, watch the suggested video if you have time, and run the <b>Code It</b> examples in SAS, Python, or R."),
     "math": dict(explore="LET'S EXPLORE", example="WORKED EXAMPLE", answer="Answer", try_="TRY IT",
                  try_note="Work these in your notebook or on scrap paper. Then check with your teacher.", real="MATH IN REAL LIFE",
                  study="Study the <b>Worked Examples</b> step by step, and try the <b>Try It</b> problems."),
@@ -436,6 +442,15 @@ class ReaderAssign:
         self.book, self.section, self.focus, self.pages = book, section, focus, pages
 class Vocab:
     def __init__(self, items): self.items = items
+class Watch:
+    """Suggested videos or courses. items: list of (title, source, minutes_or_note)."""
+    def __init__(self, items, note=None): self.items, self.note = items, note
+class Code:
+    """Side-by-side-in-spirit code: the same task in SAS, Python, and R (any may be omitted). output: what you should see."""
+    def __init__(self, title, sas=None, python=None, r=None, output=None, note=None):
+        self.title, self.sas, self.python, self.r, self.output, self.note = title, sas, python, r, output, note
+class OnTheJob:
+    def __init__(self, t): self.t = t
 class Beside:
     """Paragraph(s) on the left with a tall figure on the right (good for narrow maps). texts: str or list of str."""
     def __init__(self, fn, texts, caption=None, fig_w=0.42, left=False):
@@ -468,8 +483,11 @@ class Unit:
 
 
 class Book:
-    def __init__(self, subject, grade, title, units, year="2026–2027"):
+    def __init__(self, subject, grade, title, units, year="2026–2027", audience=None, kinds=("textbook", "workbook", "teacher"),
+                 medal=None, tagline="A VenvLearning family homeschool curriculum", year_label="School Year"):
         self.subject, self.grade, self.title, self.units, self.year = subject, grade, title, units, year
+        self.audience = audience or f"Grade {grade}"; self.kinds = kinds; self.medal = medal or ("GRADE", str(grade))
+        self.tagline, self.year_label = tagline, year_label
         self.theme = Theme(subject)
 
 
@@ -509,7 +527,7 @@ class Doc(BaseDocTemplate):
         t = self.theme; c.saveState()
         c.setFillColor(t.main); c.rect(0, PAGE_H - 22, PAGE_W, 22, fill=1, stroke=0)
         self.stripe(c, PAGE_H - 28, 6)
-        text(c, LM, PAGE_H - 15, f"VENVLEARNING  ·  GRADE {self.book.grade} {t.name.upper()}", "BodySemi", 7.5, WHITE)
+        text(c, LM, PAGE_H - 15, f"VENVLEARNING  ·  {self.book.audience.upper()}  ·  {t.name.upper()}", "BodySemi", 7.5, WHITE)
         text(c, PAGE_W - RM, PAGE_H - 15, KIND_LABEL[self.kind].upper(), "BodySemi", 7.5, WHITE, "r")
         c.setStrokeColor(LINE); c.setLineWidth(0.6); c.line(LM, BM - 16, PAGE_W - RM, BM - 16)
         text(c, PAGE_W - RM, BM - 30, str(doc.page), "MonoSemi", 9, t.main, "r")
@@ -558,8 +576,9 @@ class Doc(BaseDocTemplate):
                 x = 30 + i * 50; c.line(x, PAGE_H * 0.43, x, PAGE_H - 10)
         text(c, LM, PAGE_H - 1.25 * inch, "VENVLEARNING", "BodySemi", 11, WHITE)
         c.setFillColor(GOLD); c.rect(LM, PAGE_H - 1.38 * inch, 54, 3, fill=1, stroke=0)
-        text(c, LM, PAGE_H - 2.6 * inch, f"Grade {b.grade}", "Display", 34, BLUSH)
-        lines = {"math": ["Mathematics"], "ela": ["English", "Language Arts"], "science": ["Science"], "social": ["Social", "Studies"]}[b.subject]
+        text(c, LM, PAGE_H - 2.6 * inch, b.audience, "Display", 34, BLUSH if b.subject != "data" else IVORY)
+        lines = {"math": ["Mathematics"], "ela": ["English", "Language Arts"], "science": ["Science"], "social": ["Social", "Studies"],
+                 "data": ["Data Science &", "Psychometrics"]}[b.subject]
         for k, ln in enumerate(lines): text(c, LM, PAGE_H - 3.45 * inch - k * 0.8 * inch, ln, "Display", 64, WHITE)
         # kind badge
         lab = KIND_LABEL[self.kind].upper()
@@ -567,14 +586,14 @@ class Doc(BaseDocTemplate):
         c.setFillColor(INK if self.kind != "teacher" else GOLD); c.roundRect(LM, PAGE_H * 0.42 + 34, bw, 30, 15, fill=1, stroke=0)
         text(c, LM + bw / 2, PAGE_H * 0.42 + 44.5, lab, "BodyBold", 12, WHITE if self.kind != "teacher" else INK, "c")
         # lower area
-        text(c, LM, PAGE_H * 0.42 - 0.75 * inch, b.year + " School Year", "BodySemi", 13, HUNTER)
+        text(c, LM, PAGE_H * 0.42 - 0.75 * inch, b.year + " " + b.year_label, "BodySemi", 13, HUNTER)
         y = PAGE_H * 0.42 - 1.15 * inch
         for u in b.units:
             text(c, LM, y, f"Unit {u.num}", "MonoSemi", 10, t.main); text(c, LM + 52, y, u.title, "Body", 11, INK); y -= 18
         if self.kind != "teacher":
             text(c, LM, 1.35 * inch, "This book belongs to", "Body", 10, MUTED)
             c.setStrokeColor(INK); c.setLineWidth(0.8); c.line(LM + 110, 1.33 * inch, LM + 330, 1.33 * inch)
-        text(c, LM, 0.75 * inch, "A VenvLearning family homeschool curriculum", "Body", 9, MUTED)
+        text(c, LM, 0.75 * inch, b.tagline, "Body", 9, MUTED)
         c.restoreState()
 
 

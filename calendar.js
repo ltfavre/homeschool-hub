@@ -11,7 +11,7 @@
     if (!rec) return { rec: null, subjects: [], events: eventsOn(date) };
     const mapping = ctx.library.weeks[`${ctx.student.grade}-${rec.module}-${rec.week}`] || {};
     const keys = (rec.subjects || Object.keys(mapping)).filter((k) => mapping[k]);
-    const subjects = keys.map((k) => ({ id: k, topic: mapping[k].topic, done: ctx.progress.has(`${date}|${k}`) }));
+    const subjects = keys.map((k) => ({ id: k, topic: mapping[k].daily?.[date] || mapping[k].topic, done: ctx.progress.has(`${date}|${k}`) }));
     return { rec, subjects, events: eventsOn(date), mapping };
   }
 

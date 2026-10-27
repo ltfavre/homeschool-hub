@@ -1,0 +1,64 @@
+id,program,enroll_date,fee,status
+E1001,Day,09/04/2026,336,Withdrawn
+E1002,evening,08/13/2026,,Active
+E1003,DAY ,08/08/2026,$328.00,active
+E1004,On-line,2026-09-06,375,Active
+E1005,Evening,09/04/2026,223,Withdrawn
+E1006,DAY ,2026-09-01,$281.00,Active
+E1007,Evening,2026-08-19,$279.00,active
+E1008,Day,2026-08-18,162,withdrawn 
+E1009,evening,08/15/2026,N/A,Active
+E1010,Online,08/26/2026,377,active
+E1011,online,2026-08-13,326,active
+E1012,Online,09/07/2026,169,Active
+E1013,Day,"Sep 10, 2026",198,Active
+E1014,Evening,2026-08-10,190,Active
+E1015,evening,08/25/2026,280,active
+E1016,evening,08/10/2026,N/A,Active
+E1017,Day,2026-08-10,362,Active
+E1018,Online,"Sep 02, 2026",$216.00,Active
+E1019,DAY ,2026-08-28,N/A,Withdrawn
+E1020,online,2026-09-03,$269.00,active
+E1021,day,08/08/2026,N/A,active
+E1022,day,2026-08-19,$376.00,Active
+E1023,DAY ,08/04/2026,320,Active
+E1024,DAY ,2026-08-21,$397.00,Active
+E1025,Day,2026-08-05,379,Active
+E1026,Evening,2026-08-28,271,Withdrawn
+E1027,online,08/14/2026,175,Active
+E1028,online,08/18/2026,379,Active
+E1029,DAY ,08/14/2026,212,active
+E1030,On-line,2026-08-10,258,active
+E1031,day,2026-08-08,N/A,Withdrawn
+E1032,Evening,2026-08-24,$319.00,active
+E1033,Evening,08/19/2026,220,active
+E1034,day,"Aug 09, 2026",367,Withdrawn
+E1035,Online,"Aug 19, 2026",384,Active
+E1036,online,09/03/2026,313,Active
+E1037,evening,08/16/2026,239,Withdrawn
+E1038,Online,2026-08-03,343,Withdrawn
+E1039,online,"Sep 01, 2026",$205.00,Active
+E1040,Online,2026-09-11,308,Active
+E1041,day,08/30/2026,$210.00,Withdrawn
+E1042,online,08/13/2026,395,Active
+E1043,DAY ,2026-09-06,259,Active
+E1044,Evening,"Aug 27, 2026",$180.00,Withdrawn
+E1045,evening,2026-08-17,208,Active
+E1046,evening,2026-09-11,187,Active
+E1047,Evening,08/10/2026,,Active
+E1048,Online,2026-09-07,$236.00,Withdrawn
+E1049,evening,2026-09-01,N/A,active
+E1050,On-line,09/06/2026,N/A,active
+E1051,DAY ,2026-08-28,245,Withdrawn
+E1052,Evening,08/16/2026,164,Active
+E1053,day,08/27/2026,253,withdrawn 
+E1054,Online,"Aug 25, 2026",$199.00,active
+E1055,evening,09/11/2026,340,active
+E1056,Online,09/02/2026,$346.00,Active
+E1057,day,08/14/2026,$172.00,Withdrawn
+E1058,On-line,2026-08-04,N/A,Active
+E1059,day,09/11/2026,301,Active
+E1060,evening,2026-09-11,338,Active
+E1004,On-line,2026-09-06,375,Active
+E1018,Online,"Sep 02, 2026",$216.00,Active
+E1042,online,08/13/2026,395,Active

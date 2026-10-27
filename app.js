@@ -141,3 +141,43 @@ function showLoadError(err) {
 }
 
 load().catch(showLoadError);
+
+// Today's textbook lessons for each student, plus the parent's own Data Science & Psychometrics lesson.
+const TB_SUBJECT = {math:"Math", ela:"ELA", science:"Science", social:"Social Studies", spanish:"Spanish", art:"Art", data:"Data Science"};
+const TB_KIND = {textbook:"Textbook", workbook:"Workbook", teacher:"Teacher Edition"};
+async function loadTextbooks() {
+  const box = $("#textbookToday");
+  if (!box) return;
+  try {
+    const res = await fetch("/textbook-schedule.json", {cache:"no-store"});
+    if (!res.ok) throw new Error(String(res.status));
+    const {grades} = await res.json();
+    const todayKey = iso(today);
+    // On weekends and breaks, show the next school day that has lessons.
+    const dates = [...new Set(Object.values(grades).flatMap((g) => Object.keys(g)))].sort();
+    const day = dates.find((d) => d >= todayKey);
+    if (!day) { box.textContent = "No textbook lessons are scheduled."; return; }
+    const when = new Date(day + "T12:00:00");
+    $("#textbookHeading").textContent = day === todayKey ? "Today in the books" : `Next up · ${fmt(when, {weekday:"long", month:"short", day:"numeric"})}`;
+    const cols = [["4", "Grade 4"], ["7", "Grade 7"], ["parent", "You · Professional learning"]].map(([g, label]) => {
+      // A column with nothing on this day shows its own next scheduled day (the parent course starts later).
+      const own = grades[g]?.[day] ? day : Object.keys(grades[g] || {}).sort().find((d) => d >= todayKey);
+      const subjects = (own && grades[g][own]) || {};
+      const note = own && own !== day ? `<p class="muted">Starts ${fmt(new Date(own + "T12:00:00"), {weekday:"long", month:"short", day:"numeric"})}</p>` : "";
+      const rows = Object.entries(subjects).flatMap(([subject, items]) => items.map((it) => {
+        const name = it.kind === "lesson" ? `Lesson ${esc(it.num)}: ${esc(it.title)}` : esc(it.title);
+        const links = Object.entries(it.links || {}).map(([k, href]) => {
+          const p = it.pages?.[k]; const pages = p ? (p[0] === p[1] ? ` p. ${p[0]}` : ` pp. ${p[0]}–${p[1]}`) : "";
+          return `<a href="${esc(href)}" target="_blank" rel="noopener">${TB_KIND[k] || k}${pages}</a>`;
+        }).join(" · ");
+        return `<div class="item"><div class="item-top"><strong>${name}</strong><span class="pill">${TB_SUBJECT[subject] || esc(subject)}</span></div><div class="meta">${links}</div></div>`;
+      })).join("");
+      return `<div class="textbook-col"><h4>${label}</h4>${note}${rows || '<p class="muted">Nothing scheduled.</p>'}</div>`;
+    }).join("");
+    box.classList.remove("empty");
+    box.innerHTML = cols;
+  } catch {
+    box.textContent = "The textbook schedule could not be loaded.";
+  }
+}
+loadTextbooks();

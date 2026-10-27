@@ -1,0 +1,817 @@
+[
+{
+"level": 0,
+"text": "Language and Meaning",
+"page": 8
+},
+{
+"level": 1,
+"text": "Lesson 1.1: Reading Shakespeare's Language",
+"page": 10
+},
+{
+"level": 1,
+"text": "Lesson 1.2: Greek and Latin Roots and Affixes",
+"page": 12
+},
+{
+"level": 1,
+"text": "Lesson 1.3: Context Clues in Complex Texts",
+"page": 13
+},
+{
+"level": 1,
+"text": "Lesson 1.4: Reference Tools and Word Origins",
+"page": 15
+},
+{
+"level": 1,
+"text": "Lesson 1.5: Connotation and Denotation",
+"page": 16
+},
+{
+"level": 1,
+"text": "Lesson 1.6: Figurative Language: Metaphor, Personification, and Allusion",
+"page": 18
+},
+{
+"level": 1,
+"text": "Lesson 1.7: Word Relationships and Analogies",
+"page": 19
+},
+{
+"level": 1,
+"text": "Lesson 1.8: Sound and Rhythm in Poetry and Drama",
+"page": 21
+},
+{
+"level": 1,
+"text": "Lesson 1.9: Citing Several Pieces of Evidence",
+"page": 22
+},
+{
+"level": 1,
+"text": "Lesson 1.10: Inferring Character from Dialogue",
+"page": 23
+},
+{
+"level": 1,
+"text": "Lesson 1.11: Inference in Informational Text",
+"page": 24
+},
+{
+"level": 1,
+"text": "Lesson 1.12: Writing a Claim-Evidence-Reasoning Paragraph",
+"page": 26
+},
+{
+"level": 1,
+"text": "Lesson 1.13: Theme and Its Development",
+"page": 27
+},
+{
+"level": 1,
+"text": "Lesson 1.14: Central Ideas in Informational Text",
+"page": 29
+},
+{
+"level": 1,
+"text": "Lesson 1.15: Writing an Objective Summary",
+"page": 30
+},
+{
+"level": 1,
+"text": "Lesson 1.16: How Setting Shapes Characters and Plot",
+"page": 31
+},
+{
+"level": 1,
+"text": "Unit 1 Study Guide",
+"page": 32
+},
+{
+"level": 0,
+"text": "Long Passages and the Power of Nouns",
+"page": 33
+},
+{
+"level": 1,
+"text": "Lesson 2.1: Tracking Multiple Plotlines",
+"page": 35
+},
+{
+"level": 1,
+"text": "Lesson 2.2: Close Reading a Speech",
+"page": 36
+},
+{
+"level": 1,
+"text": "Lesson 2.3: Inference Across a Long Informational Text",
+"page": 37
+},
+{
+"level": 1,
+"text": "Lesson 2.4: Writing a Multi-Paragraph Evidence Response",
+"page": 39
+},
+{
+"level": 1,
+"text": "Lesson 2.5: How a Scene Contributes to the Whole",
+"page": 40
+},
+{
+"level": 1,
+"text": "Lesson 2.6: Analyzing a Famous Speech",
+"page": 41
+},
+{
+"level": 1,
+"text": "Lesson 2.7: Comparing Text and Performance",
+"page": 43
+},
+{
+"level": 1,
+"text": "Lesson 2.8: Writing a Scene Analysis",
+"page": 44
+},
+{
+"level": 1,
+"text": "Lesson 2.9: Kinds of Nouns",
+"page": 45
+},
+{
+"level": 1,
+"text": "Lesson 2.10: Noun Functions in Sentences",
+"page": 46
+},
+{
+"level": 1,
+"text": "Lesson 2.11: Appositives",
+"page": 48
+},
+{
+"level": 1,
+"text": "Lesson 2.12: Forming Nouns from Other Words",
+"page": 49
+},
+{
+"level": 1,
+"text": "Lesson 2.13: Precise Nouns for Vivid Writing",
+"page": 50
+},
+{
+"level": 1,
+"text": "Lesson 2.14: Possessive Nouns and Clear Reference",
+"page": 51
+},
+{
+"level": 1,
+"text": "Lesson 2.15: Writing a Literary Analysis Essay",
+"page": 52
+},
+{
+"level": 1,
+"text": "Lesson 2.16: Revising the Essay for Precision",
+"page": 53
+},
+{
+"level": 1,
+"text": "Unit 2 Study Guide",
+"page": 55
+},
+{
+"level": 0,
+"text": "Mystery and Grammar",
+"page": 56
+},
+{
+"level": 1,
+"text": "Lesson 3.1: The Mystery Genre and Frame Narratives",
+"page": 58
+},
+{
+"level": 1,
+"text": "Lesson 3.2: Pronoun Case",
+"page": 60
+},
+{
+"level": 1,
+"text": "Lesson 3.3: Clear Pronoun Reference",
+"page": 61
+},
+{
+"level": 1,
+"text": "Lesson 3.4: Characterization Through Description",
+"page": 62
+},
+{
+"level": 1,
+"text": "Lesson 3.5: Building Suspense Through Pursuit",
+"page": 63
+},
+{
+"level": 1,
+"text": "Lesson 3.6: Pronoun-Antecedent Agreement and Indefinite Pronouns",
+"page": 65
+},
+{
+"level": 1,
+"text": "Lesson 3.7: Reflexive, Intensive, and Relative Pronouns: Who and Whom",
+"page": 66
+},
+{
+"level": 1,
+"text": "Lesson 3.8: Writing a Character Analysis with Clear Pronouns",
+"page": 67
+},
+{
+"level": 1,
+"text": "Lesson 3.9: Verb Tenses: Simple, Perfect, and Progressive",
+"page": 68
+},
+{
+"level": 1,
+"text": "Lesson 3.10: Active and Passive Voice",
+"page": 69
+},
+{
+"level": 1,
+"text": "Lesson 3.11: Verb Moods",
+"page": 71
+},
+{
+"level": 1,
+"text": "Lesson 3.12: Analyzing Voice and Mood for Effect",
+"page": 72
+},
+{
+"level": 1,
+"text": "Lesson 3.13: Clues, Red Herrings, and Foreshadowing",
+"page": 73
+},
+{
+"level": 1,
+"text": "Lesson 3.14: Avoiding Shifts in Tense, Voice, and Mood",
+"page": 75
+},
+{
+"level": 1,
+"text": "Lesson 3.15: Writing a News Report",
+"page": 76
+},
+{
+"level": 1,
+"text": "Lesson 3.16: Editing for Pronouns and Verbs",
+"page": 77
+},
+{
+"level": 1,
+"text": "Unit 3 Study Guide",
+"page": 78
+},
+{
+"level": 0,
+"text": "Craft and Perspective",
+"page": 79
+},
+{
+"level": 1,
+"text": "Lesson 4.1: Word Choice and Tone",
+"page": 81
+},
+{
+"level": 1,
+"text": "Lesson 4.2: Structure: Letters, Documents, and Delay",
+"page": 82
+},
+{
+"level": 1,
+"text": "Lesson 4.3: How Sections Build an Informational Text",
+"page": 83
+},
+{
+"level": 1,
+"text": "Lesson 4.4: Technical Vocabulary",
+"page": 85
+},
+{
+"level": 1,
+"text": "Lesson 4.5: Point of View and Dramatic Irony",
+"page": 86
+},
+{
+"level": 1,
+"text": "Lesson 4.6: Author's Purpose and Point of View in Arguments",
+"page": 88
+},
+{
+"level": 1,
+"text": "Lesson 4.7: Acknowledging Other Viewpoints",
+"page": 90
+},
+{
+"level": 1,
+"text": "Lesson 4.8: Retelling from a Different Point of View",
+"page": 91
+},
+{
+"level": 1,
+"text": "Lesson 4.9: Testimony and Reliability",
+"page": 92
+},
+{
+"level": 1,
+"text": "Lesson 4.10: Pacing and Sentence Structure at the Climax",
+"page": 93
+},
+{
+"level": 1,
+"text": "Lesson 4.11: Symbolism",
+"page": 94
+},
+{
+"level": 1,
+"text": "Lesson 4.12: Writing a Craft Analysis Paragraph",
+"page": 95
+},
+{
+"level": 1,
+"text": "Lesson 4.13: The Confession and the Theme of Duality",
+"page": 96
+},
+{
+"level": 1,
+"text": "Lesson 4.14: Comparing Narrators Across the Novel",
+"page": 98
+},
+{
+"level": 1,
+"text": "Lesson 4.15: Fiction and History: Self-Experimentation",
+"page": 99
+},
+{
+"level": 1,
+"text": "Lesson 4.16: Writing a Comparative Analysis",
+"page": 101
+},
+{
+"level": 1,
+"text": "Unit 4 Study Guide",
+"page": 102
+},
+{
+"level": 0,
+"text": "Modifiers and Precise Description",
+"page": 103
+},
+{
+"level": 1,
+"text": "Lesson 5.1: Science Fiction and the Frame Narrative",
+"page": 105
+},
+{
+"level": 1,
+"text": "Lesson 5.2: Adjectives: Proper, Compound, and Coordinate",
+"page": 106
+},
+{
+"level": 1,
+"text": "Lesson 5.3: Adverbs and Their Placement",
+"page": 108
+},
+{
+"level": 1,
+"text": "Lesson 5.4: How Modifiers Create Description",
+"page": 109
+},
+{
+"level": 1,
+"text": "Lesson 5.5: Comparative and Superlative Forms",
+"page": 110
+},
+{
+"level": 1,
+"text": "Lesson 5.6: Phrases and Clauses as Modifiers",
+"page": 111
+},
+{
+"level": 1,
+"text": "Lesson 5.7: Misplaced and Dangling Modifiers",
+"page": 112
+},
+{
+"level": 1,
+"text": "Lesson 5.8: Precise Modifiers in Scientific Writing",
+"page": 113
+},
+{
+"level": 1,
+"text": "Lesson 5.9: Prepositions and Prepositional Phrases",
+"page": 115
+},
+{
+"level": 1,
+"text": "Lesson 5.10: Interjections and Tone in Dialogue",
+"page": 116
+},
+{
+"level": 1,
+"text": "Lesson 5.11: Conjunctions: Coordinating, Subordinating, and Correlative",
+"page": 118
+},
+{
+"level": 1,
+"text": "Lesson 5.12: Parts of Speech in Context",
+"page": 119
+},
+{
+"level": 1,
+"text": "Lesson 5.13: Analyzing Descriptive Writing",
+"page": 120
+},
+{
+"level": 1,
+"text": "Lesson 5.14: Planning a Science-Fiction Scene",
+"page": 121
+},
+{
+"level": 1,
+"text": "Lesson 5.15: Drafting with Precise Modifiers and Concise Language",
+"page": 122
+},
+{
+"level": 1,
+"text": "Lesson 5.16: Revising and Editing the Scene",
+"page": 123
+},
+{
+"level": 1,
+"text": "Unit 5 Study Guide",
+"page": 125
+},
+{
+"level": 0,
+"text": "Sentence Craft",
+"page": 126
+},
+{
+"level": 1,
+"text": "Lesson 6.1: Utopia or Dystopia?",
+"page": 128
+},
+{
+"level": 1,
+"text": "Lesson 6.2: Independent and Dependent Clauses",
+"page": 129
+},
+{
+"level": 1,
+"text": "Lesson 6.3: Four Sentence Types",
+"page": 131
+},
+{
+"level": 1,
+"text": "Lesson 6.4: Analyzing Sentence Structure for Effect",
+"page": 132
+},
+{
+"level": 1,
+"text": "Lesson 6.5: Revising a Hypothesis",
+"page": 133
+},
+{
+"level": 1,
+"text": "Lesson 6.6: Five Kinds of Phrases",
+"page": 134
+},
+{
+"level": 1,
+"text": "Lesson 6.7: Participial Phrases as Modifiers",
+"page": 136
+},
+{
+"level": 1,
+"text": "Lesson 6.8: Gerunds and Infinitives as Nouns",
+"page": 137
+},
+{
+"level": 1,
+"text": "Lesson 6.9: Allegory and Social Commentary",
+"page": 138
+},
+{
+"level": 1,
+"text": "Lesson 6.10: Combining with Conjunctions and Relative Clauses",
+"page": 139
+},
+{
+"level": 1,
+"text": "Lesson 6.11: Combining with Phrases",
+"page": 140
+},
+{
+"level": 1,
+"text": "Lesson 6.12: Precision vs. Over-Combining",
+"page": 141
+},
+{
+"level": 1,
+"text": "Lesson 6.13: Symbolism in the Palace and the Fire",
+"page": 142
+},
+{
+"level": 1,
+"text": "Lesson 6.14: Sentence Variety",
+"page": 143
+},
+{
+"level": 1,
+"text": "Lesson 6.15: Parallel Structure",
+"page": 144
+},
+{
+"level": 1,
+"text": "Lesson 6.16: Revising an Analytical Essay",
+"page": 145
+},
+{
+"level": 1,
+"text": "Unit 6 Study Guide",
+"page": 146
+},
+{
+"level": 0,
+"text": "Voices of the Harlem Renaissance",
+"page": 147
+},
+{
+"level": 1,
+"text": "Lesson 7.1: Entering the Harlem Renaissance",
+"page": 149
+},
+{
+"level": 1,
+"text": "Lesson 7.2: Analyzing a Poem: Dunbar's “We Wear the Mask”",
+"page": 151
+},
+{
+"level": 1,
+"text": "Lesson 7.3: Comparing Sources: How Authors Shape Information",
+"page": 153
+},
+{
+"level": 1,
+"text": "Lesson 7.4: Comparing Claims Across Sources",
+"page": 155
+},
+{
+"level": 1,
+"text": "Lesson 7.5: The Great Migration: Causes and Effects",
+"page": 156
+},
+{
+"level": 1,
+"text": "Lesson 7.6: Evaluating Reasons and Evidence",
+"page": 158
+},
+{
+"level": 1,
+"text": "Lesson 7.7: Comparing Text and Data",
+"page": 160
+},
+{
+"level": 1,
+"text": "Lesson 7.8: Writing an Argument with Strong Evidence",
+"page": 161
+},
+{
+"level": 1,
+"text": "Lesson 7.9: The Black Press and Long-Passage Analysis",
+"page": 162
+},
+{
+"level": 1,
+"text": "Lesson 7.10: Quoting, Paraphrasing, and Citing Sources",
+"page": 164
+},
+{
+"level": 1,
+"text": "Lesson 7.11: Credibility and Accuracy of Sources",
+"page": 165
+},
+{
+"level": 1,
+"text": "Lesson 7.12: Research Questions",
+"page": 166
+},
+{
+"level": 1,
+"text": "Lesson 7.13: Locke's Argument",
+"page": 167
+},
+{
+"level": 1,
+"text": "Lesson 7.14: Planning a Synthesis Essay",
+"page": 169
+},
+{
+"level": 1,
+"text": "Lesson 7.15: Drafting the Synthesis Essay",
+"page": 170
+},
+{
+"level": 1,
+"text": "Lesson 7.16: Revising, Citing, and Publishing",
+"page": 171
+},
+{
+"level": 1,
+"text": "Unit 7 Study Guide",
+"page": 172
+},
+{
+"level": 0,
+"text": "Conventions and Word Choice",
+"page": 173
+},
+{
+"level": 1,
+"text": "Lesson 8.1: The Climax: The Trap of the White Sphinx",
+"page": 175
+},
+{
+"level": 1,
+"text": "Lesson 8.2: Comma Rules",
+"page": 176
+},
+{
+"level": 1,
+"text": "Lesson 8.3: Semicolons and Colons",
+"page": 177
+},
+{
+"level": 1,
+"text": "Lesson 8.4: Dashes, Parentheses, Ellipses, and Advanced Capitalization",
+"page": 178
+},
+{
+"level": 1,
+"text": "Lesson 8.5: Imagery and Mood in the Far Future",
+"page": 180
+},
+{
+"level": 1,
+"text": "Lesson 8.6: Quotations and Titles",
+"page": 181
+},
+{
+"level": 1,
+"text": "Lesson 8.7: Common Errors: Splices, Run-Ons, Fragments, and Agreement",
+"page": 182
+},
+{
+"level": 1,
+"text": "Lesson 8.8: Editing a Passage in Context",
+"page": 183
+},
+{
+"level": 1,
+"text": "Lesson 8.9: Evidence, Belief, and the Narrator",
+"page": 184
+},
+{
+"level": 1,
+"text": "Lesson 8.10: Greek and Latin Roots Review",
+"page": 186
+},
+{
+"level": 1,
+"text": "Lesson 8.11: Commonly Confused Words",
+"page": 187
+},
+{
+"level": 1,
+"text": "Lesson 8.12: Spelling Rules and Patterns",
+"page": 188
+},
+{
+"level": 1,
+"text": "Lesson 8.13: Open Endings and Symbols",
+"page": 189
+},
+{
+"level": 1,
+"text": "Lesson 8.14: Using Reference Tools for Precise Word Choice",
+"page": 190
+},
+{
+"level": 1,
+"text": "Lesson 8.15: Concise, Formal Style",
+"page": 191
+},
+{
+"level": 1,
+"text": "Lesson 8.16: Final Edit of a Portfolio Piece",
+"page": 192
+},
+{
+"level": 1,
+"text": "Unit 8 Study Guide",
+"page": 194
+},
+{
+"level": 0,
+"text": "Capstone: Style, Revision, and Reflection",
+"page": 195
+},
+{
+"level": 1,
+"text": "Lesson 9.1: Langston Hughes and the Sound of a Poem",
+"page": 197
+},
+{
+"level": 1,
+"text": "Lesson 9.2: Tone and Mood",
+"page": 199
+},
+{
+"level": 1,
+"text": "Lesson 9.3: Developing Your Own Voice",
+"page": 200
+},
+{
+"level": 1,
+"text": "Lesson 9.4: Comparing Styles Across Time",
+"page": 202
+},
+{
+"level": 1,
+"text": "Lesson 9.5: Georgia Douglas Johnson: Building a Community",
+"page": 204
+},
+{
+"level": 1,
+"text": "Lesson 9.6: Transitions That Show Relationships",
+"page": 206
+},
+{
+"level": 1,
+"text": "Lesson 9.7: Text Structures",
+"page": 207
+},
+{
+"level": 1,
+"text": "Lesson 9.8: Cohesive Paragraphs",
+"page": 208
+},
+{
+"level": 1,
+"text": "Lesson 9.9: Elise Johnson McDougald: An Argument from Evidence",
+"page": 209
+},
+{
+"level": 1,
+"text": "Lesson 9.10: Revising Claims and Counterclaims",
+"page": 211
+},
+{
+"level": 1,
+"text": "Lesson 9.11: Revising Evidence and Citations",
+"page": 212
+},
+{
+"level": 1,
+"text": "Lesson 9.12: Revision Workshop",
+"page": 214
+},
+{
+"level": 1,
+"text": "Lesson 9.13: Dreams and Masks: A Conversation Across Generations",
+"page": 215
+},
+{
+"level": 1,
+"text": "Lesson 9.14: Year in Review: Reading Literature and Information",
+"page": 216
+},
+{
+"level": 1,
+"text": "Lesson 9.15: Year in Review: Language and Conventions",
+"page": 217
+},
+{
+"level": 1,
+"text": "Lesson 9.16: Portfolio Reflection and Presentation",
+"page": 218
+},
+{
+"level": 1,
+"text": "Unit 9 Study Guide",
+"page": 219
+},
+{
+"level": 0,
+"text": "Glossary",
+"page": 220
+}
+]

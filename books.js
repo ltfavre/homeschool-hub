@@ -40,7 +40,7 @@
       section.append(grid);
       root.append(section);
     }
-    $("status").textContent = shown.length ? `${shown.length} book${shown.length === 1 ? "" : "s"} for Grade ${grade}` : "No books match these filters.";
+    $("status").textContent = shown.length ? `${shown.length} book${shown.length === 1 ? "" : "s"} ${grade ? `for Grade ${grade}` : "for your professional learning"}` : "No books match these filters.";
   }
 
   async function init() {

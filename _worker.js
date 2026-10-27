@@ -1,5 +1,5 @@
 import {readingsForDay,readingLink,cleanTaskText} from './page-readings-core.js';
-import { subjectsForDay, curriculumForDay, taskForSubject, studentResourceLibrary } from './curriculum-schedule.js';
+import { subjectsForDay, curriculumForDay, taskForSubject, studentResourceLibrary, topicForDay } from './curriculum-schedule.js';
 import { curriculumAsset, curriculumJson } from './curriculum-assets.js';
 import { homeAssistantApi, manageHomeAssistant } from "./home-assistant-api.js";
 import { isTeacherToolsPath, teacherToolsRoute } from "./teacher-tools.js";
@@ -728,7 +728,7 @@ async function authRoute(request,env,user,url){
   const [library,exams,completion,venvTasks]=await Promise.all([assetJson(request,env,'/planner-resources.json'),assetJson(request,env,'/assessment-student.json'),env.DB.prepare("SELECT subject,completed FROM family_curriculum_completion WHERE user_id=? AND school_date=? AND curriculum=?").bind(target.id,date,activeVersion).all(),env.DB.prepare("SELECT title,status,source,external_id,due_date,updated_at FROM family_daily_tasks WHERE user_id=? AND due_date=? ORDER BY CASE status WHEN 'overdue' THEN 0 WHEN 'pending' THEN 1 WHEN 'in_progress' THEN 2 WHEN 'completed' THEN 3 WHEN 'cancelled' THEN 4 ELSE 5 END, title").bind(target.id,date).all()]);
   const dailyTasks=(venvTasks.results||[]).map(t=>({title:t.title,status:t.status,source:t.source,external_id:t.external_id,due_date:t.due_date,updated_at:t.updated_at}));
   const d=days[date]?.[target.grade];if(!d)return familyJson({student:publicUser(target),date,teaching:false,next_date:Object.keys(days).sort().find(x=>x>date)||null,daily_tasks:dailyTasks});
-  const mapping=library.weeks[`${target.grade}-${d.module}-${d.week}`],subjects=subjectsForDay(d,mapping).map(key=>{const s=mapping[key];return ({key,name:s.display_name,category:s.category,task:taskForSubject(d,key),topic:s.topic,readings:readingsForDay(s,date).map(r=>readingLink(r,library.resources)).filter(Boolean),mode:s.mode,primary:s.primary,gap_note:s.gap_note,resources:s.resources.map(id=>library.resources[id]),completed:completion.results.some(r=>r.subject===key&&r.completed===1)});});
+  const mapping=library.weeks[`${target.grade}-${d.module}-${d.week}`],subjects=subjectsForDay(d,mapping).map(key=>{const s=mapping[key];return ({key,name:s.display_name,category:s.category,task:taskForSubject(d,key),topic:topicForDay(s,date),unit:s.topic,readings:readingsForDay(s,date).map(r=>readingLink(r,library.resources)).filter(Boolean),mode:s.mode,primary:s.primary,gap_note:s.gap_note,resources:s.resources.map(id=>library.resources[id]),completed:completion.results.some(r=>r.subject===key&&r.completed===1)});});
   return familyJson({student:publicUser(target),date,teaching:true,module:d.module,week:d.week,tasks:cleanTaskText(d.tasks),goals:d.goals,integration:d.integration||'',elective:d.elective||null,lesson_context:d.lesson_context||'',curriculum:curriculumForDay(d),subjects,assessment:d.assessment?{title:exams[d.assessment].title,student_pdf:'/assessments/'+d.assessment+'-student.pdf'}:null,primary_assessments:d.primary_assessments||[],print_url:'/daily-print?date='+date+'&grade='+target.grade,daily_tasks:dailyTasks});
  }
  if(path==='/api/family/progress'&&method==='GET'){
@@ -803,7 +803,7 @@ async function authRoute(request,env,user,url){
 async function familyFetch(request,env,ctx){
  const url=new URL(request.url),path=decodeURIComponent(url.pathname);
  // Source/config files must never be delivered as public static assets.
- if(/\/(?:index\.js|_worker\.js|family-server\.js|teacher-tools\.js|wishlist\.js|ha-school\.js|home-assistant-api\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git|tools\/)/i.test(path))return new Response('Not found',{status:404});
+ if(/\/(?:index\.js|_worker\.js|family-server\.js|teacher-tools\.js|wishlist\.js|ha-school\.js|home-assistant-api\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git|tools\/|textbooks\/(?!grade[47]-[a-z]+-(?:textbook|workbook|teacher)\.pdf$|data-science-psychometrics-(?:textbook|workbook)\.pdf$|data\/[a-z_]+\.csv$)|\.toc\.json$)/i.test(path))return new Response('Not found',{status:404});
  const publicPaths=['/login','/login.html','/login.js','/forgot-password','/forgot-password.html','/family.css','/styles.css','/brand.css','/ux.js','/favicon.ico'];
  if(publicPaths.includes(path))return fetchAsset(request, env);
  if(url.pathname.startsWith('/api/home-assistant/'))return homeAssistantApi(request,env,assetJson);
@@ -822,10 +822,11 @@ async function familyFetch(request,env,ctx){
  if(user.role==='student'){
   const allowed=['/courses','/courses.html','/courses.js','/course','/course.html','/course.js','/lms.js','/lms.css','/school-events.json','/grading-config.json','/calendar','/calendar.html','/calendar.js','/packet-renderer.js','/packet-files.js','/materials.css','/vendor/pdf-lib.min.js','/page-readings.js','/agenda','/agenda.html','/agenda.js','/account-nav.js','/daily-print','/daily-print.html','/daily-print.js','/daily-print.css','/print-download.js','/planner-resources.json','/khan-ui.js','/khan-ui.css','/books','/books.html','/books.js','/books-library.json','/core-knowledge','/core-knowledge.html','/core-knowledge.js','/core-knowledge-units.json','/brand.css','/assignments','/assignments.html','/assignments.js','/library','/library.html','/library.js','/files.js','/reading-list.json'];
   if(path==='/planner-resources.json')return familyJson(studentResourceLibrary(await assetJson(request,env,path)));
+  if(path==='/books-library.json'){const data=await assetJson(request,env,path);return familyJson({...data,items:(data.items||[]).filter(b=>!b.teacher&&String(b.grade)===user.grade)});}
   if(path==='/daily-packets.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).map(([date,g])=>[date,{[user.grade]:g[user.grade]}])));}
   if(path==='/assessment-student.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).filter(([,e])=>String(e.grade)===user.grade)));}
   const pdf=path.match(/^\/assessments\/(?:(?:khan|eight)-)?g([47])-m[1-9]-(?:w[1-3]-quiz|test)-student\.pdf$/);
-  const booklet=path.match(/^\/downloads\/integrated\/grade([47])-(?:art|life|computer|skills)(?:-[a-z0-9]+)?-student\.pdf$/);
+  const booklet=path.match(/^\/downloads\/integrated\/grade([47])-(?:art|life|computer|skills)(?:-[a-z0-9]+)?-student\.pdf$/)||path.match(/^\/downloads\/textbooks\/grade([47])-(?:math|ela|science|social|art|spanish)-(?:textbook|workbook)\.pdf$/);
   if(!allowed.includes(path)&&!(pdf&&pdf[1]===user.grade)&&!(booklet&&booklet[1]===user.grade))return familyJson({error:'Parent access required'},403);
   if(/^\/daily-print(?:\.html)?$/.test(path)&&(url.searchParams.get('key')==='1'||url.searchParams.get('kind')==='keys'||url.searchParams.get('grade')!==user.grade)){url.searchParams.delete('key');if(url.searchParams.get('kind')==='keys')url.searchParams.set('kind','work');url.searchParams.set('grade',user.grade);return new Response(null,{status:302,headers:{location:url.pathname+url.search,'cache-control':'no-store'}});}
  }

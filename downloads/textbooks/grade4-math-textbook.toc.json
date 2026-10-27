@@ -1,0 +1,827 @@
+[
+{
+"level": 0,
+"text": "Place Value, Rounding, and Whole Numbers",
+"page": 8
+},
+{
+"level": 1,
+"text": "Lesson 1.1: How Place Value Works",
+"page": 10
+},
+{
+"level": 1,
+"text": "Lesson 1.2: Place Value to One Million",
+"page": 12
+},
+{
+"level": 1,
+"text": "Lesson 1.3: The Value of a Digit",
+"page": 14
+},
+{
+"level": 1,
+"text": "Lesson 1.4: Standard, Word, and Expanded Form",
+"page": 16
+},
+{
+"level": 1,
+"text": "Lesson 1.5: Renaming Numbers",
+"page": 18
+},
+{
+"level": 1,
+"text": "Lesson 1.6: Comparing Multi-Digit Numbers",
+"page": 20
+},
+{
+"level": 1,
+"text": "Lesson 1.7: Ordering Numbers",
+"page": 22
+},
+{
+"level": 1,
+"text": "Lesson 1.8: Large Numbers on a Number Line",
+"page": 23
+},
+{
+"level": 1,
+"text": "Lesson 1.9: Rounding with a Number Line",
+"page": 25
+},
+{
+"level": 1,
+"text": "Lesson 1.10: Rounding to Any Place",
+"page": 27
+},
+{
+"level": 1,
+"text": "Lesson 1.11: Estimating Sums and Differences",
+"page": 29
+},
+{
+"level": 1,
+"text": "Lesson 1.12: Is My Answer Reasonable?",
+"page": 31
+},
+{
+"level": 1,
+"text": "Lesson 1.13: Adding Multi-Digit Numbers",
+"page": 32
+},
+{
+"level": 1,
+"text": "Lesson 1.14: Subtracting with Regrouping",
+"page": 34
+},
+{
+"level": 1,
+"text": "Lesson 1.15: Subtracting Across Zeros",
+"page": 36
+},
+{
+"level": 1,
+"text": "Lesson 1.16: Solving Multi-Step Word Problems",
+"page": 38
+},
+{
+"level": 1,
+"text": "Unit 1 Study Guide",
+"page": 40
+},
+{
+"level": 0,
+"text": "Multiplication",
+"page": 42
+},
+{
+"level": 1,
+"text": "Lesson 2.1: Multiplication as Comparison",
+"page": 44
+},
+{
+"level": 1,
+"text": "Lesson 2.2: Multiplying by 10, 100, and 1,000",
+"page": 46
+},
+{
+"level": 1,
+"text": "Lesson 2.3: Multiplying with Area Models",
+"page": 47
+},
+{
+"level": 1,
+"text": "Lesson 2.4: Partial Products",
+"page": 49
+},
+{
+"level": 1,
+"text": "Lesson 2.5: Multiplying Three-Digit Numbers",
+"page": 51
+},
+{
+"level": 1,
+"text": "Lesson 2.6: The Standard Algorithm for Multiplication",
+"page": 53
+},
+{
+"level": 1,
+"text": "Lesson 2.7: Multiplying Four-Digit Numbers",
+"page": 55
+},
+{
+"level": 1,
+"text": "Lesson 2.8: Estimating Products",
+"page": 56
+},
+{
+"level": 1,
+"text": "Lesson 2.9: Multiplying Multiples of Ten",
+"page": 57
+},
+{
+"level": 1,
+"text": "Lesson 2.10: Two-Digit by Two-Digit: Area Models",
+"page": 59
+},
+{
+"level": 1,
+"text": "Lesson 2.11: Two-Digit by Two-Digit: Partial Products",
+"page": 61
+},
+{
+"level": 1,
+"text": "Lesson 2.12: Choosing and Checking a Strategy",
+"page": 62
+},
+{
+"level": 1,
+"text": "Lesson 2.13: Multiplication Word Problems",
+"page": 63
+},
+{
+"level": 1,
+"text": "Lesson 2.14: Multi-Step Problems with Multiplication",
+"page": 65
+},
+{
+"level": 1,
+"text": "Lesson 2.15: Comparison Word Problems",
+"page": 66
+},
+{
+"level": 1,
+"text": "Lesson 2.16: Multiplication Problem Solving",
+"page": 67
+},
+{
+"level": 1,
+"text": "Unit 2 Study Guide",
+"page": 69
+},
+{
+"level": 0,
+"text": "Division",
+"page": 70
+},
+{
+"level": 1,
+"text": "Lesson 3.1: What Division Means",
+"page": 72
+},
+{
+"level": 1,
+"text": "Lesson 3.2: Dividing Multiples of 10, 100, and 1,000",
+"page": 73
+},
+{
+"level": 1,
+"text": "Lesson 3.3: Dividing with Area Models",
+"page": 74
+},
+{
+"level": 1,
+"text": "Lesson 3.4: Partial Quotients",
+"page": 76
+},
+{
+"level": 1,
+"text": "Lesson 3.5: Understanding Remainders",
+"page": 77
+},
+{
+"level": 1,
+"text": "Lesson 3.6: Dividing Larger Numbers",
+"page": 79
+},
+{
+"level": 1,
+"text": "Lesson 3.7: What Do I Do With the Remainder?",
+"page": 80
+},
+{
+"level": 1,
+"text": "Lesson 3.8: Division Problem Solving",
+"page": 81
+},
+{
+"level": 1,
+"text": "Unit 3 Study Guide",
+"page": 83
+},
+{
+"level": 0,
+"text": "Factors, Multiples, and Patterns",
+"page": 84
+},
+{
+"level": 1,
+"text": "Lesson 4.1: Factors and Factor Pairs",
+"page": 86
+},
+{
+"level": 1,
+"text": "Lesson 4.2: Prime and Composite Numbers",
+"page": 87
+},
+{
+"level": 1,
+"text": "Lesson 4.3: Multiples",
+"page": 89
+},
+{
+"level": 1,
+"text": "Lesson 4.4: Divisibility Rules",
+"page": 90
+},
+{
+"level": 1,
+"text": "Lesson 4.5: Number Patterns",
+"page": 92
+},
+{
+"level": 1,
+"text": "Lesson 4.6: Shape Patterns",
+"page": 93
+},
+{
+"level": 1,
+"text": "Lesson 4.7: Input-Output Tables",
+"page": 94
+},
+{
+"level": 1,
+"text": "Lesson 4.8: Factors, Multiples, and Patterns in Problems",
+"page": 95
+},
+{
+"level": 1,
+"text": "Unit 4 Study Guide",
+"page": 97
+},
+{
+"level": 0,
+"text": "Fraction Equivalence and Comparison",
+"page": 98
+},
+{
+"level": 1,
+"text": "Lesson 5.1: Fractions and Unit Fractions",
+"page": 100
+},
+{
+"level": 1,
+"text": "Lesson 5.2: Fractions on a Number Line",
+"page": 101
+},
+{
+"level": 1,
+"text": "Lesson 5.3: Fractions Equal to and Greater Than 1",
+"page": 103
+},
+{
+"level": 1,
+"text": "Lesson 5.4: Fractions of a Set",
+"page": 104
+},
+{
+"level": 1,
+"text": "Lesson 5.5: Equivalent Fractions with Models",
+"page": 105
+},
+{
+"level": 1,
+"text": "Lesson 5.6: Equivalent Fractions by Multiplying",
+"page": 107
+},
+{
+"level": 1,
+"text": "Lesson 5.7: Simplest Form",
+"page": 108
+},
+{
+"level": 1,
+"text": "Lesson 5.8: Equivalent Fractions on a Number Line",
+"page": 109
+},
+{
+"level": 1,
+"text": "Lesson 5.9: Comparing: Same Denominator or Same Numerator",
+"page": 111
+},
+{
+"level": 1,
+"text": "Lesson 5.10: Comparing with Benchmarks",
+"page": 112
+},
+{
+"level": 1,
+"text": "Lesson 5.11: Comparing with Common Denominators",
+"page": 113
+},
+{
+"level": 1,
+"text": "Lesson 5.12: Comparing with Common Numerators",
+"page": 115
+},
+{
+"level": 1,
+"text": "Lesson 5.13: Ordering Fractions",
+"page": 116
+},
+{
+"level": 1,
+"text": "Lesson 5.14: Comparing Fractions of the Same Whole",
+"page": 117
+},
+{
+"level": 1,
+"text": "Lesson 5.15: Fraction Comparison Word Problems",
+"page": 118
+},
+{
+"level": 1,
+"text": "Lesson 5.16: Explaining Fraction Reasoning",
+"page": 119
+},
+{
+"level": 1,
+"text": "Unit 5 Study Guide",
+"page": 121
+},
+{
+"level": 0,
+"text": "Fraction Operations",
+"page": 122
+},
+{
+"level": 1,
+"text": "Lesson 6.1: Decomposing Fractions",
+"page": 124
+},
+{
+"level": 1,
+"text": "Lesson 6.2: Adding Fractions with Like Denominators",
+"page": 125
+},
+{
+"level": 1,
+"text": "Lesson 6.3: Subtracting Fractions with Like Denominators",
+"page": 127
+},
+{
+"level": 1,
+"text": "Lesson 6.4: Fraction Word Problems",
+"page": 128
+},
+{
+"level": 1,
+"text": "Lesson 6.5: Mixed Numbers and Improper Fractions",
+"page": 129
+},
+{
+"level": 1,
+"text": "Lesson 6.6: Adding Mixed Numbers",
+"page": 130
+},
+{
+"level": 1,
+"text": "Lesson 6.7: Subtracting Mixed Numbers",
+"page": 131
+},
+{
+"level": 1,
+"text": "Lesson 6.8: Subtracting Mixed Numbers with Regrouping",
+"page": 132
+},
+{
+"level": 1,
+"text": "Lesson 6.9: Fractions as Multiples of Unit Fractions",
+"page": 133
+},
+{
+"level": 1,
+"text": "Lesson 6.10: Multiplying a Fraction by a Whole Number",
+"page": 134
+},
+{
+"level": 1,
+"text": "Lesson 6.11: Models for Fraction Multiplication",
+"page": 135
+},
+{
+"level": 1,
+"text": "Lesson 6.12: Fraction Multiplication Word Problems",
+"page": 136
+},
+{
+"level": 1,
+"text": "Lesson 6.13: Fractions and Measurement",
+"page": 137
+},
+{
+"level": 1,
+"text": "Lesson 6.14: Multi-Step Fraction Problems",
+"page": 138
+},
+{
+"level": 1,
+"text": "Lesson 6.15: Estimating with Fractions",
+"page": 139
+},
+{
+"level": 1,
+"text": "Lesson 6.16: Fraction Operations Problem Solving",
+"page": 140
+},
+{
+"level": 1,
+"text": "Unit 6 Study Guide",
+"page": 142
+},
+{
+"level": 0,
+"text": "Decimals",
+"page": 143
+},
+{
+"level": 1,
+"text": "Lesson 7.1: Tenths",
+"page": 145
+},
+{
+"level": 1,
+"text": "Lesson 7.2: Decimals Greater Than 1",
+"page": 146
+},
+{
+"level": 1,
+"text": "Lesson 7.3: Tenths on a Number Line",
+"page": 147
+},
+{
+"level": 1,
+"text": "Lesson 7.4: Decimal Place Value",
+"page": 148
+},
+{
+"level": 1,
+"text": "Lesson 7.5: Hundredths",
+"page": 149
+},
+{
+"level": 1,
+"text": "Lesson 7.6: Equivalent Tenths and Hundredths",
+"page": 151
+},
+{
+"level": 1,
+"text": "Lesson 7.7: Adding Tenths and Hundredths",
+"page": 152
+},
+{
+"level": 1,
+"text": "Lesson 7.8: Decimals in Different Forms",
+"page": 153
+},
+{
+"level": 1,
+"text": "Lesson 7.9: Comparing Decimals with Models",
+"page": 154
+},
+{
+"level": 1,
+"text": "Lesson 7.10: Comparing Decimals with Place Value",
+"page": 155
+},
+{
+"level": 1,
+"text": "Lesson 7.11: Ordering Decimals",
+"page": 156
+},
+{
+"level": 1,
+"text": "Lesson 7.12: Decimals and Fractions on a Number Line",
+"page": 157
+},
+{
+"level": 1,
+"text": "Lesson 7.13: Money and Decimals",
+"page": 158
+},
+{
+"level": 1,
+"text": "Lesson 7.14: Adding Money",
+"page": 159
+},
+{
+"level": 1,
+"text": "Lesson 7.15: Subtracting Money and Making Change",
+"page": 160
+},
+{
+"level": 1,
+"text": "Lesson 7.16: Decimal and Money Problem Solving",
+"page": 162
+},
+{
+"level": 1,
+"text": "Unit 7 Study Guide",
+"page": 163
+},
+{
+"level": 0,
+"text": "Geometry, Angles, and Line Plots",
+"page": 164
+},
+{
+"level": 1,
+"text": "Lesson 8.1: Points, Lines, Segments, and Rays",
+"page": 166
+},
+{
+"level": 1,
+"text": "Lesson 8.2: Parallel and Perpendicular Lines",
+"page": 167
+},
+{
+"level": 1,
+"text": "Lesson 8.3: Classifying Triangles and Quadrilaterals",
+"page": 169
+},
+{
+"level": 1,
+"text": "Lesson 8.4: Lines of Symmetry",
+"page": 170
+},
+{
+"level": 1,
+"text": "Lesson 8.5: Angles: Right, Acute, and Obtuse",
+"page": 172
+},
+{
+"level": 1,
+"text": "Lesson 8.6: Angles and Turns",
+"page": 173
+},
+{
+"level": 1,
+"text": "Lesson 8.7: Estimating Angle Measures",
+"page": 174
+},
+{
+"level": 1,
+"text": "Lesson 8.8: Classifying Shapes by Angles",
+"page": 175
+},
+{
+"level": 1,
+"text": "Lesson 8.9: Measuring Angles with a Protractor",
+"page": 177
+},
+{
+"level": 1,
+"text": "Lesson 8.10: Drawing Angles",
+"page": 178
+},
+{
+"level": 1,
+"text": "Lesson 8.11: Adding Angle Measures",
+"page": 179
+},
+{
+"level": 1,
+"text": "Lesson 8.12: Finding Unknown Angles",
+"page": 180
+},
+{
+"level": 1,
+"text": "Lesson 8.13: Line Plots with Fractions",
+"page": 181
+},
+{
+"level": 1,
+"text": "Lesson 8.14: Solving Problems with Line Plots",
+"page": 182
+},
+{
+"level": 1,
+"text": "Lesson 8.15: Geometry Review: Attributes of Shapes",
+"page": 183
+},
+{
+"level": 1,
+"text": "Lesson 8.16: Geometry and Data Problem Solving",
+"page": 184
+},
+{
+"level": 1,
+"text": "Unit 8 Study Guide",
+"page": 186
+},
+{
+"level": 0,
+"text": "Measurement, Area, and Perimeter",
+"page": 187
+},
+{
+"level": 1,
+"text": "Lesson 9.1: Perimeter",
+"page": 189
+},
+{
+"level": 1,
+"text": "Lesson 9.2: Area",
+"page": 190
+},
+{
+"level": 1,
+"text": "Lesson 9.3: Area and Perimeter Formulas",
+"page": 192
+},
+{
+"level": 1,
+"text": "Lesson 9.4: Same Perimeter, Different Area",
+"page": 193
+},
+{
+"level": 1,
+"text": "Lesson 9.5: Finding an Unknown Side",
+"page": 194
+},
+{
+"level": 1,
+"text": "Lesson 9.6: Area of Combined Rectangles",
+"page": 195
+},
+{
+"level": 1,
+"text": "Lesson 9.7: Area and Perimeter Word Problems",
+"page": 196
+},
+{
+"level": 1,
+"text": "Lesson 9.8: Area or Perimeter?",
+"page": 197
+},
+{
+"level": 1,
+"text": "Lesson 9.9: Customary Length",
+"page": 198
+},
+{
+"level": 1,
+"text": "Lesson 9.10: Customary Weight and Capacity",
+"page": 199
+},
+{
+"level": 1,
+"text": "Lesson 9.11: Metric Units",
+"page": 200
+},
+{
+"level": 1,
+"text": "Lesson 9.12: Time Conversions",
+"page": 202
+},
+{
+"level": 1,
+"text": "Lesson 9.13: Elapsed Time",
+"page": 203
+},
+{
+"level": 1,
+"text": "Lesson 9.14: Measurement Problems with Fractions and Decimals",
+"page": 204
+},
+{
+"level": 1,
+"text": "Lesson 9.15: Multi-Step Measurement Problems",
+"page": 205
+},
+{
+"level": 1,
+"text": "Lesson 9.16: Measurement Problem Solving",
+"page": 206
+},
+{
+"level": 1,
+"text": "Unit 9 Study Guide",
+"page": 207
+},
+{
+"level": 0,
+"text": "Year in Review",
+"page": 208
+},
+{
+"level": 1,
+"text": "Lesson 10.1: Review: Place Value and Rounding",
+"page": 210
+},
+{
+"level": 1,
+"text": "Lesson 10.2: Review: Adding and Subtracting",
+"page": 211
+},
+{
+"level": 1,
+"text": "Lesson 10.3: Review: Multiplying",
+"page": 212
+},
+{
+"level": 1,
+"text": "Lesson 10.4: Review: Dividing",
+"page": 213
+},
+{
+"level": 1,
+"text": "Lesson 10.5: Review: Factors and Multiples",
+"page": 214
+},
+{
+"level": 1,
+"text": "Lesson 10.6: Review: Patterns",
+"page": 215
+},
+{
+"level": 1,
+"text": "Lesson 10.7: Review: Multi-Step Word Problems",
+"page": 216
+},
+{
+"level": 1,
+"text": "Lesson 10.8: Review: Whole-Number Challenge",
+"page": 217
+},
+{
+"level": 1,
+"text": "Lesson 10.9: Review: Equivalent Fractions",
+"page": 218
+},
+{
+"level": 1,
+"text": "Lesson 10.10: Review: Comparing Fractions",
+"page": 219
+},
+{
+"level": 1,
+"text": "Lesson 10.11: Review: Fraction Operations",
+"page": 220
+},
+{
+"level": 1,
+"text": "Lesson 10.12: Review: Decimals",
+"page": 221
+},
+{
+"level": 1,
+"text": "Lesson 10.13: Review: Geometry and Angles",
+"page": 222
+},
+{
+"level": 1,
+"text": "Lesson 10.14: Review: Area, Perimeter, and Conversions",
+"page": 223
+},
+{
+"level": 1,
+"text": "Lesson 10.15: Review: Data and Line Plots",
+"page": 224
+},
+{
+"level": 1,
+"text": "Lesson 10.16: Celebrating a Year of Math",
+"page": 225
+},
+{
+"level": 1,
+"text": "Unit 10 Study Guide",
+"page": 226
+},
+{
+"level": 0,
+"text": "Glossary",
+"page": 227
+}
+]

@@ -67,8 +67,8 @@ SUBJECTS = {
     "social": dict(name="Social Studies", main=colors.HexColor("#B4561A"), dark=colors.HexColor("#7A3810"),
                    wash=colors.HexColor("#FBEDE2"), mid=colors.HexColor("#EBB68D")),
     # signature blush: covers use the blush itself; text accents use a deeper rose so they stay readable
-    "data": dict(name="Data Science & Psychometrics", main=colors.HexColor("#B85C6C"), dark=colors.HexColor("#7E3542"),
-                 wash=colors.HexColor("#F8E8EA"), mid=colors.HexColor("#E8BFC4")),
+    "data": dict(name="Data Science & Psychometrics", main=colors.HexColor("#E8BFC4"), dark=colors.HexColor("#234638"),
+                 wash=colors.HexColor("#F9EEF0"), mid=colors.HexColor("#DDA9B0"), accent=colors.HexColor("#234638"), on_main=colors.HexColor("#234638")),
 }
 
 LABELS = {
@@ -99,6 +99,9 @@ class Theme:
         s = SUBJECTS[subject]
         self.subject = subject; self.name = s["name"]
         self.main, self.dark, self.wash, self.mid = s["main"], s["dark"], s["wash"], s["mid"]
+        # accent: color for accent TEXT (eyebrows, answers, page numbers); on_main: text drawn on a main-color fill.
+        # Most subjects use the main color and white; the blush Data Science books use blush fills with hunter-green text.
+        self.accent = s.get("accent", self.main); self.on_main = s.get("on_main", WHITE)
         base = dict(fontName="Body", textColor=INK)
         self.body = ParagraphStyle("body", fontSize=11.5, leading=17, spaceAfter=7, **base)
         self.small = ParagraphStyle("small", fontSize=9.5, leading=13, spaceAfter=3, fontName="Body", textColor=MUTED)
@@ -107,7 +110,7 @@ class Theme:
         self.cell = ParagraphStyle("cell", fontSize=10, leading=14, **base)
         self.cellb = ParagraphStyle("cellb", fontSize=10, leading=14, fontName="BodySemi", textColor=INK)
         self.prob = ParagraphStyle("prob", fontSize=11, leading=16, **base)
-        self.eyebrow = ParagraphStyle("eyebrow", fontName="BodySemi", fontSize=8.5, leading=11, textColor=self.main, spaceAfter=3)
+        self.eyebrow = ParagraphStyle("eyebrow", fontName="BodySemi", fontSize=8.5, leading=11, textColor=self.accent, spaceAfter=3)
         self.h1 = ParagraphStyle("h1", fontName="Display", fontSize=30, leading=34, textColor=HUNTER, spaceAfter=6)
         self.h2 = ParagraphStyle("h2", fontName="Display", fontSize=20, leading=24, textColor=HUNTER, spaceBefore=8, spaceAfter=6)
         self.h3 = ParagraphStyle("h3", fontName="BodySemi", fontSize=13, leading=17, textColor=self.dark, spaceBefore=8, spaceAfter=4)
@@ -115,7 +118,7 @@ class Theme:
         self.ican = ParagraphStyle("ican", fontName="DisplayIt", fontSize=14, leading=19, textColor=self.dark, spaceAfter=8)
         self.bullet = ParagraphStyle("bullet", parent=self.body, leftIndent=16, bulletIndent=3, spaceAfter=3)
         self.say = ParagraphStyle("say", parent=self.cell, fontName="BodyMed", textColor=self.dark)
-        self.answer = ParagraphStyle("answer", parent=self.cell, fontName="BodySemi", textColor=self.main)
+        self.answer = ParagraphStyle("answer", parent=self.cell, fontName="BodySemi", textColor=self.accent)
         self.lab = LABELS[subject]
 
 
@@ -386,7 +389,7 @@ def ten_times_diagram(theme, width=W):
 
 def table(theme, rows, col_widths=None, header=True, width=W, zebra=True, styles=None, font_size=10):
     st = ParagraphStyle("t", fontName="Body", fontSize=font_size, leading=font_size * 1.4, textColor=INK)
-    sth = ParagraphStyle("th", parent=st, fontName="BodySemi", textColor=WHITE)
+    sth = ParagraphStyle("th", parent=st, fontName="BodySemi", textColor=theme.on_main)
     data = [[c if isinstance(c, Flowable) else Paragraph(str(c), sth if (header and r == 0) else st) for c in row]
             for r, row in enumerate(rows)]
     cw = col_widths or [width / len(rows[0])] * len(rows[0])
@@ -527,10 +530,10 @@ class Doc(BaseDocTemplate):
         t = self.theme; c.saveState()
         c.setFillColor(t.main); c.rect(0, PAGE_H - 22, PAGE_W, 22, fill=1, stroke=0)
         self.stripe(c, PAGE_H - 28, 6)
-        text(c, LM, PAGE_H - 15, f"VENVLEARNING  ·  {self.book.audience.upper()}  ·  {t.name.upper()}", "BodySemi", 7.5, WHITE)
-        text(c, PAGE_W - RM, PAGE_H - 15, KIND_LABEL[self.kind].upper(), "BodySemi", 7.5, WHITE, "r")
+        text(c, LM, PAGE_H - 15, f"VENVLEARNING  ·  {self.book.audience.upper()}  ·  {t.name.upper()}", "BodySemi", 7.5, t.on_main)
+        text(c, PAGE_W - RM, PAGE_H - 15, KIND_LABEL[self.kind].upper(), "BodySemi", 7.5, t.on_main, "r")
         c.setStrokeColor(LINE); c.setLineWidth(0.6); c.line(LM, BM - 16, PAGE_W - RM, BM - 16)
-        text(c, PAGE_W - RM, BM - 30, str(doc.page), "MonoSemi", 9, t.main, "r")
+        text(c, PAGE_W - RM, BM - 30, str(doc.page), "MonoSemi", 9, t.accent, "r")
         if self.kind == "teacher":
             c.setFillColor(GOLD); c.rect(PAGE_W - 10, BM, 10, PAGE_H - TM - BM, fill=1, stroke=0)
         c.restoreState()
@@ -543,7 +546,7 @@ class Doc(BaseDocTemplate):
         # faint big unit numeral
         c.setFillColor(colors.Color(1, 1, 1, 0.12)); c.setFont("Display", 250)
         c.drawRightString(PAGE_W - 0.4 * inch, PAGE_H - 3.05 * inch, str(getattr(self, "opener_num", "")))
-        text(c, PAGE_W - RM, BM - 30, str(doc.page), "MonoSemi", 9, t.main, "r")
+        text(c, PAGE_W - RM, BM - 30, str(doc.page), "MonoSemi", 9, t.accent, "r")
         c.restoreState()
 
     def cover_page(self, c, doc):
@@ -574,12 +577,12 @@ class Doc(BaseDocTemplate):
                 y = PAGE_H * 0.45 + j * 40; c.line(30, y, PAGE_W - 30, y)
             for i in range(12):
                 x = 30 + i * 50; c.line(x, PAGE_H * 0.43, x, PAGE_H - 10)
-        text(c, LM, PAGE_H - 1.25 * inch, "VENVLEARNING", "BodySemi", 11, WHITE)
+        text(c, LM, PAGE_H - 1.25 * inch, "VENVLEARNING", "BodySemi", 11, t.on_main)
         c.setFillColor(GOLD); c.rect(LM, PAGE_H - 1.38 * inch, 54, 3, fill=1, stroke=0)
-        text(c, LM, PAGE_H - 2.6 * inch, b.audience, "Display", 34, BLUSH if b.subject != "data" else IVORY)
+        text(c, LM, PAGE_H - 2.6 * inch, b.audience, "Display", 34, BLUSH if b.subject != "data" else t.on_main)
         lines = {"math": ["Mathematics"], "ela": ["English", "Language Arts"], "science": ["Science"], "social": ["Social", "Studies"],
                  "data": ["Data Science &", "Psychometrics"]}[b.subject]
-        for k, ln in enumerate(lines): text(c, LM, PAGE_H - 3.45 * inch - k * 0.8 * inch, ln, "Display", 64, WHITE)
+        for k, ln in enumerate(lines): text(c, LM, PAGE_H - 3.45 * inch - k * 0.8 * inch, ln, "Display", 64, t.on_main)
         # kind badge
         lab = KIND_LABEL[self.kind].upper()
         bw = stringWidth(lab, "BodyBold", 12) + 34
@@ -589,7 +592,7 @@ class Doc(BaseDocTemplate):
         text(c, LM, PAGE_H * 0.42 - 0.75 * inch, b.year + " " + b.year_label, "BodySemi", 13, HUNTER)
         y = PAGE_H * 0.42 - 1.15 * inch
         for u in b.units:
-            text(c, LM, y, f"Unit {u.num}", "MonoSemi", 10, t.main); text(c, LM + 52, y, u.title, "Body", 11, INK); y -= 18
+            text(c, LM, y, f"Unit {u.num}", "MonoSemi", 10, t.accent); text(c, LM + 52, y, u.title, "Body", 11, INK); y -= 18
         if self.kind != "teacher":
             text(c, LM, 1.35 * inch, "This book belongs to", "Body", 10, MUTED)
             c.setStrokeColor(INK); c.setLineWidth(0.8); c.line(LM + 110, 1.33 * inch, LM + 330, 1.33 * inch)

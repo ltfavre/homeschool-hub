@@ -24,7 +24,7 @@ def a(alpha, rgb=None):
 def palette(book):
     t = book.theme
     if book.subject == "data":
-        return dict(bg=BLUSH, ink=HUNTER, sub=t.dark, art=(0.49, 0.21, 0.26), band=t.dark)
+        return dict(bg=BLUSH, ink=HUNTER, sub=HUNTER, art=(0.14, 0.27, 0.22), band=t.dark)
     return dict(bg=t.main, ink=WHITE, sub=BLUSH, art=(1, 1, 1), band=t.dark)
 
 
@@ -268,7 +268,7 @@ def front(c, book, kind):
     c.setFillColor(IVORY); c.circle(mx, my, mr, fill=1, stroke=0)
     c.setStrokeColor(GOLD); c.setLineWidth(3); c.circle(mx, my, mr - 7, fill=0, stroke=1)
     text(c, mx, my + 0.28 * inch, book.medal[0], "BodyBold", 11, t.dark, "c")
-    text(c, mx, my - 0.5 * inch, book.medal[1], "Display", 72, t.main, "c")
+    text(c, mx, my - 0.5 * inch, book.medal[1], "Display", 72, t.accent, "c")
     # subtitle
     sub = {"textbook": "Lessons, examples, and practice for the whole year", "workbook": "Daily practice, weekly checks, and unit tests",
            "teacher": "Guided lessons, pacing, and complete answer keys"}[kind]
@@ -292,7 +292,7 @@ def mini_cover(c, x, y, w, h, book, kind, here):
     c.setFillColor(GOLD if kind == "teacher" else t.dark); c.rect(x, y, 6, h, fill=1, stroke=0)
     c.setFillColor(t.dark); c.rect(x, y, w, h * 0.16, fill=1, stroke=0)
     c.setFillColor(IVORY); c.circle(x + w - 16, y + h * 0.42, 11, fill=1, stroke=0)
-    text(c, x + w - 16, y + h * 0.42 - 5, book.medal[1], "Display", 14, t.main, "c")
+    text(c, x + w - 16, y + h * 0.42 - 5, book.medal[1], "Display", 14, t.accent, "c")
     words = TITLE_LINES[book.subject]
     fs = min(12, min((w - 40) / stringWidth(ln, "Display", 1) for ln in words))
     for k, ln in enumerate(words):
@@ -323,19 +323,19 @@ def back(c, book, kind):
 
     # two columns: units | what's inside
     y -= 14
-    text(c, M, y, "INSIDE THIS YEAR", "BodyBold", 9, t.main)
+    text(c, M, y, "INSIDE THIS YEAR", "BodyBold", 9, t.accent)
     inside = (INSIDE_DATA if book.subject == "data" else INSIDE)[kind]
     colx = M + wcol * 0.56
-    text(c, colx, y, "IN THIS BOOK", "BodyBold", 9, t.main)
+    text(c, colx, y, "IN THIS BOOK", "BodyBold", 9, t.accent)
     c.setFillColor(GOLD); c.rect(M, y - 7, 40, 2, fill=1, stroke=0); c.rect(colx, y - 7, 40, 2, fill=1, stroke=0)
     yy = y - 26
     us = ParagraphStyle("u", fontName="Body", fontSize=10, leading=13, textColor=INK)
     for u in book.units:
-        text(c, M, yy, f"{u.num:02d}", "MonoSemi", 9.5, t.main)
+        text(c, M, yy, f"{u.num:02d}", "MonoSemi", 9.5, t.accent)
         para = Paragraph(u.title, us); _, h = para.wrap(wcol * 0.5 - 28, 100); para.drawOn(c, M + 26, yy - h + 10); yy -= max(h, 13) + 5
     yi = y - 26
     for item in inside:
-        c.setFillColor(t.main); c.circle(colx + 4, yi + 3.5, 3, fill=1, stroke=0)
+        c.setFillColor(t.accent); c.circle(colx + 4, yi + 3.5, 3, fill=1, stroke=0)
         para = Paragraph(item, us); _, h = para.wrap(wcol * 0.44 - 16, 100); para.drawOn(c, colx + 14, yi - h + 10); yi -= h + 7
 
     # the complete set
@@ -343,7 +343,7 @@ def back(c, book, kind):
     w, h = 1.05 * inch, 1.4 * inch
     if ys - h - 40 < 1.3 * inch:   # keep clear of the footer
         ys = 1.3 * inch + h + 40
-    text(c, M, ys, "THE COMPLETE SET", "BodyBold", 9, t.main)
+    text(c, M, ys, "THE COMPLETE SET", "BodyBold", 9, t.accent)
     c.setFillColor(GOLD); c.rect(M, ys - 7, 40, 2, fill=1, stroke=0)
     gap = 0.45 * inch
     for k, kd in enumerate(book.kinds):

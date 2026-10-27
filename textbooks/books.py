@@ -71,7 +71,7 @@ def render_blocks(t, blocks, teacher=False):
 
 
 CODE_BG = colors.HexColor("#FBF4F5")
-LANG = [("sas", "SAS", colors.HexColor("#1F5FA0")), ("python", "PYTHON", colors.HexColor("#3B6E3B")), ("r", "R", colors.HexColor("#5B4A8C"))]
+LANG = [("sas", "SAS", colors.HexColor("#234638")), ("python", "PYTHON", colors.HexColor("#5C7A5F")), ("r", "R", colors.HexColor("#8C7330"))]
 
 
 def _code_para(src, size=8.4):
@@ -211,9 +211,10 @@ def textbook_lesson(t, L, teacher=False):
 
 
 def unit_opener(t, U, doc, kind):
-    w = ParagraphStyle("ow", parent=t.h1, textColor=WHITE, fontSize=36, leading=40)
-    e = ParagraphStyle("oe", parent=t.eyebrow, textColor=BLUSH, fontSize=10)
-    s = ParagraphStyle("os", parent=t.body, textColor=IVORY, fontSize=13, leading=18)
+    light = t.on_main != WHITE
+    w = ParagraphStyle("ow", parent=t.h1, textColor=t.on_main, fontSize=36, leading=40)
+    e = ParagraphStyle("oe", parent=t.eyebrow, textColor=t.on_main if light else BLUSH, fontSize=10)
+    s = ParagraphStyle("os", parent=t.body, textColor=t.on_main if light else IVORY, fontSize=13, leading=18)
     out = [NextPageTemplate("opener"), SetOpenerNum(doc, U.num), PageBreak(), Running(f"Unit {U.num} · {U.title}"),
            Spacer(1, 0.25 * inch), P(f"UNIT {U.num}" + ("  ·  TEACHER OVERVIEW" if kind == "teacher" else ""), e),
            toc_heading(U.title, w, 0), P(U.subtitle, s), SpaceTo(3.65 * inch), NextPageTemplate("body")]
@@ -368,7 +369,7 @@ def write_lines(t, w, n):
 
 
 def problem_cell(t, pr, num, w, show_answer=False):
-    badge = Table([[P(f"<b>{num}</b>", ParagraphStyle("bd", parent=t.cell, textColor=WHITE, alignment=TA_CENTER))]], colWidths=[18], rowHeights=[18])
+    badge = Table([[P(f"<b>{num}</b>", ParagraphStyle("bd", parent=t.cell, textColor=t.on_main, alignment=TA_CENTER))]], colWidths=[18], rowHeights=[18])
     badge.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), t.main), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                                ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0),
                                ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 2), ("ROUNDEDCORNERS", [9, 9, 9, 9])]))
@@ -377,7 +378,7 @@ def problem_cell(t, pr, num, w, show_answer=False):
     if pr.choices:
         body.append(Spacer(1, 2))
         for k, ch in enumerate(pr.choices):
-            body.append(P(f"<font name='BodySemi' color='#{t.main.hexval()[2:]}'>{chr(65 + k)}</font>   {ch}", t.prob))
+            body.append(P(f"<font name='BodySemi' color='#{t.accent.hexval()[2:]}'>{chr(65 + k)}</font>   {ch}", t.prob))
     inner_w = w - 26
     if pr.lines: body += [Spacer(1, 2), write_lines(t, inner_w, pr.lines)]
     elif pr.space: body += [Spacer(1, 3), work_space(t, inner_w, max(pr.space, 26))]
@@ -467,10 +468,10 @@ def build_workbook(book, path):
 def answer_key_section(t, book, doc):
     """Self-study answer key at the back of the workbook."""
     out = [NextPageTemplate("opener"), SetOpenerNum(doc, ""), PageBreak(), Running("Answer Key"), Spacer(1, 0.25 * inch),
-           P("ANSWERS AND CODE SOLUTIONS", ParagraphStyle("ake", parent=t.eyebrow, textColor=BLUSH, fontSize=10)),
-           toc_heading("Answer Key", ParagraphStyle("akh", parent=t.h1, textColor=WHITE, fontSize=36, leading=40), 0),
+           P("ANSWERS AND CODE SOLUTIONS", ParagraphStyle("ake", parent=t.eyebrow, textColor=t.on_main, fontSize=10)),
+           toc_heading("Answer Key", ParagraphStyle("akh", parent=t.h1, textColor=t.on_main, fontSize=36, leading=40), 0),
            P("Try every problem before you look. Code solutions show one good way; yours may differ and still be right if the output matches.",
-             ParagraphStyle("aks", parent=t.body, textColor=IVORY, fontSize=13, leading=18)), SpaceTo(3.65 * inch), NextPageTemplate("body")]
+             ParagraphStyle("aks", parent=t.body, textColor=t.on_main, fontSize=13, leading=18)), SpaceTo(3.65 * inch), NextPageTemplate("body")]
     for U in book.units:
         out += [P(f"Unit {U.num}: {U.title}", t.h2)]
         week_checks = {c.after: c for c in U.checks}
@@ -521,7 +522,7 @@ def key_table(t, items, title):
     out = [CondPageBreak(1.6 * inch), P(title, t.h3)]
     rows = [["#", "Question", "Answer"]]
     for num, prompt, ans, note in items:
-        a = f"<font name='BodySemi' color='#{t.main.hexval()[2:]}'>{ans}</font>" + (f"<br/><font size='8.5' color='#5F5B56'>{note}</font>" if note else "")
+        a = f"<font name='BodySemi' color='#{t.accent.hexval()[2:]}'>{ans}</font>" + (f"<br/><font size='8.5' color='#5F5B56'>{note}</font>" if note else "")
         rows.append([str(num), P(prompt, ParagraphStyle("kq", parent=t.cell, fontSize=9, leading=12.5)), P(a, t.cell)])
     out.append(table(t, rows, [0.35 * inch, W * 0.56, W - 0.35 * inch - W * 0.56], font_size=9))
     return out

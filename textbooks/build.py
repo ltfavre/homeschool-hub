@@ -14,7 +14,7 @@ def units(key):
     return [importlib.import_module(f"content.{key}.{m}").UNIT for m in mods]
 
 
-BOOKS = {
+_BOOKS = {
     "math4": lambda: Book("math", 4, "Grade 4 Mathematics", units("math4")),
     "math7": lambda: Book("math", 7, "Grade 7 Mathematics", units("math7")),
     "ela4": lambda: Book("ela", 4, "Grade 4 English Language Arts", units("ela4")),
@@ -30,6 +30,10 @@ BOOKS = {
     "data": lambda: Book("data", "pro", "Data Science & Psychometrics", units("data"), audience="Professional Learning", kinds=("textbook", "workbook"),
                          medal=("YEAR", "1"), tagline="A VenvLearning professional learning curriculum", year_label="Professional Learning"),
 }
+
+# Student books are dated on the family's school calendar (see content/sched.py); the parent's book keeps its own pacing.
+from content.sched import pace
+BOOKS = {k: (f if k == "data" else (lambda f=f: pace(f()))) for k, f in _BOOKS.items()}
 
 if __name__ == "__main__":
     key = sys.argv[1] if len(sys.argv) > 1 else "math4"

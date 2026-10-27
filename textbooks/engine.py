@@ -66,12 +66,18 @@ SUBJECTS = {
                     wash=colors.HexColor("#E5F2E9"), mid=colors.HexColor("#97CBA9")),
     "social": dict(name="Social Studies", main=colors.HexColor("#B4561A"), dark=colors.HexColor("#7A3810"),
                    wash=colors.HexColor("#FBEDE2"), mid=colors.HexColor("#EBB68D")),
+    # lemon yellow fills with warm charcoal text; a deep mustard for accent text so it stays readable on white
+    "art": dict(name="Art", main=colors.HexColor("#F7DF4B"), dark=colors.HexColor("#3A3628"), wash=colors.HexColor("#FEF8D8"),
+                mid=colors.HexColor("#E6CC3A"), accent=colors.HexColor("#7A6500"), on_main=colors.HexColor("#2B2A22")),
     # signature blush: covers use the blush itself; text accents use a deeper rose so they stay readable
     "data": dict(name="Data Science & Psychometrics", main=colors.HexColor("#E8BFC4"), dark=colors.HexColor("#234638"),
                  wash=colors.HexColor("#F9EEF0"), mid=colors.HexColor("#DDA9B0"), accent=colors.HexColor("#234638"), on_main=colors.HexColor("#234638")),
 }
 
 LABELS = {
+    "art": dict(explore="LOOK AND WONDER", example="STEP BY STEP", answer="Look for", try_="CHECK YOUR UNDERSTANDING",
+                try_note="Talk it over with your teacher or answer in your sketchbook.", real="ART IN YOUR WORLD",
+                study="Read about the idea, study the <b>Step by Step</b> demonstrations, then make art in the <b>Create</b> studio activity."),
     "data": dict(explore="WHY IT MATTERS AT WORK", example="WORKED EXAMPLE", answer="Result", try_="QUICK CHECK",
                  try_note="Answer from memory first, then check the answer key at the back of your workbook.", real="ON THE JOB",
                  study="Read the lesson, watch the suggested video if you have time, and run the <b>Code It</b> examples in SAS, Python, or R."),
@@ -567,6 +573,12 @@ class Doc(BaseDocTemplate):
             for j in range(16):
                 y = PAGE_H * 0.45 + j * 24
                 c.line(30, y, PAGE_W - 30, y)
+        elif b.subject == "art":
+            import random
+            rnd = random.Random(4)
+            for _ in range(60):
+                x = rnd.uniform(20, PAGE_W - 20); y = rnd.uniform(PAGE_H * 0.44, PAGE_H - 10); r = rnd.uniform(4, 22)
+                c.setFillColor(colors.Color(1, 1, 1, 0.22)); c.circle(x, y, r, fill=1, stroke=0)
         elif b.subject == "science":
             for i in range(9):
                 for j in range(6):
@@ -579,9 +591,9 @@ class Doc(BaseDocTemplate):
                 x = 30 + i * 50; c.line(x, PAGE_H * 0.43, x, PAGE_H - 10)
         text(c, LM, PAGE_H - 1.25 * inch, "VENVLEARNING", "BodySemi", 11, t.on_main)
         c.setFillColor(GOLD); c.rect(LM, PAGE_H - 1.38 * inch, 54, 3, fill=1, stroke=0)
-        text(c, LM, PAGE_H - 2.6 * inch, b.audience, "Display", 34, BLUSH if b.subject != "data" else t.on_main)
+        text(c, LM, PAGE_H - 2.6 * inch, b.audience, "Display", 34, BLUSH if t.on_main == WHITE else t.on_main)
         lines = {"math": ["Mathematics"], "ela": ["English", "Language Arts"], "science": ["Science"], "social": ["Social", "Studies"],
-                 "data": ["Data Science &", "Psychometrics"]}[b.subject]
+                 "data": ["Data Science &", "Psychometrics"], "art": ["Art"]}[b.subject]
         for k, ln in enumerate(lines): text(c, LM, PAGE_H - 3.45 * inch - k * 0.8 * inch, ln, "Display", 64, t.on_main)
         # kind badge
         lab = KIND_LABEL[self.kind].upper()
@@ -1742,3 +1754,192 @@ def wave_fig(theme, width=None, height=120, labels=True, cycles=2.5):
             _arrow_line(c, xa + 8, mid, xa + 8, mid + A, INK, 0.8); text(c, xa + 13, mid + A / 2 - 3, "amplitude", "Body", 8, INK)
             text(c, w - 12, mid + 3, "rest position", "Body", 7, MUTED, "r")
     return Draw(width, height, fn)
+
+
+# ---------------------------------------------------------------- art and music figures
+def _hsv(h, s_, v):
+    import colorsys
+    r, g, b = colorsys.hsv_to_rgb(h, s_, v); return colors.Color(r, g, b)
+
+
+# painter's (RYB) wheel colors, in order starting at yellow
+RYB = [("yellow", "#F6D21E"), ("yellow-orange", "#F5A623"), ("orange", "#F07C1B"), ("red-orange", "#E4502A"), ("red", "#D7263D"), ("red-violet", "#A4286A"),
+       ("violet", "#6A2C91"), ("blue-violet", "#45399A"), ("blue", "#1F5FAD"), ("blue-green", "#138A82"), ("green", "#2E9B47"), ("yellow-green", "#A3C93A")]
+
+
+def color_wheel(theme, size=190, labels=True, highlight=None):
+    """12-part painter's color wheel. highlight: list of color names to outline."""
+    width = size + (150 if labels else 0)
+
+    def fn(c, w, h):
+        cx, cy, R = h / 2 + (75 if labels else 0), h / 2, size / 2 - 6
+        for i, (name, hx) in enumerate(RYB):
+            a0 = 90 - i * 30 - 15
+            c.setFillColor(colors.HexColor(hx)); c.setStrokeColor(WHITE); c.setLineWidth(1.5)
+            c.wedge(cx - R, cy - R, cx + R, cy + R, a0, 30, fill=1, stroke=1)
+            if highlight and name in highlight:
+                c.setStrokeColor(INK); c.setLineWidth(2.5); c.wedge(cx - R, cy - R, cx + R, cy + R, a0, 30, fill=0, stroke=1)
+            if labels and name in ("yellow", "orange", "red", "violet", "blue", "green"):
+                am = math.radians(a0 + 15); lx, ly = cx + (R + 12) * math.cos(am), cy + (R + 12) * math.sin(am)
+                text(c, lx, ly - 3, name, "BodySemi", 8, INK, "l" if math.cos(am) > 0.2 else ("r" if math.cos(am) < -0.2 else "c"))
+        c.setFillColor(WHITE); c.circle(cx, cy, R * 0.38, fill=1, stroke=0)
+        text(c, cx, cy - 3, "color wheel", "BodySemi", 7.5, MUTED, "c")
+    return Draw(width, size, fn)
+
+
+def value_scale(theme, steps=7, width=None, height=46, color=None, labels=("white", "black")):
+    """Value scale from light to dark (or tints to shades of one color)."""
+    width = width or W * 0.8
+
+    def fn(c, w, h):
+        bw = (w - 8) / steps
+        for i in range(steps):
+            t = i / (steps - 1)
+            if color is None: col = colors.Color(1 - t, 1 - t, 1 - t)
+            else:
+                base = colors.HexColor(color); r, g, b = base.red, base.green, base.blue
+                if t < 0.5: k = 1 - t * 2; col = colors.Color(r + (1 - r) * k, g + (1 - g) * k, b + (1 - b) * k)   # tints
+                else: k = (t - 0.5) * 2; col = colors.Color(r * (1 - k * 0.85), g * (1 - k * 0.85), b * (1 - k * 0.85))   # shades
+            c.setFillColor(col); c.setStrokeColor(INK); c.setLineWidth(0.6); c.rect(4 + i * bw, 14, bw, h - 18, fill=1, stroke=1)
+        if labels:
+            text(c, 4, 2, labels[0], "Body", 7.5, MUTED); text(c, w - 4, 2, labels[1], "Body", 7.5, MUTED, "r")
+    return Draw(width, height, fn)
+
+
+def perspective_fig(theme, points=1, width=None, height=170):
+    """One- or two-point perspective construction: horizon line, vanishing point(s), and a box."""
+    width = width or W * 0.8
+
+    def fn(c, w, h):
+        hy = h * 0.62
+        c.setStrokeColor(theme.accent); c.setLineWidth(1); c.line(6, hy, w - 6, hy); text(c, w - 8, hy + 4, "horizon line", "Body", 7.5, theme.accent, "r")
+        c.setStrokeColor(GRID); c.setDash(3, 3); c.setLineWidth(0.7)
+        if points == 1:
+            vp = (w / 2, hy); x0, x1, y0, y1 = w * 0.18, w * 0.38, h * 0.12, h * 0.42
+            for (x, y) in [(x0, y0), (x1, y0), (x0, y1), (x1, y1)]: c.line(x, y, *vp)
+            c.setDash(); c.setStrokeColor(INK); c.setLineWidth(1.4)
+            k = 0.45; fx = lambda x, y: (x + (vp[0] - x) * k, y + (vp[1] - y) * k)
+            c.rect(x0, y0, x1 - x0, y1 - y0, fill=0, stroke=1)
+            b = [fx(x0, y0), fx(x1, y0), fx(x1, y1), fx(x0, y1)]
+            for (x, y), (bx, by) in zip([(x0, y0), (x1, y0), (x1, y1), (x0, y1)], b): c.line(x, y, bx, by)
+            c.line(*b[1], *b[2]); c.line(*b[2], *b[3])
+            c.setFillColor(theme.accent); c.circle(*vp, 3, fill=1, stroke=0); text(c, vp[0], vp[1] + 7, "vanishing point", "Body", 7.5, theme.accent, "c")
+        else:
+            v1, v2 = (12, hy), (w - 12, hy); xe = w * 0.5; yt, yb = h * 0.85, h * 0.18
+            for v in (v1, v2):
+                c.line(xe, yt, *v); c.line(xe, yb, *v)
+            c.setDash(); c.setStrokeColor(INK); c.setLineWidth(1.4); c.line(xe, yb, xe, yt)
+            def on(v, y, t): return xe + (v[0] - xe) * t, y + (v[1] - y) * t
+            for v, t in ((v1, 0.38), (v2, 0.33)):
+                a, b = on(v, yt, t), on(v, yb, t); c.line(xe, yt, *a); c.line(xe, yb, *b); c.line(*a, *b)
+            for v in (v1, v2):
+                c.setFillColor(theme.accent); c.circle(*v, 3, fill=1, stroke=0)
+            text(c, v1[0] + 4, hy + 7, "VP 1", "Body", 7.5, theme.accent); text(c, v2[0] - 4, hy + 7, "VP 2", "Body", 7.5, theme.accent, "r")
+    return Draw(width, height, fn)
+
+
+def _note(c, x, y, kind, stem_up=True, size=5):
+    """kind: whole, half, quarter, eighth. y is the note-head center."""
+    c.saveState(); c.translate(x, y); c.rotate(-20)
+    c.setStrokeColor(INK); c.setLineWidth(1.2); c.setFillColor(INK)
+    c.ellipse(-size * 1.25, -size * 0.85, size * 1.25, size * 0.85, fill=0 if kind in ("whole", "half") else 1, stroke=1)
+    c.restoreState()
+    if kind != "whole":
+        c.setStrokeColor(INK); c.setLineWidth(1.2)
+        sx = x + size * 1.1 if stem_up else x - size * 1.1
+        c.line(sx, y, sx, y + (size * 6 if stem_up else -size * 6))
+        if kind == "eighth":
+            p = c.beginPath(); top = y + size * 6
+            p.moveTo(sx, top); p.curveTo(sx + 2, top - 4, sx + 9, top - 7, sx + 6, top - 15); c.drawPath(p, fill=0, stroke=1)
+
+
+def rhythm_fig(theme, beats, width=None, height=70, labels=True):
+    """A row of rhythm values on a single line. beats: list of 'whole','half','quarter','eighth','rest' (quarter rest)."""
+    width = width or W * 0.8
+    dur = {"whole": 4, "half": 2, "quarter": 1, "eighth": 0.5, "rest": 1}
+
+    def fn(c, w, h):
+        y = h * 0.45; c.setStrokeColor(GRID); c.setLineWidth(1); c.line(6, y, w - 6, y)
+        total = sum(dur[b] for b in beats); x = 18; unit = (w - 30) / total
+        for b in beats:
+            if b == "rest":
+                c.setStrokeColor(INK); c.setLineWidth(2)
+                p = c.beginPath(); p.moveTo(x - 2, y + 10); p.lineTo(x + 3, y + 4); p.lineTo(x - 2, y - 1); p.lineTo(x + 3, y - 7); c.drawPath(p, fill=0, stroke=1)
+            else:
+                _note(c, x, y, b)
+            if labels: text(c, x, 4, {"whole": "4", "half": "2", "quarter": "1", "eighth": "½", "rest": "rest"}[b], "MonoSemi", 8, theme.accent, "c")
+            x += dur[b] * unit
+    return Draw(width, height, fn)
+
+
+def staff_fig(theme, notes=(), width=None, height=90, clef_label=True, names=False):
+    """Five-line treble staff. notes: list of (letter-with-octave, kind) e.g. ("E4","quarter"). Positions from E4 (bottom line) to F5 (top line)."""
+    width = width or W * 0.85
+    order = ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5", "D5", "E5", "F5", "G5"]
+
+    def fn(c, w, h):
+        gap = 8; base = h * 0.3
+        c.setStrokeColor(INK); c.setLineWidth(0.8)
+        for i in range(5): c.line(10, base + i * gap, w - 10, base + i * gap)
+        if clef_label: text(c, 14, base + 2 * gap - 4, "treble", "BodySemi", 7, MUTED)
+        n = max(1, len(notes)); x = 60
+        step = (w - 80) / n
+        for nm, kind in notes:
+            k = order.index(nm) - 2            # E4 = 0 = bottom line
+            y = base + k * gap / 2
+            if nm == "C4":
+                c.setStrokeColor(INK); c.line(x - 9, y, x + 9, y)
+            _note(c, x, y, kind, stem_up=k < 4, size=4.2)
+            if names: text(c, x, base - 22, nm[0], "BodySemi", 8.5, theme.accent, "c")
+            x += step
+    return Draw(width, height, fn)
+
+
+def rule_of_thirds(theme, width=200, height=130, focal=(2, 1)):
+    def fn(c, w, h):
+        c.setStrokeColor(INK); c.setLineWidth(1); c.rect(1, 1, w - 2, h - 2, fill=0, stroke=1)
+        c.setStrokeColor(theme.accent); c.setDash(4, 3)
+        for k in (1, 2): c.line(w * k / 3, 2, w * k / 3, h - 2); c.line(2, h * k / 3, w - 2, h * k / 3)
+        c.setDash()
+        for i in (1, 2):
+            for j in (1, 2):
+                c.setFillColor(theme.main if (i, j) == focal else WHITE); c.setStrokeColor(INK); c.circle(w * i / 3, h * j / 3, 5, fill=1, stroke=1)
+    return Draw(width, height, fn)
+
+
+def shaded_sphere(theme, width=230, height=150, labels=True):
+    """Sphere lit from the upper left: highlight, midtone, core shadow, reflected light, cast shadow."""
+    def fn(c, w, h):
+        cx, cy, r = w * 0.38, h * 0.55, h * 0.36
+        c.setFillColor(colors.Color(0, 0, 0, alpha=0.28)); c.ellipse(cx - r * 0.4, cy - r * 1.18, cx + r * 1.7, cy - r * 0.78, fill=1, stroke=0)
+        for i in range(40):                                  # radial gradient approximation
+            t = i / 39; rr = r * (1 - t * 0.98)
+            ox, oy = -r * 0.35 * t, r * 0.35 * t
+            g = 0.25 + 0.72 * t
+            c.setFillColor(colors.Color(g, g, g)); c.circle(cx + ox, cy + oy, rr, fill=1, stroke=0)
+        c.setStrokeColor(INK); c.setLineWidth(0.8); c.circle(cx, cy, r, fill=0, stroke=1)
+        c.setFillColor(theme.accent)
+        if labels:
+            for txt, x, y, tx in (("highlight", cx - r * 0.35, cy + r * 0.35, w * 0.72), ("core shadow", cx + r * 0.55, cy - r * 0.35, w * 0.72),
+                                  ("reflected light", cx + r * 0.6, cy - r * 0.78, w * 0.72), ("cast shadow", cx + r * 1.1, cy - r * 1.0, w * 0.72)):
+                c.setStrokeColor(theme.accent); c.setLineWidth(0.6); ty = y
+                c.line(x, y, tx - 4, ty); text(c, tx, ty - 3, txt, "Body", 8, INK)
+            text(c, cx - r * 1.1, cy + r * 1.05, "light source", "BodySemi", 8, theme.accent)
+    return Draw(width, height, fn)
+
+
+def face_guide(theme, width=150, height=190):
+    """Proportion guide for a face seen from the front."""
+    def fn(c, w, h):
+        cx, cy, rx, ry = w / 2, h / 2, w * 0.33, h * 0.42
+        c.setStrokeColor(INK); c.setLineWidth(1.2); c.ellipse(cx - rx, cy - ry, cx + rx, cy + ry, fill=0, stroke=1)
+        c.setStrokeColor(theme.accent); c.setDash(3, 3); c.setLineWidth(0.7)
+        c.line(cx, cy - ry, cx, cy + ry)
+        eye = cy; nose = cy - ry * 0.5; mouth = nose - (nose - (cy - ry)) / 3
+        for y in (eye, nose, mouth): c.line(cx - rx, y, cx + rx, y)
+        c.setDash(); c.setStrokeColor(INK); c.setLineWidth(1)
+        for s in (-1, 1): c.ellipse(cx + s * rx * 0.45 - 8, eye - 4, cx + s * rx * 0.45 + 8, eye + 4, fill=0, stroke=1)
+        c.line(cx - 6, nose, cx + 6, nose); c.arc(cx - 14, mouth - 6, cx + 14, mouth + 4, 200, 140)
+        text(c, cx + rx + 4, eye - 3, "eyes: halfway", "Body", 7, theme.accent); text(c, cx + rx + 4, nose - 3, "nose", "Body", 7, theme.accent)
+        text(c, cx + rx + 4, mouth - 3, "mouth", "Body", 7, theme.accent)
+    return Draw(width + 60, height, fn)

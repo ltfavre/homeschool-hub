@@ -25,6 +25,8 @@ def palette(book):
     t = book.theme
     if book.subject == "data":
         return dict(bg=BLUSH, ink=HUNTER, sub=HUNTER, art=(0.14, 0.27, 0.22), band=t.dark)
+    if book.subject == "art":
+        return dict(bg=t.main, ink=t.on_main, sub=t.dark, art=(0.17, 0.16, 0.13), band=t.dark)
     return dict(bg=t.main, ink=WHITE, sub=BLUSH, art=(1, 1, 1), band=t.dark)
 
 
@@ -34,9 +36,9 @@ def stripe(c, y, h=8, color=INK, step=6):
         c.rect(x, y, step / 2, h, fill=1, stroke=0); x += step
 
 
-SHORT = {"math": "Mathematics", "ela": "English Language Arts", "science": "Science", "social": "Social Studies", "data": "Data Science & Psychometrics"}
+SHORT = {"art": "Art", "math": "Mathematics", "ela": "English Language Arts", "science": "Science", "social": "Social Studies", "data": "Data Science & Psychometrics"}
 TITLE_LINES = {"math": ["Mathematics"], "ela": ["English", "Language Arts"], "science": ["Science"], "social": ["Social", "Studies"],
-               "data": ["Data Science &", "Psychometrics"]}
+               "data": ["Data Science &", "Psychometrics"], "art": ["Art"]}
 
 BLURB = {
     "math": "A full year of Grade {g} mathematics, taught one clear idea at a time. Every lesson opens with a question worth thinking about, "
@@ -45,6 +47,8 @@ BLURB = {
            "grammar, and writing instruction, so students learn to read carefully, think deeply, and write with purpose.",
     "science": "A full year of Grade {g} science built around questions, investigations, and evidence. Students observe, measure, model, "
                "and explain the natural world, then use what they learn to design solutions to real problems.",
+    "art": "A full year of Grade {g} arts: drawing, painting, and design; music; art history; theater and dance; media arts; and sculpture. "
+           "Every lesson pairs looking closely at real artwork with hands-on studio time, and the year ends with a portfolio and a show.",
     "data": "A year of professional learning in statistics, data science, and psychometrics, built for a working professional: about 30 minutes a day, "
             "Monday through Friday. Every lesson pairs a short reading with worked examples, a suggested video, and hands-on code in SAS, Python, and R, "
             "using realistic assessment and survey data.",
@@ -196,6 +200,32 @@ def art_social(c, cx, cy, r):
     c.line(x - 6, y - 6, x + 6, y + 6); c.line(x - 6, y + 6, x + 6, y - 6)
 
 
+def art_art(c, cx, cy, r):
+    # painter's palette with paint wells, a brush, music notes, and a frame corner
+    c.setStrokeColor(a(0.55)); c.setLineWidth(2.4); c.setFillColor(a(0.07))
+    p = c.beginPath(); p.moveTo(cx - r, cy)
+    p.curveTo(cx - r, cy + r * 0.85, cx + r * 0.6, cy + r * 0.95, cx + r * 0.95, cy + r * 0.3)
+    p.curveTo(cx + r * 1.15, cy - r * 0.2, cx + r * 0.65, cy - r * 0.35, cx + r * 0.4, cy - r * 0.2)
+    p.curveTo(cx + r * 0.1, cy - r * 0.05, cx + r * 0.25, cy - r * 0.75, cx - r * 0.2, cy - r * 0.8)
+    p.curveTo(cx - r * 0.7, cy - r * 0.85, cx - r, cy - r * 0.45, cx - r, cy); p.close(); c.drawPath(p, fill=1, stroke=1)
+    c.setFillColor(a(0)); c.circle(cx + r * 0.25, cy - r * 0.42, r * 0.13, fill=0, stroke=1)
+    for i, (dx, dy) in enumerate([(-0.65, 0.2), (-0.35, 0.55), (0.05, 0.65), (0.45, 0.5), (0.7, 0.15), (-0.6, -0.35)]):
+        c.setFillColor(a(0.18 + 0.08 * (i % 3))); c.circle(cx + dx * r, cy + dy * r, r * 0.12, fill=1, stroke=0)
+    # brush
+    c.saveState(); c.translate(cx + r * 0.2, cy - r * 1.05); c.rotate(28)
+    c.setFillColor(a(0.35)); c.roundRect(-4, 0, 8, r * 1.2, 3, fill=1, stroke=0)
+    c.setFillColor(a(0.5)); c.rect(-5, r * 1.2, 10, 12, fill=1, stroke=0)
+    p = c.beginPath(); p.moveTo(-5, r * 1.2 + 12); p.curveTo(-6, r * 1.2 + 30, 0, r * 1.2 + 40, 0, r * 1.2 + 44); p.curveTo(0, r * 1.2 + 40, 6, r * 1.2 + 30, 5, r * 1.2 + 12); p.close()
+    c.setFillColor(a(0.6)); c.drawPath(p, fill=1, stroke=0); c.restoreState()
+    # music notes
+    c.setFillColor(a(0.4)); c.setStrokeColor(a(0.4)); c.setLineWidth(2)
+    for nx, ny in ((cx + r * 1.05, cy + r * 1.0), (cx + r * 1.4, cy + r * 1.15)):
+        c.ellipse(nx - 7, ny - 5, nx + 7, ny + 5, fill=1, stroke=0); c.line(nx + 6, ny, nx + 6, ny + 30)
+    c.line(cx + r * 1.05 + 6, cy + r * 1.0 + 30, cx + r * 1.4 + 6, cy + r * 1.15 + 30)
+    # frame corner
+    c.setStrokeColor(a(0.3)); c.setLineWidth(5); c.line(cx - r * 1.3, cy + r * 1.3, cx - r * 0.6, cy + r * 1.3); c.line(cx - r * 1.3, cy + r * 1.3, cx - r * 1.3, cy + r * 0.6)
+
+
 def art_data(c, cx, cy, r):
     # scatter with regression line, an item characteristic curve, a bell curve, and code brackets
     import random
@@ -225,7 +255,7 @@ def art_data(c, cx, cy, r):
     c.setFont("MonoSemi", 15); c.drawString(x0 - r * 0.35, y0 - 26, "proc means;   df.describe()   summary(x)")
 
 
-ART = {"data": art_data, "math": art_math, "ela": art_ela, "science": art_science, "social": art_social}
+ART = {"art": art_art, "data": art_data, "math": art_math, "ela": art_ela, "science": art_science, "social": art_social}
 
 
 # ---------------------------------------------------------------- pages
@@ -276,7 +306,7 @@ def front(c, book, kind):
         sub = {"textbook": "Statistics, coding, and measurement in 30 minutes a day", "workbook": "Practice, coding exercises, weekly quizzes, and answers"}[kind]
     text(c, x, yb - 0.55 * inch, sub, "BodyMed", 14, pal["sub"])
     scope = f"{len(book.units)} units" if len(book.units) > 1 else f"Unit {book.units[0].num}: {book.units[0].title}"
-    text(c, x, yb - 0.85 * inch, f"{book.year} {book.year_label}  ·  {scope}", "Body", 11, a(0.8, (1, 1, 1) if pal["ink"] == WHITE else (0.08, 0.17, 0.14)))
+    text(c, x, yb - 0.85 * inch, f"{book.year} {book.year_label}  ·  {scope}", "Body", 11, a(0.8, (1, 1, 1) if pal["ink"] == WHITE else (pal["ink"].red, pal["ink"].green, pal["ink"].blue)))
     # bottom band
     c.setFillColor(t.dark); c.rect(0, 0, PAGE_W, 0.95 * inch, fill=1, stroke=0)
     stripe(c, 0.95 * inch, 8, INK)

@@ -7,6 +7,8 @@ from engine import *
 def check_tag(C):
     """Eyebrow label for a check page."""
     if "Quiz" in C.title: return "WEEKLY QUIZ"
+    if "Sketchbook" in C.title: return "SKETCHBOOK CHECK"
+    if "Portfolio" in C.title: return "YEAR-END PORTFOLIO REVIEW" if "Year-End" in C.title else "PORTFOLIO REVIEW"
     if "Final Exam" in C.title: return "FINAL EXAM" if C.kind == "test" else "FINAL REVIEW"
     if "Exam" in C.title: return "UNIT EXAM"
     if "Year-End" in C.title:
@@ -112,7 +114,7 @@ def watch_box(t, wb):
 
 def investigate_box(t, iv):
     """Hands-on investigation or activity: question, materials, numbered steps, what to record, safety."""
-    tag = "INVESTIGATE" if t.subject == "science" else "ACTIVITY"
+    tag = {"science": "INVESTIGATE", "art": "CREATE"}.get(t.subject, "ACTIVITY")
     inner = [P(f"{tag}  ·  {iv.title.upper()}", t.eyebrow), P(iv.question, ParagraphStyle("ivq", parent=t.boxt, fontName="BodySemi"))]
     if iv.materials: inner.append(P("<b>You need:</b> " + "; ".join(iv.materials) + ".", t.boxt))
     num = ParagraphStyle("ivs", parent=t.boxt, leftIndent=22, bulletIndent=0)
@@ -242,13 +244,15 @@ PREP = {"math": "Read the student lesson and work the Try It problems.",
         "ela": "Read the student lesson and any assigned Reader chapter; answer the Your Turn questions.",
         "science": "Read the student lesson, gather and test the investigation materials, and answer the Check Your Understanding questions.",
         "social": "Read the student lesson and its sources, preview the maps, and answer the Check Your Understanding questions.",
-        "data": "Read the lesson and run the Code It examples."}
+        "data": "Read the lesson and run the Code It examples.",
+        "art": "Read the lesson, gather the studio materials, and try the Create activity yourself first so you can model it."}
 ROUTINE = {"math": "Warm-Up 5 · Teach 15 · Guided Practice 10 · Independent Practice 15 · Exit Ticket 5",
            "ela": "Warm-Up 5 · Read 15 · Mini-Lesson 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3",
            "science": "Engage 5 · Investigate 15 · Explain 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3",
            "social": "Warm-Up 5 · Read and Discuss 15 · Analyze 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3",
-           "data": "Read 10 · Watch or Code 15 · Quick Check 5"}
-DAYS = {"math": "Monday–Thursday", "ela": "Monday–Thursday", "science": "Monday and Wednesday", "social": "Tuesday and Thursday", "data": "Monday–Thursday"}
+           "data": "Read 10 · Watch or Code 15 · Quick Check 5",
+           "art": "Look and Talk 5 · Learn and Demonstrate 10 · Create 25 · Reflect 5"}
+DAYS = {"math": "Monday–Thursday", "ela": "Monday–Thursday", "science": "Monday and Wednesday", "social": "Tuesday and Thursday", "data": "Monday–Thursday", "art": "Monday and Wednesday"}
 
 
 DATA_INTRO = {
@@ -281,8 +285,10 @@ def front_matter(t, book, doc, kind):
                       "<b>Watch Out</b> boxes warn you about common mistakes."]
                      + (["<b>Investigate</b> boxes are hands-on experiments. Do them with your teacher and record what you observe."] if t.subject == "science" else [])
                      + (["<b>Activity</b> boxes are hands-on map, source, and timeline work. Do them with your teacher."] if t.subject == "social" else [])
+                     + (["<b>Create</b> boxes are studio activities. Keep everything you make in your portfolio folder."] if t.subject == "art" else [])
                      + [
-                      "Every Friday there is a short <b>Weekly Check</b> in your workbook. The last Friday of a unit is the <b>Unit Test</b>."]],
+                      ("Every Friday there is a short <b>Sketchbook Check</b> in your workbook. The last Friday of a unit is the <b>Portfolio Review</b>." if t.subject == "art" else
+                       "Every Friday there is a short <b>Weekly Check</b> in your workbook. The last Friday of a unit is the <b>Unit Test</b>.")]],
         "workbook": ["How to use this workbook",
                      "Every lesson in your textbook has matching practice pages here. Show your thinking in the work space. "
                      "When a problem has an answer line, write your final answer there.",
@@ -294,7 +300,7 @@ def front_matter(t, book, doc, kind):
                     "and do, the student lesson with Try It answers, and answer keys for every workbook page, weekly check and unit test.",
                     [f"<b>Daily routine (about 45–55 minutes):</b> {ROUTINE[t.subject]}.",
                      "<b>Say:</b> lines are a suggested script. Use your own words.",
-                     f"{DAYS[t.subject]} are lessons. Friday is the <b>Weekly Check</b> (about {15 if t.subject in ('science', 'social') else 20} minutes), then corrections or a project.",
+                     f"{DAYS[t.subject]} are lessons. Friday is the <b>{'Sketchbook Check' if t.subject == 'art' else 'Weekly Check'}</b> (about {15 if t.subject in ('science', 'social', 'art') else 20} minutes), then corrections or a project.",
                      "Dates match the VenvLearning lesson plans for the 2026–2027 school year."]],
     }[kind]
     if t.subject == "data":
@@ -343,7 +349,9 @@ def name_date(t):
 def work_space(t, w, h, grid=True):
     def fn(c, ww, hh):
         c.setStrokeColor(LINE); c.setLineWidth(0.6); c.roundRect(0, 0, ww, hh, 4, stroke=1, fill=0)
-        if grid and t.subject == "math":
+        if t.subject == "art":
+            pass                                  # blank sketch box
+        elif grid and t.subject == "math":
             c.setStrokeColor(GRID); c.setLineWidth(0.35); s = 12
             x = s
             while x < ww: c.line(x, 1, x, hh - 1); x += s

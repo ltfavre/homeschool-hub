@@ -47,6 +47,15 @@ def render_blocks(t, blocks, teacher=False):
             out += [Spacer(1, 4), passage_box(t, b), Spacer(1, 10)]
         elif isinstance(b, ReaderAssign):
             out += [Spacer(1, 2), reader_box(t, b), Spacer(1, 8)]
+        elif isinstance(b, Beside):
+            fw = W * b.fig_w; tw = W - fw - 14
+            fig = [b.fn(t)] + ([P(b.caption, ParagraphStyle("capb", parent=t.small, alignment=TA_CENTER))] if b.caption else [])
+            txt = [P(x, t.body) for x in b.texts]
+            cells = [fig, txt] if b.left else [txt, fig]
+            tb = Table([cells], colWidths=[fw, tw] if b.left else [tw, fw])
+            tb.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (0, 0), 14),
+                                    ("RIGHTPADDING", (1, 0), (1, 0), 0), ("TOPPADDING", (0, 0), (-1, -1), 2)]))
+            out += [tb, Spacer(1, 8)]
         elif isinstance(b, Investigate):
             out += [Spacer(1, 4), investigate_box(t, b), Spacer(1, 8)]
     return out

@@ -436,6 +436,10 @@ class ReaderAssign:
         self.book, self.section, self.focus, self.pages = book, section, focus, pages
 class Vocab:
     def __init__(self, items): self.items = items
+class Beside:
+    """Paragraph(s) on the left with a tall figure on the right (good for narrow maps). texts: str or list of str."""
+    def __init__(self, fn, texts, caption=None, fig_w=0.42, left=False):
+        self.fn, self.texts, self.caption, self.fig_w, self.left = fn, texts if isinstance(texts, list) else [texts], caption, fig_w, left
 class Investigate:
     """Hands-on investigation (science) or activity (social studies)."""
     def __init__(self, title, question, materials, steps, record=None, safety=None):

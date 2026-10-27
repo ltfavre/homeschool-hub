@@ -1,0 +1,270 @@
+"""Grade 7 Science · Unit 1: Cycles of Matter and Energy — science practices, Earth's spheres and the water cycle, carbon,
+oxygen, and nitrogen cycles, photosynthesis, cellular respiration, food webs, and biodiversity (Oct 12 – Nov 6, 2026; Mon/Wed)."""
+from engine import *
+from content.sskit import S, MC, OR, SA, DRAW, tsci, make_test, weeks_for, check, review
+
+# ================================================================= Week 1 · Practices and the water cycle
+L1 = Lesson("1.1", "Variables, Data, and Scientific Explanations",
+    "I can identify independent, dependent, and controlled variables and write a scientific explanation using CER.", "SEP 3, 4, 6",
+    [("independent variable", "The variable the scientist changes on purpose."), ("dependent variable", "The variable that is measured; it responds to the change."),
+     ("controlled variables", "Conditions kept the same so the test is fair."), ("hypothesis", "A testable prediction that explains how one variable affects another.")],
+    "Does a fizzing tablet dissolve faster in hot water or cold water? How could you find out fairly?",
+    [Text("A controlled experiment tests how one factor affects another. The <b>independent variable</b> is what you change. The <b>dependent variable</b> is what you measure. Everything else stays the same as <b>controlled variables</b>. A good <b>hypothesis</b> is written so it can be tested: “If…, then…, because….”"),
+     Figure(lambda t: table(t, [["Part", "Fizzing-tablet experiment"], ["question", "How does water temperature affect how long a tablet takes to dissolve?"], ["hypothesis", "If the water is warmer, then the tablet will dissolve faster, because particles move faster at higher temperatures."],
+                                ["independent variable", "water temperature"], ["dependent variable", "time to dissolve (seconds)"], ["controlled variables", "amount of water, type and size of tablet, cup, no stirring"]],
+                            [1.6 * inch, 4.3 * inch], width=5.9 * inch, font_size=9.5)),
+     Investigate("Temperature and Dissolving", "How does water temperature affect dissolving time?", ["3 identical effervescent antacid tablets (or 3 equal spoonfuls of sugar)", "3 clear cups", "cold, room-temperature, and warm tap water", "thermometer", "stopwatch"],
+                 ["Measure 200 mL of water into each cup and record each temperature.", "Drop one tablet into each cup at the same moment and start the timer.", "Record the time when each tablet is completely dissolved.", "Repeat if you can, and average the trials."],
+                 record="a data table and a line or bar graph with temperature on the x-axis and time on the y-axis.", safety="Use warm tap water, not boiling water. Do not swallow the tablets or solutions."),
+     Example("Write a scientific explanation", "Data: 8°C → 95 s; 21°C → 52 s; 40°C → 24 s",
+             ["Claim: Tablets dissolve faster in warmer water.", "Evidence: dissolving time dropped from 95 s at 8°C to 52 s at 21°C to 24 s at 40°C.", "Reasoning: particles in warmer water move faster, so they collide with the tablet more often and break it apart sooner."],
+             "A complete explanation connects the evidence to a scientific idea."),
+     KeyIdea("Change one independent variable, measure the dependent variable, control everything else, and explain results with CER.")],
+    [Problem("Plant height is measured after different amounts of fertilizer. Independent variable?", "amount of fertilizer"), Problem("Same experiment: dependent variable?", "plant height"),
+     Problem("Name two controlled variables.", "e.g. type of plant, water, light, soil, pot size")],
+    [S("Warm-Up", [SA("The variable you change", "independent variable"), SA("The variable you measure", "dependent variable")], cols=2),
+     S("Identify the Variables", [SA(q, a) for q, a in [("Does the height of a ramp affect how far a car rolls? Independent:", "ramp height"), ("Same: dependent:", "distance the car rolls"),
+                                                         ("Same: two controlled variables:", "same car, same surface, same release method"), ("Write a hypothesis for the ramp experiment.", "If the ramp is higher, then the car will roll farther, because it has more energy at the bottom.")]], cols=1),
+     S("Analyze Data", [OR("Data: 0 g salt → water boils at 100.0°C; 20 g → 100.3°C; 40 g → 100.7°C. Write a CER.", "Claim: adding salt raises boiling point. Evidence: 100.0 → 100.3 → 100.7°C as salt increases. Reasoning: dissolved particles change how water molecules escape.", lines=4)]),
+     S("Exit Ticket", [OR("Why must controlled variables stay the same?", "So any change in the dependent variable can be linked to the independent variable alone.", lines=2)])],
+    tsci("Students identify variables and write CER explanations.", "Plan investigations; analyze data; construct explanations.", "Tablets or sugar, cups, thermometer, stopwatch, workbook Lesson 1.1",
+         "Fizzing question.", "Temperature and Dissolving.", ["Teach variable types and the If–then–because hypothesis.", "Model CER."], "Check Your Understanding 1–3.",
+         ["Confusing independent and dependent variables."], ["Mnemonic: I change the Independent; the Dependent Depends on it."], ["Design a second experiment testing stirring speed."]),
+    summary="Independent is changed, dependent is measured, controlled stay the same; explain with CER.")
+
+L2 = Lesson("1.2", "Earth's Spheres and the Water Cycle",
+    "I can describe Earth's four spheres and model how energy from the sun and gravity drive the water cycle.", "MS-ESS2-4",
+    [("geosphere", "The solid rock and soil of Earth."), ("hydrosphere", "All of Earth's water."), ("atmosphere", "The layer of gases around Earth."),
+     ("biosphere", "All living things on Earth."), ("transpiration", "The release of water vapor from plant leaves."), ("condensation", "The change from water vapor to liquid water.")],
+    "The water you drank today may once have been in a dinosaur, a cloud, or an ocean. How could that be?",
+    [Text("Scientists study Earth as a system of four interacting parts, or spheres: the <b>geosphere</b>, <b>hydrosphere</b>, <b>atmosphere</b>, and <b>biosphere</b>. Matter, like water, constantly moves among them. Earth has about the same amount of water today as it had long ago; it just keeps cycling."),
+     Figure(lambda t: cycle_fig(t, ["Evaporation and transpiration: sun heats water; vapor rises", "Condensation: vapor cools into cloud droplets", "Precipitation: gravity pulls rain and snow down",
+                                    "Runoff and infiltration: water flows to oceans or soaks into groundwater"], center="Water cycle", width=W * 0.92, height=220, bw=150)),
+     Text("Two forces drive the cycle. <b>Energy from the sun</b> evaporates water and powers winds. <b>Gravity</b> pulls precipitation down and makes water flow downhill into rivers, lakes, and oceans, and soak into the ground."),
+     Investigate("Water Cycle in a Bag", "Can you model the water cycle?", ["a zip-top bag", "1/4 cup water with a few drops of blue food coloring", "tape", "a sunny window", "marker"],
+                 ["Draw a sun, cloud, and waves on the bag.", "Pour in the water and seal the bag.", "Tape it to a sunny window.", "Observe it after 1 hour, after 1 day, and after 2 days."],
+                 record="observations and a labeled sketch showing evaporation, condensation, and precipitation in the bag."),
+     KeyIdea("Water cycles among Earth's spheres, driven by energy from the sun and by gravity.")],
+    [Problem("Which sphere includes clouds and air?", "atmosphere"), Problem("What process returns water vapor from plants?", "transpiration"), Problem("What force makes rain fall and rivers flow?", "gravity")],
+    [S("Warm-Up", [SA("All living things make up the…", "biosphere"), SA("Water vapor cooling into droplets is…", "condensation")], cols=2),
+     S("Practice", [SA(q, a) for q, a in [("Which sphere does a river belong to?", "hydrosphere"), ("Which sphere does a mountain belong to?", "geosphere"),
+                                          ("What provides the energy for evaporation?", "the sun"), ("What happens to water that soaks into soil?", "it becomes groundwater (infiltration)")]] +
+                   [OR("Describe one interaction between two spheres in the water cycle.", "e.g. water evaporates from the ocean (hydrosphere) into the atmosphere.", lines=2),
+                    OR("Explain the droplets on the inside of the bag using the words evaporation and condensation.", "Sunlight evaporated water; the vapor touched the cooler bag and condensed into droplets.", lines=3)]),
+     S("Exit Ticket", [OR("Name the two things that drive the water cycle and what each does.", "Sun's energy causes evaporation; gravity causes precipitation and runoff.", lines=2)])],
+    tsci("Students model the water cycle within Earth's spheres.", "Develop a model of the cycling of water driven by the sun and gravity.", "Zip bags, water, food coloring, tape, workbook Lesson 1.2",
+         "Dinosaur water.", "Water Cycle in a Bag (set up today, observe all week).", ["Teach the four spheres; the cycle diagram."], "Check Your Understanding 1–3.",
+         ["Thinking water is “used up.”"], ["Sphere sorting cards."], ["Research how much of Earth's water is fresh and available."], independent="Workbook. Weekly Check Friday."),
+    summary="Water cycles among Earth's spheres, powered by the sun and gravity.")
+
+# ================================================================= Week 2 · Carbon, oxygen, nitrogen
+L3 = Lesson("1.3", "The Carbon and Oxygen Cycles",
+    "I can explain how carbon and oxygen cycle among living things, the atmosphere, the oceans, and rocks.", "MS-LS2-3",
+    [("carbon cycle", "The movement of carbon among the air, living things, oceans, and rocks."), ("decomposer", "An organism that breaks down dead matter and returns materials to the environment."),
+     ("fossil fuel", "Coal, oil, or natural gas formed from ancient living things."), ("combustion", "Burning; a reaction with oxygen that releases energy and carbon dioxide.")],
+    "Carbon is in your body, in a diamond, in soda bubbles, and in the air. How can one element be in all of these?",
+    [Text("Carbon is the building block of living things. Carbon atoms are never used up; they cycle. Plants take carbon dioxide from the air during photosynthesis and build sugars. Animals eat plants. Living things release carbon dioxide during cellular respiration, and decomposers release it as they break down dead matter. Oceans absorb and release carbon dioxide too. Over millions of years, some carbon becomes buried as fossil fuels; burning them releases that carbon quickly."),
+     Text("The oxygen cycle is linked to the carbon cycle: photosynthesis <b>releases</b> oxygen, and respiration and combustion <b>use</b> oxygen. Today air is about 21 percent oxygen and about 0.04 percent carbon dioxide."),
+     Figure(lambda t: table(t, [["Process", "Carbon dioxide", "Oxygen"], ["photosynthesis", "taken in", "released"], ["cellular respiration", "released", "taken in"],
+                                ["decomposition", "released", "taken in"], ["combustion (burning fuels)", "released", "taken in"], ["ocean absorption", "taken in (dissolves in water)", "—"]],
+                            [2.2 * inch, 1.9 * inch, 1.5 * inch], width=5.6 * inch, font_size=9.5)),
+     Investigate("Follow a Carbon Atom", "What paths can one carbon atom take?", ["station cards: Atmosphere, Plant, Animal, Decomposer, Ocean, Fossil Fuel", "one die"],
+                 ["Start at the Atmosphere station.", "Roll the die; each station card tells where a roll sends you and why (e.g. 1–3: a plant takes you in during photosynthesis).", "Record each move for 10 rolls.", "Compare paths with a partner."],
+                 record="your atom's path as a flow chart, with the process that moved it at each arrow."),
+     KeyIdea("Photosynthesis removes carbon dioxide and adds oxygen; respiration, decomposition, and combustion do the opposite.")],
+    [Problem("Which process removes carbon dioxide from the air?", "photosynthesis"), Problem("Name two processes that release carbon dioxide.", "respiration, decomposition, or combustion"), Problem("About what percent of air is oxygen?", "21 percent")],
+    [S("Warm-Up", [SA("Coal, oil, and natural gas are…", "fossil fuels"), SA("Organisms that break down dead matter", "decomposers")], cols=2),
+     S("Practice", [SA(q, a) for q, a in [("A tree takes in CO₂. Process?", "photosynthesis"), ("A car burns gasoline. Process?", "combustion"), ("A fungus breaks down a log. Process?", "decomposition"),
+                                          ("You exhale. Process?", "cellular respiration")]] +
+                   [OR("Explain why burning fossil fuels adds carbon to the atmosphere faster than natural processes remove it.", "Burning releases carbon stored over millions of years in a short time; photosynthesis and oceans can't absorb it all as fast.", lines=3)]),
+     S("Exit Ticket", [OR("How are the carbon and oxygen cycles connected?", "Processes that take in CO₂ release O₂ (photosynthesis) and processes that release CO₂ use O₂ (respiration, combustion).", lines=2)])],
+    tsci("Students trace the carbon and oxygen cycles.", "Develop a model to describe the cycling of matter among living and nonliving parts.", "Station cards, dice, workbook Lesson 1.3",
+         "Carbon everywhere.", "Follow a Carbon Atom.", ["Teach the process table."], "Check Your Understanding 1–3.",
+         ["Thinking plants don't respire."], ["Two-column in/out chart."], ["Graph a year of carbon dioxide data and explain the seasonal pattern."]),
+    summary="Carbon and oxygen cycle through photosynthesis, respiration, decomposition, combustion, and oceans.")
+
+L4 = Lesson("1.4", "The Nitrogen Cycle",
+    "I can explain how nitrogen moves from the air into living things and back.", "MS-LS2-3",
+    [("nitrogen fixation", "Changing nitrogen gas into a form plants can use."), ("legume", "A plant such as a bean, pea, or peanut that hosts nitrogen-fixing bacteria in its roots.")],
+    "Air is about 78 percent nitrogen, and your body needs nitrogen to build proteins. Why can't you just breathe it in and use it?",
+    [Text("Living things need nitrogen to build proteins and DNA, but most organisms can't use nitrogen gas (N₂) directly. It has to be <b>fixed</b> into compounds such as ammonia and nitrates."),
+     Figure(lambda t: cycle_fig(t, ["Nitrogen gas (N₂) in the air", "Fixation: bacteria in soil and legume roots (and lightning) make usable nitrogen", "Plants absorb nitrates; animals eat plants",
+                                    "Decomposers return nitrogen to soil; other bacteria release N₂ to the air"], center="Nitrogen", width=W * 0.95, height=230, bw=160)),
+     Text("Farmers use this cycle. Planting <b>legumes</b> such as soybeans or peanuts adds usable nitrogen to the soil. Peanut farmer and scientist George Washington Carver taught Southern farmers to rotate cotton with peanuts and other legumes to restore worn-out soil."),
+     Investigate("Root Nodule Search", "Where do nitrogen-fixing bacteria live?", ["a bean or pea plant (or photos from your teacher)", "magnifying glass", "water"],
+                 ["Gently dig up the plant and rinse the soil from its roots.", "Look for small round bumps (nodules) on the roots.", "Sketch the roots and nodules."],
+                 record="a labeled sketch and an explanation of what the bacteria in the nodules do."),
+     KeyIdea("Bacteria fix nitrogen gas into usable forms; plants absorb it, animals eat plants, and decomposers and bacteria return it.")],
+    [Problem("What percent of air is nitrogen?", "about 78 percent"), Problem("What does nitrogen fixation do?", "changes N₂ into forms plants can use"), Problem("Why do farmers plant legumes?", "Their root bacteria add usable nitrogen to the soil.")],
+    [S("Warm-Up", [SA("Living things use nitrogen to build…", "proteins (and DNA)"), SA("A bean plant is a…", "legume")], cols=2),
+     S("Practice", [SA(q, a) for q, a in [("Can animals use nitrogen gas directly?", "no"), ("How do animals get nitrogen?", "by eating plants or other animals"),
+                                          ("Name a non-living way nitrogen is fixed.", "lightning"), ("What returns nitrogen from dead organisms to soil?", "decomposers")]] +
+                   [OR("Explain why rotating crops with legumes can help soil.", "Legumes host bacteria that fix nitrogen, restoring nitrogen other crops used up.", lines=3)]),
+     S("Exit Ticket", [OR("Trace one nitrogen atom from the air into your body.", "Air → bacteria fix it → plant absorbs nitrate → I eat the plant (or an animal that ate it).", lines=2)])],
+    tsci("Students model the nitrogen cycle.", "Develop a model to describe the cycling of matter.", "Bean or pea plant, magnifier, workbook Lesson 1.4",
+         "Why not breathe it?", "Root Nodule Search.", ["Teach the cycle; Carver and crop rotation."], "Check Your Understanding 1–3.",
+         ["Thinking plants take N₂ from the air."], ["Cycle with picture cards."], ["Research nitrogen runoff and the Gulf of Mexico dead zone."], independent="Workbook. Weekly Check Friday."),
+    summary="Bacteria fix nitrogen so plants and animals can use it; decomposers return it.")
+
+# ================================================================= Week 3 · Photosynthesis and respiration
+L5 = Lesson("1.5", "Photosynthesis",
+    "I can explain how plants use light energy to make sugar and oxygen from carbon dioxide and water.", "MS-LS1-6",
+    [("photosynthesis", "The process plants use to turn light energy, carbon dioxide, and water into sugar and oxygen."), ("chloroplast", "The part of a plant cell where photosynthesis happens."),
+     ("chlorophyll", "The green pigment that captures light energy."), ("glucose", "A sugar made in photosynthesis that stores energy.")],
+    "A huge oak tree grows from a tiny acorn. Where does all that mass come from?",
+    [Text("Surprisingly, most of a tree's mass comes from the <b>air</b>! In <b>photosynthesis</b>, chloroplasts in leaf cells use light energy captured by <b>chlorophyll</b> to combine carbon dioxide from the air with water from the soil. They produce glucose, which the plant uses for energy and to build its body, and release oxygen."),
+     Figure(lambda t: table(t, [["Word equation", "carbon dioxide + water  —(light energy)→  glucose + oxygen"], ["Chemical equation", "6CO₂ + 6H₂O  —(light)→  C₆H₁₂O₆ + 6O₂"]], [1.6 * inch, 4.3 * inch], header=False, width=5.9 * inch)),
+     Text("Photosynthesis changes light energy into <b>chemical energy</b> stored in sugar. Almost every food chain on Earth begins with this process."),
+     Investigate("Floating Leaf Disks", "Does light intensity affect the rate of photosynthesis?", ["fresh spinach leaves", "a straw or hole punch", "a plastic syringe (no needle)", "baking soda solution (1/8 tsp in 300 mL water) with 1 drop dish soap", "2 clear cups", "a lamp"],
+                 ["Punch 20 disks from the leaves.", "Put 10 disks in the syringe with solution, push out the air, cover the tip, and pull the plunger to remove gas from the leaves until the disks sink. Repeat for the other 10.",
+                  "Put 10 sunk disks in a cup under the lamp and 10 in a cup in a dark place.", "Count floating disks every minute for 15 minutes."],
+                 record="a line graph of floating disks vs time for both cups, and a CER explaining the difference (oxygen produced in photosynthesis makes disks float)."),
+     KeyIdea("Photosynthesis: carbon dioxide + water + light energy → glucose + oxygen, in chloroplasts.")],
+    [Problem("Where does most of a tree's mass come from?", "carbon dioxide from the air"), Problem("What are the products of photosynthesis?", "glucose and oxygen"), Problem("What pigment captures light?", "chlorophyll")],
+    [S("Warm-Up", [SA("Reactants of photosynthesis", "carbon dioxide and water"), SA("Organelle where it happens", "chloroplast")], cols=2),
+     S("Analyze Data", [SA("Disks floating after 10 min: lamp cup 9; dark cup 0. Which had more photosynthesis?", "the lamp cup"),
+                        SA("What gas made the disks float?", "oxygen"), SA("What was the independent variable?", "light (lamp vs dark)"),
+                        OR("Write a CER for the leaf disk results.", "Claim: light increases photosynthesis. Evidence: 9 vs 0 disks floating. Reasoning: photosynthesis needs light and makes oxygen, which fills the leaf spaces and makes disks float.", lines=4)], cols=1),
+     S("Exit Ticket", [OR("Explain how photosynthesis transforms energy.", "It changes light energy into chemical energy stored in glucose.", lines=2)])],
+    tsci("Students explain photosynthesis and test light's effect.", "Construct a scientific explanation for the role of photosynthesis in the cycling of matter and flow of energy.", "Spinach, syringe, baking soda, soap, cups, lamp, workbook Lesson 1.5",
+         "Oak tree mass.", "Floating Leaf Disks.", ["Teach the equation; energy transformation."], "Check Your Understanding 1–3.",
+         ["Believing plants get their mass from soil."], ["Color-coded equation."], ["Test different colors of light with cellophane filters."]),
+    summary="Plants turn carbon dioxide and water into glucose and oxygen using light.")
+
+L6 = Lesson("1.6", "Cellular Respiration",
+    "I can explain how cells release energy from food through cellular respiration.", "MS-LS1-7",
+    [("cellular respiration", "The process cells use to release energy from glucose using oxygen."), ("mitochondria", "Cell parts where cellular respiration releases energy."),
+     ("fermentation", "A process that releases energy from sugar without oxygen.")],
+    "You ate breakfast hours ago. How is that food powering your brain right now?",
+    [Text("All organisms, including plants, need energy. In <b>cellular respiration</b>, mitochondria in cells break down glucose with oxygen, releasing energy the cell can use. Carbon dioxide and water are given off as waste."),
+     Figure(lambda t: table(t, [["Word equation", "glucose + oxygen  →  carbon dioxide + water + energy"], ["Chemical equation", "C₆H₁₂O₆ + 6O₂  →  6CO₂ + 6H₂O + energy"]], [1.6 * inch, 4.3 * inch], header=False, width=5.9 * inch)),
+     Text("Notice that respiration is roughly the reverse of photosynthesis. The products of one are the reactants of the other, so matter cycles between plants and animals while energy flows from the sun, through living things, and is eventually lost as heat."),
+     Text("Some organisms, like yeast, can also release energy without oxygen through <b>fermentation</b>, giving off carbon dioxide. That's why bread dough rises."),
+     Investigate("Yeast Balloons", "Does yeast need sugar to release carbon dioxide?", ["2 empty water bottles", "2 balloons", "2 packets of dry yeast", "warm water", "2 tablespoons sugar"],
+                 ["Add 1 cup warm water and 1 packet yeast to each bottle.", "Add sugar to bottle A only. Swirl both.", "Stretch a balloon over each bottle's mouth.", "Measure each balloon's circumference every 10 minutes for 30 minutes."],
+                 record="a data table and a graph; explain what filled the balloon and why one grew more."),
+     KeyIdea("Respiration: glucose + oxygen → carbon dioxide + water + energy, in mitochondria. It is the reverse of photosynthesis.")],
+    [Problem("Where does cellular respiration happen?", "in mitochondria"), Problem("What gas filled the balloon?", "carbon dioxide"), Problem("Do plants carry out respiration?", "Yes; all living cells do.")],
+    [S("Warm-Up", [SA("Products of respiration", "carbon dioxide, water, energy"), SA("Reactants of respiration", "glucose and oxygen")], cols=2),
+     S("Compare", [SA(q, a) for q, a in [("Which process stores energy in glucose?", "photosynthesis"), ("Which process releases energy from glucose?", "cellular respiration"),
+                                         ("Which produces oxygen?", "photosynthesis"), ("Which produces carbon dioxide?", "cellular respiration")]] +
+                   [OR("Balloon A (sugar) grew to 28 cm; balloon B (no sugar) to 13 cm. Explain using CER.", "Claim: yeast needs sugar to release much CO₂. Evidence: 28 vs 13 cm. Reasoning: yeast breaks down sugar for energy and gives off CO₂.", lines=4)], cols=1),
+     S("Exit Ticket", [OR("Explain how matter cycles but energy flows between photosynthesis and respiration.", "The same atoms move back and forth between the processes; energy enters as light and leaves as heat.", lines=3)])],
+    tsci("Students explain cellular respiration.", "Develop a model of how food is rearranged through chemical reactions to release energy.", "Bottles, balloons, yeast, sugar, warm water, string, ruler, workbook Lesson 1.6",
+         "Breakfast power.", "Yeast Balloons.", ["Teach the equation; compare with photosynthesis."], "Check Your Understanding 1–3.",
+         ["Confusing respiration with breathing."], ["Side-by-side equation organizer."], ["Bake bread and explain the rise."], independent="Workbook. Weekly Check Friday."),
+    summary="Cells release energy from glucose with oxygen; respiration and photosynthesis cycle matter.")
+
+# ================================================================= Week 4 · Food webs and biodiversity
+L7 = Lesson("1.7", "Food Webs and Energy Pyramids",
+    "I can model how energy flows through a food web and explain why less energy reaches each higher level.", "MS-LS2-3",
+    [("producer", "An organism that makes its own food, usually by photosynthesis."), ("consumer", "An organism that eats other organisms."),
+     ("food web", "A diagram of all the feeding relationships in an ecosystem."), ("trophic level", "A feeding level in a food chain or energy pyramid.")],
+    "Why are there far more grasshoppers than hawks in a field?",
+    [Text("Energy enters most ecosystems as sunlight captured by <b>producers</b>. Primary consumers (herbivores) eat producers, secondary consumers eat herbivores, and so on. Decomposers break down dead organisms at every level. Arrows in a food chain point in the direction energy flows: from the eaten to the eater."),
+     Figure(lambda t: flow_fig(t, ["Sun", "Grass (producer)", "Grasshopper (primary consumer)", "Frog (secondary consumer)", "Snake (tertiary consumer)", "Hawk (top consumer)"], height=62, size=7.8)),
+     Text("At each level, organisms use most of their energy to live, move, and stay warm, and much is lost as heat. On average only about <b>10 percent</b> of the energy at one level is stored in the next. That's why an energy pyramid narrows at the top and why there are fewer top predators."),
+     Figure(lambda t: bar_graph(t, ["Producers", "Primary", "Secondary", "Tertiary"], [10000, 1000, 100, 10], title="Energy available at each level (energy units)", ylabel="", step=2000, height=160)),
+     Investigate("Build a Food Web", "How are organisms in a forest ecosystem connected?", ["cards: oak tree, grass, acorn weevil, grasshopper, mouse, rabbit, deer, frog, snake, hawk, fox, mushroom (decomposer)", "yarn or a pencil"],
+                 ["Arrange the cards on a large sheet of paper.", "Draw arrows from each food to the organism that eats it.", "Label producers, consumers, and the decomposer.", "Remove the mouse. Predict two effects on the web."],
+                 record="your food web and your predictions."),
+     KeyIdea("Energy flows from producers to consumers; only about 10 percent passes to each higher level, while matter is recycled by decomposers.")],
+    [Problem("Which way do food-chain arrows point?", "from the organism eaten to the organism that eats it (direction of energy flow)"), Problem("If grass has 20,000 units, about how much reaches grasshoppers?", "2,000 units"),
+     Problem("Why are top predators few?", "Little energy reaches the top of the pyramid.")],
+    [S("Warm-Up", [SA("An organism that makes its own food", "producer"), SA("Organisms that break down dead matter", "decomposers")], cols=2),
+     S("Practice", [SA(q, a) for q, a in [("Producers have 50,000 units. Primary consumers?", "5,000"), ("Secondary consumers?", "500"), ("Tertiary consumers?", "50"),
+                                          ("In grass → rabbit → fox, the fox is a…", "secondary consumer")]] +
+                   [OR("If a disease kills most rabbits, predict effects on the grass and the foxes. Explain.", "Grass increases (fewer eaters); foxes decrease (less food) or switch prey.", lines=3)], cols=1),
+     S("Exit Ticket", [OR("Explain the difference between how matter and energy move through an ecosystem.", "Matter cycles (decomposers return it); energy flows one way and is lost as heat.", lines=2)])],
+    tsci("Students model energy flow.", "Develop a model of cycling of matter and flow of energy among living and nonliving parts.", "Organism cards, yarn, workbook Lesson 1.7",
+         "Grasshoppers vs hawks.", "Build a Food Web.", ["Teach levels; 10 percent rule; pyramid."], "Check Your Understanding 1–3.",
+         ["Drawing arrows from eater to eaten."], ["“Gives energy to” arrow phrase."], ["Research a Mississippi food web (Gulf Coast marsh or pine forest)."]),
+    summary="Energy flows up through feeding levels with about 10 percent passed on; matter recycles.")
+
+L8 = Lesson("1.8", "Biodiversity and Ecosystem Services",
+    "I can explain why biodiversity matters and evaluate ways to protect ecosystem services.", "MS-LS2-5",
+    [("biodiversity", "The variety of living things in an area."), ("ecosystem services", "Benefits people get from healthy ecosystems, such as clean water and pollination."),
+     ("pollinator", "An animal, such as a bee, that carries pollen between flowers.")],
+    "What would happen to your breakfast if all the bees disappeared?",
+    [Text("<b>Biodiversity</b> is the variety of species, genes, and ecosystems in a place. Ecosystems with high biodiversity are usually more stable: if one species declines, others can fill its role."),
+     Figure(lambda t: table(t, [["Ecosystem service", "Example"], ["pollination", "Bees, butterflies, and bats pollinate many fruits, nuts, and vegetables."], ["clean water", "Wetlands filter pollutants as water flows through them."],
+                                ["flood control", "Wetlands and forests soak up heavy rain like sponges."], ["healthy soil", "Decomposers and earthworms recycle nutrients."], ["food and materials", "Fish, timber, and medicines come from ecosystems."]],
+                            [1.7 * inch, 4.2 * inch], width=5.9 * inch, font_size=9.5)),
+     Example("Evaluate a design solution", "A town wants to reduce flooding. Option A: build a concrete channel. Option B: restore a wetland upstream.",
+             ["Criteria: reduce flooding, cost, protect biodiversity, clean water.", "A: moves water fast but removes habitat and doesn't filter water.", "B: soaks up and slows water, filters pollutants, and provides habitat, but needs land."],
+             "Option B meets more criteria, especially biodiversity and clean water, though land and cost are constraints."),
+     Investigate("Biodiversity Survey", "How many kinds of living things live in a small area?", ["4 sticks and string to mark a 1 m × 1 m square", "magnifying glass", "notebook"],
+                 ["Mark a square in a lawn and another in a less-mowed area (garden edge, field, or woods).", "Count the different kinds of plants and animals in each square for 10 minutes.", "Compare the two squares."],
+                 record="a table of species counts and an explanation of which area has more biodiversity and why."),
+     KeyIdea("Biodiversity keeps ecosystems stable and provides services people depend on; good design solutions protect it.")],
+    [Problem("What is biodiversity?", "the variety of living things in an area"), Problem("Name two ecosystem services.", "e.g. pollination, clean water, flood control"), Problem("Why is a diverse ecosystem more stable?", "Other species can fill roles if one declines.")],
+    [S("Warm-Up", [SA("An animal that carries pollen", "pollinator"), SA("Wetlands help prevent…", "flooding")], cols=2),
+     S("Practice", [SA("Lawn square: 3 species. Field square: 14 species. Which has more biodiversity?", "the field square"),
+                    OR("Explain one way the loss of pollinators would affect people.", "Fewer fruits, nuts, and vegetables would be produced.", lines=2),
+                    OR("Evaluate: A farmer wants to remove all hedgerows to plant more crops. Name one benefit and one cost to ecosystem services.", "Benefit: more crop area. Cost: loss of habitat for pollinators and pest-eating birds; more erosion.", lines=3)], cols=1),
+     S("Exit Ticket", [OR("Choose one ecosystem service and explain how people could protect it.", "Answers vary; e.g. plant native flowers to support pollinators.", lines=2)])],
+    tsci("Students explain biodiversity and evaluate solutions.", "Evaluate competing design solutions for maintaining biodiversity and ecosystem services.", "String, sticks, magnifier, workbook Lesson 1.8, Unit 1 Review",
+         "No bees, no breakfast?", "Biodiversity Survey.", ["Teach services; model evaluating solutions with criteria."], "Check Your Understanding 1–3.",
+         ["Thinking biodiversity only means animals."], ["Criteria-and-constraints chart."], ["Plant a pollinator pot."],
+         independent="Workbook; then the Unit 1 Review.", exit_="Tomorrow (Friday): Unit 1 Test."),
+    summary="Biodiversity stabilizes ecosystems and provides services worth protecting.")
+
+# ================================================================= checks
+C1 = check("Weekly Check 1: Variables and the Water Cycle", [S("Show what you know", [
+    SA("Does the amount of sunlight affect bean plant growth? Independent variable:", "amount of sunlight"), SA("Dependent variable:", "plant growth (height)"),
+    SA("One controlled variable:", "e.g. water, soil, type of bean"), SA("Water vapor cooling into droplets is…", "condensation"),
+    SA("Which sphere includes all living things?", "biosphere"), OR("Name the two drivers of the water cycle and what each does.", "Sun: evaporation; gravity: precipitation and runoff.", lines=2)], cols=1)])
+C2 = check("Weekly Check 2: Carbon, Oxygen, and Nitrogen", [S("Show what you know", [
+    SA("Which process removes CO₂ from air?", "photosynthesis"), SA("Name a process that releases CO₂.", "respiration, decomposition, or combustion"),
+    SA("About what percent of air is nitrogen?", "78 percent"), SA("What do nitrogen-fixing bacteria do?", "change N₂ into usable forms"),
+    OR("Why does burning fossil fuels change the carbon cycle?", "It releases stored carbon quickly, adding CO₂ faster than it is removed.", lines=2)], cols=1)])
+C3 = check("Weekly Check 3: Photosynthesis and Respiration", [S("Show what you know", [
+    SA("Products of photosynthesis", "glucose and oxygen"), SA("Products of cellular respiration", "carbon dioxide, water, energy"),
+    SA("Organelle for photosynthesis", "chloroplast"), SA("Organelle for respiration", "mitochondria"),
+    OR("Explain how photosynthesis and respiration cycle matter.", "Products of each are reactants of the other; atoms move back and forth.", lines=2)], cols=1)])
+
+REVIEW = review("Unit 1 Review", [
+    S("Practices and cycles", [SA("The variable you measure", "dependent"), SA("Plants releasing water vapor", "transpiration"), SA("Changing N₂ into usable forms", "nitrogen fixation"),
+                               SA("Burning fuel", "combustion")], cols=2),
+    S("Energy", [SA("Photosynthesis equation (words)", "carbon dioxide + water + light → glucose + oxygen"), SA("Producers 30,000 units; primary consumers?", "3,000"),
+                 OR("Why do energy pyramids narrow at the top?", "Only about 10 percent of energy passes to each level; the rest is used or lost as heat.", lines=2)])])
+
+TEST = make_test("Unit 1 Test", [
+    S("Part A · Science practices (1 point each)", [
+        SA("Does the temperature of water affect how much sugar dissolves? Independent variable:", "water temperature"),
+        SA("Dependent variable:", "amount of sugar dissolved"), SA("Name one controlled variable.", "e.g. amount of water, stirring, type of sugar")], cols=1),
+    S("Part B · Cycles (1 point each)", [
+        MC("Which process adds water vapor to the air from plants?", ["condensation", "transpiration", "infiltration", "runoff"], 1),
+        SA("What force pulls precipitation down?", "gravity"),
+        MC("Which process removes carbon dioxide from the atmosphere?", ["combustion", "decomposition", "photosynthesis", "respiration"], 2),
+        SA("Why can't animals use nitrogen gas directly?", "It must be fixed into compounds (by bacteria) first."),
+        SA("Name the organisms that return nutrients from dead matter to soil.", "decomposers")], cols=1),
+    S("Part C · Energy in living things (1 point each)", [
+        SA("Write the word equation for photosynthesis.", "carbon dioxide + water (+ light) → glucose + oxygen"),
+        SA("Write the word equation for cellular respiration.", "glucose + oxygen → carbon dioxide + water + energy"),
+        SA("Producers store 40,000 units of energy. About how much reaches secondary consumers?", "400 units"),
+        MC("Which is an ecosystem service?", ["a parking lot", "wetlands filtering water", "a concrete channel"], 1)], cols=1),
+    S("Part D · Data analysis (4 points)", [
+        OR("Leaf disks floating after 12 minutes: bright light 10, dim light 5, dark 0. Write a CER explaining the results.",
+           "Rubric: claim that more light increases photosynthesis (1); evidence with numbers (1); reasoning that photosynthesis produces oxygen that makes disks float (1); clear connection of light energy to the process (1).", lines=6, points=4)]),
+    S("Part E · Explain (4 points)", [
+        OR("Use a food chain (grass → rabbit → fox) to explain how matter cycles and energy flows. Include photosynthesis, respiration, and decomposers.",
+           "Rubric: photosynthesis captures light energy in grass (1); energy passes up with ~10 percent at each level and is lost as heat (1); respiration releases energy and CO₂ (1); decomposers recycle matter to soil (1).", lines=8, points=4)])])
+
+LESSONS = [L1, L2, L3, L4, L5, L6, L7, L8]
+CHECKS = [C1, C2, C3]
+WEEKS = weeks_for(1, LESSONS, CHECKS, REVIEW, TEST, "science")
+
+UNIT = Unit(1, "Cycles of Matter and Energy", "Science practices, Earth's spheres, the water, carbon, oxygen, and nitrogen cycles, photosynthesis, respiration, food webs, and biodiversity.",
+    "Every atom in your body has been somewhere else before: in the air, the ocean, a plant, or another animal. In this unit you'll learn how scientists design experiments and explain data, then use those skills to trace how matter cycles and energy flows through Earth's systems and living things.",
+    ["Identify variables and write CER explanations from data.", "Model the water, carbon, oxygen, and nitrogen cycles.", "Explain photosynthesis and cellular respiration as linked processes.",
+     "Model energy flow in food webs and evaluate ways to protect biodiversity."],
+    [("MS-LS1-6, 1-7", "Photosynthesis; cellular respiration."), ("MS-LS2-3", "Cycling of matter and flow of energy in ecosystems."), ("MS-LS2-5", "Maintaining biodiversity and ecosystem services."),
+     ("MS-ESS2-4", "The water cycle driven by the sun and gravity."), ("SEP 3, 4, 6", "Investigations; data analysis; explanations.")],
+    [("independent variable", "The variable that is changed."), ("dependent variable", "The variable that is measured."), ("photosynthesis", "Light + CO₂ + water → glucose + oxygen."),
+     ("cellular respiration", "Glucose + oxygen → CO₂ + water + energy."), ("nitrogen fixation", "Changing N₂ into usable forms."), ("biodiversity", "The variety of life in an area.")],
+    ["Plants need light, water, and air.", "Food chains (Grade 5)."], ["Antacid tablets, cups, thermometer, stopwatch", "Zip bags, food coloring", "Spinach, syringe, baking soda, lamp", "Yeast, sugar, bottles, balloons", "String and sticks for a survey square"],
+    LESSONS, CHECKS, REVIEW, TEST,
+    real_world="Farmers, foresters, and environmental engineers use these cycles to grow food, manage forests, and protect water supplies.",
+    family_note="Bake bread together and talk about how yeast respiration makes it rise.",
+    weeks=WEEKS)

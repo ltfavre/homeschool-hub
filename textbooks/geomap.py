@@ -36,7 +36,7 @@ def place(name):
 
 def geo_map(theme, bounds, width=None, height=None, states=False, focus=None, countries=True, country_borders=False,
             rivers=(), lakes=True, labels=(), title=None, compass=True, scale_miles=None, legend=None, focus_countries=None,
-            dim_outside=None, legend_pos="tl"):
+            dim_outside=None, legend_pos="tl", compass_pos="tr"):
     """focus: {state name: color} fills; focus_countries: {country: color}. labels: (text, lon, lat[, style[, dx, dy]]);
     styles: city (dot + label), capital (star + label), region, water (italic blue), big (serif), plain.
     legend: list of (color, label). scale_miles: draw a scale bar of that many miles."""
@@ -113,7 +113,7 @@ def geo_map(theme, bounds, width=None, height=None, states=False, focus=None, co
                 text(c, x + dx, y + dy, txt, "Body", 7.5, MUTED, "c")
         c.setStrokeColor(theme.dark); c.setLineWidth(0.8); c.rect(0, 0, w, mh, fill=0, stroke=1)
         if compass:
-            cx, cy = w - 18, mh - 26
+            cx, cy = (w - 18, mh - 26) if compass_pos == "tr" else (18, mh - 26)
             c.setFillColor(theme.dark); p = c.beginPath(); p.moveTo(cx, cy + 12); p.lineTo(cx + 5, cy - 4); p.lineTo(cx, cy); p.lineTo(cx - 5, cy - 4); p.close()
             c.drawPath(p, fill=1, stroke=0); text(c, cx, cy + 15, "N", "BodyBold", 8, theme.dark, "c")
         if scale_miles:
@@ -173,6 +173,6 @@ def mississippi_map(theme, width=None, cities=True, rivers=("Mississippi", "Pear
             dx = -10 if n == "Gulfport" else 0
             labs.append((n, lon, lat, "capital" if n == "Jackson" else "city", dx, -8 if n == "Biloxi" else 0))
     labs += list(extra_labels)
-    return geo_map(theme, (-92.2, -87.6, 29.9, 35.3), width=width or W * 0.55, height=height, states=True,
+    return geo_map(theme, (-91.9, -87.75, 29.95, 35.15), width=width or W * 0.42, height=height, states=True,
                    focus={"Mississippi": focus_fill or theme.wash}, rivers=rivers, labels=labs, title=title, scale_miles=50,
-                   dim_outside=colors.HexColor("#EDE8DF"))
+                   dim_outside=colors.HexColor("#EDE8DF"), compass_pos="tl")

@@ -8,6 +8,9 @@ def check_tag(C):
     """Eyebrow label for a check page."""
     if "Quiz" in C.title: return "WEEKLY QUIZ"
     if "Sketchbook" in C.title: return "SKETCHBOOK CHECK"
+    if C.title.startswith("Prueba"): return "PRUEBA · WEEKLY QUIZ"
+    if C.title.startswith("Examen"): return "EXAMEN · YEAR-END TEST" if "Final" in C.title else "EXAMEN · UNIT TEST"
+    if C.title.startswith("Repaso"): return "REPASO · REVIEW"
     if "Portfolio" in C.title: return "YEAR-END PORTFOLIO REVIEW" if "Year-End" in C.title else "PORTFOLIO REVIEW"
     if "Final Exam" in C.title: return "FINAL EXAM" if C.kind == "test" else "FINAL REVIEW"
     if "Exam" in C.title: return "UNIT EXAM"
@@ -67,6 +70,13 @@ def render_blocks(t, blocks, teacher=False):
             out += [Spacer(1, 4)] + code_box(t, b) + [Spacer(1, 8)]
         elif isinstance(b, Watch):
             out += [Spacer(1, 2), watch_box(t, b), Spacer(1, 8)]
+        elif isinstance(b, Callout):
+            out += [Spacer(1, 2), panel([P(b.label, ParagraphStyle("co", parent=t.eyebrow, textColor=HUNTER)), P(b.t, t.boxt)], SAGE_WASH, left_bar=HUNTER), Spacer(1, 8)]
+        elif isinstance(b, Dialogue):
+            out += [Spacer(1, 2), dialogue_box(t, b), Spacer(1, 8)]
+        elif isinstance(b, Phrases):
+            rows = [["Español", "Sounds like", "English"]] + [list(r) for r in b.rows]
+            out += [P(b.title, t.h4), table(t, rows, [2.2 * inch, 1.8 * inch, W - 4.0 * inch], font_size=10), Spacer(1, 8)]
         elif isinstance(b, OnTheJob):
             out += [Spacer(1, 2), panel([P("ON THE JOB", ParagraphStyle("otj", parent=t.eyebrow, textColor=HUNTER)), P(b.t, t.boxt)], SAGE_WASH, left_bar=HUNTER), Spacer(1, 8)]
     return out
@@ -104,8 +114,22 @@ def code_box(t, cb):
     return [tb]
 
 
+def dialogue_box(t, d):
+    sp = ParagraphStyle("dsp", parent=t.boxt, fontName="BodySemi", textColor=t.accent)
+    ln = ParagraphStyle("dln", parent=t.boxt, fontSize=12, leading=16)
+    en = ParagraphStyle("den", parent=t.small, fontName="BodyMed")
+    rows = [[P("DIÁLOGO  ·  " + d.title.upper(), t.eyebrow), ""]]
+    for who, line, eng in d.lines:
+        rows.append([P(who, sp), [P(line, ln)] + ([P(eng, en)] if eng else [])])
+    if d.note: rows.append(["", P(d.note, t.small)])
+    tb = Table(rows, colWidths=[0.95 * inch, W - 0.95 * inch])
+    tb.setStyle(TableStyle([("SPAN", (0, 0), (1, 0)), ("VALIGN", (0, 0), (-1, -1), "TOP"), ("BACKGROUND", (0, 0), (-1, -1), IVORY), ("BOX", (0, 0), (-1, -1), 0.8, t.mid),
+                            ("LINEABOVE", (0, 0), (-1, 0), 4, t.main), ("LEFTPADDING", (0, 0), (-1, -1), 10), ("TOPPADDING", (0, 0), (-1, -1), 4), ("BOTTOMPADDING", (0, 0), (-1, -1), 4)]))
+    return tb
+
+
 def watch_box(t, wb):
-    inner = [P("WATCH AND EXPLORE", t.eyebrow)]
+    inner = [P(wb.label, t.eyebrow)]
     for title, src, extra in wb.items:
         inner.append(Paragraph(f"<b>{title}</b> · {src}" + (f" <font color='#5F5B56'>({extra})</font>" if extra else ""), ParagraphStyle("wi", parent=t.boxt, leftIndent=14, bulletIndent=2), bulletText="•"))
     if wb.note: inner.append(P(wb.note, t.small))
@@ -245,14 +269,16 @@ PREP = {"math": "Read the student lesson and work the Try It problems.",
         "science": "Read the student lesson, gather and test the investigation materials, and answer the Check Your Understanding questions.",
         "social": "Read the student lesson and its sources, preview the maps, and answer the Check Your Understanding questions.",
         "data": "Read the lesson and run the Code It examples.",
-        "art": "Read the lesson, gather the studio materials, and try the Create activity yourself first so you can model it."}
+        "art": "Read the lesson, gather the studio materials, and try the Create activity yourself first so you can model it.",
+        "spanish": "Read the lesson aloud once, play the pronunciation audio for any word you're unsure of, and practice the dialogue."}
 ROUTINE = {"math": "Warm-Up 5 · Teach 15 · Guided Practice 10 · Independent Practice 15 · Exit Ticket 5",
            "ela": "Warm-Up 5 · Read 15 · Mini-Lesson 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3",
            "science": "Engage 5 · Investigate 15 · Explain 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3",
            "social": "Warm-Up 5 · Read and Discuss 15 · Analyze 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3",
            "data": "Read 10 · Watch or Code 15 · Quick Check 5",
-           "art": "Look and Talk 5 · Learn and Demonstrate 10 · Create 25 · Reflect 5"}
-DAYS = {"math": "Monday–Thursday", "ela": "Monday–Thursday", "science": "Monday and Wednesday", "social": "Tuesday and Thursday", "data": "Monday–Thursday", "art": "Monday and Wednesday"}
+           "art": "Look and Talk 5 · Learn and Demonstrate 10 · Create 25 · Reflect 5",
+           "spanish": "Calentamiento 3 · Escucha y repite 5 · Aprende 6 · Practica 6 · Habla 3 (about 20–25 minutes)"}
+DAYS = {"math": "Monday–Thursday", "ela": "Monday–Thursday", "science": "Monday and Wednesday", "social": "Tuesday and Thursday", "data": "Monday–Thursday", "art": "Monday and Wednesday", "spanish": "Monday–Thursday"}
 
 
 DATA_INTRO = {
@@ -286,6 +312,8 @@ def front_matter(t, book, doc, kind):
                      + (["<b>Investigate</b> boxes are hands-on experiments. Do them with your teacher and record what you observe."] if t.subject == "science" else [])
                      + (["<b>Activity</b> boxes are hands-on map, source, and timeline work. Do them with your teacher."] if t.subject == "social" else [])
                      + (["<b>Create</b> boxes are studio activities. Keep everything you make in your portfolio folder."] if t.subject == "art" else [])
+                     + (["<b>Sounds like</b> columns show how to say each word; the CAPITAL syllable gets the stress. Hear any word at SpanishDict.com.",
+                         "<b>Diálogo</b> boxes are conversations. Read them aloud with a partner, then change the details to talk about yourself."] if t.subject == "spanish" else [])
                      + [
                       ("Every Friday there is a short <b>Sketchbook Check</b> in your workbook. The last Friday of a unit is the <b>Portfolio Review</b>." if t.subject == "art" else
                        "Every Friday there is a short <b>Weekly Check</b> in your workbook. The last Friday of a unit is the <b>Unit Test</b>.")]],
@@ -298,7 +326,7 @@ def front_matter(t, book, doc, kind):
         "teacher": ["How to use this Teacher Edition",
                     "This book holds everything needed to teach the course: unit overviews, a plan for every lesson with what to say "
                     "and do, the student lesson with Try It answers, and answer keys for every workbook page, weekly check and unit test.",
-                    [f"<b>Daily routine (about 45–55 minutes):</b> {ROUTINE[t.subject]}.",
+                    [(f"<b>Daily routine:</b> {ROUTINE[t.subject]}." if t.subject == "spanish" else f"<b>Daily routine (about 45–55 minutes):</b> {ROUTINE[t.subject]}."),
                      "<b>Say:</b> lines are a suggested script. Use your own words.",
                      f"{DAYS[t.subject]} are lessons. Friday is the <b>{'Sketchbook Check' if t.subject == 'art' else 'Weekly Check'}</b> (about {15 if t.subject in ('science', 'social', 'art') else 20} minutes), then corrections or a project.",
                      "Dates match the VenvLearning lesson plans for the 2026–2027 school year."]],

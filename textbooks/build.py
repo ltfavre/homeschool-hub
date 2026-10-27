@@ -23,6 +23,8 @@ BOOKS = {
     "sci7": lambda: Book("science", 7, "Grade 7 Science", units("sci7")),
     "ss4": lambda: Book("social", 4, "Grade 4 Social Studies", units("ss4")),
     "ss7": lambda: Book("social", 7, "Grade 7 Social Studies", units("ss7")),
+    "span4": lambda: Book("spanish", 4, "Grade 4 Spanish", units("span4")),
+    "span7": lambda: Book("spanish", 7, "Grade 7 Spanish (Spanish 1A)", units("span7")),
     "art4": lambda: Book("art", 4, "Grade 4 Art", units("art4")),
     "art7": lambda: Book("art", 7, "Grade 7 Art", units("art7")),
     "data": lambda: Book("data", "pro", "Data Science & Psychometrics", units("data"), audience="Professional Learning", kinds=("textbook", "workbook"),

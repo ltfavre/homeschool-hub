@@ -66,6 +66,8 @@ SUBJECTS = {
                     wash=colors.HexColor("#E5F2E9"), mid=colors.HexColor("#97CBA9")),
     "social": dict(name="Social Studies", main=colors.HexColor("#B4561A"), dark=colors.HexColor("#7A3810"),
                    wash=colors.HexColor("#FBEDE2"), mid=colors.HexColor("#EBB68D")),
+    "spanish": dict(name="Spanish", main=colors.HexColor("#6A45A6"), dark=colors.HexColor("#432A6E"), wash=colors.HexColor("#F1ECF8"),
+                    mid=colors.HexColor("#BFAEDF")),
     # lemon yellow fills with warm charcoal text; a deep mustard for accent text so it stays readable on white
     "art": dict(name="Art", main=colors.HexColor("#F7DF4B"), dark=colors.HexColor("#3A3628"), wash=colors.HexColor("#FEF8D8"),
                 mid=colors.HexColor("#E6CC3A"), accent=colors.HexColor("#7A6500"), on_main=colors.HexColor("#2B2A22")),
@@ -75,6 +77,9 @@ SUBJECTS = {
 }
 
 LABELS = {
+    "spanish": dict(explore="PARA EMPEZAR", example="MODELO", answer="Respuesta", try_="¡PRACTICA!",
+                    try_note="Say each answer out loud first, then write it. Check with your teacher.", real="EL MUNDO HISPANOHABLANTE",
+                    study="Listen and repeat the new words, study the <b>Modelo</b> boxes, and practice speaking with a partner every day."),
     "art": dict(explore="LOOK AND WONDER", example="STEP BY STEP", answer="Look for", try_="CHECK YOUR UNDERSTANDING",
                 try_note="Talk it over with your teacher or answer in your sketchbook.", real="ART IN YOUR WORLD",
                 study="Read about the idea, study the <b>Step by Step</b> demonstrations, then make art in the <b>Create</b> studio activity."),
@@ -453,13 +458,22 @@ class Vocab:
     def __init__(self, items): self.items = items
 class Watch:
     """Suggested videos or courses. items: list of (title, source, minutes_or_note)."""
-    def __init__(self, items, note=None): self.items, self.note = items, note
+    def __init__(self, items, note=None, label="WATCH AND EXPLORE"): self.items, self.note, self.label = items, note, label
 class Code:
     """Side-by-side-in-spirit code: the same task in SAS, Python, and R (any may be omitted). output: what you should see."""
     def __init__(self, title, sas=None, python=None, r=None, output=None, note=None):
         self.title, self.sas, self.python, self.r, self.output, self.note = title, sas, python, r, output, note
 class OnTheJob:
     def __init__(self, t): self.t = t
+class Callout:
+    """A labeled note box, e.g. Callout("CULTURA", "...")."""
+    def __init__(self, label, t): self.label, self.t = label, t
+class Dialogue:
+    """A short conversation. lines: list of (speaker, line, english or None)."""
+    def __init__(self, title, lines, note=None): self.title, self.lines, self.note = title, lines, note
+class Phrases:
+    """Vocabulary table with pronunciation. rows: (spanish, sounds_like, english)."""
+    def __init__(self, title, rows): self.title, self.rows = title, rows
 class Beside:
     """Paragraph(s) on the left with a tall figure on the right (good for narrow maps). texts: str or list of str."""
     def __init__(self, fn, texts, caption=None, fig_w=0.42, left=False):
@@ -593,7 +607,7 @@ class Doc(BaseDocTemplate):
         c.setFillColor(GOLD); c.rect(LM, PAGE_H - 1.38 * inch, 54, 3, fill=1, stroke=0)
         text(c, LM, PAGE_H - 2.6 * inch, b.audience, "Display", 34, BLUSH if t.on_main == WHITE else t.on_main)
         lines = {"math": ["Mathematics"], "ela": ["English", "Language Arts"], "science": ["Science"], "social": ["Social", "Studies"],
-                 "data": ["Data Science &", "Psychometrics"], "art": ["Art"]}[b.subject]
+                 "data": ["Data Science &", "Psychometrics"], "art": ["Art"], "spanish": ["Spanish", "Español"]}[b.subject]
         for k, ln in enumerate(lines): text(c, LM, PAGE_H - 3.45 * inch - k * 0.8 * inch, ln, "Display", 64, t.on_main)
         # kind badge
         lab = KIND_LABEL[self.kind].upper()

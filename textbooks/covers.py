@@ -36,9 +36,9 @@ def stripe(c, y, h=8, color=INK, step=6):
         c.rect(x, y, step / 2, h, fill=1, stroke=0); x += step
 
 
-SHORT = {"art": "Art", "math": "Mathematics", "ela": "English Language Arts", "science": "Science", "social": "Social Studies", "data": "Data Science & Psychometrics"}
+SHORT = {"spanish": "Spanish", "art": "Art", "math": "Mathematics", "ela": "English Language Arts", "science": "Science", "social": "Social Studies", "data": "Data Science & Psychometrics"}
 TITLE_LINES = {"math": ["Mathematics"], "ela": ["English", "Language Arts"], "science": ["Science"], "social": ["Social", "Studies"],
-               "data": ["Data Science &", "Psychometrics"], "art": ["Art"]}
+               "data": ["Data Science &", "Psychometrics"], "art": ["Art"], "spanish": ["Spanish", "Español"]}
 
 BLURB = {
     "math": "A full year of Grade {g} mathematics, taught one clear idea at a time. Every lesson opens with a question worth thinking about, "
@@ -47,6 +47,8 @@ BLURB = {
            "grammar, and writing instruction, so students learn to read carefully, think deeply, and write with purpose.",
     "science": "A full year of Grade {g} science built around questions, investigations, and evidence. Students observe, measure, model, "
                "and explain the natural world, then use what they learn to design solutions to real problems.",
+    "spanish": "A full year of Grade {g} Spanish in short daily lessons. Students listen, speak, read, and write from the very first day, "
+               "building real conversations step by step and exploring the people, places, and traditions of the Spanish-speaking world.",
     "art": "A full year of Grade {g} arts: drawing, painting, and design; music; art history; theater and dance; media arts; and sculpture. "
            "Every lesson pairs looking closely at real artwork with hands-on studio time, and the year ends with a portfolio and a show.",
     "data": "A year of professional learning in statistics, data science, and psychometrics, built for a working professional: about 30 minutes a day, "
@@ -200,6 +202,21 @@ def art_social(c, cx, cy, r):
     c.line(x - 6, y - 6, x + 6, y + 6); c.line(x - 6, y + 6, x + 6, y - 6)
 
 
+def art_spanish(c, cx, cy, r):
+    # overlapping speech bubbles with greetings, plus accented letters
+    def bubble(x, y, w, h, tail_left, txt, size, alpha):
+        c.setStrokeColor(a(0.6)); c.setLineWidth(2.2); c.setFillColor(a(alpha))
+        c.roundRect(x, y, w, h, 18, fill=1, stroke=1)
+        p = c.beginPath(); tx = x + (w * 0.22 if tail_left else w * 0.78)
+        p.moveTo(tx - 10, y + 1); p.lineTo(tx + (-18 if tail_left else 18), y - 22); p.lineTo(tx + 10, y + 1); c.drawPath(p, fill=1, stroke=0)
+        c.setFillColor(a(0.85)); c.setFont("Display", size); c.drawCentredString(x + w / 2, y + h / 2 - size * 0.33, txt)
+    bubble(cx - r * 1.25, cy + r * 0.25, r * 1.5, r * 0.75, True, "¡Hola!", 34, 0.12)
+    bubble(cx + r * 0.05, cy - r * 0.55, r * 1.35, r * 0.68, False, "¿Qué tal?", 26, 0.18)
+    c.setFillColor(a(0.28)); c.setFont("Display", 54)
+    c.drawCentredString(cx + r * 1.05, cy + r * 0.95, "ñ"); c.drawCentredString(cx - r * 1.0, cy - r * 0.85, "¿")
+    c.setFont("Display", 38); c.drawCentredString(cx + r * 1.35, cy + r * 0.2, "é"); c.drawCentredString(cx - r * 0.4, cy + r * 1.35, "¡")
+
+
 def art_art(c, cx, cy, r):
     # painter's palette with paint wells, a brush, music notes, and a frame corner
     c.setStrokeColor(a(0.55)); c.setLineWidth(2.4); c.setFillColor(a(0.07))
@@ -255,7 +272,7 @@ def art_data(c, cx, cy, r):
     c.setFont("MonoSemi", 15); c.drawString(x0 - r * 0.35, y0 - 26, "proc means;   df.describe()   summary(x)")
 
 
-ART = {"art": art_art, "data": art_data, "math": art_math, "ela": art_ela, "science": art_science, "social": art_social}
+ART = {"spanish": art_spanish, "art": art_art, "data": art_data, "math": art_math, "ela": art_ela, "science": art_science, "social": art_social}
 
 
 # ---------------------------------------------------------------- pages

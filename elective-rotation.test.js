@@ -11,7 +11,10 @@ test('both grades have daily foundations, alternating core, one shared elective,
  for(const [date,grades]of Object.entries(days))for(const [g,d]of Object.entries(grades)){
   if(date<'2026-10-26'){assert.notEqual(d.curriculum,'core-electives-v1');continue;}
   const wd=new Date(date+'T12:00Z').getUTCDay();const mapping=lib.weeks[`${g}-${d.module}-${d.week}`];
-  assert.equal(d.curriculum,'core-electives-v1');assert.equal(d.elective.title,grades[g==='4'?'7':'4'].elective.title);
+  assert.equal(d.curriculum,'core-electives-v1');
+  // Summer extension (Jul 19 – Aug 6, 2027): core textbooks only, no elective.
+  if(date>'2027-07-16'){assert.equal(d.elective,null);assert.deepEqual(d.subjects,wd===5?['review']:['math','ela',wd===1||wd===3?'science':'social']);for(const s of d.subjects)assert.ok(taskForSubject(d,s),date+s);count++;continue;}
+  assert.equal(d.elective.title,grades[g==='4'?'7':'4'].elective.title);
   const expected=['math','ela',wd===1||wd===3?'science':'social'];if(hasLesson(g,date,'spanish'))expected.push('spanish');if(hasLesson(g,date,'art')&&d.elective.subject!=='art')expected.push('art');expected.push(d.elective.subject);
   assert.deepEqual(subjectsForDay(d,mapping),wd===5?['review']:expected);
   if(hasLesson(g,date,'spanish'))assert.ok(!/beginner Spanish/i.test(taskForSubject(d,'ela')),date+g);
@@ -21,12 +24,12 @@ test('both grades have daily foundations, alternating core, one shared elective,
   assert.equal(keys[date][g].practice.length,d.practice.length);for(const s of keys[date][g].practice)for(const q of s.items)assert.ok(q.answer);
   count++;
  }
- assert.equal(count,340);
+ assert.equal(count,370);
 });
 test('six-week art block excludes Thanksgiving, has exact daily publisher pages and no inactive elective tests',()=>{
  const b=lib.rotation.blocks[0];assert.equal(b.start,'2026-10-26');assert.equal(b.end,'2026-12-11');assert.equal(b.weeks,6);assert.equal(days['2026-11-23'],undefined);
  let n=0;
- for(const [date,grades]of Object.entries(days))for(const [g,d]of Object.entries(grades))if(d.curriculum==='core-electives-v1'&&d.elective.block===1&&d.day<4){
+ for(const [date,grades]of Object.entries(days))for(const [g,d]of Object.entries(grades))if(d.curriculum==='core-electives-v1'&&d.elective?.block===1&&d.day<4){
   const p=lib.weeks[`${g}-${d.module}-${d.week}`].art;const all=readingsForDay(p,date),book=all.filter(r=>r.resource_id.startsWith('tb-')),refs=all.filter(r=>!r.resource_id.startsWith('medieval-overview-')&&!r.resource_id.startsWith('tb-'));assert.equal(refs.length,2);
   assert.equal(book.length,hasLesson(g,date,'art')?2:0,date+g);
   if(all.length>refs.length+book.length){assert.equal(date+g,'2026-10-264');assert.ok(lib.resources[all[0].resource_id].url.startsWith('/downloads/integrated/grade4-art-medieval-'));}
@@ -45,7 +48,7 @@ test('planner and curriculum agree with every daily subject list and keep school
  for(const p of planner.plans)for(const w of p.weeks)if(w.start>='2026-10-26')for(let i=0;i<5;i++){
   const dt=new Date(w.start+'T12:00Z');dt.setUTCDate(dt.getUTCDate()+i);const d=days[dt.toISOString().slice(0,10)][p.grade];assert.deepEqual(w.subjects_by_day[i],d.subjects);assert.equal(w.days[i],d.tasks);
  }
- assert.equal(planner.calendar.end,'2027-07-23');assert.equal(lib.rotation.blocks.at(-1).weeks,4);assert.equal(lib.rotation.blocks.at(-1).partial,true);
+ assert.equal(planner.calendar.end,'2027-08-06');assert.ok(!planner.calendar.breaks.some(b=>b[0]==='2027-07-19'));assert.equal(lib.rotation.blocks.at(-1).weeks,4);assert.equal(lib.rotation.blocks.at(-1).partial,true);
  const safe=studentResourceLibrary(lib);assert.ok(!safe.resources['ckva-4-tg']);assert.ok(safe.resources['ckva-4-sab']);
 });
 test('Home Assistant feed reflects both grades with four weekday tasks and no stale elective tasks',async()=>{

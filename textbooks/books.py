@@ -47,7 +47,27 @@ def render_blocks(t, blocks, teacher=False):
             out += [Spacer(1, 4), passage_box(t, b), Spacer(1, 10)]
         elif isinstance(b, ReaderAssign):
             out += [Spacer(1, 2), reader_box(t, b), Spacer(1, 8)]
+        elif isinstance(b, Investigate):
+            out += [Spacer(1, 4), investigate_box(t, b), Spacer(1, 8)]
     return out
+
+
+def investigate_box(t, iv):
+    """Hands-on investigation or activity: question, materials, numbered steps, what to record, safety."""
+    tag = "INVESTIGATE" if t.subject == "science" else "ACTIVITY"
+    inner = [P(f"{tag}  ·  {iv.title.upper()}", t.eyebrow), P(iv.question, ParagraphStyle("ivq", parent=t.boxt, fontName="BodySemi"))]
+    if iv.materials: inner.append(P("<b>You need:</b> " + "; ".join(iv.materials) + ".", t.boxt))
+    num = ParagraphStyle("ivs", parent=t.boxt, leftIndent=22, bulletIndent=0)
+    for i, st in enumerate(iv.steps, 1): inner.append(Paragraph(st, num, bulletText=f"{i}"))
+    if iv.record: inner.append(P(f"<b>Record:</b> {iv.record}", ParagraphStyle("ivr", parent=t.boxt, textColor=t.dark, spaceBefore=3)))
+    if iv.safety: inner.append(P(f"<b>Safety:</b> {iv.safety}", ParagraphStyle("ivx", parent=t.boxt, textColor=colors.HexColor("#8A5A00"))))
+    rows = [[inner[:2]]] + [[f] for f in inner[2:]]
+    tb = Table(rows, colWidths=[W])
+    tb.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 1, t.main), ("BACKGROUND", (0, 0), (-1, -1), IVORY),
+                            ("LINEBEFORE", (0, 0), (0, -1), 5, t.main), ("LEFTPADDING", (0, 0), (-1, -1), 14),
+                            ("RIGHTPADDING", (0, 0), (-1, -1), 12), ("TOPPADDING", (0, 0), (-1, -1), 1), ("BOTTOMPADDING", (0, 0), (-1, -1), 1),
+                            ("TOPPADDING", (0, 0), (-1, 0), 8), ("BOTTOMPADDING", (0, -1), (-1, -1), 8)]))
+    return tb
 
 
 def passage_box(t, ps):
@@ -159,6 +179,17 @@ def study_guide(t, U):
     return out
 
 
+PREP = {"math": "Read the student lesson and work the Try It problems.",
+        "ela": "Read the student lesson and any assigned Reader chapter; answer the Your Turn questions.",
+        "science": "Read the student lesson, gather and test the investigation materials, and answer the Check Your Understanding questions.",
+        "social": "Read the student lesson and its sources, preview the maps, and answer the Check Your Understanding questions."}
+ROUTINE = {"math": "Warm-Up 5 · Teach 15 · Guided Practice 10 · Independent Practice 15 · Exit Ticket 5",
+           "ela": "Warm-Up 5 · Read 15 · Mini-Lesson 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3",
+           "science": "Engage 5 · Investigate 15 · Explain 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3",
+           "social": "Warm-Up 5 · Read and Discuss 15 · Analyze 10 · Guided Practice 7 · Independent 10 · Exit Ticket 3"}
+DAYS = {"math": "Monday–Thursday", "ela": "Monday–Thursday", "science": "Monday and Wednesday", "social": "Tuesday and Thursday"}
+
+
 def front_matter(t, book, doc, kind):
     out = [NextPageTemplate("body"), PageBreak()]
     intro = {
@@ -167,7 +198,10 @@ def front_matter(t, book, doc, kind):
                      f"{t.lab['study']} Your practice pages are in your <b>Student Workbook</b>, labeled with the same lesson number."
                      + (" When a lesson says <b>Read in Your Reader</b>, read that chapter in your Core Knowledge Reader first." if t.subject == "ela" else ""),
                      ["<b>Key Idea</b> boxes hold the most important rule or fact. Learn these.",
-                      "<b>Watch Out</b> boxes warn you about common mistakes.",
+                      "<b>Watch Out</b> boxes warn you about common mistakes."]
+                     + (["<b>Investigate</b> boxes are hands-on experiments. Do them with your teacher and record what you observe."] if t.subject == "science" else [])
+                     + (["<b>Activity</b> boxes are hands-on map, source, and timeline work. Do them with your teacher."] if t.subject == "social" else [])
+                     + [
                       "Every Friday there is a short <b>Weekly Check</b> in your workbook. The last Friday of a unit is the <b>Unit Test</b>."]],
         "workbook": ["How to use this workbook",
                      "Every lesson in your textbook has matching practice pages here. Show your thinking in the work space. "
@@ -178,9 +212,9 @@ def front_matter(t, book, doc, kind):
         "teacher": ["How to use this Teacher Edition",
                     "This book holds everything needed to teach the course: unit overviews, a plan for every lesson with what to say "
                     "and do, the student lesson with Try It answers, and answer keys for every workbook page, weekly check and unit test.",
-                    ["<b>Daily routine (about 45–55 minutes):</b> Warm-Up 5 · Teach 15 · Guided Practice 10 · Independent Practice 15 · Exit Ticket 5.",
+                    [f"<b>Daily routine (about 45–55 minutes):</b> {ROUTINE[t.subject]}.",
                      "<b>Say:</b> lines are a suggested script. Use your own words.",
-                     "Monday–Thursday are lessons. Friday is the <b>Weekly Check</b> (about 20 minutes), then corrections or a project.",
+                     f"{DAYS[t.subject]} are lessons. Friday is the <b>Weekly Check</b> (about {15 if t.subject in ('science', 'social') else 20} minutes), then corrections or a project.",
                      "Dates match the VenvLearning lesson plans for the 2026–2027 school year."]],
     }[kind]
     out += [P(intro[0], t.h2), P(intro[1], t.body)] + bullets(intro[2], t.bullet)
@@ -233,7 +267,7 @@ def work_space(t, w, h, grid=True):
             while x < ww: c.line(x, 1, x, hh - 1); x += s
             y = s
             while y < hh: c.line(1, y, ww - 1, y); y += s
-        elif not grid or t.subject == "ela":
+        elif not grid or t.subject != "math":
             c.setStrokeColor(GRID); y = hh - 22
             while y > 4: c.line(6, y, ww - 6, y); y -= 22
     return Draw(w, h, fn)
@@ -266,7 +300,7 @@ def problem_cell(t, pr, num, w, show_answer=False):
     inner_w = w - 26
     if pr.lines: body += [Spacer(1, 2), write_lines(t, inner_w, pr.lines)]
     elif pr.space: body += [Spacer(1, 3), work_space(t, inner_w, max(pr.space, 26))]
-    elif not pr.choices and not pr.fig: body += [Spacer(1, 2), answer_line(t, inner_w if t.subject == "ela" else min(inner_w, 170))]
+    elif not pr.choices and not pr.fig: body += [Spacer(1, 2), answer_line(t, inner_w if t.subject != "math" else min(inner_w, 170))]
     if show_answer: body.append(P(f"Answer: {pr.answer}", t.answer))
     tb = Table([[badge, body]], colWidths=[24, w - 24])
     tb.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
@@ -408,7 +442,7 @@ def teacher_lesson(t, L):
     out.append(P(L.i_can, t.ican))
     out.append(info_table(t, [("Objective", T["objective"]), ("Standard", L.standard + " — " + T.get("standard_text", "")),
                               ("Date", L.date or "—"), ("Time", T.get("time", "About 50 minutes")),
-                              ("Materials", T["materials"]), ("Get ready", T.get("prep", "Read the student lesson and work the Try It problems." if t.subject == "math" else "Read the student lesson and any assigned Reader chapter; answer the Your Turn questions."))]))
+                              ("Materials", T["materials"]), ("Get ready", T.get("prep", PREP[t.subject]))]))
     out += [Spacer(1, 8), P("Lesson Flow", t.h3), flow_table(t, T["flow"])]
     side = []
     if T.get("misconceptions"):

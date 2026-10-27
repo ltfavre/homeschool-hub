@@ -436,6 +436,10 @@ class ReaderAssign:
         self.book, self.section, self.focus, self.pages = book, section, focus, pages
 class Vocab:
     def __init__(self, items): self.items = items
+class Investigate:
+    """Hands-on investigation (science) or activity (social studies)."""
+    def __init__(self, title, question, materials, steps, record=None, safety=None):
+        self.title, self.question, self.materials, self.steps, self.record, self.safety = title, question, materials, steps, record, safety
 
 
 class Lesson:
@@ -534,15 +538,25 @@ class Doc(BaseDocTemplate):
                     x = 40 + i * 44; y = PAGE_H * 0.46 + j * 44
                     s = "+−×÷=%"[(i + j) % 6]
                     c.setFillColor(colors.Color(1, 1, 1, 0.10)); c.setFont("Display", 20); c.drawCentredString(x, y, s)
-        else:
+        elif b.subject == "ela":
             for j in range(16):
                 y = PAGE_H * 0.45 + j * 24
                 c.line(30, y, PAGE_W - 30, y)
+        elif b.subject == "science":
+            for i in range(9):
+                for j in range(6):
+                    x = 40 + i * 68 + (34 if j % 2 else 0); y = PAGE_H * 0.47 + j * 62
+                    c.circle(x, y, 18, stroke=1, fill=0); c.circle(x, y, 3, stroke=1, fill=0)
+        else:
+            for j in range(9):
+                y = PAGE_H * 0.45 + j * 40; c.line(30, y, PAGE_W - 30, y)
+            for i in range(12):
+                x = 30 + i * 50; c.line(x, PAGE_H * 0.43, x, PAGE_H - 10)
         text(c, LM, PAGE_H - 1.25 * inch, "VENVLEARNING", "BodySemi", 11, WHITE)
         c.setFillColor(GOLD); c.rect(LM, PAGE_H - 1.38 * inch, 54, 3, fill=1, stroke=0)
         text(c, LM, PAGE_H - 2.6 * inch, f"Grade {b.grade}", "Display", 34, BLUSH)
-        text(c, LM, PAGE_H - 3.45 * inch, t.name if b.subject == "math" else "English", "Display", 64, WHITE)
-        if b.subject == "ela": text(c, LM, PAGE_H - 4.25 * inch, "Language Arts", "Display", 64, WHITE)
+        lines = {"math": ["Mathematics"], "ela": ["English", "Language Arts"], "science": ["Science"], "social": ["Social", "Studies"]}[b.subject]
+        for k, ln in enumerate(lines): text(c, LM, PAGE_H - 3.45 * inch - k * 0.8 * inch, ln, "Display", 64, WHITE)
         # kind badge
         lab = KIND_LABEL[self.kind].upper()
         bw = stringWidth(lab, "BodyBold", 12) + 34
@@ -1551,4 +1565,154 @@ def island_map(theme, width=None, height=210):
         # scale bar
         c.setStrokeColor(INK); c.line(w - 110, 14, w - 50, 14); c.line(w - 110, 11, w - 110, 17); c.line(w - 50, 11, w - 50, 17)
         text(c, w - 80, 20, "1 mile", "Body", 7.5, INK, "c")
+    return Draw(width, height, fn)
+
+
+# ---------------------------------------------------------------- science and social studies figures
+def _wrap(s, font, size, maxw):
+    words = s.split(); lines = []; cur = ""
+    for wd in words:
+        t = (cur + " " + wd).strip()
+        if stringWidth(t, font, size) <= maxw or not cur: cur = t
+        else: lines.append(cur); cur = wd
+    if cur: lines.append(cur)
+    return lines
+
+
+def _box(c, theme, x, y, bw, bh, label, fill=None, size=8.5):
+    c.setFillColor(fill or theme.wash); c.setStrokeColor(theme.main); c.setLineWidth(1)
+    c.roundRect(x - bw / 2, y - bh / 2, bw, bh, 5, fill=1, stroke=1)
+    lines = _wrap(label, "BodySemi", size, bw - 10)
+    lh = size + 2; y0 = y + (len(lines) - 1) * lh / 2 - size * 0.35
+    for i, ln in enumerate(lines): text(c, x, y0 - i * lh, ln, "BodySemi", size, INK, "c")
+
+
+def _arrow_line(c, x1, y1, x2, y2, color, lw=1.4):
+    c.setStrokeColor(color); c.setLineWidth(lw); c.line(x1, y1, x2, y2)
+    ang = math.atan2(y2 - y1, x2 - x1); s = 7
+    c.setFillColor(color); p = c.beginPath(); p.moveTo(x2, y2)
+    p.lineTo(x2 - s * math.cos(ang - 0.4), y2 - s * math.sin(ang - 0.4)); p.lineTo(x2 - s * math.cos(ang + 0.4), y2 - s * math.sin(ang + 0.4)); p.close()
+    c.drawPath(p, fill=1, stroke=0)
+
+
+def cycle_fig(theme, labels, width=None, height=None, center=None, bw=None):
+    """Labels arranged clockwise around a loop with arrows between them."""
+    width = width or W * 0.75; height = height or (210 if len(labels) > 3 else 180); n = len(labels)
+
+    def fn(c, w, h):
+        cx, cy = w / 2, h / 2; rx, ry = w / 2 - (bw or 100) / 2 - 6, h / 2 - 24
+        b = bw or min(118, w / 3.2); bh = 40
+        pts = [(cx + rx * math.sin(2 * math.pi * i / n), cy + ry * math.cos(2 * math.pi * i / n)) for i in range(n)]
+        for i in range(n):
+            (x1, y1), (x2, y2) = pts[i], pts[(i + 1) % n]
+            dx, dy = x2 - x1, y2 - y1; d = math.hypot(dx, dy)
+            # trim to box edges
+            tx = (b / 2 + 4) / abs(dx) if dx else 9e9; ty = (bh / 2 + 4) / abs(dy) if dy else 9e9; tt = min(tx, ty)
+            _arrow_line(c, x1 + dx * tt, y1 + dy * tt, x2 - dx * tt, y2 - dy * tt, theme.dark)
+        for (x, y), lab in zip(pts, labels): _box(c, theme, x, y, b, bh, lab)
+        if center: text(c, cx, cy - 4, center, "Display", 13, theme.dark, "c")
+    return Draw(width, height, fn)
+
+
+def flow_fig(theme, labels, width=None, height=58, size=8.5):
+    """Boxes in a row joined by arrows (a process or chain)."""
+    width = width or W; n = len(labels)
+
+    def fn(c, w, h):
+        gap = 22; bw = (w - gap * (n - 1)) / n
+        for i, lab in enumerate(labels):
+            x = bw / 2 + i * (bw + gap)
+            _box(c, theme, x, h / 2, bw, h - 6, lab, size=size)
+            if i < n - 1: _arrow_line(c, x + bw / 2 + 3, h / 2, x + bw / 2 + gap - 3, h / 2, theme.dark)
+    return Draw(width, height, fn)
+
+
+def line_graph(theme, labels, series, title=None, ylabel=None, ymin=0, ymax=None, step=None, width=None, height=180):
+    """Line graph over category labels. series: list of (name, values)."""
+    width = width or W * 0.8
+    allv = [v for _, vs in series for v in vs]; ymax = ymax if ymax is not None else max(allv)
+    step = step or max(1, round((ymax - ymin) / 5)); ymax = ymin + step * math.ceil((ymax - ymin) / step)
+    cols = [theme.main, theme.dark, GOLD, HUNTER]
+
+    def fn(c, w, h):
+        L, B, R, T = 46, 34, w - 12, h - (22 if title else 8) - (12 if len(series) > 1 else 0)
+        if title: text(c, (L + R) / 2, h - 12, title, "BodySemi", 9.5, theme.dark, "c")
+        v = ymin
+        while v <= ymax + 1e-9:
+            y = B + (T - B) * (v - ymin) / (ymax - ymin)
+            c.setStrokeColor(GRID); c.setLineWidth(0.5); c.line(L, y, R, y); text(c, L - 5, y - 3, f"{v:g}", "Mono", 7.5, INK, "r"); v += step
+        c.setStrokeColor(INK); c.setLineWidth(0.9); c.line(L, B, L, T); c.line(L, B, R, B)
+        n = len(labels); xs = [L + (R - L) * (i + 0.5) / n for i in range(n)]
+        for x, lab in zip(xs, labels): text(c, x, B - 13, lab, "Body", 7.5, INK, "c")
+        if ylabel:
+            c.saveState(); c.translate(11, (B + T) / 2); c.rotate(90); text(c, 0, 0, ylabel, "BodyMed", 8, MUTED, "c"); c.restoreState()
+        for k, (name, vs) in enumerate(series):
+            col = cols[k % len(cols)]; c.setStrokeColor(col); c.setLineWidth(1.8)
+            pts = [(x, B + (T - B) * (v - ymin) / (ymax - ymin)) for x, v in zip(xs, vs) if v is not None]
+            for (x1, y1), (x2, y2) in zip(pts, pts[1:]): c.line(x1, y1, x2, y2)
+            c.setFillColor(col)
+            for x, y in pts: c.circle(x, y, 2.8, fill=1, stroke=0)
+            if len(series) > 1:
+                lx = L + k * 110; c.rect(lx, h - (30 if title else 12), 10, 3, fill=1, stroke=0); text(c, lx + 14, h - (32 if title else 14), name, "Body", 7.5, INK)
+    return Draw(width, height, fn)
+
+
+def circuit_fig(theme, closed=True, bulbs=1, width=220, height=130, series=True, labels=True):
+    """Simple circuit: battery on the left, bulb(s) on top, switch on the right."""
+    def fn(c, w, h):
+        x0, x1, y0, y1 = 30, w - 30, 20, h - 30
+        c.setStrokeColor(INK); c.setLineWidth(1.6)
+        # wires
+        c.line(x0, y0, x1, y0)
+        c.line(x0, y0, x0, (y0 + y1) / 2 - 14); c.line(x0, (y0 + y1) / 2 + 14, x0, y1)
+        c.line(x0, y1, x1, y1)
+        sy = (y0 + y1) / 2
+        c.line(x1, y1, x1, sy + 12)
+        c.line(x1, y0, x1, sy - 12)
+        # battery
+        c.setLineWidth(2.4); c.line(x0 - 12, sy + 6, x0 + 12, sy + 6); c.setLineWidth(4); c.line(x0 - 6, sy - 4, x0 + 6, sy - 4)
+        text(c, x0 + 16, sy + 3, "+", "BodyBold", 9, INK)
+        if labels: text(c, x0 - 16, sy - 3, "battery", "Body", 8, MUTED, "r")
+        # switch
+        c.setLineWidth(1.6); c.setFillColor(INK); c.circle(x1, sy - 12, 2.5, fill=1, stroke=0); c.circle(x1, sy + 12, 2.5, fill=1, stroke=0)
+        if closed: c.line(x1, sy - 12, x1, sy + 12)
+        else: c.line(x1, sy - 12, x1 + 14, sy + 8)
+        if labels: text(c, x1 + 18, sy - 3, "switch (" + ("closed" if closed else "open") + ")", "Body", 8, MUTED)
+        # bulbs
+        for i in range(bulbs):
+            bx = x0 + (x1 - x0) * (i + 1) / (bulbs + 1)
+            c.setFillColor(colors.HexColor("#FFF2B3") if closed else WHITE); c.setStrokeColor(INK); c.setLineWidth(1.2)
+            c.circle(bx, y1, 10, fill=1, stroke=1); c.line(bx - 7, y1 - 7, bx + 7, y1 + 7); c.line(bx - 7, y1 + 7, bx + 7, y1 - 7)
+            if closed:
+                c.setStrokeColor(GOLD)
+                for a in range(30, 160, 32):
+                    r1, r2 = 14, 20; c.line(bx + r1 * math.cos(math.radians(a)), y1 + r1 * math.sin(math.radians(a)), bx + r2 * math.cos(math.radians(a)), y1 + r2 * math.sin(math.radians(a)))
+        if labels: text(c, (x0 + x1) / 2, y1 + 22 if not closed else y1 + 24, "bulb" if bulbs == 1 else "bulbs", "Body", 8, MUTED, "c")
+    return Draw(width, height, fn)
+
+
+def wave_fig(theme, width=None, height=120, labels=True, cycles=2.5):
+    width = width or W * 0.75
+
+    def fn(c, w, h):
+        mid = h / 2 - 4; A = h / 2 - 22; L = (w - 40) / cycles
+        c.setStrokeColor(GRID); c.setDash(3, 3); c.line(10, mid, w - 10, mid); c.setDash()
+        c.setStrokeColor(theme.main); c.setLineWidth(2)
+        p = c.beginPath()
+        for i in range(201):
+            x = 20 + (w - 40) * i / 200; y = mid + A * math.sin(2 * math.pi * (x - 20) / L)
+            (p.moveTo if i == 0 else p.lineTo)(x, y)
+        c.drawPath(p, stroke=1, fill=0)
+        if labels:
+            xc = 20 + L / 4; xt = 20 + 3 * L / 4
+            text(c, xc, mid + A + 6, "crest", "BodySemi", 8, theme.dark, "c"); text(c, xt, mid - A - 13, "trough", "BodySemi", 8, theme.dark, "c")
+            # wavelength crest to crest
+            y = mid + A + 16; c.setStrokeColor(INK); c.setLineWidth(0.8)
+            _arrow_line(c, xc + L / 2, y, xc + L, y, INK, 0.8); _arrow_line(c, xc + L / 2, y, xc, y, INK, 0.8)
+            c.setStrokeColor(GRID); c.line(xc + L, mid + A, xc + L, y + 3)
+            text(c, xc + L / 2, y + 4, "wavelength", "Body", 8, INK, "c")
+            # amplitude
+            xa = 20 + 5 * L / 4
+            _arrow_line(c, xa + 8, mid, xa + 8, mid + A, INK, 0.8); text(c, xa + 13, mid + A / 2 - 3, "amplitude", "Body", 8, INK)
+            text(c, w - 12, mid + 3, "rest position", "Body", 7, MUTED, "r")
     return Draw(width, height, fn)

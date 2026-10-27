@@ -60,3 +60,50 @@ UNIT_MONDAYS = {
     7: ["2027-04-26", "2027-05-03", "2027-05-10", "2027-05-17"], 8: ["2027-05-24", "2027-05-31", "2027-06-07", "2027-06-14"],
     9: ["2027-06-21", "2027-06-28", "2027-07-05", "2027-07-12"],
 }
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# School-year pacing. The children started Lesson 1.1 in every textbook on Tuesday, October 27, 2026, so every
+# student book is dated from that day on the family's school calendar. Each subject's lessons fill its class days in
+# order with no gaps; each weekly check goes on the first Friday after the last lesson it covers, and the unit test on
+# the first Friday after the unit's last lesson (with the review as homework the day before).
+START = _dt.date(2026, 10, 27)
+LAST_DAY = _dt.date(2027, 7, 16)            # last day on the family's school calendar
+BREAKS = [("2026-11-23", "2026-11-27"), ("2026-12-21", "2027-01-01"), ("2027-03-15", "2027-03-19")]
+CLASS_DAYS = {"math": (0, 1, 2, 3), "ela": (0, 1, 2, 3), "spanish": (0, 1, 2, 3), "science": (0, 2), "art": (0, 2), "social": (1, 3)}
+
+
+def _off(d):
+    return any(_dt.date.fromisoformat(a) <= d <= _dt.date.fromisoformat(b) for a, b in BREAKS)
+
+
+def school_days(weekdays):
+    """Dates from START on that fall on the given weekdays (0 = Monday) and are not breaks; runs past LAST_DAY if needed."""
+    d = START
+    while True:
+        if d.weekday() in weekdays and not _off(d): yield d
+        d += _dt.timedelta(1)
+
+
+def _next_friday(d):
+    return next(x for x in school_days((4,)) if x > d)
+
+
+def pace(book):
+    """Date every lesson, check, review, and test in a student book, and rebuild each unit's pacing table."""
+    slots = school_days(CLASS_DAYS[book.subject])
+    for U in book.units:
+        rows = []
+        for L in U.lessons:
+            d = next(slots); L.date = _lab(d); L._d = d; rows.append((d, L.num, L.title))
+        by_num = {L.num: L for L in U.lessons}
+        for C in U.checks:
+            fri = _next_friday(by_num[C.after]._d); C.date = _lab(fri); rows.append((fri, "Check", C.title))
+        fri = _next_friday(U.lessons[-1]._d)
+        U.test.date = _lab(fri); U.review.date = _lab(fri - _dt.timedelta(1)) + " (homework) or as needed"; rows.append((fri, "Test", U.test.title))
+        weeks = {}
+        for d, num, title in sorted(rows, key=lambda r: (r[0], r[1] in ("Check", "Test"))):
+            mon = d - _dt.timedelta(d.weekday())
+            weeks.setdefault(mon, []).append((f"{d:%a} {d.month}/{d.day}", num, title))
+        U.weeks = [(f"Week of {m:%b} {m.day}", items) for m, items in weeks.items()]
+    return book

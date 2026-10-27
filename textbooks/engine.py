@@ -62,6 +62,10 @@ SUBJECTS = {
                  wash=colors.HexColor("#F8E9E6"), mid=colors.HexColor("#E2A39C")),
     "ela": dict(name="English Language Arts", main=colors.HexColor("#2C5A85"), dark=colors.HexColor("#1B3B59"),
                 wash=colors.HexColor("#E7EEF6"), mid=colors.HexColor("#9DB8D4")),
+    "science": dict(name="Science", main=colors.HexColor("#2E7A4B"), dark=colors.HexColor("#1B4F30"),
+                    wash=colors.HexColor("#E5F2E9"), mid=colors.HexColor("#97CBA9")),
+    "social": dict(name="Social Studies", main=colors.HexColor("#B4561A"), dark=colors.HexColor("#7A3810"),
+                   wash=colors.HexColor("#FBEDE2"), mid=colors.HexColor("#EBB68D")),
 }
 
 LABELS = {
@@ -71,6 +75,12 @@ LABELS = {
     "ela": dict(explore="GET READY", example="MODEL", answer="Model answer", try_="YOUR TURN",
                 try_note="Answer in your notebook in complete sentences. Then check with your teacher.", real="WHY IT MATTERS",
                 study="Read the <b>Model</b> boxes to see how a strong reader thinks, then answer the <b>Your Turn</b> questions."),
+    "science": dict(explore="I WONDER", example="EXPLAIN IT", answer="Explanation", try_="CHECK YOUR UNDERSTANDING",
+                    try_note="Answer in your science notebook in complete sentences. Then check with your teacher.", real="SCIENCE IN YOUR WORLD",
+                    study="Read the <b>Explain It</b> boxes to see how a scientist reasons from evidence, and answer the <b>Check Your Understanding</b> questions."),
+    "social": dict(explore="THINK ABOUT IT", example="LOOK CLOSER", answer="Answer", try_="CHECK YOUR UNDERSTANDING",
+                   try_note="Answer in your notebook in complete sentences. Then check with your teacher.", real="CONNECTIONS TODAY",
+                   study="Read the <b>Look Closer</b> boxes to see how a historian or geographer reads a source, map, or chart, and answer the <b>Check Your Understanding</b> questions."),
 }
 
 PAGE_W, PAGE_H = letter

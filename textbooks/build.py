@@ -3,6 +3,7 @@ import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 from engine import Book
 from books import build_textbook, build_workbook, build_teacher
+from covers import attach
 
 import importlib, glob
 
@@ -18,6 +19,10 @@ BOOKS = {
     "math7": lambda: Book("math", 7, "Grade 7 Mathematics", units("math7")),
     "ela4": lambda: Book("ela", 4, "Grade 4 English Language Arts", units("ela4")),
     "ela7": lambda: Book("ela", 7, "Grade 7 English Language Arts", units("ela7")),
+    "sci4": lambda: Book("science", 4, "Grade 4 Science", units("sci4")),
+    "sci7": lambda: Book("science", 7, "Grade 7 Science", units("sci7")),
+    "ss4": lambda: Book("social", 4, "Grade 4 Social Studies", units("ss4")),
+    "ss7": lambda: Book("social", 7, "Grade 7 Social Studies", units("ss7")),
 }
 
 if __name__ == "__main__":
@@ -29,12 +34,12 @@ if __name__ == "__main__":
     kinds = (("textbook", build_textbook), ("workbook", build_workbook), ("teacher", build_teacher))
     if "--units" not in sys.argv or "--all" in sys.argv:
         for kind, fn in kinds:
-            path = os.path.join(out, f"{stem}-{kind}.pdf"); fn(book, path); print("wrote", os.path.relpath(path))
+            path = os.path.join(out, f"{stem}-{kind}.pdf"); fn(book, path); attach(book, kind, path); print("wrote", os.path.relpath(path))
     if "--units" in sys.argv:
         # one printable booklet per unit, for binders
         for U in book.units:
             part = Book(book.subject, book.grade, f"{book.title} · Unit {U.num}", [U])
             for kind, fn in kinds:
                 path = os.path.join(out, "units", f"{stem}-unit{U.num:02d}-{kind}.pdf"); os.makedirs(os.path.dirname(path), exist_ok=True)
-                fn(part, path)
+                fn(part, path); attach(part, kind, path)
             print("wrote unit", U.num)

@@ -852,7 +852,7 @@ async function authRoute(request,env,user,url){
 async function familyFetch(request,env,ctx){
  const url=new URL(request.url),path=decodeURIComponent(url.pathname);
  // Source/config files must never be delivered as public static assets.
- if(/\/(?:index\.js|_worker\.js|family-server\.js|teacher-tools\.js|wishlist\.js|ha-school\.js|home-assistant-api\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git|tools\/|textbooks\/(?!grade[47]-[a-z]+-(?:textbook|workbook|teacher)\.pdf$|data-science-psychometrics-(?:textbook|workbook)\.pdf$|data\/[a-z_]+\.csv$)|\.toc\.json$)/i.test(path))return new Response('Not found',{status:404});
+ if(/\/(?:index\.js|_worker\.js|family-server\.js|teacher-tools\.js|wishlist\.js|ha-school\.js|home-assistant-api\.js|schema\.sql|wrangler\.jsonc|package\.json|README\.md|\.dev|\.git|tools\/|textbooks\/(?!grade[47]-[a-z]+-(?:textbook|workbook|teacher|reader)\.pdf$|data-science-psychometrics-(?:textbook|workbook)\.pdf$|data\/[a-z_]+\.csv$)|\.toc\.json$|\.index\.json$)/i.test(path))return new Response('Not found',{status:404});
  const publicPaths=['/login','/login.html','/login.js','/forgot-password','/forgot-password.html','/family.css','/styles.css','/brand.css','/ux.js','/favicon.ico'];
  if(publicPaths.includes(path))return fetchAsset(request, env);
  if(url.pathname.startsWith('/api/home-assistant/'))return homeAssistantApi(request,env,assetJson);
@@ -875,7 +875,7 @@ async function familyFetch(request,env,ctx){
   if(path==='/daily-packets.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).map(([date,g])=>[date,{[user.grade]:g[user.grade]}])));}
   if(path==='/assessment-student.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).filter(([,e])=>String(e.grade)===user.grade)));}
   const pdf=path.match(/^\/assessments\/(?:(?:khan|eight)-)?g([47])-m[1-9]-(?:w[1-3]-quiz|test)-student\.pdf$/);
-  const booklet=path.match(/^\/downloads\/integrated\/grade([47])-(?:art|life|computer|skills)(?:-[a-z0-9]+)?-student\.pdf$/)||path.match(/^\/downloads\/textbooks\/grade([47])-(?:math|ela|science|social|art|spanish)-(?:textbook|workbook)\.pdf$/);
+  const booklet=path.match(/^\/downloads\/integrated\/grade([47])-(?:art|life|computer|skills)(?:-[a-z0-9]+)?-student\.pdf$/)||path.match(/^\/downloads\/textbooks\/grade([47])-(?:math|ela|science|social|art|spanish)-(?:textbook|workbook)\.pdf$/)||path.match(/^\/downloads\/textbooks\/grade([47])-ela-reader\.pdf$/);
   if(!allowed.includes(path)&&!(pdf&&pdf[1]===user.grade)&&!(booklet&&booklet[1]===user.grade))return familyJson({error:'Parent access required'},403);
   if(/^\/daily-print(?:\.html)?$/.test(path)&&(url.searchParams.get('key')==='1'||url.searchParams.get('kind')==='keys'||url.searchParams.get('grade')!==user.grade)){url.searchParams.delete('key');if(url.searchParams.get('kind')==='keys')url.searchParams.set('kind','work');url.searchParams.set('grade',user.grade);return new Response(null,{status:302,headers:{location:url.pathname+url.search,'cache-control':'no-store'}});}
  }

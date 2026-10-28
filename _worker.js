@@ -1,4 +1,5 @@
 import {readingsForDay,readingLink,cleanTaskText} from './page-readings-core.js';
+import {buildTodo,todoKeys} from './todo-core.js';
 import { subjectsForDay, curriculumForDay, taskForSubject, studentResourceLibrary, topicForDay } from './curriculum-schedule.js';
 import { curriculumAsset, curriculumJson } from './curriculum-assets.js';
 import { homeAssistantApi, manageHomeAssistant } from "./home-assistant-api.js";
@@ -125,6 +126,22 @@ async function ensureFamilyTaskTables(db) {
       comment TEXT NOT NULL DEFAULT '',
       updated_at INTEGER NOT NULL,
       PRIMARY KEY (student_id, item_key)
+    );
+    CREATE TABLE IF NOT EXISTS family_todo_checks (
+      user_id TEXT NOT NULL,
+      school_date TEXT NOT NULL,
+      item_key TEXT NOT NULL,
+      checked INTEGER NOT NULL DEFAULT 0,
+      updated_at INTEGER NOT NULL,
+      PRIMARY KEY (user_id, school_date, item_key)
+    );
+    CREATE TABLE IF NOT EXISTS family_todo_turnins (
+      user_id TEXT NOT NULL,
+      school_date TEXT NOT NULL,
+      turned_in_at INTEGER NOT NULL,
+      done INTEGER NOT NULL,
+      total INTEGER NOT NULL,
+      PRIMARY KEY (user_id, school_date)
     );
     CREATE TABLE IF NOT EXISTS family_announcements (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -720,6 +737,38 @@ async function authRoute(request,env,user,url){
   }else await env.DB.prepare('UPDATE family_users SET username=?,display_name=? WHERE id=?').bind(username,name,target.id).run();
   return familyJson({ok:true,signed_out:!!b.password&&target.id===user.id});
  }
+ if(path.startsWith('/api/family/todo')){
+  // Daily to-do list: students check off tasks and turn the list in; parents see each girl's list and turn-in status.
+  const b=method==='POST'?await parseBody(request):null;if(method==='POST'&&!b)return familyJson({error:'Invalid JSON body'},400);
+  const date=String((b?b.date:url.searchParams.get('date'))||centralDate());if(!safeDate(date))return familyJson({error:'Invalid date'},400);
+  const sid=user.role==='parent'?String((b?b.student_id:url.searchParams.get('student'))||'student-4'):user.id;
+  const target=await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(sid).first();if(!target)return familyJson({error:'Student not found'},404);
+  await ensureFamilyTaskTables(env.DB);
+  const [days,library,schedule]=await Promise.all([assetJson(request,env,'/daily-packets.json'),assetJson(request,env,'/planner-resources.json'),assetJson(request,env,'/textbook-schedule.json')]);
+  const day=days[date]?.[target.grade];const mapping=day?library.weeks[`${target.grade}-${day.module}-${day.week}`]:null;
+  const groups=buildTodo({day,date,mapping,book:schedule.grades?.[target.grade]?.[date],resources:library.resources}),keys=todoKeys(groups);
+  if(path==='/api/family/todo'&&method==='GET'){
+   const rows=await env.DB.prepare('SELECT item_key FROM family_todo_checks WHERE user_id=? AND school_date=? AND checked=1').bind(target.id,date).all();
+   const turned=await env.DB.prepare('SELECT turned_in_at,done,total FROM family_todo_turnins WHERE user_id=? AND school_date=?').bind(target.id,date).first();
+   return familyJson({student:publicUser(target),date,school_day:!!day,groups,checked:(rows.results||[]).map(r=>r.item_key).filter(k=>keys.includes(k)),turned_in:turned||null});
+  }
+  if(path==='/api/family/todo'&&method==='POST'){
+   if(!keys.includes(String(b.key))||typeof b.checked!=='boolean')return familyJson({error:'Invalid task'},400);
+   await env.DB.prepare('INSERT INTO family_todo_checks(user_id,school_date,item_key,checked,updated_at) VALUES(?,?,?,?,?) ON CONFLICT(user_id,school_date,item_key) DO UPDATE SET checked=excluded.checked,updated_at=excluded.updated_at').bind(target.id,date,String(b.key),b.checked?1:0,epoch()).run();
+   return familyJson({ok:true});
+  }
+  if(path==='/api/family/todo/turn-in'&&method==='POST'){
+   if(!day)return familyJson({error:'No school day scheduled'},400);
+   const rows=await env.DB.prepare('SELECT item_key FROM family_todo_checks WHERE user_id=? AND school_date=? AND checked=1').bind(target.id,date).all();const done=new Set((rows.results||[]).map(r=>r.item_key));
+   await env.DB.prepare('INSERT INTO family_todo_turnins(user_id,school_date,turned_in_at,done,total) VALUES(?,?,?,?,?) ON CONFLICT(user_id,school_date) DO UPDATE SET turned_in_at=excluded.turned_in_at,done=excluded.done,total=excluded.total').bind(target.id,date,epoch(),keys.filter(k=>done.has(k)).length,keys.length).run();
+   // A subject whose tasks are all checked counts as finished on the agenda, calendar, and Home Assistant.
+   const finished=[...new Set(groups.map(g=>g.subject))].filter(s=>(day.subjects||[]).includes(s)&&groups.filter(g=>g.subject===s).every(g=>g.tasks.every(t=>done.has(t.key))));
+   if(day.subjects?.includes('review')&&groups.every(g=>g.tasks.every(t=>done.has(t.key))))finished.push('review');
+   for(const s of finished)await env.DB.prepare("INSERT INTO family_curriculum_completion(user_id,school_date,subject,completed,updated_at,curriculum) VALUES(?,?,?,?,?,?) ON CONFLICT(user_id,school_date,subject,curriculum) DO UPDATE SET completed=excluded.completed,updated_at=excluded.updated_at").bind(target.id,date,s,1,epoch(),curriculumForDay(day)).run();
+   return familyJson({ok:true,done:keys.filter(k=>done.has(k)).length,total:keys.length,finished});
+  }
+  return familyJson({error:'Not found'},404);
+ }
  if(path==='/api/family/agenda'&&method==='GET'){
   const date=url.searchParams.get('date')||centralDate();if(!safeDate(date))return familyJson({error:'Invalid date'},400);
   const target=user.role==='parent'?await env.DB.prepare("SELECT * FROM family_users WHERE id=? AND role='student' AND active=1").bind(url.searchParams.get('student')||'student-4').first():user;if(!target)return familyJson({error:'Student not found'},404);
@@ -820,7 +869,7 @@ async function familyFetch(request,env,ctx){
  if(path.startsWith('/api/')&&!['GET','HEAD'].includes(request.method)&&(request.headers.get('origin')!==url.origin||!(request.headers.get('content-type')||'').startsWith('application/json')))return familyJson({error:'Please use the website form.'},403);
  if(path==='/'&&user.role==='student')return new Response(null,{status:302,headers:{location:'/courses','cache-control':'no-store'}});
  if(user.role==='student'){
-  const allowed=['/courses','/courses.html','/courses.js','/course','/course.html','/course.js','/lms.js','/lms.css','/school-events.json','/grading-config.json','/calendar','/calendar.html','/calendar.js','/packet-renderer.js','/packet-files.js','/materials.css','/vendor/pdf-lib.min.js','/page-readings.js','/agenda','/agenda.html','/agenda.js','/account-nav.js','/daily-print','/daily-print.html','/daily-print.js','/daily-print.css','/print-download.js','/planner-resources.json','/khan-ui.js','/khan-ui.css','/books','/books.html','/books.js','/books-library.json','/core-knowledge','/core-knowledge.html','/core-knowledge.js','/core-knowledge-units.json','/brand.css','/assignments','/assignments.html','/assignments.js','/library','/library.html','/library.js','/files.js','/reading-list.json'];
+  const allowed=['/todo','/todo.html','/todo.js','/todo.css','/courses','/courses.html','/courses.js','/course','/course.html','/course.js','/lms.js','/lms.css','/school-events.json','/grading-config.json','/calendar','/calendar.html','/calendar.js','/packet-renderer.js','/packet-files.js','/materials.css','/vendor/pdf-lib.min.js','/page-readings.js','/agenda','/agenda.html','/agenda.js','/account-nav.js','/daily-print','/daily-print.html','/daily-print.js','/daily-print.css','/print-download.js','/planner-resources.json','/khan-ui.js','/khan-ui.css','/books','/books.html','/books.js','/books-library.json','/core-knowledge','/core-knowledge.html','/core-knowledge.js','/core-knowledge-units.json','/brand.css','/assignments','/assignments.html','/assignments.js','/library','/library.html','/library.js','/files.js','/reading-list.json'];
   if(path==='/planner-resources.json')return familyJson(studentResourceLibrary(await assetJson(request,env,path)));
   if(path==='/books-library.json'){const data=await assetJson(request,env,path);return familyJson({...data,items:(data.items||[]).filter(b=>!b.teacher&&String(b.grade)===user.grade)});}
   if(path==='/daily-packets.json'){const data=await assetJson(request,env,path);return familyJson(Object.fromEntries(Object.entries(data).map(([date,g])=>[date,{[user.grade]:g[user.grade]}])));}

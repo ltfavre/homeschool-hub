@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My To-Do List · VenvLearning</title><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/family.css?v=ui-20261020"><link rel="stylesheet" href="/brand.css?v=brand-5"><link rel="stylesheet" href="/todo.css?v=todo-1"></head><body><header class="topbar"><div><p class="eyebrow">FAMILY HOMESCHOOL</p><h1>My To-Do List</h1></div><nav></nav></header>
+<main class="todo-layout">
+ <div class="todo-controls"><label id="studentLabel" hidden>Student<select id="student"></select></label><label>School day<input id="date" type="date"></label><button id="today" type="button" class="secondary">Today</button><button id="print" type="button" class="secondary">Print my list</button></div>
+ <section id="overview" class="todo-overview" hidden aria-label="Turn-in status"></section>
+ <p id="status" role="status" class="family-status">Loading your list…</p>
+ <article id="sheet" class="todo-sheet" hidden>
+  <header class="todo-head"><div><p class="eyebrow" id="sheetDate"></p><h2 id="sheetTitle"></h2></div><div class="todo-progress"><strong id="doneCount">0</strong><span id="doneLabel">of 0 done</span></div></header>
+  <div id="groups" class="todo-groups"></div>
+  <footer class="todo-foot"><button id="turnIn" type="button">Turn in to Mom</button><p id="turnStatus" class="todo-turned" role="status"></p>
+   <p class="todo-print-only todo-sign">☐ Turned in to Mom &nbsp;&nbsp; Mom's initials: ________ &nbsp;&nbsp; Time: ________</p></footer>
+ </article>
+</main>
+<script src="/account-nav.js?v=lms-7" defer></script><script src="/todo.js?v=todo-1" defer></script><script src="/ux.js?v=ux-1" defer></script></body></html>

@@ -1,0 +1,48 @@
+.todo-layout{max-width:860px;margin:0 auto;padding:1rem 16px 3rem}
+.todo-controls{display:flex;flex-wrap:wrap;gap:.75rem;align-items:end;margin-bottom:1rem}
+.todo-controls label{min-width:150px}
+.todo-overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.75rem;margin-bottom:1rem}
+.todo-chip{display:flex;justify-content:space-between;align-items:center;gap:.75rem;padding:.75rem 1rem;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface);cursor:pointer;text-align:left;font:inherit;color:var(--ink)}
+.todo-chip[aria-pressed="true"]{border-color:var(--hunter);box-shadow:inset 0 0 0 1px var(--hunter)}
+.todo-chip small{color:var(--muted)}
+.todo-chip .in{color:var(--hunter);font-weight:600}
+.todo-sheet{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:1.25rem 1.25rem 1rem}
+.todo-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;border-bottom:1px solid var(--line);padding-bottom:.85rem;margin-bottom:.5rem}
+.todo-head h2{margin:.1rem 0 0;font-family:var(--font-display);font-weight:400;font-size:clamp(1.5rem,4vw,2rem)}
+.todo-progress{text-align:right;line-height:1.1;white-space:nowrap}
+.todo-progress strong{display:block;font-size:2rem;color:var(--hunter)}
+.todo-progress span{color:var(--muted);font-size:.85rem}
+.todo-group{padding:.85rem 0 .75rem 1rem;border-bottom:1px solid var(--line);border-left:5px solid var(--subj,#A8B89F);margin:.5rem 0}
+.todo-group:last-child{border-bottom:0}
+.todo-group h3{margin:0;font-size:1.05rem}
+.todo-meta{display:flex;flex-wrap:wrap;gap:.25rem .6rem;align-items:baseline;margin-bottom:.4rem}
+.todo-subject{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--subj-ink,var(--hunter))}
+.todo-unit{font-size:.85rem;color:var(--muted)}
+.todo-tasks{list-style:none;margin:.35rem 0 0;padding:0;display:grid;gap:.3rem}
+.todo-task{display:flex;align-items:flex-start;gap:.65rem;padding:.35rem .4rem;border-radius:var(--radius)}
+.todo-task:hover{background:var(--sage-wash)}
+.todo-task input{width:1.35rem;height:1.35rem;margin:.1rem 0 0;flex:none;accent-color:var(--hunter);cursor:pointer}
+.todo-task label{display:block;cursor:pointer;flex:1;line-height:1.4}
+.todo-task.done label{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(35,70,56,.45)}
+.todo-task a{font-size:.85rem;white-space:nowrap;align-self:center}
+.todo-foot{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1rem;border-top:1px solid var(--line);margin-top:.75rem;padding-top:1rem}
+.todo-turned{margin:0;color:var(--hunter);font-weight:600}
+.todo-print-only{display:none}
+.subj-math{--subj:#C0392B;--subj-ink:#A3271B}.subj-ela{--subj:#2C5FA8;--subj-ink:#234D8A}.subj-science{--subj:#2E7A4B;--subj-ink:#2E7A4B}
+.subj-social{--subj:#B4561A;--subj-ink:#9A4813}.subj-spanish{--subj:#6A45A6;--subj-ink:#5A3891}.subj-art{--subj:#E9C928;--subj-ink:#7A6500}
+.subj-review{--subj:#A8B89F}
+@media (max-width:560px){.todo-head{flex-direction:column}.todo-progress{text-align:left}.todo-task a{display:none}}
+@media print{
+ .topbar,.todo-controls,.todo-overview,#status,#turnIn,.todo-task a,.todo-turned{display:none!important}
+ body{background:#fff}.todo-layout{padding:0;max-width:none}
+ .todo-sheet{border:0;box-shadow:none;padding:0}
+ body{font-size:12.5px}.todo-head{padding-bottom:.4rem;margin-bottom:.2rem}.todo-head h2{font-size:1.5rem}
+ .todo-group{break-inside:avoid;padding:.3rem 0 .3rem .6rem;margin:.2rem 0}.todo-group h3{font-size:.95rem}.todo-meta{margin-bottom:.1rem}
+ .todo-tasks{gap:0;margin-top:.15rem}.todo-task{padding:.1rem 0}.todo-task:hover{background:none}.todo-foot{margin-top:.3rem;padding-top:.5rem}
+ .todo-task input{appearance:none;-webkit-appearance:none;width:1.05rem;height:1.05rem;border:1.5px solid #222;border-radius:3px;background:#fff}
+ .todo-task input:checked{background:#fff}
+ .todo-task.done label{color:inherit;text-decoration:none}
+ .todo-print-only{display:block}.todo-sign{margin:.5rem 0 0;font-size:1rem}
+ .todo-progress{display:none}
+ @page{margin:.5in}
+}

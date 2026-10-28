@@ -157,6 +157,22 @@ CREATE TABLE IF NOT EXISTS family_grades (
   PRIMARY KEY (student_id, item_key)
 );
 
+CREATE TABLE IF NOT EXISTS family_todo_checks (
+  user_id TEXT NOT NULL,
+  school_date TEXT NOT NULL,
+  item_key TEXT NOT NULL,
+  checked INTEGER NOT NULL DEFAULT 0,
+  updated_at INTEGER NOT NULL,
+  PRIMARY KEY (user_id, school_date, item_key)
+);
+CREATE TABLE IF NOT EXISTS family_todo_turnins (
+  user_id TEXT NOT NULL,
+  school_date TEXT NOT NULL,
+  turned_in_at INTEGER NOT NULL,
+  done INTEGER NOT NULL,
+  total INTEGER NOT NULL,
+  PRIMARY KEY (user_id, school_date)
+);
 CREATE TABLE IF NOT EXISTS family_announcements (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,

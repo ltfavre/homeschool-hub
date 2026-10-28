@@ -75,7 +75,7 @@ def collect(key):
         for L in U.lessons:
             head = f"Lesson {L.num}: {L.title}"
             items.append(dict(date=iso(L.date), kind="lesson", unit=U.num, unit_title=U.title, num=L.num, title=L.title, heading=head,
-                              pages={k: idx[k].get(head) for k in book.kinds}))
+                              pages={k: idx[k].get(head) for k in book.kinds}, reader=reader_refs(book, L)))
         for C in list(U.checks) + [U.test]:
             items.append(dict(date=iso(C.date), kind="test" if C.kind == "test" else "check", unit=U.num, unit_title=U.title, title=C.title, minutes=C.minutes,
                               pages={"workbook": idx.get("workbook", {}).get(C.title), "teacher": idx.get("teacher", {}).get(C.title + " — Answer Key")}))
@@ -86,6 +86,71 @@ def collect(key):
 
 
 def rid(book, kind): return f"tb-{stem(book)}-{kind}"
+
+
+# ---------------------------------------------------------------- ELA Readers (textbooks/readers/build_readers.py)
+READER_PART = {"King Arthur and the Round Table Reader": "arthur", "Treasure Island Reader": "treasure", "The Tempest Reader": "tempest",
+               "Strange Case of Dr. Jekyll and Mr. Hyde Reader": "jekyll", "The Time Machine Reader": "timemachine",
+               "The Genius of the Harlem Renaissance Reader": "harlem"}
+HARLEM_KEYS = [("language of race", "Introduction and a Note on Historical Language"), ("dunbar", "Literary Tradition and Paul Laurence Dunbar"),
+               ("great migration", "The Great Migration and Charles S. Johnson"), ("black press", "Harlem, the Black Press, and J. A. Rogers"),
+               ("new negro", "The New Negro: Locke and Kellogg"), ("langston hughes", "Langston Hughes"), ("georgia douglas", "Georgia Douglas Johnson"),
+               ("mcdougald", "Elise Johnson McDougald")]
+
+
+def reader_index(grade):
+    path = os.path.join(ROOT, "downloads", "textbooks", f"grade{grade}-ela-reader.index.json")
+    return json.load(open(path)) if os.path.exists(path) else None
+
+
+def reader_sections(part, section):
+    """A lesson's Reader assignment ('Chapters 5–6: ...', 'Act 1, Scene 2 (first section)') -> section names in the Reader index."""
+    low = section.lower()
+    if part == "harlem":
+        return [name for key, name in HARLEM_KEYS if key in low]
+    if part == "tempest":
+        if low.startswith("introduction"): return ["Introduction", "Act 1, Scene 1"]
+        if "scene 2" in low: return ["Act 1, Scene 2 (first section)" if "first" in low else "Act 1, Scene 2 (second section)"]
+        m = re.match(r"act (\d)", low)
+        return [f"Act {m.group(1)}"] + (["Epilogue"] if m and m.group(1) == "5" else []) if m else []
+    out = []
+    m = re.search(r"chapters? (\d+)(?:\s*(?:–|-|and)\s*(\d+))?", low)
+    if m:
+        a, b = int(m.group(1)), int(m.group(2) or m.group(1))
+        out = [f"Chapter {a}", f"Chapter {b}"] if "and" in low[m.start():m.end()] else [f"Chapter {n}" for n in range(a, b + 1)]
+    for extra in ("After the Story", "Epilogue", "The Voyage", "Blackbeard"):
+        if extra.lower() in low: out.append(extra)
+    return out
+
+
+def reader_refs(book, L):
+    """Reader pages for an ELA lesson: [{part, label, printed, pdf}] (one entry per Reader section)."""
+    if book.subject != "ela": return []
+    from engine import ReaderAssign
+    idx = reader_index(book.grade)
+    if not idx: return []
+    found, seen = [], set()
+    def walk(o):
+        if id(o) in seen: return
+        seen.add(id(o))
+        if isinstance(o, ReaderAssign): found.append(o); return
+        if isinstance(o, (list, tuple)): [walk(x) for x in o]
+        elif hasattr(o, "__dict__") and not isinstance(o, type): [walk(v) for v in vars(o).values()]
+    walk(L)
+    refs = []
+    for ra in found:
+        part = READER_PART.get(ra.book)
+        if not part or part not in idx["parts"]: continue
+        P = idx["parts"][part]
+        for name in reader_sections(part, ra.section):
+            sec = P["sections"].get(name)
+            if not sec: continue
+            prev = refs[-1] if refs else None
+            if prev and prev["part"] == P["short"] and prev["printed"][1] + 1 == sec["printed"][0]:   # contiguous sections read as one
+                prev.update(section=prev["section"] + " – " + name, label=f"{prev['label']} – {name}", printed=[prev["printed"][0], sec["printed"][1]], pdf=[prev["pdf"][0], sec["pdf"][1]])
+            else:
+                refs.append({"part": P["short"], "section": name, "label": f"{P['short']}, {name}", "printed": list(sec["printed"]), "pdf": list(sec["pdf"])})
+    return refs
 
 
 def resources_for(book):
@@ -99,6 +164,10 @@ def resources_for(book):
             "note": {"textbook": "The lesson to read together each day.", "workbook": "Practice pages, weekly checks, and tests for every lesson.",
                      "teacher": "Lesson plans, timing, and answer keys for every workbook page, check, and test."}[kind],
             "teacher_only": kind == "teacher" or book.subject == "data", "reviewed": "2026-10-27"}
+    if book.subject == "ela" and reader_index(book.grade):
+        out[rid(book, "reader")] = {"title": f"Grade {book.grade} ELA Reader", "url": f"{DL}/{stem(book)}-reader.pdf", "provider": "VenvLearning",
+                                    "kind": "Textbook", "access": "Included", "teacher_only": False, "reviewed": "2026-10-28",
+                                    "note": "Every story, play, novel, and selection the ELA lessons read. Each part keeps its own page numbers."}
     return out
 
 
@@ -112,6 +181,8 @@ def lesson_task(subject, book, item):
     tb, wb, te = (item["pages"].get(k) for k in ("textbook", "workbook", "teacher"))
     s = f"{PREFIX[subject]} Lesson {item['num']}: {item['title']} - Read the textbook lesson together"
     s += f" ({rng(tb)})" if tb else ""
+    for r in item.get("reader") or []:
+        s += f", read in your Reader: {r['label']} ({rng(r['printed'])})"
     s += f", then complete Workbook Lesson {item['num']}" + (f" ({rng(wb)})" if wb else "") + "."
     if te: s += f" Parent: Teacher Edition {rng(te)}."
     return s
@@ -215,7 +286,8 @@ def main():
             schedule[g].setdefault(it["date"], {}).setdefault(book.subject, []).append(
                 {k: it[k] for k in ("kind", "unit", "unit_title", "title") if k in it} | ({"num": it["num"]} if "num" in it else {})
                 | {"links": {k: f"{DL}/{stem(book)}-{k}.pdf#page={p[0] + COVER_PAGES}" for k, p in it["pages"].items() if p}}
-                | {"pages": {k: list(p) for k, p in it["pages"].items() if p}})
+                | {"pages": {k: list(p) for k, p in it["pages"].items() if p}}
+                | ({"reader": [r | {"link": f"{DL}/{stem(book)}-reader.pdf#page={r['pdf'][0]}"} for r in it["reader"]]} if it.get("reader") else {}))
             if g != "parent": by_date.setdefault((g, it["date"]), {}).setdefault(book.subject, []).append((book, it))
 
     spanish_ids = {k for k, r in lib["resources"].items() if is_spanish_resource(r) and not k.startswith("tb-")}
@@ -264,11 +336,16 @@ def main():
                     for k in ("textbook", "workbook"):
                         if rid(b, k) not in m.setdefault("resources", []): m["resources"].insert(0 if k == "textbook" else 1, rid(b, k))
                     if rid(b, "teacher") not in m.setdefault("teacher_resources", []): m["teacher_resources"].insert(0, rid(b, "teacher"))
+                    if any(li.get("reader") for _, li in lessons) and rid(b, "reader") not in m["resources"]: m["resources"].insert(1, rid(b, "reader"))
                     m["primary"] = rid(b, "textbook")
                     for _, li in lessons:            # usually one lesson; two when a pacing.json anchor doubles up
                         for k, label in (("textbook", "Textbook"), ("workbook", "Workbook practice")):
                             r = reading(b, k, li, wd, f"{label} · Lesson {li['num']}: {li['title']}")
                             if r: m["readings"].append(r)
+                            if k == "textbook":
+                                for rr in li.get("reader") or []:
+                                    m["readings"].append({"resource_id": rid(b, "reader"), "section": f"Reader · {rr['label']}",
+                                                          "printed": rr["printed"], "pdf": rr["pdf"], "weekdays": [wd]})
                         t = reading(b, "teacher", li, wd, f"Teacher Edition · Lesson {li['num']} plan and answer key")
                         if t: m["teacher_readings"].append(t)
                     m.setdefault("daily", {})[date] = " + ".join(f"Lesson {li['num']}: {li['title']}" for _, li in lessons)
@@ -381,6 +458,10 @@ def main():
             r = resources_for(book)[rid(book, kind)]
             new_items.append({"grade": g, "subject": book.subject, "title": r["title"], "url": r["url"], "provider": "VenvLearning", "kind": r["kind"],
                               "access": r["access"], "teacher": kind == "teacher", "weeks": weeks, "note": r["note"]})
+        if rid(book, "reader") in lib["resources"]:
+            r = lib["resources"][rid(book, "reader")]
+            new_items.append({"grade": g, "subject": "ela", "title": r["title"], "url": r["url"], "provider": "VenvLearning", "kind": "Textbook",
+                              "access": "Included", "teacher": False, "weeks": weeks, "note": r["note"]})
     books_lib["items"] = new_items + books_lib["items"]
 
     save("daily-packets.json", days); save("planner-resources.json", lib); save("planner-data.json", planner); save("integrated-curriculum.json", ic); save("daily-practice-keys.json", keys)

@@ -1,0 +1,507 @@
+{
+ "cover_pages": 0,
+ "parts": {
+  "tempest": {
+   "title": "The Tempest",
+   "short": "The Tempest",
+   "pdf_start": 9,
+   "offset": 5,
+   "sections": {
+    "Introduction": {
+     "printed": [
+      1,
+      51
+     ],
+     "pdf": [
+      15,
+      65
+     ]
+    },
+    "Act 1, Scene 1": {
+     "printed": [
+      52,
+      61
+     ],
+     "pdf": [
+      66,
+      75
+     ]
+    },
+    "Act 1, Scene 2 (first section)": {
+     "printed": [
+      62,
+      73
+     ],
+     "pdf": [
+      76,
+      87
+     ]
+    },
+    "Act 1, Scene 2 (second section)": {
+     "printed": [
+      74,
+      107
+     ],
+     "pdf": [
+      88,
+      121
+     ]
+    },
+    "Act 2": {
+     "printed": [
+      108,
+      151
+     ],
+     "pdf": [
+      122,
+      165
+     ]
+    },
+    "Act 3": {
+     "printed": [
+      152,
+      191
+     ],
+     "pdf": [
+      166,
+      205
+     ]
+    },
+    "Act 4": {
+     "printed": [
+      192,
+      217
+     ],
+     "pdf": [
+      206,
+      231
+     ]
+    },
+    "Act 5": {
+     "printed": [
+      218,
+      243
+     ],
+     "pdf": [
+      232,
+      257
+     ]
+    },
+    "Epilogue": {
+     "printed": [
+      244,
+      246
+     ],
+     "pdf": [
+      258,
+      260
+     ]
+    }
+   }
+  },
+  "jekyll": {
+   "title": "Strange Case of Dr. Jekyll and Mr. Hyde",
+   "short": "Jekyll and Hyde",
+   "pdf_start": 270,
+   "offset": 5,
+   "sections": {
+    "Introduction": {
+     "printed": [
+      1,
+      14
+     ],
+     "pdf": [
+      276,
+      289
+     ]
+    },
+    "Chapter 1": {
+     "printed": [
+      15,
+      28
+     ],
+     "pdf": [
+      290,
+      303
+     ]
+    },
+    "Chapter 2": {
+     "printed": [
+      29,
+      49
+     ],
+     "pdf": [
+      304,
+      324
+     ]
+    },
+    "Chapter 3": {
+     "printed": [
+      50,
+      55
+     ],
+     "pdf": [
+      325,
+      330
+     ]
+    },
+    "Chapter 4": {
+     "printed": [
+      56,
+      66
+     ],
+     "pdf": [
+      331,
+      341
+     ]
+    },
+    "Chapter 5": {
+     "printed": [
+      67,
+      76
+     ],
+     "pdf": [
+      342,
+      351
+     ]
+    },
+    "Chapter 6": {
+     "printed": [
+      77,
+      85
+     ],
+     "pdf": [
+      352,
+      360
+     ]
+    },
+    "Chapter 7": {
+     "printed": [
+      86,
+      89
+     ],
+     "pdf": [
+      361,
+      364
+     ]
+    },
+    "Chapter 8": {
+     "printed": [
+      90,
+      112
+     ],
+     "pdf": [
+      365,
+      387
+     ]
+    },
+    "Chapter 9": {
+     "printed": [
+      113,
+      128
+     ],
+     "pdf": [
+      388,
+      403
+     ]
+    },
+    "Chapter 10": {
+     "printed": [
+      129,
+      167
+     ],
+     "pdf": [
+      404,
+      442
+     ]
+    }
+   }
+  },
+  "timemachine": {
+   "title": "The Time Machine",
+   "short": "The Time Machine",
+   "pdf_start": 449,
+   "offset": 5,
+   "sections": {
+    "Introduction": {
+     "printed": [
+      1,
+      14
+     ],
+     "pdf": [
+      455,
+      468
+     ]
+    },
+    "Chapter 1": {
+     "printed": [
+      15,
+      26
+     ],
+     "pdf": [
+      469,
+      480
+     ]
+    },
+    "Chapter 2": {
+     "printed": [
+      27,
+      35
+     ],
+     "pdf": [
+      481,
+      489
+     ]
+    },
+    "Chapter 3": {
+     "printed": [
+      36,
+      45
+     ],
+     "pdf": [
+      490,
+      499
+     ]
+    },
+    "Chapter 4": {
+     "printed": [
+      46,
+      57
+     ],
+     "pdf": [
+      500,
+      511
+     ]
+    },
+    "Chapter 5": {
+     "printed": [
+      58,
+      66
+     ],
+     "pdf": [
+      512,
+      520
+     ]
+    },
+    "Chapter 6": {
+     "printed": [
+      67,
+      80
+     ],
+     "pdf": [
+      521,
+      534
+     ]
+    },
+    "Chapter 7": {
+     "printed": [
+      81,
+      91
+     ],
+     "pdf": [
+      535,
+      545
+     ]
+    },
+    "Chapter 8": {
+     "printed": [
+      92,
+      114
+     ],
+     "pdf": [
+      546,
+      568
+     ]
+    },
+    "Chapter 9": {
+     "printed": [
+      115,
+      126
+     ],
+     "pdf": [
+      569,
+      580
+     ]
+    },
+    "Chapter 10": {
+     "printed": [
+      127,
+      140
+     ],
+     "pdf": [
+      581,
+      594
+     ]
+    },
+    "Chapter 11": {
+     "printed": [
+      141,
+      150
+     ],
+     "pdf": [
+      595,
+      604
+     ]
+    },
+    "Chapter 12": {
+     "printed": [
+      151,
+      163
+     ],
+     "pdf": [
+      605,
+      617
+     ]
+    },
+    "Chapter 13": {
+     "printed": [
+      164,
+      169
+     ],
+     "pdf": [
+      618,
+      623
+     ]
+    },
+    "Chapter 14": {
+     "printed": [
+      170,
+      181
+     ],
+     "pdf": [
+      624,
+      635
+     ]
+    },
+    "Chapter 15": {
+     "printed": [
+      182,
+      184
+     ],
+     "pdf": [
+      636,
+      638
+     ]
+    },
+    "After the Story": {
+     "printed": [
+      185,
+      192
+     ],
+     "pdf": [
+      639,
+      646
+     ]
+    },
+    "Epilogue": {
+     "printed": [
+      193,
+      194
+     ],
+     "pdf": [
+      647,
+      648
+     ]
+    }
+   }
+  },
+  "harlem": {
+   "title": "Voices of the Harlem Renaissance",
+   "short": "Harlem Renaissance",
+   "pdf_start": 660,
+   "offset": 0,
+   "sections": {
+    "Introduction and a Note on Historical Language": {
+     "printed": [
+      1,
+      2
+     ],
+     "pdf": [
+      660,
+      661
+     ]
+    },
+    "Literary Tradition and Paul Laurence Dunbar": {
+     "printed": [
+      3,
+      5
+     ],
+     "pdf": [
+      662,
+      664
+     ]
+    },
+    "The Great Migration and Charles S. Johnson": {
+     "printed": [
+      6,
+      7
+     ],
+     "pdf": [
+      665,
+      666
+     ]
+    },
+    "Harlem, the Black Press, and J. A. Rogers": {
+     "printed": [
+      8,
+      9
+     ],
+     "pdf": [
+      667,
+      668
+     ]
+    },
+    "The New Negro: Locke and Kellogg": {
+     "printed": [
+      10,
+      12
+     ],
+     "pdf": [
+      669,
+      671
+     ]
+    },
+    "Langston Hughes": {
+     "printed": [
+      13,
+      17
+     ],
+     "pdf": [
+      672,
+      676
+     ]
+    },
+    "Georgia Douglas Johnson": {
+     "printed": [
+      18,
+      19
+     ],
+     "pdf": [
+      677,
+      678
+     ]
+    },
+    "Elise Johnson McDougald": {
+     "printed": [
+      20,
+      20
+     ],
+     "pdf": [
+      679,
+      679
+     ]
+    },
+    "More Voices of the Harlem Renaissance": {
+     "printed": [
+      21,
+      23
+     ],
+     "pdf": [
+      680,
+      682
+     ]
+    }
+   }
+  }
+ }
+}

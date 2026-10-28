@@ -122,6 +122,18 @@
    "note": "Lesson plans, timing, and answer keys for every workbook page, check, and test."
   },
   {
+   "grade": 4,
+   "subject": "ela",
+   "title": "Grade 4 ELA Reader",
+   "url": "/downloads/textbooks/grade4-ela-reader.pdf",
+   "provider": "VenvLearning",
+   "kind": "Textbook",
+   "access": "Included",
+   "teacher": false,
+   "weeks": 37,
+   "note": "Every story, play, novel, and selection the ELA lessons read. Each part keeps its own page numbers."
+  },
+  {
    "grade": 7,
    "subject": "ela",
    "title": "Grade 7 English Language Arts: Student Textbook",
@@ -156,6 +168,18 @@
    "teacher": true,
    "weeks": 37,
    "note": "Lesson plans, timing, and answer keys for every workbook page, check, and test."
+  },
+  {
+   "grade": 7,
+   "subject": "ela",
+   "title": "Grade 7 ELA Reader",
+   "url": "/downloads/textbooks/grade7-ela-reader.pdf",
+   "provider": "VenvLearning",
+   "kind": "Textbook",
+   "access": "Included",
+   "teacher": false,
+   "weeks": 37,
+   "note": "Every story, play, novel, and selection the ELA lessons read. Each part keeps its own page numbers."
   },
   {
    "grade": 4,

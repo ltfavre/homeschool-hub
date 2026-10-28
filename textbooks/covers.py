@@ -318,7 +318,7 @@ def front(c, book, kind):
     text(c, mx, my - 0.5 * inch, book.medal[1], "Display", 72, t.accent, "c")
     # subtitle
     sub = {"textbook": "Lessons, examples, and practice for the whole year", "workbook": "Daily practice, weekly checks, and unit tests",
-           "teacher": "Guided lessons, pacing, and complete answer keys"}[kind]
+           "teacher": "Guided lessons, pacing, and complete answer keys", "reader": "Every story, play, and novel for the year in one book"}[kind]
     if book.subject == "data":
         sub = {"textbook": "Statistics, coding, and measurement in 30 minutes a day", "workbook": "Practice, coding exercises, weekly quizzes, and answers"}[kind]
     text(c, x, yb - 0.55 * inch, sub, "BodyMed", 14, pal["sub"])
@@ -392,13 +392,14 @@ def back(c, book, kind):
         ys = 1.3 * inch + h + 40
     text(c, M, ys, "THE COMPLETE SET", "BodyBold", 9, t.accent)
     c.setFillColor(GOLD); c.rect(M, ys - 7, 40, 2, fill=1, stroke=0)
-    gap = 0.45 * inch
+    gap = 0.45 * inch if len(book.kinds) < 4 else 0.3 * inch
     for k, kd in enumerate(book.kinds):
         mini_cover(c, M + k * (w + gap), ys - 20 - h, w, h, book, kd, kd == kind)
     note = ParagraphStyle("n", fontName="Body", fontSize=9.5, leading=13, textColor=MUTED)
-    n = {2: "both", 3: "all three"}[len(book.kinds)]
+    n = {2: "both", 3: "all three", 4: "all four"}[len(book.kinds)]
     para = Paragraph(f"Each lesson has the same number in {n} books, and every day of the year is mapped to its lesson in the "
-                     "VenvLearning planner.", note)
+                     "VenvLearning planner." if "reader" not in book.kinds else
+                     "Every ELA lesson names the Reader part and pages to read, and every day of the year is mapped to its lesson in the VenvLearning planner.", note)
     sx = M + len(book.kinds) * (w + gap); _, ph = para.wrap(PAGE_W - sx - M - 0.3 * inch, 200); para.drawOn(c, sx, ys - 20 - h / 2 - ph / 2)
 
     # footer band

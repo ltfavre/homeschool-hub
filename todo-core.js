@@ -21,6 +21,8 @@ function lessonGroup(subject, it) {
   const tb = it.pages?.textbook, wb = it.pages?.workbook, link = k => (it.links?.[k] || '').startsWith('/downloads/textbooks/grade') ? it.links[k] : null;
   const tasks = [];
   if (tb) tasks.push({key: `${subject}:${it.num}:read`, text: `Read Textbook Lesson ${it.num} (${range(tb)})`, link: link('textbook')});
+  (it.reader || []).forEach((r, i) => tasks.push({key: `${subject}:${it.num}:reader${i ? i : ''}`, text: `Read in your Reader: ${r.label} (${range(r.printed)})`,
+    link: (r.link || '').startsWith('/downloads/textbooks/grade') ? r.link : null}));
   if (wb) tasks.push({key: `${subject}:${it.num}:work`, text: `Complete Workbook Lesson ${it.num} (${range(wb)})`, link: link('workbook')});
   return {subject, name: subjectLabels[subject] || subject, unit: `Unit ${it.unit}: ${it.unit_title}`, title: `Lesson ${it.num}: ${it.title}`, tasks};
 }

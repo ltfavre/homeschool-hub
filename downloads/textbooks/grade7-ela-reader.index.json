@@ -1,100 +1,90 @@
 {
  "cover_pages": 0,
  "parts": {
-  "tempest": {
-   "title": "The Tempest",
-   "short": "The Tempest",
+  "carol": {
+   "title": "A Christmas Carol",
+   "short": "A Christmas Carol",
    "pdf_start": 9,
-   "offset": 5,
+   "offset": 0,
    "sections": {
     "Introduction": {
      "printed": [
-      1,
-      51
+      2,
+      3
      ],
      "pdf": [
-      15,
-      65
+      10,
+      11
      ]
     },
-    "Act 1, Scene 1": {
+    "Stave One (first section)": {
      "printed": [
-      52,
-      61
+      4,
+      11
      ],
      "pdf": [
-      66,
-      75
+      12,
+      19
      ]
     },
-    "Act 1, Scene 2 (first section)": {
+    "Stave One (second section)": {
      "printed": [
-      62,
-      73
+      12,
+      20
      ],
      "pdf": [
-      76,
-      87
+      20,
+      28
      ]
     },
-    "Act 1, Scene 2 (second section)": {
+    "Stave Two": {
      "printed": [
-      74,
-      107
+      21,
+      35
      ],
      "pdf": [
-      88,
-      121
+      29,
+      43
      ]
     },
-    "Act 2": {
+    "Stave Three (first section)": {
      "printed": [
-      108,
-      151
+      36,
+      46
      ],
      "pdf": [
-      122,
-      165
+      44,
+      54
      ]
     },
-    "Act 3": {
+    "Stave Three (second section)": {
      "printed": [
-      152,
-      191
+      47,
+      54
      ],
      "pdf": [
-      166,
-      205
+      55,
+      62
      ]
     },
-    "Act 4": {
+    "Stave Four": {
      "printed": [
-      192,
-      217
+      55,
+      68
      ],
      "pdf": [
-      206,
-      231
+      63,
+      76
      ]
     },
-    "Act 5": {
+    "Stave Five": {
      "printed": [
-      218,
-      243
+      69,
+      74
      ],
      "pdf": [
-      232,
-      257
-     ]
-    },
-    "Epilogue": {
-     "printed": [
-      244,
-      246
-     ],
-     "pdf": [
-      258,
-      260
+      77,
+      82
      ]
     }
    }
@@ -102,7 +92,7 @@
   "jekyll": {
    "title": "Strange Case of Dr. Jekyll and Mr. Hyde",
    "short": "Jekyll and Hyde",
-   "pdf_start": 270,
+   "pdf_start": 85,
    "offset": 5,
    "sections": {
     "Introduction": {
@@ -111,8 +101,8 @@
       14
      ],
      "pdf": [
-      276,
-      289
+      91,
+      104
      ]
     },
     "Chapter 1": {
@@ -121,8 +111,8 @@
       28
      ],
      "pdf": [
-      290,
-      303
+      105,
+      118
      ]
     },
     "Chapter 2": {
@@ -131,8 +121,8 @@
       49
      ],
      "pdf": [
-      304,
-      324
+      119,
+      139
      ]
     },
     "Chapter 3": {
@@ -141,8 +131,8 @@
       55
      ],
      "pdf": [
-      325,
-      330
+      140,
+      145
      ]
     },
     "Chapter 4": {
@@ -151,8 +141,8 @@
       66
      ],
      "pdf": [
-      331,
-      341
+      146,
+      156
      ]
     },
     "Chapter 5": {
@@ -161,8 +151,8 @@
       76
      ],
      "pdf": [
-      342,
-      351
+      157,
+      166
      ]
     },
     "Chapter 6": {
@@ -171,8 +161,8 @@
       85
      ],
      "pdf": [
-      352,
-      360
+      167,
+      175
      ]
     },
     "Chapter 7": {
@@ -181,8 +171,8 @@
       89
      ],
      "pdf": [
-      361,
-      364
+      176,
+      179
      ]
     },
     "Chapter 8": {
@@ -191,8 +181,8 @@
       112
      ],
      "pdf": [
-      365,
-      387
+      180,
+      202
      ]
     },
     "Chapter 9": {
@@ -201,8 +191,8 @@
       128
      ],
      "pdf": [
-      388,
-      403
+      203,
+      218
      ]
     },
     "Chapter 10": {
@@ -211,8 +201,8 @@
       167
      ],
      "pdf": [
-      404,
-      442
+      219,
+      257
      ]
     }
    }
@@ -220,7 +210,7 @@
   "timemachine": {
    "title": "The Time Machine",
    "short": "The Time Machine",
-   "pdf_start": 449,
+   "pdf_start": 264,
    "offset": 5,
    "sections": {
     "Introduction": {
@@ -229,8 +219,8 @@
       14
      ],
      "pdf": [
-      455,
-      468
+      270,
+      283
      ]
     },
     "Chapter 1": {
@@ -239,8 +229,8 @@
       26
      ],
      "pdf": [
-      469,
-      480
+      284,
+      295
      ]
     },
     "Chapter 2": {
@@ -249,8 +239,8 @@
       35
      ],
      "pdf": [
-      481,
-      489
+      296,
+      304
      ]
     },
     "Chapter 3": {
@@ -259,8 +249,8 @@
       45
      ],
      "pdf": [
-      490,
-      499
+      305,
+      314
      ]
     },
     "Chapter 4": {
@@ -269,8 +259,8 @@
       57
      ],
      "pdf": [
-      500,
-      511
+      315,
+      326
      ]
     },
     "Chapter 5": {
@@ -279,8 +269,8 @@
       66
      ],
      "pdf": [
-      512,
-      520
+      327,
+      335
      ]
     },
     "Chapter 6": {
@@ -289,8 +279,8 @@
       80
      ],
      "pdf": [
-      521,
-      534
+      336,
+      349
      ]
     },
     "Chapter 7": {
@@ -299,8 +289,8 @@
       91
      ],
      "pdf": [
-      535,
-      545
+      350,
+      360
      ]
     },
     "Chapter 8": {
@@ -309,8 +299,8 @@
       114
      ],
      "pdf": [
-      546,
-      568
+      361,
+      383
      ]
     },
     "Chapter 9": {
@@ -319,8 +309,8 @@
       126
      ],
      "pdf": [
-      569,
-      580
+      384,
+      395
      ]
     },
     "Chapter 10": {
@@ -329,8 +319,8 @@
       140
      ],
      "pdf": [
-      581,
-      594
+      396,
+      409
      ]
     },
     "Chapter 11": {
@@ -339,8 +329,8 @@
       150
      ],
      "pdf": [
-      595,
-      604
+      410,
+      419
      ]
     },
     "Chapter 12": {
@@ -349,8 +339,8 @@
       163
      ],
      "pdf": [
-      605,
-      617
+      420,
+      432
      ]
     },
     "Chapter 13": {
@@ -359,8 +349,8 @@
       169
      ],
      "pdf": [
-      618,
-      623
+      433,
+      438
      ]
     },
     "Chapter 14": {
@@ -369,8 +359,8 @@
       181
      ],
      "pdf": [
-      624,
-      635
+      439,
+      450
      ]
     },
     "Chapter 15": {
@@ -379,8 +369,8 @@
       184
      ],
      "pdf": [
-      636,
-      638
+      451,
+      453
      ]
     },
     "After the Story": {
@@ -389,8 +379,8 @@
       192
      ],
      "pdf": [
-      639,
-      646
+      454,
+      461
      ]
     },
     "Epilogue": {
@@ -399,8 +389,8 @@
       194
      ],
      "pdf": [
-      647,
-      648
+      462,
+      463
      ]
     }
    }
@@ -408,7 +398,7 @@
   "harlem": {
    "title": "Voices of the Harlem Renaissance",
    "short": "Harlem Renaissance",
-   "pdf_start": 660,
+   "pdf_start": 475,
    "offset": 0,
    "sections": {
     "Introduction and a Note on Historical Language": {
@@ -417,8 +407,8 @@
       2
      ],
      "pdf": [
-      660,
-      661
+      475,
+      476
      ]
     },
     "Literary Tradition and Paul Laurence Dunbar": {
@@ -427,8 +417,8 @@
       5
      ],
      "pdf": [
-      662,
-      664
+      477,
+      479
      ]
     },
     "The Great Migration and Charles S. Johnson": {
@@ -437,8 +427,8 @@
       7
      ],
      "pdf": [
-      665,
-      666
+      480,
+      481
      ]
     },
     "Harlem, the Black Press, and J. A. Rogers": {
@@ -447,8 +437,8 @@
       9
      ],
      "pdf": [
-      667,
-      668
+      482,
+      483
      ]
     },
     "The New Negro: Locke and Kellogg": {
@@ -457,8 +447,8 @@
       12
      ],
      "pdf": [
-      669,
-      671
+      484,
+      486
      ]
     },
     "Langston Hughes": {
@@ -467,8 +457,8 @@
       17
      ],
      "pdf": [
-      672,
-      676
+      487,
+      491
      ]
     },
     "Georgia Douglas Johnson": {
@@ -477,8 +467,8 @@
       19
      ],
      "pdf": [
-      677,
-      678
+      492,
+      493
      ]
     },
     "Elise Johnson McDougald": {
@@ -487,8 +477,8 @@
       20
      ],
      "pdf": [
-      679,
-      679
+      494,
+      494
      ]
     },
     "More Voices of the Harlem Renaissance": {
@@ -497,8 +487,8 @@
       23
      ],
      "pdf": [
-      680,
-      682
+      495,
+      497
      ]
     }
    }

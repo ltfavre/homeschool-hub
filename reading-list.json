@@ -545,25 +545,25 @@
      ]
     },
     {
-     "id": "rl7-lamb",
+     "id": "rl7-littlewomen",
      "module": 1,
      "dates": "Oct 12 – Nov 6",
      "role": "companion",
-     "title": "Tales from Shakespeare",
-     "author": "Charles & Mary Lamb",
-     "year": 1807,
-     "why": "Prose retellings of Shakespeare's plays. Read 'The Tempest' before or alongside the class reader.",
-     "ties": "ELA Module 1–2 (The Tempest)",
+     "title": "Little Women (Chapters 1–2)",
+     "author": "Louisa May Alcott",
+     "year": 1868,
+     "why": "The novel opens on Christmas: the March sisters, poor themselves, give their Christmas breakfast to a hungry family. Read alongside A Christmas Carol.",
+     "ties": "ELA Module 1–2 (A Christmas Carol: generosity, poverty, and family)",
      "prompts": [
-      "Read the Lambs' Tempest. What details did they leave out of the play?",
-      "Which version helps you understand Prospero better, and why?"
+      "Compare the Marches' Christmas morning with the Cratchits' dinner. What do both families value?",
+      "Which March sister is most like Fred, and which is most like Scrooge at the start? Give evidence."
      ],
      "note": "",
      "access": "Free · public domain",
      "links": [
       {
        "label": "Read free (Project Gutenberg)",
-       "url": "https://www.gutenberg.org/ebooks/1286",
+       "url": "https://www.gutenberg.org/ebooks/514",
        "type": "ebook"
       }
      ]
@@ -627,31 +627,26 @@
      ]
     },
     {
-     "id": "rl7-caesar",
+     "id": "rl7-lays",
      "module": 4,
      "dates": "Jan 25 – Feb 19",
      "role": "core",
-     "title": "Julius Caesar",
-     "author": "William Shakespeare",
-     "year": 1599,
-     "why": "Shakespeare's play about the end of the Republic; Antony's funeral speech is a model text for purpose and viewpoint.",
+     "title": "Lays of Ancient Rome (“Horatius”)",
+     "author": "Thomas Babington Macaulay",
+     "year": 1842,
+     "why": "Stirring ballads about heroes of the early Republic; “Horatius” is a model text for how a writer's purpose and viewpoint shape a story.",
      "ties": "Social Studies Module 4 (Republic vs. Empire); ELA purpose, viewpoint, and craft",
      "prompts": [
-      "Compare Brutus's and Antony's funeral speeches. Which persuasive techniques does each use?",
-      "Was Brutus a hero or a traitor? Argue with evidence from Act 3."
+      "Read “Horatius” aloud. How does Macaulay make the reader admire Horatius? Find three word choices.",
+      "Macaulay wrote in 1842 as if he were an ancient Roman poet. Whose viewpoint does the ballad leave out?"
      ],
-     "note": "Read with a free audio version (LibriVox) or the Lambs' prose summary first.",
+     "note": "A long narrative poem; read “Horatius” first and the other lays as time allows.",
      "access": "Free · public domain",
      "links": [
       {
        "label": "Read free (Project Gutenberg)",
-       "url": "https://www.gutenberg.org/ebooks/1522",
+       "url": "https://www.gutenberg.org/ebooks/847",
        "type": "ebook"
-      },
-      {
-       "label": "Read online",
-       "url": "https://www.gutenberg.org/cache/epub/1522/pg1522-images.html",
-       "type": "web"
       }
      ]
     },

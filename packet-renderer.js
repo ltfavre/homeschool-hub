@@ -1,7 +1,7 @@
 // Shared model keeps student work, lesson directions, and teacher answers separate.
 window.PacketRenderer=(()=>{
  const node=(tag,text='',cls='')=>{const e=document.createElement(tag);e.textContent=text;e.className=cls;return e;};
- const labels={math:'Math',ela:'ELA + Spanish',science:'Science',social:'Social Studies',spanish:'Spanish',art:'Art',life:'Human Sciences',computer:'Computer Science',skills:'Life Skills',review:'Friday review / projects'};
+ const labels={math:'Math',ela:'ELA',science:'Science',social:'Social Studies',spanish:'Spanish',art:'Art',life:'Human Sciences',computer:'Computer Science',skills:'Life Skills',review:'Friday review / projects'};
  const prefixes={math:'Math:',ela:'ELA:',science:'Sci:',social:'SS:',spanish:'Sp:',art:'Art:',life:'Life:',computer:'CS:',skills:'Skills:',review:'Friday:'};
  const fmt=date=>new Date(date+'T12:00:00Z').toLocaleDateString('en-US',{timeZone:'UTC',weekday:'long',month:'short',day:'numeric',year:'numeric'});
  const range=n=>n[0]===n[1]?String(n[0]):n.join('–');
@@ -50,7 +50,7 @@ window.PacketRenderer=(()=>{
    task=task.replace(/Open the assigned chapters and exact pages listed in Materials\./g,'').replace(/Read the selected passage with your parent; model an example and complete guided practice\./g,'Read together and model an example, then complete the student worksheet.').trim();
    task=record.curriculum==='core-electives-v1'?task:specificTask(id,s.topic,task,{session,readings,practice:record.practice,extrasList:(s.resources||[]).filter(k=>!assigned.has(k)).map(k=>library.resources[k]).filter(r=>r&&r.title&&!r.teacher_only)});
    const extras=(s.resources||[]).filter(k=>!assigned.has(k)).map(k=>({...library.resources[k],resource_id:k})).filter(r=>r.title&&!r.teacher_only);
-   return {id,name:s.display_name||(id==='ela'&&record.curriculum==='core-electives-v1'?(weekday===2||weekday===4?'ELA + Spanish':'ELA'):labels[id])||id,topic:s.topic,task,readings,preparation,extras};
+   return {id,name:s.display_name||labels[id]||id,topic:s.topic,task,readings,preparation,extras};
   })};
  }
  function questions(section,parent,teacher){

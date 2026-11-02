@@ -1,11 +1,12 @@
 """Builds the Grade 4 and Grade 7 ELA Readers: one book per grade holding every story the ELA lessons read.
 
-    python3 readers/build_readers.py SOURCE_DIR
+    python3 readers/build_readers.py SOURCE_DIR [GRADE ...]
 
 SOURCE_DIR holds the Core Knowledge Readers (Creative Commons BY-NC-SA) downloaded from coreknowledge.org:
-    venv-CKLA_G4U8_Treasure_Island_Reader.pdf, venv-CC_TheTempest_Reader.pdf,
+    venv-CKLA_G4U8_Treasure_Island_Reader.pdf,
     venv-CC_StrangeCaseOfDrJekyllAndMrHyde_Reader.pdf, venv-CC_TheTimeMachine_Reader.pdf
-King Arthur (Grade 4) and the Harlem Renaissance anthology (Grade 7) are VenvLearning's own (readers/arthur_*.py, readers/harlem.py).
+King Arthur (Grade 4), A Christmas Carol (Grade 7: Dickens's public-domain text with VenvLearning's introduction), and the
+Harlem Renaissance anthology (Grade 7) are typeset here (readers/arthur_*.py, readers/carol.py, readers/harlem.py).
 
 Writes downloads/textbooks/grade{4,7}-ela-reader.pdf and grade{4,7}-ela-reader.index.json. The index maps every Reader
 assignment in the ELA lessons to its part, printed pages, and PDF pages. Each part keeps its own page numbers."""
@@ -107,6 +108,34 @@ def build_arthur(path):
     return log
 
 
+def build_carol(path):
+    from readers.carol import INTRO, load
+    sections = load()
+    log, story, W = {}, [], PAGE_W - 2 * M
+    story += [Mark(INTRO["title"], log), Spacer(1, 18), Paragraph("BEFORE YOU READ", S["eyebrow"]), Paragraph(INTRO["title"], S["h1"]), Rule(), Spacer(1, 8),
+              words_box(INTRO["words"], W), Spacer(1, 12)] + [Paragraph(p, S["body7"]) for p in INTRO["paras"]]
+    story += [Spacer(1, 6), Paragraph("CHARACTERS", S["eyebrow"])]
+    t = Table([[Paragraph(f"<b>{escape(n)}</b>", S["word"]), Paragraph(escape(d), S["word"])] for n, d in INTRO["cast"]], colWidths=[2.2 * inch, W - 2.2 * inch])
+    t.setStyle(TableStyle([("LINEBELOW", (0, 0), (-1, -1), 0.5, LINE), ("VALIGN", (0, 0), (-1, -1), "TOP")]))
+    story.append(t)
+    for s in sections:
+        story += [PageBreak(), Mark(s["name"], log), Spacer(1, 18), Paragraph(s["stave"], S["eyebrow"]), Paragraph(escape(s["title"]), S["h1"]), Rule(), Spacer(1, 8),
+                  words_box(s["words"], W), Spacer(1, 14)]
+        story += [Paragraph(escape(p), S["body7"]) for p in s["paras"]]
+    story += [PageBreak(), Mark("end", log), Spacer(1, 30), Paragraph("ABOUT THIS TEXT", S["eyebrow"]), Rule(), Spacer(1, 6)] + [Paragraph(escape(p), S["small"]) for p in [
+        "A Christmas Carol was first published in London by Chapman and Hall on December 19, 1843, and is in the public domain. This part reprints Dickens's "
+        "complete text, including his short preface, with modern quotation marks. British spellings (colour, spectre, meagre) are kept.",
+        "The introduction, character list, and Words to Know were written for VenvLearning.",
+        "Want more? Dickens's public reading version, which he cut down to perform on stage, and many illustrated editions are free in the public domain, "
+        "and there are many stage and film versions to compare with the book."]]
+    story.insert(0, Paragraph("<i>I have endeavoured in this Ghostly little book, to raise the Ghost of an Idea, which shall not put my readers out of humour with themselves, "
+                              "with each other, with the season, or with me. May it haunt their houses pleasantly, and no one wish to lay it.</i>", S["small"]))
+    story.insert(1, Paragraph("Their faithful Friend and Servant, C. D. &nbsp;December, 1843.", S["by"]))
+    story.insert(2, PageBreak())
+    part_doc(path, "A Christmas Carol", story)
+    return log
+
+
 def build_harlem(path):
     from readers.harlem import SECTIONS
     log, story, W = {}, [], PAGE_W - 2 * M
@@ -146,9 +175,6 @@ CK = {
     "treasure": dict(file="venv-CKLA_G4U8_Treasure_Island_Reader.pdf", title="Treasure Island", author="Robert Louis Stevenson",
                      source="Core Knowledge Language Arts, Grade 4, Unit 8: Treasure Island Reader", license="CC BY-NC-SA 3.0",
                      license_url="https://creativecommons.org/licenses/by-nc-sa/3.0/", year="Core Knowledge Foundation"),
-    "tempest": dict(file="venv-CC_TheTempest_Reader.pdf", title="The Tempest", author="William Shakespeare",
-                    source="Core Classics: The Tempest Reader (Core Knowledge Language Arts, Grade 7, Unit 2)", license="CC BY-NC-SA 4.0",
-                    license_url="https://creativecommons.org/licenses/by-nc-sa/4.0/", year="Core Knowledge Foundation"),
     "jekyll": dict(file="venv-CC_StrangeCaseOfDrJekyllAndMrHyde_Reader.pdf", title="Strange Case of Dr. Jekyll and Mr. Hyde", author="Robert Louis Stevenson",
                    source="Core Classics: Strange Case of Dr. Jekyll and Mr. Hyde Reader (Core Knowledge Language Arts, Grade 7, Unit 3)", license="CC BY-NC-SA 4.0",
                    license_url="https://creativecommons.org/licenses/by-nc-sa/4.0/", year="Core Knowledge Foundation"),
@@ -160,8 +186,6 @@ CK = {
 CK_SECTIONS = {
     "treasure": {"Chapter 1": (2, 9), "Chapter 2": (10, 21), "Chapter 3": (22, 33), "Chapter 4": (34, 43), "Chapter 5": (44, 51), "Chapter 6": (52, 61),
                  "Chapter 7": (62, 71), "Chapter 8": (72, 79), "Chapter 9": (80, 89), "The Voyage": (90, 98), "Blackbeard": (99, 110), "Glossary": (111, 120)},
-    "tempest": {"Introduction": (1, 51), "Act 1, Scene 1": (52, 61), "Act 1, Scene 2 (first section)": (62, 73), "Act 1, Scene 2 (second section)": (74, 107),
-                "Act 2": (108, 151), "Act 3": (152, 191), "Act 4": (192, 217), "Act 5": (218, 243), "Epilogue": (244, 246)},
     "jekyll": {"Introduction": (1, 14), "Chapter 1": (15, 28), "Chapter 2": (29, 49), "Chapter 3": (50, 55), "Chapter 4": (56, 66), "Chapter 5": (67, 76),
                "Chapter 6": (77, 85), "Chapter 7": (86, 89), "Chapter 8": (90, 112), "Chapter 9": (113, 128), "Chapter 10": (129, 167)},
     "timemachine": {"Introduction": (1, 14), "Chapter 1": (15, 26), "Chapter 2": (27, 35), "Chapter 3": (36, 45), "Chapter 4": (46, 57), "Chapter 5": (58, 66),
@@ -289,7 +313,7 @@ def reader_covers(g, path):
                                    "Each part keeps its own page numbers, and every ELA lesson names the part and pages to read.")
     covers.INSIDE["reader"] = {4: ["King Arthur and the Round Table: 22 chapters, retold by VenvLearning", "Treasure Island (Core Knowledge Reader)",
                                    "Words to Know for every chapter", "Lesson-by-lesson page references"],
-                               7: ["The Tempest, by William Shakespeare", "Strange Case of Dr. Jekyll and Mr. Hyde", "The Time Machine, by H. G. Wells",
+                               7: ["A Christmas Carol, by Charles Dickens", "Strange Case of Dr. Jekyll and Mr. Hyde", "The Time Machine, by H. G. Wells",
                                    "Voices of the Harlem Renaissance: an anthology"]}[g]
     engine.KIND_LABEL.setdefault("reader", "Student Reader"); covers.KIND_LABEL.setdefault("reader", "Student Reader")
     from build import BOOKS
@@ -337,12 +361,13 @@ def assemble(g, parts, units_rows, out_pdf):
     return index_parts
 
 
-def main(src_dir):
+def main(src_dir, grades=(4, 7)):
     os.makedirs(OUT, exist_ok=True); tmp = os.path.join(OUT, ".readerparts"); os.makedirs(tmp, exist_ok=True)
-    ka_pdf, hr_pdf = os.path.join(tmp, "arthur.pdf"), os.path.join(tmp, "harlem.pdf")
-    ka, hr = build_arthur(ka_pdf), build_harlem(hr_pdf)
+    ka_pdf, hr_pdf, cc_pdf = os.path.join(tmp, "arthur.pdf"), os.path.join(tmp, "harlem.pdf"), os.path.join(tmp, "carol.pdf")
+    ka, hr, cc = build_arthur(ka_pdf), build_harlem(hr_pdf), build_carol(cc_pdf)
     from readers.arthur_a import CHAPTERS
     from readers.harlem import SECTIONS
+    from readers.carol import INTRO, SECTIONS as CC_SECTIONS
 
     def ck_part(key, short, title_lines, units):
         ck = CK[key]; path = os.path.join(src_dir, ck["file"]); off = page_offset(path)
@@ -362,16 +387,23 @@ def main(src_dir):
                    title_lines=["Voices of the", "Harlem Renaissance"], pdf=hr_pdf, offset=0, toc=[(t, hr[t]) for t in titles], sections=hr_secs,
                    credit="Background sections © 2026 VenvLearning. All poems and essay excerpts were published in 1930 or earlier and are in the public domain in the United States; see Sources at the end of the part.",
                    units="Read in Units 7 and 9: history, background, and the poems and essays of the movement.")
-    g4 = [ka_part, ck_part("treasure", "Treasure Island", ["Treasure Island"], "Read in Units 4–6: nine chapters of the adventure, plus “The Voyage” and “Blackbeard.”")]
-    g7 = [ck_part("tempest", "The Tempest", ["The Tempest"], "Read in Units 1–2: the complete play, act by act."),
+    cc_names = [INTRO["title"]] + [s["name"] for s in CC_SECTIONS]
+    cc_secs = {n: (cc[n], (cc[cc_names[i + 1]] - 1) if i + 1 < len(cc_names) else cc["end"] - 1) for i, n in enumerate(cc_names)}
+    cc_part = dict(key="carol", title="A Christmas Carol", short="A Christmas Carol", author="Charles Dickens", title_lines=["A Christmas", "Carol"], pdf=cc_pdf, offset=0,
+                   toc=[(INTRO["title"], cc[INTRO["title"]])] + [(f"{s['stave'].title().replace(', Continued', ', continued')}: {s['title']}", cc[s["name"]]) for s in CC_SECTIONS],
+                   sections=cc_secs, units="Read in Units 1–2: the complete story, stave by stave, from Marley's Ghost to The End of It.",
+                   credit="Charles Dickens, A Christmas Carol (1843), complete text, public domain. Introduction, character list, and Words to Know © 2026 VenvLearning.")
+    g4 = [ka_part, ck_part("treasure", "Treasure Island", ["Treasure Island"], "Read in Units 4–6: nine chapters of the adventure, plus “The Voyage” and “Blackbeard.”")] if 4 in grades else []
+    g7 = [cc_part,
           ck_part("jekyll", "Jekyll and Hyde", ["Strange Case of", "Dr. Jekyll", "and Mr. Hyde"], "Read in Units 3–4: the complete novella, chapter by chapter."),
           ck_part("timemachine", "The Time Machine", ["The Time Machine"], "Read in Units 5–6 and 8: the novel from the Inventor to the Epilogue."), hr_part]
     rows4 = [("Units 1–3", "King Arthur and the Round Table, Chapters 1–12"), ("Units 4–6", "Treasure Island, Chapters 1–9, “The Voyage,” and “Blackbeard”"),
              ("Units 7–8", "King Arthur and the Round Table, Chapters 13–20"), ("Unit 9", "King Arthur, Chapters 21–22, and rereading")]
-    rows7 = [("Units 1–2", "The Tempest, Introduction through Act 5"), ("Units 3–4", "Strange Case of Dr. Jekyll and Mr. Hyde, Chapters 1–10"),
+    rows7 = [("Units 1–2", "A Christmas Carol, Introduction through Stave Five"), ("Units 3–4", "Strange Case of Dr. Jekyll and Mr. Hyde, Chapters 1–10"),
              ("Units 5–6", "The Time Machine, Chapters 1–12"), ("Unit 7", "Voices of the Harlem Renaissance"), ("Unit 8", "The Time Machine, Chapters 13–15, After the Story, and Epilogue"),
              ("Unit 9", "Voices of the Harlem Renaissance (Hughes, Georgia Douglas Johnson, McDougald)")]
     for g, parts, rows in ((4, g4, rows4), (7, g7, rows7)):
+        if g not in grades: continue
         out_pdf = os.path.join(OUT, f"grade{g}-ela-reader.pdf")
         assemble(g, parts, rows, out_pdf)
         idx = {"cover_pages": 0, "parts": {}}
@@ -385,4 +417,4 @@ def main(src_dir):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main(sys.argv[1], tuple(int(g) for g in sys.argv[2:]) or (4, 7))

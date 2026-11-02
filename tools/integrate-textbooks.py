@@ -9,8 +9,10 @@ What it does, for every school day from 2026-10-26 on (the current core + electi
   * makes each scheduled textbook lesson the assigned reading for that day, with exact printed and PDF pages
     for the textbook and workbook (students) and the teacher edition (parents),
   * rewrites that subject's task text to point at the lesson, and lists Friday checks and tests,
-  * adds Spanish (Mon-Thu) and Art (Mon/Wed) as their own subjects on days their books cover, and takes the
-    old beginner-Spanish segment out of ELA on those days,
+  * adds Art (Mon/Wed) as its own subject on days its book covers,
+  * takes Spanish out of the year for both grades (the beginner-Spanish segment, practice, standards, materials, and
+    weekly pattern), and replaces The Tempest in Grade 7 ELA with A Christmas Carol (old Tempest materials and the
+    Shakespeare independent reading are dropped; the reading list's replacements are added),
   * records each day's lesson title so the calendar, agenda, and Home Assistant show it,
   * writes textbook-schedule.json (all books, including the parent's Data Science & Psychometrics book) and
     adds every book to the Books library.
@@ -29,14 +31,16 @@ START = "2026-10-26"
 DL = "/downloads/textbooks"
 COVER_PAGES = 2                     # front cover + inside cover before printed page 1
 BASELINE = os.path.join(ROOT, "tools", "textbook-baseline.json.gz")
-SUBJECT_OF = {"math": "math", "ela": "ela", "science": "science", "social": "social", "art": "art", "spanish": "spanish", "data": "data"}
-PREFIX = {"math": "Math:", "ela": "ELA:", "science": "Sci:", "social": "SS:", "spanish": "Sp:", "art": "Art:"}
-LABEL = {"math": "Math", "ela": "ELA", "science": "Science", "social": "Social Studies", "spanish": "Spanish", "art": "Art"}
+SUBJECT_OF = {"math": "math", "ela": "ela", "science": "science", "social": "social", "art": "art", "data": "data"}
+PREFIX = {"math": "Math:", "ela": "ELA:", "science": "Sci:", "social": "SS:", "art": "Art:"}
+LABEL = {"math": "Math", "ela": "ELA", "science": "Science", "social": "Social Studies", "art": "Art"}
 KIND_TITLE = {"textbook": "Student Textbook", "workbook": "Student Workbook", "teacher": "Teacher Edition"}
 TASK_SPLIT = re.compile(r"\s+(?=Math:|ELA:|Sci:|SS:|Art:|Life:|CS:|Skills:|Sp:|Friday:)")
 MONTHS = {m: i for i, m in enumerate(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 1)}
 OLD_SPANISH = ["Practice beginner Spanish for 10-15 minutes.",
                "Include spelling/grammar editing and 10-15 minutes of beginner Spanish practice; read or listen to model phrases and use the current Spanish booklet."]
+SHAKESPEARE = re.compile(r"Tempest|Shakespeare", re.I)
+CAROL_BOOKS = ("rl7-littlewomen", "rl7-lays")            # reading-list books that replace the Shakespeare independent reading
 
 
 def iso(label):
@@ -89,7 +93,7 @@ def rid(book, kind): return f"tb-{stem(book)}-{kind}"
 
 
 # ---------------------------------------------------------------- ELA Readers (textbooks/readers/build_readers.py)
-READER_PART = {"King Arthur and the Round Table Reader": "arthur", "Treasure Island Reader": "treasure", "The Tempest Reader": "tempest",
+READER_PART = {"King Arthur and the Round Table Reader": "arthur", "Treasure Island Reader": "treasure", "A Christmas Carol Reader": "carol",
                "Strange Case of Dr. Jekyll and Mr. Hyde Reader": "jekyll", "The Time Machine Reader": "timemachine",
                "The Genius of the Harlem Renaissance Reader": "harlem"}
 HARLEM_KEYS = [("language of race", "Introduction and a Note on Historical Language"), ("dunbar", "Literary Tradition and Paul Laurence Dunbar"),
@@ -104,15 +108,13 @@ def reader_index(grade):
 
 
 def reader_sections(part, section):
-    """A lesson's Reader assignment ('Chapters 5–6: ...', 'Act 1, Scene 2 (first section)') -> section names in the Reader index."""
+    """A lesson's Reader assignment ('Chapters 5–6: ...', 'Stave One (first section)') -> section names in the Reader index."""
     low = section.lower()
     if part == "harlem":
         return [name for key, name in HARLEM_KEYS if key in low]
-    if part == "tempest":
-        if low.startswith("introduction"): return ["Introduction", "Act 1, Scene 1"]
-        if "scene 2" in low: return ["Act 1, Scene 2 (first section)" if "first" in low else "Act 1, Scene 2 (second section)"]
-        m = re.match(r"act (\d)", low)
-        return [f"Act {m.group(1)}"] + (["Epilogue"] if m and m.group(1) == "5" else []) if m else []
+    if part == "carol":
+        from readers.carol import INTRO, SECTIONS
+        return [n for n in [INTRO["title"]] + [s["name"] for s in SECTIONS] if n.lower() in low]
     out = []
     m = re.search(r"chapters? (\d+)(?:\s*(?:–|-|and)\s*(\d+))?", low)
     if m:
@@ -210,6 +212,86 @@ def is_spanish_resource(r):
     return bool(re.search(r"lightbulblanguages|spanishlearninglab|[Ss]panish", json.dumps(r)))
 
 
+def week_keys(days, grades=("4", "7")):
+    """'grade-module-week' keys of the weeks with a school day from START on."""
+    return {f"{g}-{d['module']}-{d['week']}" for date, gd in days.items() if date >= START for g, d in gd.items() if g in grades}
+
+
+def remove_spanish(days, keys, lib, planner, ic, books_lib):
+    """No Spanish this school year (decided Nov 2026): from START on, take the beginner-Spanish segment, practice, and standards out
+    of every day, the Spanish materials out of the weekly plans, and Spanish out of the weekly pattern and the Books library."""
+    spanish_ids = {k for k, r in lib["resources"].items() if is_spanish_resource(r)}
+    for date, gd in days.items():
+        if date < START: continue
+        for g, d in gd.items():
+            for rec in (d, keys.get(date, {}).get(g)):
+                if not rec: continue
+                tasks = " ".join(drop_old_spanish(x) if x.startswith("ELA:") else x for x in split_tasks(rec.get("tasks") or ""))
+                if tasks != " ".join(split_tasks(rec.get("tasks") or "")): rec["tasks"] = tasks
+                if rec.get("practice"): rec["practice"] = [p for p in rec["practice"] if "spanish" not in (p.get("title") or "").lower()]
+                if rec.get("standards"): rec["standards"] = re.sub(r"\s*\|\s*Spanish:[^|]*", "", rec["standards"])
+                if rec.get("integration"): rec["integration"] = rec["integration"].replace(" Spanish is Tuesday/Thursday.", "")
+                if rec.get("subjects"): rec["subjects"] = [s for s in rec["subjects"] if s != "spanish"]
+    weeks = week_keys(days)
+    for wkey in weeks:
+        m = lib["weeks"].get(wkey, {})
+        m.pop("spanish", None)
+        e = m.get("ela")
+        if not e: continue
+        drop = lambda r: r.get("resource_id") in spanish_ids or "spanish" in (r.get("section") or "").lower()
+        e["readings"] = [r for r in e.get("readings", []) if not drop(r)]
+        e["teacher_readings"] = [r for r in e.get("teacher_readings", []) if not drop(r)]
+        for k in ("resources", "teacher_resources", "supplements"):
+            if k in e: e[k] = [x for x in e[k] if x not in spanish_ids]
+        e.pop("spanish_topic", None)
+        if e.get("gap_note"): e["gap_note"] = e["gap_note"].replace(", and a beginner Spanish segment", "")
+        if e.get("reading_instruction"):
+            e["reading_instruction"] = re.sub(r"\s*Spanish: .*$", "", e["reading_instruction"].replace(" Beginner Spanish uses its separate selection within this block.", ""))
+    for p in planner["plans"]:
+        if p.get("standards"): p["standards"] = re.sub(r"\s*\|\s*Spanish:[^|]*", "", p["standards"])
+        for w in p["weeks"]:
+            if f"{p['grade']}-{p['module']}-{w['number']}" in weeks and w.get("integration"): w["integration"] = w["integration"].replace(" Spanish is Tuesday/Thursday.", "")
+    for w in ic["weeks"]:
+        if f"{w['grade']}-{w['module']}-{w['week']}" not in weeks: continue
+        w["integration"] = (w.get("integration") or "").replace(" Spanish is Tuesday/Thursday.", "")
+        w["subjects"].pop("spanish", None)
+        e = w["subjects"].get("ela")
+        if e:
+            if e.get("reading_instruction"): e["reading_instruction"] = re.sub(r"\s*Spanish: .*$", "", e["reading_instruction"])
+            e["resources"] = [x for x in e.get("resources", []) if x not in spanish_ids]
+    ic["subjects"] = [s for s in ic["subjects"] if s["id"] != "spanish"]
+    for src in (planner, ic):
+        for day, items in (src.get("rotation") or {}).get("weekly_pattern", {}).items():
+            src["rotation"]["weekly_pattern"][day] = ["ELA" if x == "ELA + beginner Spanish" else x for x in items]
+    books_lib["subjects"].pop("spanish", None)
+    books_lib["items"] = [b for b in books_lib["items"] if b.get("subject") != "spanish" and "lightbulblanguages" not in (b.get("url") or "")]
+
+
+def replace_shakespeare(days, lib, books_lib):
+    """Grade 7 ELA reads A Christmas Carol instead of The Tempest (decided Nov 2026): from START on, drop the Core Knowledge
+    Tempest materials and the Shakespeare independent reading, and add the reading list's replacements to their module's ELA weeks."""
+    old = {k for k, r in lib["resources"].items() if SHAKESPEARE.search(json.dumps(r, ensure_ascii=False))}
+    rl = json.load(open(os.path.join(ROOT, "reading-list.json"), encoding="utf-8"))
+    new = {b["id"]: b for b in rl["grades"]["7"]["books"] if b["id"] in CAROL_BOOKS}
+    for k, b in new.items():
+        lib["resources"][k] = {"title": f"{b['title']} ({b['author']}) — independent reading", "url": b["links"][0]["url"], "provider": "Project Gutenberg (public domain)",
+                               "kind": "Ebook · 2026–27 reading list", "access": "Free e-book (EPUB, Kindle, web)", "note": b.get("note", ""), "teacher_only": False, "reviewed": "2026-11-02"}
+    for wkey in week_keys(days, ("7",)):
+        e = lib["weeks"].get(wkey, {}).get("ela")
+        if not e: continue
+        for k in ("resources", "teacher_resources", "supplements"):
+            if k in e: e[k] = [x for x in e[k] if x not in old]
+        for k in ("readings", "teacher_readings"):
+            if k in e: e[k] = [r for r in e[k] if r.get("resource_id") not in old]
+        for k, b in new.items():
+            if b["module"] == int(wkey.split("-")[1]) and k not in e.setdefault("resources", []): e["resources"].append(k)
+    books_lib["items"] = [b for b in books_lib["items"] if not (b.get("grade") == 7 and SHAKESPEARE.search(b.get("title") or ""))]
+    for k, b in new.items():
+        r = lib["resources"][k]
+        books_lib["items"].append({"grade": 7, "subject": "ela", "title": r["title"], "url": r["url"], "provider": r["provider"], "kind": r["kind"],
+                                   "access": r["access"], "teacher": False, "weeks": 4})
+
+
 def extend_year(days, lib, planner, ic, keys):
     """Summer extension: school days after the original last day (Jul 16, 2027) through sched.LAST_DAY, so every textbook
     lesson and unit test has a day. Core subjects only (no elective); module 9 continues as weeks 5, 6, 7."""
@@ -273,11 +355,13 @@ def main():
     days, lib, planner, ic, books_lib = (copy.deepcopy(base[k]) for k in ("days", "lib", "planner", "ic", "books"))
     keys = load("daily-practice-keys.json")
     print("summer extension days:", extend_year(days, lib, planner, ic, keys))
+    remove_spanish(days, keys, lib, planner, ic, books_lib)
+    replace_shakespeare(days, lib, books_lib)
 
     schedule = {"4": {}, "7": {}, "parent": {}}
     by_date = {}          # (grade, date) -> {subject: [(book, item)]}
     all_books = {}
-    for key in ["math4", "math7", "ela4", "ela7", "sci4", "sci7", "ss4", "ss7", "span4", "span7", "art4", "art7", "data"]:
+    for key in ["math4", "math7", "ela4", "ela7", "sci4", "sci7", "ss4", "ss7", "art4", "art7", "data"]:
         book, items = collect(key)
         all_books[key] = book
         lib["resources"].update(resources_for(book))
@@ -290,7 +374,6 @@ def main():
                 | ({"reader": [r | {"link": f"{DL}/{stem(book)}-reader.pdf#page={r['pdf'][0]}"} for r in it["reader"]]} if it.get("reader") else {}))
             if g != "parent": by_date.setdefault((g, it["date"]), {}).setdefault(book.subject, []).append((book, it))
 
-    spanish_ids = {k for k, r in lib["resources"].items() if is_spanish_resource(r) and not k.startswith("tb-")}
     touched = set(); changed_days = 0
     for date in sorted(days):
         if date < START: continue
@@ -302,7 +385,7 @@ def main():
             mapping = lib["weeks"][wkey]
             segs = split_tasks(d["tasks"]); subjects = list(d["subjects"])
             if wd == 5:
-                entries = [(s, b, it) for s in ["math", "ela", "science", "social", "spanish", "art"] for b, it in todays.get(s, []) if it["kind"] in ("check", "test")]
+                entries = [(s, b, it) for s in ["math", "ela", "science", "social", "art"] for b, it in todays.get(s, []) if it["kind"] in ("check", "test")]
                 if entries and "review" in mapping:
                     segs = [x for x in segs if not x.startswith("Friday:")] + [friday_task(entries)]
                     rv = mapping["review"]
@@ -317,13 +400,13 @@ def main():
                     rv.setdefault("daily", {})[date] = "Weekly checks: " + ", ".join(f"{LABEL[s]} {it['title'].split(':')[0]}" for s, b, it in entries)
                     touched.add(wkey)
             else:
-                for s in ["math", "ela", "science", "social", "spanish", "art"]:
+                for s in ["math", "ela", "science", "social", "art"]:
                     lessons = [(b, it) for b, it in todays.get(s, []) if it["kind"] == "lesson"]
                     if not lessons: continue
                     b, it = lessons[0]
                     if s not in subjects:
                         if s in ("science", "social", "math", "ela"): continue          # core rotation stays as planned
-                        pos = max([subjects.index(x) + 1 for x in ("math", "ela", "science", "social", "spanish") if x in subjects] or [0])
+                        pos = max([subjects.index(x) + 1 for x in ("math", "ela", "science", "social") if x in subjects] or [0])
                         subjects.insert(pos, s)
                     # weekly mapping: textbook readings replace the old selections (art keeps its elective pages alongside)
                     m = mapping.setdefault(s, {"resources": [], "teacher_resources": [], "readings": [], "teacher_readings": []})
@@ -331,7 +414,6 @@ def main():
                         if s != "art" or "display_name" not in m or m.get("category") != "Elective":
                             m["readings"], m["teacher_readings"] = [], []
                         m["textbook"] = stem(b)
-                        if s == "spanish": m.update(display_name="Spanish", category="World language")
                         if s == "art" and not m.get("display_name"): m.update(display_name="Art", category="Arts")
                     for k in ("textbook", "workbook"):
                         if rid(b, k) not in m.setdefault("resources", []): m["resources"].insert(0 if k == "textbook" else 1, rid(b, k))
@@ -365,26 +447,6 @@ def main():
                         at = next((i for i, x in enumerate(segs) if x.split(":")[0] + ":" in ("Art:", "Life:", "CS:", "Skills:")), len(segs))
                         segs.insert(at, seg)
                     touched.add(wkey)
-                if any(it["kind"] == "lesson" for b, it in todays.get("spanish", [])):
-                    segs = [drop_old_spanish(x) if x.startswith("ELA:") else x for x in segs]
-                    e = mapping.get("ela")
-                    if e:
-                        moved = [r for r in e.get("readings", []) if r.get("resource_id") in spanish_ids]
-                        e["readings"] = [r for r in e.get("readings", []) if r.get("resource_id") not in spanish_ids]
-                        e["teacher_readings"] = [r for r in e.get("teacher_readings", []) if r.get("resource_id") not in spanish_ids]
-                        sp_res = [x for x in e.get("resources", []) if x in spanish_ids]
-                        e["resources"] = [x for x in e.get("resources", []) if x not in spanish_ids]
-                        e["supplements"] = [x for x in e.get("supplements", []) if x not in spanish_ids]
-                        e.pop("spanish_topic", None)
-                        if e.get("gap_note"): e["gap_note"] = e["gap_note"].replace(", and a beginner Spanish segment", "")
-                        if e.get("reading_instruction"): e["reading_instruction"] = e["reading_instruction"].replace(" Beginner Spanish uses its separate selection within this block.", "")
-                        sp = mapping.get("spanish")
-                        if sp is not None:
-                            for x in sp_res:
-                                if x not in sp["resources"]: sp["resources"].append(x)
-                            sp.setdefault("supplements", [])
-                            for x in sp_res:
-                                if x not in sp["supplements"]: sp["supplements"].append(x)
             new_tasks = " ".join(segs)
             if new_tasks != d["tasks"] or subjects != d["subjects"]:
                 d["tasks"], d["subjects"] = new_tasks, subjects; changed_days += 1
@@ -409,43 +471,18 @@ def main():
                     w["days"][i] = rec["tasks"]
                     if "subjects_by_day" in w: w["subjects_by_day"][i] = rec["subjects"]
 
-    # weekly notes: Spanish now meets Mon-Thu wherever the Spanish book has lessons
-    SP_OLD, SP_NEW = "Spanish is Tuesday/Thursday.", "Spanish is Monday–Thursday from the VenvLearning Spanish textbook."
-    sp_weeks = set()
-    for date, gd in days.items():
-        for g, d in gd.items():
-            if any(it["kind"] == "lesson" for b, it in by_date.get((g, date), {}).get("spanish", [])):
-                d["integration"] = (d.get("integration") or "").replace(SP_OLD, SP_NEW); sp_weeks.add((g, d["module"], d["week"]))
-    for p in planner["plans"]:
-        for w in p["weeks"]:
-            if (str(p["grade"]), p["module"], w["number"]) in sp_weeks:
-                if w.get("integration"): w["integration"] = w["integration"].replace(SP_OLD, SP_NEW)
-                if w.get("goals") and "Spanish Monday" not in w["goals"]:
-                    w["goals"] = w["goals"].replace("Social Studies Tuesday/Thursday.", "Social Studies Tuesday/Thursday; Spanish Monday–Thursday.")
-    for w in ic["weeks"]:
-        if (str(w["grade"]), w["module"], w["week"]) in sp_weeks:
-            w["integration"] = (w.get("integration") or "").replace(SP_OLD, SP_NEW)
-            m = lib["weeks"].get(f"{w['grade']}-{w['module']}-{w['week']}", {}).get("spanish")
-            if m: w["subjects"]["spanish"] = {"topic": m.get("topic", "Spanish"), "resources": m["resources"], "teacher_resources": m["teacher_resources"], "reading_instruction": m.get("reading_instruction", "")}
-            e = w["subjects"].get("ela")
-            if e and e.get("reading_instruction"):
-                e["reading_instruction"] = re.sub(r"\s*Spanish: .*$", "", e["reading_instruction"])
-                e["resources"] = [x for x in e["resources"] if x not in spanish_ids]
-
     # weekly pattern and subject list
     lib["rotation"]["weekly_pattern"] = {
-        "Monday": ["Math", "ELA", "Science", "Spanish", "Art", "Current elective"], "Tuesday": ["Math", "ELA", "Social Studies", "Spanish", "Current elective"],
-        "Wednesday": ["Math", "ELA", "Science", "Spanish", "Art", "Current elective"], "Thursday": ["Math", "ELA", "Social Studies", "Spanish", "Current elective"],
+        "Monday": ["Math", "ELA", "Science", "Art", "Current elective"], "Tuesday": ["Math", "ELA", "Social Studies", "Current elective"],
+        "Wednesday": ["Math", "ELA", "Science", "Art", "Current elective"], "Thursday": ["Math", "ELA", "Social Studies", "Current elective"],
         "Friday": ["Weekly checks and unit tests from the workbooks", "Projects / field trips / catch-up"]}
-    if not any(s["id"] == "spanish" for s in ic["subjects"]):
-        ic["subjects"].insert(4, {"id": "spanish", "name": "Spanish", "days": "Monday–Thursday"})
     for s in ic["subjects"]:
         if s["id"] in ("math", "ela"): s["days"] = "Monday–Thursday"
         if s["id"] == "art": s["days"] = "Monday / Wednesday"
-    ic.setdefault("notes", []).append("VenvLearning textbooks, workbooks, and teacher editions are the primary materials for Math, ELA, Science, Social Studies, Spanish, and Art; earlier selections remain as supporting resources.") if not any("VenvLearning textbooks" in n for n in ic.get("notes", [])) else None
+    ic.setdefault("notes", []).append("VenvLearning textbooks, workbooks, and teacher editions are the primary materials for Math, ELA, Science, Social Studies, and Art; earlier selections remain as supporting resources.") if not any("VenvLearning textbooks" in n for n in ic.get("notes", [])) else None
 
-    # Books library: every book (Spanish and Art have their own subject; the old ELA-filed Spanish set is retired)
-    books_lib["subjects"].setdefault("spanish", "Spanish"); books_lib["subjects"]["data"] = "Data Science & Psychometrics (parent)"
+    # Books library: every book (Art has its own subject)
+    books_lib["subjects"]["data"] = "Data Science & Psychometrics (parent)"
     books_lib["items"] = [b for b in books_lib["items"] if not ("lightbulblanguages" in (b.get("url") or "")) and not (b.get("provider") == "VenvLearning" and b.get("kind") in ("Textbook", "Teacher guide"))]
     lesson_weeks = {}
     for (g, date), subs in by_date.items():

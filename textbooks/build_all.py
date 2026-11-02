@@ -5,7 +5,7 @@ import os, sys, subprocess
 from concurrent.futures import ThreadPoolExecutor
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "..", "downloads", "textbooks")
-KEYS = sys.argv[1:] or ["math4", "math7", "ela4", "ela7", "sci4", "sci7", "ss4", "ss7", "art4", "art7", "span4", "span7", "data"]
+KEYS = sys.argv[1:] or ["math4", "math7", "ela4", "ela7", "sci4", "sci7", "ss4", "ss7", "art4", "art7", "data"]
 
 
 def run(k):

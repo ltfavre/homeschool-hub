@@ -5,7 +5,7 @@ Method: for every math, ELA, science and social studies week, compared the week'
 ## Well aligned
 - Math, both grades: readings match topics (every lesson title fits).
 - Grade 7 social studies: chapters match the history topics in order.
-- ELA, both grades: topics are skills (context clues, evidence) applied to the novel chapters, so titles do not need to match. Spanish workbook units are mixed into ELA by design.
+- ELA, both grades: topics are skills (context clues, evidence) applied to the novel chapters, so titles do not need to match.
 
 ## Problems found (labeled in the lesson guide with a note on the reading)
 | Week | Topic | Reading | Issue |

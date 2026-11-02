@@ -1,0 +1,19 @@
+{
+  "name": "venvlearning-tutor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local AI tutor for the VenvLearning homeschool curriculum, one per child.",
+  "scripts": {
+    "setup": "node setup.js",
+    "start": "node server.js",
+    "knowledge": "python export_knowledge.py %USERPROFILE%/VenvLearningTutor/knowledge",
+    "test": "node --test tutor.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0"
+  }
+}

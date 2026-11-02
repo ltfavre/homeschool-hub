@@ -22,12 +22,12 @@ const ask = (q, def = '') => new Promise(r => rl.question(def ? `${q} [${def}]: 
 function askHidden(q) {   // reads the API key without echoing it
   return new Promise(resolve => {
     process.stdout.write(q); let s = '';
-    const onData = ch => {
-      ch = String(ch);
-      if (ch === '\r' || ch === '\n' || ch === '\u0004') { process.stdin.setRawMode(false); process.stdin.off('data', onData); process.stdout.write('\n'); resolve(s.trim()); }
-      else if (ch === '\u0003') process.exit(1);
-      else if (ch === '\u007f' || ch === '\b') s = s.slice(0, -1);
-      else s += ch;
+    const onData = chunk => {
+      for (const ch of String(chunk)) {   // a paste arrives as one chunk
+        if (ch === '\r' || ch === '\n' || ch === '\u0004') { process.stdin.setRawMode(false); process.stdin.off('data', onData); process.stdout.write('\n'); resolve(s.trim()); return; }
+        if (ch === '\u0003') process.exit(1);
+        if (ch === '\u007f' || ch === '\b') s = s.slice(0, -1); else s += ch;
+      }
     };
     process.stdin.setRawMode(true); process.stdin.resume(); process.stdin.on('data', onData);
   });
@@ -41,10 +41,10 @@ for (const grade of [4, 7]) {
   children.push({id: `grade${grade}`, grade, name, token: prev?.token || token()});
 }
 const port = Number(await ask('Port for the tutor', String(old.port || 8790)));
-rl.pause();
+rl.close();   // close readline first: while it is open it echoes every keystroke, including the key
 let key = await askHidden(old.anthropic_api_key ? 'Anthropic API key (press Enter to keep the saved one): ' : 'Anthropic API key (from console.anthropic.com → API keys): ');
 if (!key) key = old.anthropic_api_key || '';
-rl.close();
+process.stdin.pause();
 if (!key && !process.env.ANTHROPIC_API_KEY) console.log('No API key saved. Set ANTHROPIC_API_KEY or run setup again before starting the tutor.');
 
 fs.mkdirSync(DATA_DIR, {recursive: true});

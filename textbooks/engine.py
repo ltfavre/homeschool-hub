@@ -530,6 +530,22 @@ class Book:
 KIND_LABEL = {"textbook": "Student Textbook", "workbook": "Student Workbook", "teacher": "Teacher Edition"}
 
 
+# Lesson pages: the lesson runs in a main column, and reminders, definitions, and key ideas sit beside it as tabs in a
+# side rail on the outer edge of the page (see SideNote).
+RAIL_W = 1.85 * inch; RAIL_GAP = 0.22 * inch; MAIN_W = W - RAIL_W - RAIL_GAP
+RAIL_X = LM + MAIN_W + RAIL_GAP
+
+
+class SideNote(Flowable):
+    """A tab in the side rail, placed beside the main-column content that follows it. Takes no room in the main column.
+    Notes never overlap: each starts below the previous one, and a note that won't fit moves to the top of the next page."""
+    def __init__(self, doc, note):
+        super().__init__(); self.doc, self.note = doc, note
+    def wrap(self, aw, ah): return 0, 0
+    def drawOn(self, canv, x, y, _sW=0):
+        self.doc.place_note(canv, self.note, y)
+
+
 class Doc(BaseDocTemplate):
     def __init__(self, path, book, kind, **kw):
         super().__init__(path, pagesize=letter, leftMargin=LM, rightMargin=RM, topMargin=TM, bottomMargin=BM,
@@ -537,13 +553,31 @@ class Doc(BaseDocTemplate):
         self.book, self.kind, self.theme = book, kind, book.theme
         self.running = ""
         frame = Frame(LM, BM, W, PAGE_H - TM - BM, id="f", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
+        main = Frame(LM, BM, MAIN_W, PAGE_H - TM - BM, id="m", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
         self.addPageTemplates([PageTemplate(id="cover", frames=[frame], onPage=self.cover_page),
                                PageTemplate(id="body", frames=[frame], onPage=self.body_page, onPageEnd=self.footer),
+                               PageTemplate(id="lesson", frames=[main], onPage=self.lesson_page, onPageEnd=self.footer),
                                PageTemplate(id="opener", frames=[frame], onPage=self.opener_page, onPageEnd=self.footer)])
 
     def beforeDocument(self):
         self.running = ""   # multiBuild runs several passes; don't carry the last footer into the front matter
         self.toc_log = []   # (level, heading, page) from the final pass; written beside the PDF as <name>.toc.json
+        self.rail_top, self.pending = PAGE_H - TM, []
+
+    def lesson_page(self, c, doc):
+        self.body_page(c, doc)
+        self.rail_top = PAGE_H - TM
+        waiting, self.pending = self.pending, []
+        for note in waiting: self.place_note(c, note, PAGE_H - TM)
+
+    def place_note(self, c, note, y):
+        """Draw a side-rail tab whose top lines up with y (or sits below the previous tab)."""
+        _, h = note.wrap(RAIL_W, PAGE_H)
+        top = min(y, self.rail_top)
+        if top - h < BM:
+            self.pending.append(note); return
+        note.drawOn(c, RAIL_X, top - h)
+        self.rail_top = top - h - 10
 
     def multiBuild(self, story, *a, **k):
         r = super().multiBuild(story, *a, **k)

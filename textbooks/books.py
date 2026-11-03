@@ -2,6 +2,85 @@
 import os
 import re as _re
 from engine import *
+import engine as _engine
+
+
+# Lesson pages are built at the main-column width (MAIN_W) while the rest of the book uses the full width (W), so these
+# helpers size themselves from the current W instead of the full-width default.
+def panel(flowables, bg, border=None, pad=11, width=None, left_bar=None):
+    return _engine.panel(flowables, bg, border=border, pad=pad, width=width or W, left_bar=left_bar)
+
+
+class Scaled(Flowable):
+    """A flowable drawn smaller by a fixed factor."""
+    def __init__(self, f, s): super().__init__(); self.f, self.s = f, s
+    def wrap(self, aw, ah):
+        w, h = self.f.wrap(aw / self.s, ah / self.s); self.fw, self.fh = w, h
+        return w * self.s, h * self.s
+    def draw(self):
+        self.canv.saveState(); self.canv.scale(self.s, self.s); self.f.drawOn(self.canv, 0, 0); self.canv.restoreState()
+
+
+def fit(f, width=None):
+    """A figure or table shrunk, if needed, to fit the column."""
+    width = width or W
+    fw, _ = f.wrap(width, PAGE_H)
+    return f if fw <= width + 0.5 else Scaled(f, width / fw)
+
+
+def centered(flow, width=None):
+    width = width or W
+    return _engine.centered(fit(flow, width), width)
+
+
+class RailTab(Flowable):
+    """A side-rail note: a tinted card with a colored index tab on the page's outer edge, labeled sideways."""
+    TAB = 0.3 * inch
+    def __init__(self, label, flowables, color, wash, fg=WHITE):
+        super().__init__(); self.label, self.color, self.wash, self.fg = label, color, wash, fg
+        self.inner = Table([[f] for f in flowables], colWidths=[RAIL_W])
+        self.inner.setStyle(TableStyle([("LEFTPADDING", (0, 0), (-1, -1), 9), ("RIGHTPADDING", (0, 0), (-1, -1), 7),
+                                        ("TOPPADDING", (0, 0), (-1, -1), 1), ("BOTTOMPADDING", (0, 0), (-1, -1), 1),
+                                        ("TOPPADDING", (0, 0), (-1, 0), 8), ("BOTTOMPADDING", (0, -1), (-1, -1), 8)]))
+    def wrap(self, aw, ah):
+        _, ih = self.inner.wrap(RAIL_W, ah)
+        self.h = max(ih, stringWidth(self.label, "BodyBold", 7.5) + 24)
+        return RAIL_W + self.TAB, self.h
+    def draw(self):
+        c = self.canv; c.saveState()
+        c.setFillColor(self.wash); c.roundRect(0, 0, RAIL_W + 6, self.h, 5, stroke=0, fill=1)
+        c.setFillColor(self.color); c.roundRect(RAIL_W, 0, self.TAB, self.h, 5, stroke=0, fill=1)
+        c.rect(RAIL_W, 0, 6, self.h, stroke=0, fill=1)
+        c.translate(RAIL_W + self.TAB / 2 + 2.7, self.h / 2); c.rotate(90)
+        text(c, 0, 0, self.label, "BodyBold", 7.5, self.fg, "c")
+        c.restoreState()
+        self.inner.drawOn(self.canv, 0, self.h - self.inner._height)
+
+
+RAIL_TEXT = None
+
+
+def rail_styles():
+    body = ParagraphStyle("rt", fontName="Body", fontSize=9.5, leading=13, textColor=INK, spaceAfter=2)
+    return body, ParagraphStyle("rw", parent=body, fontName="BodySemi"), ParagraphStyle("rd", parent=body, textColor=MUTED, spaceAfter=5)
+
+
+def rail_note(t, b):
+    """The side-rail tab for a reminder, key idea, definition list, or tip, or None if b belongs in the main column."""
+    body, word, defn = rail_styles()
+    if isinstance(b, KeyIdea): return RailTab(b.title.upper(), [P(b.t, ParagraphStyle("rk", parent=body, fontName="BodyMed"))], t.main, t.wash, t.on_main)
+    if isinstance(b, WatchOut): return RailTab("WATCH OUT", [P(b.t, body)], GOLD, colors.HexColor("#FBF3DC"), INK)
+    if isinstance(b, Callout): return RailTab(b.label.upper(), [P(b.t, body)], HUNTER, SAGE_WASH)
+    if isinstance(b, OnTheJob): return RailTab("ON THE JOB", [P(b.t, body)], HUNTER, SAGE_WASH)
+    if isinstance(b, Vocab): return vocab_rail(t, b.items)
+    return None
+
+
+def vocab_rail(t, vocab, label="WORDS TO KNOW"):
+    body, word, defn = rail_styles()
+    items = []
+    for w, d in vocab: items += [P(w, word), P(d, defn)]
+    return RailTab(label, items, HUNTER, SAGE_WASH)
 
 
 # ================================================================ shared pieces
@@ -250,9 +329,15 @@ def vocab_panel(t, vocab, title="Words to Know"):
     return boxed(t, title.upper(), [tb], SAGE_WASH, HUNTER, WHITE, left_bar=HUNTER)
 
 
-def render_blocks(t, blocks, teacher=False):
-    out = []
+def render_blocks(t, blocks, teacher=False, rail=False):
+    """Lesson content as flowables. With rail=True (textbook lesson pages), reminders, key ideas, definitions, and tips
+    become side-rail tabs placed beside the main-column block they follow."""
+    out = []; last = 0
     for b in blocks:
+        note = rail_note(t, b) if rail else None
+        if note is not None:
+            out.insert(last, SideNote(t.doc, note)); continue
+        last = len(out)
         if isinstance(b, Text): out.append(P(b.t, t.body))
         elif isinstance(b, Heading): out.append(P(b.t, t.h3))
         elif isinstance(b, Bullets): out += bullets(b.items, t.bullet)
@@ -274,7 +359,7 @@ def render_blocks(t, blocks, teacher=False):
             out += [Spacer(1, 2), reader_box(t, b), Spacer(1, 8)]
         elif isinstance(b, Beside):
             fw = W * b.fig_w; tw = W - fw - 14
-            fig = [b.fn(t)] + ([P(b.caption, ParagraphStyle("capb", parent=t.small, alignment=TA_CENTER))] if b.caption else [])
+            fig = [fit(b.fn(t), fw - (14 if b.left else 0))] + ([P(b.caption, ParagraphStyle("capb", parent=t.small, alignment=TA_CENTER))] if b.caption else [])
             txt = [P(x, t.body) for x in b.texts]
             cells = [fig, txt] if b.left else [txt, fig]
             tb = Table([cells], colWidths=[fw, tw] if b.left else [tw, fw])
@@ -459,12 +544,14 @@ def textbook_lesson(t, L, U=None, teacher=False):
     """Lesson banner and title; Today's Goal and Today's Assignment; then numbered steps:
     1 Get Ready (words to know, warm-up question), 2 Learn, 3 Your Turn, 4 Wrap Up."""
     out = lesson_header(t, L, U)
+    rail = getattr(t, "rail", False)
+    if L.vocab and rail: out.append(SideNote(t.doc, vocab_rail(t, L.vocab)))     # beside the goal, at the top of the lesson
     out += [goal_card(t, L), Spacer(1, 8), checklist(t, "TODAY'S ASSIGNMENT", assignment_items(t, L), IVORY)]
     out += step(t, 1, "Get Ready")
-    if L.vocab: out += [vocab_panel(t, L.vocab), Spacer(1, 8)]
+    if L.vocab and not rail: out += [vocab_panel(t, L.vocab), Spacer(1, 8)]
     out.append(boxed(t, t.lab["explore"], [P(L.launch, ParagraphStyle("gr", parent=t.boxt, fontSize=12, leading=17))], WHITE, border=t.mid))
     out += step(t, 2, "Learn")
-    out += render_blocks(t, L.learn, teacher)
+    out += render_blocks(t, L.learn, teacher, rail=rail)
     out += [KeepTogether(step(t, 3, t.lab["try_"].title()) + [try_it_box(t, L, with_answers=teacher)])]
     if L.summary:
         out += [KeepTogether(step(t, 4, "Wrap Up") + [summary_box(t, L)])]
@@ -577,13 +664,27 @@ def front_matter(t, book, doc, kind):
     return out
 
 
+def lesson_in_column(t, L, U):
+    """A textbook lesson laid out in the main column, with its side-rail tabs."""
+    global W
+    full, W = W, MAIN_W
+    t.rail = True
+    try:
+        return textbook_lesson(t, L, U)
+    finally:
+        W, t.rail = full, False
+
+
 def build_textbook(book, path):
-    t = book.theme; doc = Doc(path, book, "textbook")
+    t = book.theme; doc = Doc(path, book, "textbook"); t.doc = doc
     story = [Spacer(1, 1)] + front_matter(t, book, doc, "textbook")
     for U in book.units:
         story += unit_opener(t, U, doc, "textbook") + unit_intro_student(t, U)
         for L in U.lessons:
-            story += [PageBreak()] + textbook_lesson(t, L, U)       # every lesson starts on a fresh page
+            # every lesson starts on a fresh page; student books put tips and definitions in side-rail tabs (the parent's
+            # Data Science book keeps full-width pages for its wide code samples)
+            story += ([NextPageTemplate("lesson"), PageBreak()] + lesson_in_column(t, L, U)) if student_book(t) else ([PageBreak()] + textbook_lesson(t, L, U))
+        story += [NextPageTemplate("body")]
         story += study_guide(t, U)
     story += glossary(t, book)
     doc.multiBuild(story)

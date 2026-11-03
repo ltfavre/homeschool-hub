@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tutor History</title>
+<style>
+:root{--hunter:#234638;--ink:#171717;--ivory:#FAF7F2;--rose:#F5E5E5;--muted:#5F5B56;--line:#E6DFD2;--sage-wash:#EEF2EA}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ivory);color:var(--ink);font-family:"Outfit",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px}
+header{padding:14px 16px;background:var(--hunter);color:#fff}
+header h1{margin:0;font-size:1.2em;font-weight:600}
+.wrap{display:grid;grid-template-columns:minmax(240px,320px) 1fr;min-height:calc(100vh - 52px)}
+aside{border-right:1px solid var(--line);background:#fff;overflow-y:auto}
+.tabs{display:flex;gap:6px;padding:10px;border-bottom:1px solid var(--line)}
+.tabs button{flex:1;font:inherit;border:1px solid var(--line);background:var(--ivory);border-radius:999px;padding:6px;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--hunter);color:#fff;border-color:var(--hunter)}
+.item{display:block;width:100%;text-align:left;font:inherit;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 14px;cursor:pointer}
+.item:hover,.item[aria-current=true]{background:var(--sage-wash)}
+.item b{display:block;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item small{color:var(--muted)}
+section{padding:16px;overflow-y:auto}
+.turn{max-width:760px;margin:0 0 12px;padding:10px 14px;border-radius:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.student{background:var(--hunter);color:#fff;margin-left:auto}
+.tutor{background:#fff;border:1px solid var(--line)}
+.error{background:var(--rose);color:#7a2430;font-size:.9em}
+.meta{color:var(--muted);font-size:.8em;margin:0 0 4px}
+.empty{color:var(--muted);padding:16px}
+@media (max-width:700px){.wrap{grid-template-columns:1fr}aside{max-height:40vh;border-right:0;border-bottom:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<header><h1>Tutor History</h1></header>
+<div class="wrap"><aside><div class="tabs" id="tabs"></div><div id="list"></div></aside><section id="view"><p class="empty">Choose a conversation.</p></section></div>
+<script>
+const key = location.pathname.split('/').pop();
+const api = p => fetch(p, {headers: {'x-tutor-key': key}}).then(r => r.json());
+const fmt = s => new Date(s).toLocaleString('en-US', {weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'});
+let data, current = 0;
+function tabs() {
+  const el = document.getElementById('tabs'); el.innerHTML = '';
+  data.children.forEach((c, i) => { const b = document.createElement('button'); b.textContent = `${c.name} (Gr ${c.grade})`; b.setAttribute('aria-pressed', i === current); b.onclick = () => { current = i; tabs(); list(); }; el.appendChild(b); });
+}
+function list() {
+  const el = document.getElementById('list'), c = data.children[current]; el.innerHTML = '';
+  if (!c.conversations.length) { el.innerHTML = '<p class="empty">No conversations yet.</p>'; return; }
+  for (const v of c.conversations) {
+    const b = document.createElement('button'); b.className = 'item';
+    b.innerHTML = `<b></b><small>${fmt(v.updated)} · ${v.turns} message${v.turns === 1 ? '' : 's'}</small>`; b.querySelector('b').textContent = v.title || '(untitled)';
+    b.onclick = () => { el.querySelectorAll('.item').forEach(x => x.removeAttribute('aria-current')); b.setAttribute('aria-current', 'true'); show(c.id, v.id); };
+    el.appendChild(b);
+  }
+}
+async function show(child, id) {
+  const c = await api(`/api/parent/conversations/${child}/${id}`), el = document.getElementById('view'); el.innerHTML = '';
+  for (const m of c.transcript) {
+    const meta = document.createElement('p'); meta.className = 'meta'; meta.textContent = `${m.role === 'student' ? c.child_name : m.role === 'tutor' ? 'Tutor' : 'Problem'} · ${fmt(m.at)}`;
+    const d = document.createElement('div'); d.className = 'turn ' + m.role; d.textContent = m.text;
+    if (m.role === 'student') meta.style.textAlign = 'right';
+    el.append(meta, d);
+  }
+  const u = c.usage || {};
+  const p = document.createElement('p'); p.className = 'meta'; p.textContent = `Tokens: ${u.input || 0} in (+${u.cache_read || 0} cached), ${u.output || 0} out`; el.appendChild(p);
+}
+(async () => { data = await api('/api/parent/conversations'); if (data.error) { document.body.textContent = 'Not authorized.'; return; } tabs(); list(); })();
+</script>
+</body>
+</html>

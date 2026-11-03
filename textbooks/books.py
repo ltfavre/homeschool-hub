@@ -159,6 +159,57 @@ def reader_pages(t, r):
     return f"page {lo}" if lo == hi else f"pages {lo}–{hi}"
 
 
+BOOK_KEY = {"math": "math", "ela": "ela", "science": "sci", "social": "ss", "art": "art"}
+
+
+def directions_for(t, *key):
+    """Written directions for a Your Turn set ("Y", lesson), a workbook section ("S", lesson, section title), or a
+    check section ("C", check title, section title), from content/directions.py."""
+    from content.directions import DIRECTIONS
+    return DIRECTIONS.get(f"{BOOK_KEY.get(t.subject, t.subject)}{getattr(t, 'grade', '')}", {}).get("|".join(key))
+
+
+def with_directions(t, sections, *key):
+    """The sections, each given its written directions when it has none of its own."""
+    import copy
+    out = []
+    for s in sections:
+        d = s.intro or directions_for(t, *key, _re.sub(r"<[^>]+>", "", s.title).strip())
+        if d: d = mc_note(d, s.problems)
+        if d and d != s.intro: s = copy.copy(s); s.intro = d
+        out.append(s)
+    return out
+
+
+def mc_note(d, problems):
+    """Directions plus how to answer multiple-choice questions, when the set has any."""
+    mc = [p for p in problems if p.choices]
+    if not mc or "circle" in d.lower(): return d
+    return d + (" Circle the letter of the best answer." if len(mc) == len(problems) else " For questions with choices, circle the letter of the best answer.")
+
+
+def student_book(t): return t.subject in BOOK_KEY
+
+
+def your_turn_section(t, L):
+    """The textbook's Your Turn questions as Part A of the workbook lesson, with room to answer."""
+    import copy
+    probs = []
+    for p in L.try_it:
+        q = copy.copy(p)
+        if t.subject == "math" and not p.choices: q.space, q.lines = max(p.space or 0, 44), 0
+        elif not p.choices and not p.fig: q.space, q.lines = 0, max(p.lines or 0, 2)
+        q.wide = True
+        probs.append(q)
+    return Section(t.lab["try_"].title(), probs, mc_note(directions_for(t, "Y", L.num) or "Answer each question.", probs), cols=1)
+
+
+def workbook_sections(t, L):
+    """Every part of a workbook lesson, in order: Part A Your Turn (student books), then the practice sections."""
+    secs = with_directions(t, L.practice, "S", L.num)
+    return ([your_turn_section(t, L)] if L.try_it and student_book(t) else []) + secs
+
+
 def assignment_items(t, L):
     """Today's steps for a lesson, in order: read the lesson, any Reader section, any hands-on activity, Your Turn, the workbook."""
     items = [f"Read <b>Lesson {L.num}</b> in this book with your teacher."]
@@ -169,8 +220,12 @@ def assignment_items(t, L):
         elif isinstance(b, Investigate):
             tag = {"science": "Investigate", "art": "Create"}.get(t.subject, "Activity")
             items.append(f"Do the <b>{tag}</b> activity: {b.title}.")
-    if L.try_it: items.append(f"Answer the <b>{t.lab['try_'].title()}</b> questions in your notebook.")
-    items.append(f"Complete <b>Workbook Lesson {L.num}</b>.")
+    n = len(workbook_sections(t, L))
+    if L.try_it and student_book(t):
+        items.append(f"Answer the <b>{t.lab['try_'].title()}</b> questions in <b>Workbook Lesson {L.num}, Part A</b>.")
+        if n > 1: items.append(f"Complete the rest of <b>Workbook Lesson {L.num}</b> (Parts B–{LETTERS[n - 1]})." if n > 2 else f"Complete <b>Workbook Lesson {L.num}, Part B</b>.")
+    else:
+        items.append(f"Complete <b>Workbook Lesson {L.num}</b>.")
     return items
 
 
@@ -365,16 +420,20 @@ def example_box(t, ex):
 
 
 def try_it_box(t, L, with_answers=False):
-    directions = ParagraphStyle("dir", parent=t.boxt, fontName="BodyMed", textColor=t.dark)
-    inner = [chip("✎ " + t.lab["try_"], t.main, t.on_main), Spacer(1, 5),
-             P(("<b>Directions:</b> " + t.lab["try_note"]) if not with_answers else "Answers are shown in color.", directions)]
+    dir_style = ParagraphStyle("dir", parent=t.boxt, fontName="BodyMed", textColor=t.dark)
+    if with_answers: note = "Answers are shown in color."
+    elif student_book(t):
+        note = (f"<b>Directions:</b> {mc_note(directions_for(t, 'Y', L.num) or 'Answer each question.', L.try_it)} "
+                f"Write your answers in <b>Workbook Lesson {L.num}, Part A</b>. Then check with your teacher.")
+    else: note = "<b>Directions:</b> " + t.lab["try_note"]
+    inner = [chip("✎ " + t.lab["try_"], t.main, t.on_main), Spacer(1, 5), P(note, dir_style)]
     for i, pr in enumerate(L.try_it, 1):
         row = [P(f"<b>{i}.</b>  {pr.prompt}", t.boxt)]
         if pr.fig: row += [centered(pr.fig(t), W - 40)]
         if pr.choices: row.append(P("    ".join(f"<b>{chr(65 + k)}.</b> {c}" for k, c in enumerate(pr.choices)), t.boxt))
         if with_answers: row.append(P(f"Answer: {pr.answer}", t.answer))
         inner += row
-    inner.append(P(f"Next: <b>Workbook Lesson {L.num}</b>.", t.small))
+    if not student_book(t): inner.append(P(f"Next: <b>Workbook Lesson {L.num}</b>.", t.small))
     return panel(inner, t.wash, border=t.mid)
 
 
@@ -639,16 +698,16 @@ LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 def workbook_lesson(t, L, U=None):
     """Practice pages: banner, title, name and date, Today's Goal, a short What To Do list, then lettered parts."""
-    parts = [s.title for s in L.practice]
+    secs = workbook_sections(t, L); parts = [s.title for s in secs]
     todo = [f"Read <b>Textbook Lesson {L.num}</b> first.",
-            f"Do every part on these pages: " + ", ".join(f"<b>Part {LETTERS[i]}</b> {p}" for i, p in enumerate(parts)) + ".",
+            f"Do every part on these pages: " + ", ".join(f"<b>Part {LETTERS[i]}</b> {p.rstrip('.')}" for i, p in enumerate(parts)) + ".",
             "Show your thinking. Write final answers on the lines." if t.subject == "math" else "Answer in complete sentences unless a line asks for one word.",
             "Check your work with your teacher and fix any mistakes."]
     out = lesson_header(t, L, U, tag="PRACTICE", title_style=ParagraphStyle("wh", parent=t.h2, spaceBefore=0))
     out[-1] = toc_heading(f"Lesson {L.num}: {L.title}", ParagraphStyle("wh", parent=t.h2, spaceBefore=0), 1, running=f"Lesson {L.num} Practice · {L.title}")
     out += [name_date(t), Spacer(1, 8), goal_card(t, L, size=13), Spacer(1, 6), checklist(t, "WHAT TO DO", todo, IVORY), Spacer(1, 4)]
     n = 1
-    for i, sec in enumerate(L.practice):
+    for i, sec in enumerate(secs):
         part, n = section_grid(t, sec, n, letter=LETTERS[i])
         out += part
     return out
@@ -679,8 +738,9 @@ def check_pages(t, C, show_answer=False, teacher=False):
             todo.insert(1, f"This test has <b>{sum(p.points for s in C.sections for p in s.problems)} points</b>.")
         out += [checklist(t, "DIRECTIONS", todo, IVORY), Spacer(1, 4)]
     n = 1
-    for i, sec in enumerate(C.sections):
-        part, n = section_grid(t, sec, n, show_answer, letter=LETTERS[i] if len(C.sections) > 1 else None)
+    secs = with_directions(t, C.sections, "C", _re.sub(r"<[^>]+>", "", C.title).strip())
+    for i, sec in enumerate(secs):
+        part, n = section_grid(t, sec, n, show_answer, letter=LETTERS[i] if len(secs) > 1 else None)
         out += part
     return out
 
@@ -715,7 +775,7 @@ def answer_key_section(t, book, doc):
         out += [P(f"Unit {U.num}: {U.title}", t.h2)]
         week_checks = {c.after: c for c in U.checks}
         for L in U.lessons:
-            out += problems_key(t, L.practice, f"Lesson {L.num}: {L.title}")
+            out += problems_key(t, workbook_sections(t, L), f"Lesson {L.num}: {L.title}")
             if L.num in week_checks:
                 out += check_teacher(t, week_checks[L.num])[1:]
         out += check_teacher(t, U.review)[1:] + check_teacher(t, U.test)[1:]
@@ -799,7 +859,7 @@ def teacher_lesson(t, L, U=None):
     # student lesson with answers
     out += [PageBreak(), chip(f"STUDENT LESSON {L.num}  ·  WITH ANSWERS", HUNTER), Spacer(1, 6)]
     out += textbook_lesson_compact(t, L)
-    out += [Spacer(1, 8)] + problems_key(t, L.practice, f"Workbook Answer Key · Lesson {L.num}")
+    out += [Spacer(1, 8)] + problems_key(t, workbook_sections(t, L), f"Workbook Answer Key · Lesson {L.num}")
     return out
 
 

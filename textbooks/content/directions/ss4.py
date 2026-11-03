@@ -1,0 +1,21 @@
+"""Directions for Grade 4 Social Studies (see content/directions/__init__.py). Written for a 9- to 10-year-old reader."""
+D = {
+    "S|1.2|Warm-Up": "Write the word for each description.",
+    "S|1.2|Practice": "Use the map of Mississippi in your textbook to answer each question.",
+    "S|1.4|Warm-Up": "Write the word for each description.",
+    "S|1.5|Warm-Up": "Finish each line.",
+    "S|1.5|Match the Region": "Write the Mississippi region that matches each description.",
+    "S|1.6|Warm-Up": "Write the word for each description.",
+    "S|1.6|Compare": "Write a word or short phrase about the region for each item.",
+    "S|1.7|Warm-Up": "Write the word for each description.",
+    "S|1.7|Sort": "Write what kind of natural resource each one is.",
+    "Y|1.8": "Write goods or service, or answer the question.",
+    "S|1.8|Warm-Up": "Write the word for each description.",
+    "S|1.8|Practice": "Answer each question. Use the region names you learned.",
+    "C|Weekly Check 1: Maps and Location|Show what you know": "Answer each question about maps.",
+    "C|Weekly Check 2: Land and Water|Show what you know": "Write the name for each one.",
+    "C|Weekly Check 3: Regions|Show what you know": "Write the Mississippi region that matches each description.",
+    "C|Unit 1 Review|Maps": "Answer each item about maps.",
+    "C|Unit 1 Review|Regions and resources": "Write what the land is like and one product or resource for each region.",
+    "C|Unit 1 Test|Part C · Regions and resources (1 point each)": "Answer each question about Mississippi's regions.",
+}

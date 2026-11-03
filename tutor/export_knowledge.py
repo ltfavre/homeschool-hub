@@ -11,6 +11,7 @@ import json, os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(ROOT, "textbooks"))
 from build import BOOKS  # noqa: E402
+from books import workbook_sections, with_directions  # noqa: E402
 
 KEYS = {4: ["math4", "ela4", "sci4", "ss4", "art4"], 7: ["math7", "ela7", "sci7", "ss7", "art7"]}
 SUBJECT = {"science": "science", "social": "social", "math": "math", "ela": "ela", "art": "art"}
@@ -73,7 +74,7 @@ def block(b, theme):
 
 def section(s):
     d = {"title": plain(s.title), "items": [problem(p) for p in s.problems]}
-    if s.intro: d["intro"] = plain(s.intro)
+    if s.intro: d["directions"] = plain(s.intro)
     if s.passage: d["passage"] = passage(s.passage)
     return d
 
@@ -88,12 +89,12 @@ def export_book(key):
                 "num": L.num, "title": plain(L.title), "date": L.date, "i_can": plain(L.i_can), "standard": plain(L.standard),
                 "vocab": [[plain(w), plain(d)] for w, d in (L.vocab or [])], "get_ready": plain(L.launch),
                 "learn": "\n\n".join(x for x in (block(b, book.theme) for b in L.learn) if x),
-                "your_turn": [problem(p) for p in L.try_it], "workbook": [section(s) for s in L.practice],
+                "your_turn": [problem(p) for p in L.try_it], "workbook": [section(s) for s in workbook_sections(book.theme, L)],
                 "summary": plain(L.summary or ""),
                 "teacher": {k: [plain(x) for x in t.get(k, [])] for k in ("misconceptions", "support", "extend")}})
         for C in list(U.checks) + [U.review, U.test]:
             out["assessments"].append({"subject": book.subject, "unit": U.num, "unit_title": plain(U.title), "kind": C.kind, "title": plain(C.title),
-                                       "date": C.date, "sections": [section(s) for s in C.sections]})
+                                       "date": C.date, "sections": [section(s) for s in with_directions(book.theme, C.sections, "C", plain(C.title))]})
     return out
 
 

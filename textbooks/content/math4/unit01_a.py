@@ -307,7 +307,7 @@ CHECK1 = Check("Weekly Check 1: Place Value", [
         Problem("In 99,000, the first 9 is worth ___ times the second 9.", "10", space=18),
         Problem("Write “one hundred four thousand, ten” in standard form.", "104,010", space=18),
     ])], date="Fri Oct 16", minutes=15, after="1.4",
-    rubric=[["7/7 or 6/7", "Ready to move on."], ["4–5", "Review the missed lessons using the Key Idea boxes before Monday."],
+    rubric=[["7/7 or 6/7", "Ready to move on."], ["4–5", "Review the missed lessons using the Key Idea boxes before the next lesson."],
             ["0–3", "Reteach Lessons 1.3–1.4 with a place-value chart and blocks."]])
 
 # ------------------------------------------------------------------ 1.5
@@ -548,7 +548,7 @@ CHECK2 = Check("Weekly Check 2: Comparing and Ordering", [
         Problem("What number is at point M?", "64,000", fig=lambda t: number_line(t, 60000, 70000, 1000, 5000, points=[(64000, "M")], width=CW, height=58), space=14),
         Problem("Is 8,300 closer to 8,000 or 9,000?", "8,000", space=16),
     ])], date="Fri Oct 23", minutes=15, after="1.8",
-    rubric=[["6–7", "Ready for rounding."], ["4–5", "Review the number line (Lesson 1.8) before Monday: rounding builds on it."],
+    rubric=[["6–7", "Ready for rounding."], ["4–5", "Review the number line (Lesson 1.8) before the next lesson: rounding builds on it."],
             ["0–3", "Reteach comparing with a place-value table."]])
 
 LESSONS_A = [L1, L2, L3, L4, L5, L6, L7, L8]

@@ -207,7 +207,7 @@ L8 = Lesson("1.8", "Revision, Critique, and the Artist Statement",
      S("Artist Statement", [OR("Write your artist statement (75–150 words).", "Includes what, how, revision, and meaning.", lines=8)])],
     tart("Students revise with critique and write artist statements.", "Refine work; present and evaluate.", "Drawing materials, workbook Lesson 1.8, Unit 1 Review",
          "Museum labels.", ["Model a critique and a statement."], "Final Piece and Statement.",
-         ["Statements that only describe, without choices or meaning."], ["Statement template."], ["Display the work at home with its statement."], reflect="Share statements; Friday: Unit 1 Portfolio Review."),
+         ["Statements that only describe, without choices or meaning."], ["Statement template."], ["Display the work at home with its statement."], reflect="Share statements; Next: Unit 1 Portfolio Review."),
     summary="Critique, revise, and explain your choices.")
 
 # ================================================================= checks

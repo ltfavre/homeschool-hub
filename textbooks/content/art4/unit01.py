@@ -218,7 +218,7 @@ L8 = Lesson("1.8", "Revision and Kind, Specific Feedback",
      S("Exit Ticket", [OR("What feedback did you use, and how did it change your art?", "Answers vary.", lines=2)])],
     tart("Students give feedback and revise artwork.", "Refine and complete artistic work; apply criteria to evaluate work.", "Thumbnails, paper, color media, workbook Lesson 1.8, Unit 1 Review",
          "Helpful vs unhelpful comments.", ["Show Austin's Butterfly if available.", "Model kind, specific, helpful feedback."], "Draft, Feedback, Final.",
-         ["Feedback that is only praise."], ["Feedback sentence starters."], ["Give feedback on a sibling's work."], reflect="Students compare draft and final; store both in the portfolio. Friday: Unit 1 Portfolio Review."),
+         ["Feedback that is only praise."], ["Feedback sentence starters."], ["Give feedback on a sibling's work."], reflect="Students compare draft and final; store both in the portfolio. Next: Unit 1 Portfolio Review."),
     summary="Get kind, specific, helpful feedback, then revise.")
 
 # ================================================================= checks

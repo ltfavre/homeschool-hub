@@ -85,19 +85,32 @@ class CheckBox(Flowable):
         c.roundRect(0, 1, self.s, self.s, 2, stroke=1, fill=1)
 
 
-def when(L):
-    """'Tuesday, November 3' from the school calendar date pace() gives each lesson."""
-    d = getattr(L, "_d", None)
-    return f"{d:%A, %B} {d.day}" if d else (L.date or "")
+def weeks_of(U):
+    """The unit's lessons grouped into weeks: each weekly check closes a week, and the unit test closes the last one.
+    The books show this order (Week 2 · Lesson 3 of 4), never calendar dates, so any family can use them on its own schedule."""
+    ends = sorted(i for i, L in enumerate(U.lessons) if any(C.after == L.num for C in U.checks))
+    out, start = [], 0
+    for e in ends + [len(U.lessons) - 1]:
+        if e >= start: out.append(U.lessons[start:e + 1]); start = e + 1
+    return out
+
+
+def place(L, U):
+    """(week, lesson in that week, lessons that week) for a lesson, or None without its unit."""
+    if not U: return None
+    for w, wk in enumerate(weeks_of(U), 1):
+        if L in wk: return w, wk.index(L) + 1, len(wk)
+    return None
 
 
 def lesson_banner(t, L, U=None, tag=None):
-    """Full-width colored bar: LESSON 1.5 and the planned day on the left, the unit on the right."""
+    """Full-width colored bar: LESSON 1.5 and its place in the unit (Week 2 · Lesson 3 of 4) on the left, the unit on the right."""
     big = ParagraphStyle("bn", fontName="BodyBold", fontSize=13, leading=16, textColor=t.on_main)
     sm = ParagraphStyle("bs", fontName="BodyMed", fontSize=9.5, leading=12, textColor=t.on_main)
     right = ParagraphStyle("br", parent=sm, alignment=TA_RIGHT)
     left = [P(f"LESSON {L.num}" + (f"  ·  {tag}" if tag else ""), big)]
-    if when(L): left.append(P(f"Planned for {when(L)}", sm))
+    pl = place(L, U)
+    if pl: left.append(P(f"Week {pl[0]}  ·  Lesson {pl[1]} of {pl[2]}", sm))
     unit = f"Unit {U.num}: {U.title}" if U else f"Unit {L.num.split('.')[0]}"
     tb = Table([[left, P(unit, right)]], colWidths=[W * 0.5, W * 0.5])
     tb.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), t.main), ("ROUNDEDCORNERS", [6, 6, 6, 6]), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
@@ -500,25 +513,25 @@ ROUTINE = {"math": "Warm-Up 5 · Teach 15 · Guided Practice 10 · Independent P
            "data": "Read 10 · Watch or Code 15 · Quick Check 5",
            "art": "Look and Talk 5 · Learn and Demonstrate 10 · Create 25 · Reflect 5",
            "spanish": "Calentamiento 3 · Escucha y repite 5 · Aprende 6 · Practica 6 · Habla 3 (about 20–25 minutes)"}
-DAYS = {"math": "Monday–Thursday", "ela": "Monday–Thursday", "science": "Monday and Wednesday", "social": "Tuesday and Thursday", "data": "Monday–Thursday", "art": "Monday and Wednesday", "spanish": "Monday–Thursday"}
+PER_WEEK = {"math": "Four", "ela": "Four", "science": "Two", "social": "Two", "data": "Four", "art": "Two", "spanish": "Four"}
 
 
 DATA_INTRO = {
     "textbook": ["How to use this book",
-                 "This is a year of professional learning built to fit inside a workday: about 30 minutes, Monday through Friday. "
-                 "Monday through Thursday is a lesson. Friday is a short quiz plus time to use the week's skill on real work.",
+                 "This is a year of professional learning built to fit inside a workday: about 30 minutes, five days a week. "
+                 "Four days are lessons. The fifth is a short quiz plus time to use the week's skill on real work.",
                  ["<b>A 30-minute day:</b> Read 10 · Watch or Code 15 · Quick Check 5. If a day gets away from you, the Quick Check alone keeps you moving.",
                   "<b>Code It</b> boxes show the same task in <b>SAS</b>, <b>Python</b>, and <b>R</b>. Run at least one language every day, and rotate so you build all three.",
                   "<b>Watch and Explore</b> boxes suggest free videos and courses, plus optional DataCamp courses if you subscribe.",
                   "<b>On the Job</b> boxes connect each skill to assessment, research, and reporting work.",
                   "Every exercise uses the VenvLearning data pack (exam.csv, survey.csv, and more), so your results match the answer key.",
-                  "Your practice pages, Friday quizzes, unit exams, and answer key are in your <b>Workbook</b>."]],
+                  "Your practice pages, weekly quizzes, unit exams, and answer key are in your <b>Workbook</b>."]],
     "workbook": ["How to use this workbook",
                  "Every lesson in your textbook has matching practice here: a warm-up, practice problems, a coding exercise, and an exit question. "
-                 "Fridays have a 15-minute quiz; the last Friday of each unit is the unit exam.",
+                 "Each week ends with a 15-minute quiz; each unit ends with the unit exam.",
                  ["Work a problem before checking the <b>Answer Key</b> at the back.", "For coding exercises, write your code in SAS Studio, RStudio, or Jupyter, then record the key output here.",
                   "If an answer doesn't match, compare your code with the solution line by line. Finding the difference is the fastest way to learn.",
-                  "Use the <b>Apply It</b> prompts on Fridays to try the week's skill on your own work data."]],
+                  "Use the <b>Apply It</b> prompts at the end of each week to try the week's skill on your own work data."]],
 }
 
 
@@ -541,8 +554,8 @@ def front_matter(t, book, doc, kind):
                      + (["<b>Sounds like</b> columns show how to say each word; the CAPITAL syllable gets the stress. Hear any word at SpanishDict.com.",
                          "<b>Diálogo</b> boxes are conversations. Read them aloud with a partner, then change the details to talk about yourself."] if t.subject == "spanish" else [])
                      + [
-                      ("Every Friday there is a short <b>Sketchbook Check</b> in your workbook. The last Friday of a unit is the <b>Portfolio Review</b>." if t.subject == "art" else
-                       "Every Friday there is a short <b>Weekly Check</b> in your workbook. The last Friday of a unit is the <b>Unit Test</b>.")]],
+                      ("At the end of each week of lessons there is a short <b>Sketchbook Check</b> in your workbook. Each unit ends with the <b>Portfolio Review</b>." if t.subject == "art" else
+                       "At the end of each week of lessons there is a short <b>Weekly Check</b> in your workbook. Each unit ends with the <b>Unit Test</b>.")]],
         "workbook": ["How to use this workbook",
                      "Every lesson in your textbook has matching practice pages here. Show your thinking in the work space. "
                      "When a problem has an answer line, write your final answer there.",
@@ -554,8 +567,8 @@ def front_matter(t, book, doc, kind):
                     "and do, the student lesson with Try It answers, and answer keys for every workbook page, weekly check and unit test.",
                     [(f"<b>Daily routine:</b> {ROUTINE[t.subject]}." if t.subject == "spanish" else f"<b>Daily routine (about 45–55 minutes):</b> {ROUTINE[t.subject]}."),
                      "<b>Say:</b> lines are a suggested script. Use your own words.",
-                     f"{DAYS[t.subject]} are lessons. Friday is the <b>{'Sketchbook Check' if t.subject == 'art' else 'Weekly Check'}</b> (about {15 if t.subject in ('science', 'social', 'art') else 20} minutes), then corrections or a project.",
-                     "Dates match the VenvLearning lesson plans for the 2026–2027 school year."]],
+                     f"{PER_WEEK[t.subject]} lessons a week, then the <b>{'Sketchbook Check' if t.subject == 'art' else 'Weekly Check'}</b> (about {15 if t.subject in ('science', 'social', 'art') else 20} minutes), then corrections or a project.",
+                     "Each plan's <b>Pacing</b> row and each unit's pacing guide give the week and lesson order. Set the days to fit your own calendar."]],
     }[kind]
     if t.subject == "data":
         intro = DATA_INTRO[kind]
@@ -718,7 +731,7 @@ def check_banner(t, C, teacher=False):
     sm = ParagraphStyle("cbs", fontName="BodyMed", fontSize=9.5, leading=12, textColor=WHITE)
     right = ParagraphStyle("cbr", parent=sm, alignment=TA_RIGHT)
     left = [P(check_tag(C) + ("  ·  ANSWER KEY" if teacher else ""), big)]
-    if C.date: left.append(P(f"Planned for {C.date}", sm))
+    left.append(P(f"After Lesson {C.after}" if C.after else "Study before the unit test" if C.kind == "review" else "At the end of the unit", sm))
     tb = Table([[left, P(f"About {C.minutes} minutes" if C.minutes else "", right)]], colWidths=[W * 0.6, W * 0.4])
     tb.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), HUNTER), ("ROUNDEDCORNERS", [6, 6, 6, 6]), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                             ("LEFTPADDING", (0, 0), (-1, -1), 12), ("RIGHTPADDING", (0, 0), (-1, -1), 12),
@@ -841,7 +854,7 @@ def teacher_lesson(t, L, U=None):
     T = L.teacher
     out = lesson_header(t, L, U, tag="TEACHER PLAN", title_style=ParagraphStyle("th", parent=t.h1, fontSize=24, leading=28))
     out.append(info_table(t, [("Student goal", f"<b>{L.i_can}</b>"), ("Objective", T["objective"]), ("Standard", L.standard + " — " + T.get("standard_text", "")),
-                              ("Date", L.date or "—"), ("Time", T.get("time", "About 50 minutes")),
+                              ("Pacing", (lambda pl: f"Unit {U.num}, week {pl[0]}, lesson {pl[1]} of {pl[2]}" if pl else "—")(place(L, U))), ("Time", T.get("time", "About 50 minutes")),
                               ("Materials", T["materials"]), ("Get ready", T.get("prep", PREP[t.subject]))]))
     out += [Spacer(1, 8), P("Lesson Flow", t.h3), flow_table(t, T["flow"])]
     side = []
@@ -876,11 +889,15 @@ def unit_overview_teacher(t, U):
     out += [P("Standards", t.h3), table(t, [["Code", "Standard"]] + [[a, b] for a, b in U.standards], [0.95 * inch, W - 0.95 * inch])]
     out += [P("What students should already know", t.h3)] + bullets(U.prior, t.bullet)
     out += [P("Materials for the unit", t.h3)] + bullets(U.materials, t.bullet)
-    out += [P("Pacing calendar", t.h3)]
-    rows = [["Week", "Day", "Lesson", "Title"]]
-    for wk, items in U.weeks:
-        for day, num, title in items: rows.append([wk, day, num, title])
-    out.append(table(t, rows, [1.35 * inch, 0.95 * inch, 0.75 * inch, W - 3.05 * inch], font_size=9))
+    out += [P("Pacing guide", t.h3), P("Teach the lessons in order, then give the week's check. Set the days to fit your own calendar.", t.small)]
+    rows = [["Week", "Order", "Lesson", "Title"]]
+    checks = {C.after: C for C in U.checks}
+    for w, wk in enumerate(weeks_of(U), 1):
+        for k, L in enumerate(wk, 1): rows.append([f"Week {w}", f"Lesson {k} of {len(wk)}", L.num, L.title])
+        C = checks.get(wk[-1].num)
+        if C: rows.append([f"Week {w}", "End of week", "Check", C.title])
+    rows += [[f"Week {len(weeks_of(U))}", "Before the test", "Review", U.review.title], [f"Week {len(weeks_of(U))}", "End of unit", "Test", U.test.title]]
+    out.append(table(t, rows, [0.8 * inch, 1.2 * inch, 0.7 * inch, W - 2.7 * inch], font_size=9))
     if U.family_note: out += [Spacer(1, 8), panel([P("TEACHING THIS UNIT AT HOME", t.eyebrow), P(U.family_note, t.boxt)], SAGE_WASH, left_bar=HUNTER)]
     out += [Spacer(1, 8), vocab_panel(t, U.vocab, "Unit Vocabulary")]
     return out

@@ -58,7 +58,7 @@ L2 = Lesson("1.2", "Fair Tests and Evidence",
      S("Exit Ticket", [OR("Why do scientists keep all variables the same except one?", "So they know the one change caused the result.", lines=2)])],
     tsci("Students plan fair tests and write CER.", "Plan and carry out fair tests; construct explanations from evidence.", "Paper towels, measuring cups, water, workbook Lesson 1.2",
          "Paper airplane race.", "Paper Towel Test.", ["Teach variables; CER."], "Check Your Understanding 1–3.",
-         ["Changing more than one variable."], ["Change/Same/Measure chart."], ["Repeat the test three times and average the results."], independent="Workbook. Weekly Check Friday."),
+         ["Changing more than one variable."], ["Change/Same/Measure chart."], ["Repeat the test three times and average the results."], independent="Workbook. The Weekly Check comes next."),
     summary="A fair test changes one variable; CER = claim, evidence, reasoning.")
 
 # ================================================================= Week 2 · Body systems overview
@@ -110,7 +110,7 @@ L4 = Lesson("1.4", "Body Systems Work Together",
      S("Exit Ticket", [OR("Why do you breathe faster when you run?", "Muscles need more oxygen; the respiratory and circulatory systems work harder to deliver it.", lines=2)])],
     tsci("Students identify body systems and their interactions.", "Internal structures function to support survival, growth, and behavior.", "System index cards, workbook Lesson 1.4",
          "Soccer kick.", "Systems Relay.", ["Teach the systems chart.", "Model the soccer example."], "Check Your Understanding 1–3.",
-         ["Thinking each system works alone."], ["Picture cards for each system."], ["Make a body-systems poster."], independent="Workbook. Weekly Check Friday."),
+         ["Thinking each system works alone."], ["Picture cards for each system."], ["Make a body-systems poster."], independent="Workbook. The Weekly Check comes next."),
     summary="Six major systems each have a job, and they work together.")
 
 # ================================================================= Week 3 · Digestive and respiratory
@@ -161,7 +161,7 @@ L6 = Lesson("1.6", "The Respiratory System",
     tsci("Students explain gas exchange and breathing.", "Internal structures support survival.", "Timer, workbook Lesson 1.6",
          "Hold your breath.", "Breathing Rate investigation.", ["Teach the path and the diaphragm."], "Check Your Understanding 1–3.",
          ["Thinking we breathe out no oxygen at all, or that lungs are muscles."], ["Hands on ribs while breathing."], ["Build a balloon lung model in a plastic bottle."],
-         independent="Workbook. Weekly Check Friday."),
+         independent="Workbook. The Weekly Check comes next."),
     summary="The respiratory system takes in oxygen and removes carbon dioxide.")
 
 # ================================================================= Week 4 · Circulatory, skeletal, muscular, healthy choices
@@ -214,7 +214,7 @@ L8 = Lesson("1.8", "Bones, Muscles, and Healthy Choices",
     tsci("Students explain bone-muscle teamwork and healthy habits.", "Internal structures support survival, growth, and behavior.", "Workbook Lesson 1.8, Unit 1 Review",
          "Bend your arm.", "Muscle Partners.", ["Teach bones, tendons, muscle pairs.", "Healthy choices chart."], "Check Your Understanding 1–3.",
          ["Thinking muscles push."], ["Model with two rubber bands and a hinged ruler."], ["Track sleep and activity for a week."],
-         independent="Workbook; then the Unit 1 Review.", exit_="Tomorrow (Friday): Unit 1 Test."),
+         independent="Workbook; then the Unit 1 Review.", exit_="Next: Unit 1 Test."),
     summary="Bones support and protect; muscles pull in pairs; healthy habits keep systems strong.")
 
 # ================================================================= checks

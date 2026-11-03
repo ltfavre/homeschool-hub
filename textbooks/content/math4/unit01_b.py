@@ -282,7 +282,7 @@ L12 = Lesson(
                               "Work Example 2 and discuss the Watch Out: rounding up vs. down."]),
                ("Guided Practice", 10, ["Shop from a store flyer: choose two items, estimate the total, decide if $50 (or $500) is enough."]),
                ("Independent", 12, ["Workbook Lesson 1.12."]),
-               ("Exit Ticket", 3, ["Check. Friday: Weekly Check 3."])],
+               ("Exit Ticket", 3, ["Check. Next: Weekly Check 3."])],
          misconceptions=["Trusting an exact answer without checking it.", "Thinking an estimate proves you have enough money even when it is very close."],
          support=["Use money amounts the student knows."], extend=["Make up a wrong answer for the teacher to catch."]),
     date="Thu Oct 29",

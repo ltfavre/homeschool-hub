@@ -77,7 +77,7 @@ L2 = Lesson("1.2", "Where in the World Is Mississippi?",
      S("Exit Ticket", [OR("Describe Mississippi's relative location in two sentences.", "e.g. Mississippi is in the southern U.S. between Louisiana and Alabama, with Tennessee to the north and the Gulf of Mexico to the south.", lines=2)])],
     tss("Students describe relative and absolute location.", "Use maps to explain relationships between locations of places.", "Globe or world map, workbook Lesson 1.2",
         "Describe home to someone far away.", "Read the lesson; examine both maps.", ["Teach latitude/longitude and hemispheres."], "Check Your Understanding 1–3.",
-        ["Mixing up latitude and longitude."], ["“Lat is flat” memory trick."], ["Find the coordinates of a favorite vacation spot."], independent="Workbook. Weekly Check Friday."),
+        ["Mixing up latitude and longitude."], ["“Lat is flat” memory trick."], ["Find the coordinates of a favorite vacation spot."], independent="Workbook. The Weekly Check comes next."),
     summary="Mississippi is in the southern U.S., in the Northern and Western Hemispheres, around 32° N, 90° W.")
 
 # ================================================================= Week 2 · Landforms and waterways
@@ -135,7 +135,7 @@ L4 = Lesson("1.4", "Reading Physical and Political Maps",
      S("Exit Ticket", [OR("Write one question a physical map can answer and one a political map can answer.", "Answers vary.", lines=2)])],
     tss("Students compare physical and political maps.", "Construct maps and other graphic representations.", "Salt dough materials, workbook Lesson 1.4",
         "Rivers vs cities.", "Read the lesson; compare the maps.", ["Model using two maps together."], "Check Your Understanding 1–3.",
-        ["Thinking one map shows everything."], ["Sort questions into physical/political."], ["Find your county on a Mississippi county map."], independent="Workbook. Weekly Check Friday."),
+        ["Thinking one map shows everything."], ["Sort questions into physical/political."], ["Find your county on a Mississippi county map."], independent="Workbook. The Weekly Check comes next."),
     summary="Physical maps show nature; political maps show boundaries and cities.")
 
 # ================================================================= Week 3 · Regions
@@ -185,7 +185,7 @@ L6 = Lesson("1.6", "Comparing the Delta and the Piney Woods",
      S("Exit Ticket", [OR("Explain how soil affects the jobs people have in each region.", "Rich Delta soil supports crops; sandy Piney Woods soil supports pine forests and timber.", lines=2)])],
     tss("Students compare two regions.", "Explain how people modify and adapt to their environments.", "Workbook Lesson 1.6",
         "Delta farm vs Piney Woods town.", "Read both descriptions.", ["Model one Venn entry each."], "Check Your Understanding 1–3.",
-        ["Listing facts without comparing."], ["Compare/contrast word bank."], ["Interview a relative who lived in another region."], independent="Workbook. Weekly Check Friday."),
+        ["Listing facts without comparing."], ["Compare/contrast word bank."], ["Interview a relative who lived in another region."], independent="Workbook. The Weekly Check comes next."),
     summary="The Delta's rich soil supports crops; the Piney Woods' sandy soil supports forests.")
 
 # ================================================================= Week 4 · Resources and economy
@@ -239,7 +239,7 @@ L8 = Lesson("1.8", "Resources and Work in Each Region",
     tss("Students connect resources to regional economies.", "Identify resources used to produce goods and services; how people adapt to environments.", "Poster paper, markers, workbook Lesson 1.8, Unit 1 Review",
         "Three workers.", "Read the lesson and table.", ["Model tracing a product."], "Check Your Understanding 1–3.",
         ["Confusing goods and services."], ["Goods = hold it; services = someone does it."], ["Visit a local farm, mill, or port online."],
-        independent="Workbook; then the Unit 1 Review.", exit_="Tomorrow (Friday): Unit 1 Test."),
+        independent="Workbook; then the Unit 1 Review.", exit_="Next: Unit 1 Test."),
     summary="Each region's resources shape its goods, services, and jobs.")
 
 # ================================================================= checks

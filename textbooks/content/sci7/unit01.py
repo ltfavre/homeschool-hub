@@ -54,7 +54,7 @@ L2 = Lesson("1.2", "Earth's Spheres and the Water Cycle",
      S("Exit Ticket", [OR("Name the two things that drive the water cycle and what each does.", "Sun's energy causes evaporation; gravity causes precipitation and runoff.", lines=2)])],
     tsci("Students model the water cycle within Earth's spheres.", "Develop a model of the cycling of water driven by the sun and gravity.", "Zip bags, water, food coloring, tape, workbook Lesson 1.2",
          "Dinosaur water.", "Water Cycle in a Bag (set up today, observe all week).", ["Teach the four spheres; the cycle diagram."], "Check Your Understanding 1–3.",
-         ["Thinking water is “used up.”"], ["Sphere sorting cards."], ["Research how much of Earth's water is fresh and available."], independent="Workbook. Weekly Check Friday."),
+         ["Thinking water is “used up.”"], ["Sphere sorting cards."], ["Research how much of Earth's water is fresh and available."], independent="Workbook. The Weekly Check comes next."),
     summary="Water cycles among Earth's spheres, powered by the sun and gravity.")
 
 # ================================================================= Week 2 · Carbon, oxygen, nitrogen
@@ -103,7 +103,7 @@ L4 = Lesson("1.4", "The Nitrogen Cycle",
      S("Exit Ticket", [OR("Trace one nitrogen atom from the air into your body.", "Air → bacteria fix it → plant absorbs nitrate → I eat the plant (or an animal that ate it).", lines=2)])],
     tsci("Students model the nitrogen cycle.", "Develop a model to describe the cycling of matter.", "Bean or pea plant, magnifier, workbook Lesson 1.4",
          "Why not breathe it?", "Root Nodule Search.", ["Teach the cycle; Carver and crop rotation."], "Check Your Understanding 1–3.",
-         ["Thinking plants take N₂ from the air."], ["Cycle with picture cards."], ["Research nitrogen runoff and the Gulf of Mexico dead zone."], independent="Workbook. Weekly Check Friday."),
+         ["Thinking plants take N₂ from the air."], ["Cycle with picture cards."], ["Research nitrogen runoff and the Gulf of Mexico dead zone."], independent="Workbook. The Weekly Check comes next."),
     summary="Bacteria fix nitrogen so plants and animals can use it; decomposers return it.")
 
 # ================================================================= Week 3 · Photosynthesis and respiration
@@ -152,7 +152,7 @@ L6 = Lesson("1.6", "Cellular Respiration",
      S("Exit Ticket", [OR("Explain how matter cycles but energy flows between photosynthesis and respiration.", "The same atoms move back and forth between the processes; energy enters as light and leaves as heat.", lines=3)])],
     tsci("Students explain cellular respiration.", "Develop a model of how food is rearranged through chemical reactions to release energy.", "Bottles, balloons, yeast, sugar, warm water, string, ruler, workbook Lesson 1.6",
          "Breakfast power.", "Yeast Balloons.", ["Teach the equation; compare with photosynthesis."], "Check Your Understanding 1–3.",
-         ["Confusing respiration with breathing."], ["Side-by-side equation organizer."], ["Bake bread and explain the rise."], independent="Workbook. Weekly Check Friday."),
+         ["Confusing respiration with breathing."], ["Side-by-side equation organizer."], ["Bake bread and explain the rise."], independent="Workbook. The Weekly Check comes next."),
     summary="Cells release energy from glucose with oxygen; respiration and photosynthesis cycle matter.")
 
 # ================================================================= Week 4 · Food webs and biodiversity
@@ -206,7 +206,7 @@ L8 = Lesson("1.8", "Biodiversity and Ecosystem Services",
     tsci("Students explain biodiversity and evaluate solutions.", "Evaluate competing design solutions for maintaining biodiversity and ecosystem services.", "String, sticks, magnifier, workbook Lesson 1.8, Unit 1 Review",
          "No bees, no breakfast?", "Biodiversity Survey.", ["Teach services; model evaluating solutions with criteria."], "Check Your Understanding 1–3.",
          ["Thinking biodiversity only means animals."], ["Criteria-and-constraints chart."], ["Plant a pollinator pot."],
-         independent="Workbook; then the Unit 1 Review.", exit_="Tomorrow (Friday): Unit 1 Test."),
+         independent="Workbook; then the Unit 1 Review.", exit_="Next: Unit 1 Test."),
     summary="Biodiversity stabilizes ecosystems and provides services worth protecting.")
 
 # ================================================================= checks

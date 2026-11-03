@@ -52,7 +52,7 @@ BLURB = {
     "art": "A full year of Grade {g} arts: drawing, painting, and design; music; art history; theater and dance; media arts; and sculpture. "
            "Every lesson pairs looking closely at real artwork with hands-on studio time, and the year ends with a portfolio and a show.",
     "data": "A year of professional learning in statistics, data science, and psychometrics, built for a working professional: about 30 minutes a day, "
-            "Monday through Friday. Every lesson pairs a short reading with worked examples, a suggested video, and hands-on code in SAS, Python, and R, "
+            "five days a week. Every lesson pairs a short reading with worked examples, a suggested video, and hands-on code in SAS, Python, and R, "
             "using realistic assessment and survey data.",
     "social": "A full year of Grade {g} social studies. Students read maps, weigh primary and secondary sources, build timelines, and "
               "connect geography, history, government, and economics to the people and places that shaped our world.",
@@ -60,25 +60,25 @@ BLURB = {
 KIND_BLURB_DATA = {
     "textbook": "This <b>Textbook</b> teaches every lesson: the big idea, key terms, worked examples, side-by-side code in SAS, Python, and R, "
                 "suggested videos, and On the Job notes that connect each skill to real work. It pairs with the Workbook.",
-    "workbook": "This <b>Workbook</b> holds the hands-on practice for every lesson, a quiz every Friday, unit exams, and a complete answer key "
+    "workbook": "This <b>Workbook</b> holds the hands-on practice for every lesson, a quiz at the end of each week, unit exams, and a complete answer key "
                 "with code solutions at the back.",
 }
 INSIDE_DATA = {
-    "textbook": ["Four 30-minute lessons a week, Monday–Thursday", "Code It examples in SAS, Python, and R", "Watch lists: videos and free courses for each topic", "On the Job notes and a glossary"],
-    "workbook": ["Practice and coding exercises for every lesson", "A quiz every Friday", "Unit exams", "Answer key with code solutions"],
+    "textbook": ["Four 30-minute lessons a week", "Code It examples in SAS, Python, and R", "Watch lists: videos and free courses for each topic", "On the Job notes and a glossary"],
+    "workbook": ["Practice and coding exercises for every lesson", "A quiz at the end of each week", "Unit exams", "Answer key with code solutions"],
 }
 KIND_BLURB = {
     "textbook": "This <b>Student Textbook</b> teaches every lesson: the big idea, key vocabulary, models and examples, and a short set of practice "
                 "problems to check understanding. It pairs with the Student Workbook and the Teacher Edition.",
-    "workbook": "This <b>Student Workbook</b> holds the daily practice pages for every lesson, plus each Friday's Weekly Check, the unit reviews, "
+    "workbook": "This <b>Student Workbook</b> holds the daily practice pages for every lesson, plus a Weekly Check at the end of each week, the unit reviews, "
                 "and the unit tests, with room to show thinking and write complete answers.",
-    "teacher": "This <b>Teacher Edition</b> holds everything needed to teach: a pacing calendar, a guided lesson plan for every day with "
+    "teacher": "This <b>Teacher Edition</b> holds everything needed to teach: a week-by-week pacing guide, a guided lesson plan for every lesson with "
                "timing, discussion prompts, common misconceptions, support and extension ideas, and complete answer keys.",
 }
 INSIDE = {
     "textbook": ["Clear lesson goals: “I can…” statements", "Key vocabulary with student-friendly definitions", "Models, examples, and Key Idea summaries", "A study guide and glossary for every unit"],
-    "workbook": ["Warm-ups, practice, and exit tickets for every lesson", "Weekly Checks every Friday", "Unit reviews and unit tests", "Space to show work and explain thinking"],
-    "teacher": ["Day-by-day pacing calendar for the school year", "Guided lessons with timing and teaching moves", "Misconceptions, supports, and extensions", "Answer keys and scoring guides for every page"],
+    "workbook": ["Warm-ups, practice, and exit tickets for every lesson", "A Weekly Check for each week of lessons", "Unit reviews and unit tests", "Space to show work and explain thinking"],
+    "teacher": ["Week-by-week pacing guide", "Guided lessons with timing and teaching moves", "Misconceptions, supports, and extensions", "Answer keys and scoring guides for every page"],
 }
 
 
@@ -323,7 +323,7 @@ def front(c, book, kind):
         sub = {"textbook": "Statistics, coding, and measurement in 30 minutes a day", "workbook": "Practice, coding exercises, weekly quizzes, and answers"}[kind]
     text(c, x, yb - 0.55 * inch, sub, "BodyMed", 14, pal["sub"])
     scope = f"{len(book.units)} units" if len(book.units) > 1 else f"Unit {book.units[0].num}: {book.units[0].title}"
-    text(c, x, yb - 0.85 * inch, f"{book.year} {book.year_label}  ·  {scope}", "Body", 11, a(0.8, (1, 1, 1) if pal["ink"] == WHITE else (pal["ink"].red, pal["ink"].green, pal["ink"].blue)))
+    text(c, x, yb - 0.85 * inch, "  ·  ".join(x for x in (f"{book.year} {book.year_label}".strip() if book.year else "", scope) if x), "Body", 11, a(0.8, (1, 1, 1) if pal["ink"] == WHITE else (pal["ink"].red, pal["ink"].green, pal["ink"].blue)))
     # bottom band
     c.setFillColor(t.dark); c.rect(0, 0, PAGE_W, 0.95 * inch, fill=1, stroke=0)
     stripe(c, 0.95 * inch, 8, INK)
@@ -361,7 +361,7 @@ def back(c, book, kind):
     c.setFillColor(GOLD if kind == "teacher" else t.dark); c.rect(PAGE_W - 0.32 * inch, 0, 0.32 * inch, PAGE_H, fill=1, stroke=0)
     head = f"Grade {g} {SHORT[book.subject]}" if book.subject != "data" else SHORT["data"]
     text(c, M, PAGE_H - 0.75 * inch, head, "Display", 32, pal["ink"])
-    text(c, M, PAGE_H - 1.12 * inch, KIND_LABEL[kind] + "  ·  " + book.year + ("  ·  " + book.audience if book.subject == "data" else ""), "BodyMed", 12, pal["sub"])
+    text(c, M, PAGE_H - 1.12 * inch, "  ·  ".join(x for x in (KIND_LABEL[kind], book.year, book.audience if book.subject == "data" else "") if x), "BodyMed", 12, pal["sub"])
 
     body = ParagraphStyle("b", fontName="Body", fontSize=11.5, leading=17, textColor=INK)
     y = PAGE_H - 2.05 * inch; wcol = PAGE_W - 2 * M - 0.3 * inch
@@ -397,9 +397,8 @@ def back(c, book, kind):
         mini_cover(c, M + k * (w + gap), ys - 20 - h, w, h, book, kd, kd == kind)
     note = ParagraphStyle("n", fontName="Body", fontSize=9.5, leading=13, textColor=MUTED)
     n = {2: "both", 3: "all three", 4: "all four"}[len(book.kinds)]
-    para = Paragraph(f"Each lesson has the same number in {n} books, and every day of the year is mapped to its lesson in the "
-                     "VenvLearning planner." if "reader" not in book.kinds else
-                     "Every ELA lesson names the Reader part and pages to read, and every day of the year is mapped to its lesson in the VenvLearning planner.", note)
+    para = Paragraph(f"Each lesson has the same number in {n} books, so the textbook, workbook, and teacher pages always match." if "reader" not in book.kinds else
+                     "Every ELA lesson names the Reader part and pages to read.", note)
     sx = M + len(book.kinds) * (w + gap); _, ph = para.wrap(PAGE_W - sx - M - 0.3 * inch, 200); para.drawOn(c, sx, ys - 20 - h / 2 - ph / 2)
 
     # footer band

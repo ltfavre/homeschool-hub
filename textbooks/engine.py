@@ -674,9 +674,6 @@ class Doc(BaseDocTemplate):
         y = PAGE_H * 0.42 - 1.15 * inch
         for u in b.units:
             text(c, LM, y, f"Unit {u.num}", "MonoSemi", 10, t.accent); text(c, LM + 52, y, u.title, "Body", 11, INK); y -= 18
-        if self.kind != "teacher":
-            text(c, LM, 1.35 * inch, "This book belongs to", "Body", 10, MUTED)
-            c.setStrokeColor(INK); c.setLineWidth(0.8); c.line(LM + 110, 1.33 * inch, LM + 330, 1.33 * inch)
         text(c, LM, 0.75 * inch, b.tagline, "Body", 9, MUTED)
         c.restoreState()
 

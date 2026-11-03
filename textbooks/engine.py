@@ -32,6 +32,16 @@ pdfmetrics.registerFont(TTFont("Sym", os.path.join(F, "DejaVuSans.ttf")))   # fa
 registerFontFamily("Body", normal="Body", bold="BodySemi", italic="BodyMed", boldItalic="BodyBold")
 registerFontFamily("Display", normal="Display", bold="Display", italic="DisplayIt", boldItalic="DisplayIt")
 registerFontFamily("Mono", normal="Mono", bold="MonoSemi", italic="Mono", boldItalic="MonoSemi")
+# Reading passages (stories, excerpts, articles) are set in a book serif so they look different from the lesson's
+# instructions. Georgia (Windows, embedding permitted) is used when installed; elsewhere, Times.
+_WINFONTS = os.path.join(os.environ.get("WINDIR", "C:/Windows"), "Fonts")
+if os.path.exists(os.path.join(_WINFONTS, "georgia.ttf")):
+    for name, file in [("Read", "georgia"), ("ReadBold", "georgiab"), ("ReadIt", "georgiai"), ("ReadBI", "georgiaz")]:
+        pdfmetrics.registerFont(TTFont(name, os.path.join(_WINFONTS, file + ".ttf")))
+    registerFontFamily("Read", normal="Read", bold="ReadBold", italic="ReadIt", boldItalic="ReadBI")
+    READ_FONT = "Read"
+else:
+    READ_FONT = "Times-Roman"
 
 import re as _re
 from reportlab.platypus import Paragraph as _Paragraph
@@ -56,6 +66,8 @@ HUNTER = colors.HexColor("#234638"); FOREST = colors.HexColor("#142B23"); INK = 
 IVORY = colors.HexColor("#FAF7F2"); GOLD = colors.HexColor("#D4AF37"); BLUSH = colors.HexColor("#E8BFC4")
 SAGE = colors.HexColor("#A8B89F"); SAGE_WASH = colors.HexColor("#EEF2EA"); MUTED = colors.HexColor("#5F5B56")
 LINE = colors.HexColor("#E6DFD2"); WHITE = colors.white; GRID = colors.HexColor("#E9E4DA")
+# reading passages: warm paper, a brown book label, and dark brown-black type
+PAPER = colors.HexColor("#FFFAEC"); PAPER_EDGE = colors.HexColor("#D9C7A0"); BOOK = colors.HexColor("#7A5426"); READ_INK = colors.HexColor("#26201A")
 
 SUBJECTS = {
     "math": dict(name="Mathematics", main=colors.HexColor("#A3322B"), dark=colors.HexColor("#6E1F1A"),
@@ -511,7 +523,7 @@ class Book:
         self.subject, self.grade, self.title, self.units, self.year = subject, grade, title, units, year
         self.audience = audience or f"Grade {grade}"; self.kinds = kinds; self.medal = medal or ("GRADE", str(grade))
         self.tagline, self.year_label = tagline, year_label
-        self.theme = Theme(subject)
+        self.theme = Theme(subject); self.theme.grade = grade
 
 
 # ---------------------------------------------------------------- document

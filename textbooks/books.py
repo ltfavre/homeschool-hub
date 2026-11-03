@@ -1,4 +1,6 @@
 """Renders a Book (see engine.py) into the student textbook, student workbook and teacher edition."""
+import os
+import re as _re
 from engine import *
 
 
@@ -18,18 +20,166 @@ def check_tag(C):
         return "YEAR-END TEST" if C.kind == "test" else "YEAR-END REVIEW"
     return {"test": "UNIT TEST", "review": "UNIT REVIEW"}.get(C.kind, "WEEKLY CHECK")
 
-def lesson_header(t, L, kind_note=None):
-    out = [P(f"UNIT {L.num.split('.')[0]}  ·  LESSON {L.num}  ·  {L.standard}" + (f"  ·  {kind_note}" if kind_note else ""), t.eyebrow),
-           toc_heading(f"Lesson {L.num}: {L.title}", t.h1, 1, running=f"Lesson {L.num} · {L.title}")]
-    return out
+# ---------------------------------------------------------------- clarity kit
+# Two visual languages, so a student always knows what she is looking at:
+#   * Lesson information and instructions (goal, assignment, words to know, key ideas, examples, questions) are sans-serif
+#     boxes, each opened by a solid colored LABEL CHIP that names what the box is.
+#   * Reading content (stories, excerpts, articles, speeches) is set like a page from a book: warm paper, a brown
+#     "READING" tab, and a book serif (see passage_box).
+
+def chip(text, bg, fg=WHITE, size=8.5):
+    """A solid rounded label, e.g. TODAY'S GOAL. Sized to its text and left-aligned."""
+    st = ParagraphStyle("chip", fontName="BodyBold", fontSize=size, leading=size + 2, textColor=fg)
+    # symbols the brand font lacks (★ ✎) are drawn with the fallback font, so measure them in it
+    from engine import _BODY_CMAP
+    w = sum(stringWidth(ch, "BodyBold" if ord(ch) in _BODY_CMAP else "Sym", size) for ch in text) + 18
+    tb = Table([[P(text, st)]], colWidths=[w], rowHeights=[size + 9])
+    tb.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), bg), ("ROUNDEDCORNERS", [5, 5, 5, 5]), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                            ("LEFTPADDING", (0, 0), (-1, -1), 8), ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+                            ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
+    tb.hAlign = "LEFT"
+    return tb
+
+
+def boxed(t, label, flowables, bg, chip_bg=None, chip_fg=None, border=None, left_bar=None):
+    """An information box opened by a label chip."""
+    return panel([chip(label, chip_bg or t.main, chip_fg or t.on_main), Spacer(1, 5)] + list(flowables), bg, border=border, left_bar=left_bar)
+
+
+class StepHeader(Flowable):
+    """Numbered lesson step: a colored circle with the step number, the step name, and a rule to the margin."""
+    def __init__(self, t, n, label, note=None):
+        super().__init__(); self.t, self.n, self.label, self.note = t, n, label, note
+    def wrap(self, aw, ah): self.aw = aw; return aw, 30
+    def draw(self):
+        c, t = self.canv, self.t
+        c.setFillColor(t.main); c.circle(11, 13, 11, stroke=0, fill=1)
+        text(c, 11, 9, str(self.n), "BodyBold", 11.5, t.on_main, "c")
+        text(c, 30, 8.5, self.label, "BodySemi", 14, t.dark)
+        x = 30 + stringWidth(self.label, "BodySemi", 14) + 10
+        if self.note:
+            text(c, x, 9, self.note, "Body", 9.5, MUTED); x += stringWidth(self.note, "Body", 9.5) + 10
+        c.setStrokeColor(t.mid); c.setLineWidth(1); c.line(x, 13, self.aw, 13)
+
+
+def step(t, n, label, note=None):
+    return [Spacer(1, 6), StepHeader(t, n, label, note), Spacer(1, 4)]
+
+
+class Target(Flowable):
+    """Bullseye icon for the goal card."""
+    def __init__(self, t, size=34): super().__init__(); self.t, self.s = t, size
+    def wrap(self, aw, ah): return self.s, self.s
+    def draw(self):
+        c, r = self.canv, self.s / 2
+        for k, col in enumerate([self.t.main, WHITE, self.t.main, WHITE, self.t.main]):
+            c.setFillColor(col); c.circle(r, r, r * (1 - k * 0.2), stroke=0, fill=1)
+
+
+class CheckBox(Flowable):
+    """An empty checkbox to tick off an assignment step."""
+    def __init__(self, t, size=12): super().__init__(); self.t, self.s = t, size
+    def wrap(self, aw, ah): return self.s, self.s + 3
+    def draw(self):
+        c = self.canv; c.setStrokeColor(self.t.main); c.setLineWidth(1.3); c.setFillColor(WHITE)
+        c.roundRect(0, 1, self.s, self.s, 2, stroke=1, fill=1)
+
+
+def when(L):
+    """'Tuesday, November 3' from the school calendar date pace() gives each lesson."""
+    d = getattr(L, "_d", None)
+    return f"{d:%A, %B} {d.day}" if d else (L.date or "")
+
+
+def lesson_banner(t, L, U=None, tag=None):
+    """Full-width colored bar: LESSON 1.5 and the planned day on the left, the unit on the right."""
+    big = ParagraphStyle("bn", fontName="BodyBold", fontSize=13, leading=16, textColor=t.on_main)
+    sm = ParagraphStyle("bs", fontName="BodyMed", fontSize=9.5, leading=12, textColor=t.on_main)
+    right = ParagraphStyle("br", parent=sm, alignment=TA_RIGHT)
+    left = [P(f"LESSON {L.num}" + (f"  ·  {tag}" if tag else ""), big)]
+    if when(L): left.append(P(f"Planned for {when(L)}", sm))
+    unit = f"Unit {U.num}: {U.title}" if U else f"Unit {L.num.split('.')[0]}"
+    tb = Table([[left, P(unit, right)]], colWidths=[W * 0.5, W * 0.5])
+    tb.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), t.main), ("ROUNDEDCORNERS", [6, 6, 6, 6]), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                            ("LEFTPADDING", (0, 0), (-1, -1), 12), ("RIGHTPADDING", (0, 0), (-1, -1), 12),
+                            ("TOPPADDING", (0, 0), (-1, -1), 7), ("BOTTOMPADDING", (0, 0), (-1, -1), 8)]))
+    return tb
+
+
+def lesson_header(t, L, U=None, tag=None, title_style=None):
+    return [lesson_banner(t, L, U, tag), Spacer(1, 8),
+            toc_heading(f"Lesson {L.num}: {L.title}", title_style or t.h1, 1, running=f"Lesson {L.num} · {L.title}")]
+
+
+def goal_card(t, L, size=15):
+    """TODAY'S GOAL: the I can statement, large, next to a bullseye. The standard is small reference text."""
+    goal = ParagraphStyle("goal", fontName="BodySemi", fontSize=size, leading=size * 1.32, textColor=t.dark)
+    inner = [chip("TODAY'S GOAL", t.main, t.on_main), Spacer(1, 5), P(L.i_can, goal)]
+    if L.standard: inner.append(P(f"Standards: {L.standard}", ParagraphStyle("std", parent=t.tiny, spaceBefore=3)))
+    tb = Table([[Target(t), inner]], colWidths=[48, W - 48])
+    tb.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), t.wash), ("BOX", (0, 0), (-1, -1), 1.2, t.main), ("ROUNDEDCORNERS", [6, 6, 6, 6]),
+                            ("VALIGN", (0, 0), (0, 0), "MIDDLE"), ("VALIGN", (1, 0), (1, 0), "TOP"),
+                            ("LEFTPADDING", (0, 0), (0, 0), 12), ("LEFTPADDING", (1, 0), (1, 0), 6), ("RIGHTPADDING", (0, 0), (-1, -1), 12),
+                            ("TOPPADDING", (0, 0), (-1, -1), 10), ("BOTTOMPADDING", (0, 0), (-1, -1), 10)]))
+    return tb
+
+
+def checklist(t, label, items, bg=WHITE):
+    """A labeled list of steps, each with a checkbox to tick off."""
+    st = ParagraphStyle("cl", parent=t.boxt, fontSize=11.5, leading=15.5, spaceAfter=0)
+    rows = [[CheckBox(t), P(x, st)] for x in items]
+    tb = Table(rows, colWidths=[20, W - 20 - 30])
+    tb.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                            ("TOPPADDING", (0, 0), (-1, -1), 3), ("BOTTOMPADDING", (0, 0), (-1, -1), 3)]))
+    return panel([chip(label, HUNTER), Spacer(1, 4), tb], bg, border=LINE, left_bar=HUNTER)
+
+
+_READER_INDEX = {}
+
+
+def reader_pages(t, r):
+    """Printed pages in the Grade Reader for a Read in Your Reader assignment, from the Reader's page index."""
+    import json
+    g = getattr(t, "grade", None)
+    if g not in _READER_INDEX:
+        f = os.path.join(HERE, "..", "downloads", "textbooks", f"grade{g}-ela-reader.index.json")
+        _READER_INDEX[g] = json.load(open(f, encoding="utf-8")) if os.path.exists(f) else None
+    idx = _READER_INDEX[g]
+    if not idx: return None
+    book, sec = r.book.lower(), r.section.lower()
+    part = next((p for p in idx["parts"].values() if p["title"].lower() in book or p["short"].lower() in book), None)
+    if not part: return None
+    names = [n for n in part["sections"] if n.lower() in sec]
+    m = _re.search(r"chapters? (\d+)(?:\s*(?:–|-|and|through)\s*(\d+))?", sec)
+    if m:
+        a, b = int(m.group(1)), int(m.group(2) or m.group(1))
+        names += [f"Chapter {n}" for n in range(a, b + 1) if f"Chapter {n}" in part["sections"]]
+    if not names: return None
+    lo = min(part["sections"][n]["printed"][0] for n in names); hi = max(part["sections"][n]["printed"][1] for n in names)
+    return f"page {lo}" if lo == hi else f"pages {lo}–{hi}"
+
+
+def assignment_items(t, L):
+    """Today's steps for a lesson, in order: read the lesson, any Reader section, any hands-on activity, Your Turn, the workbook."""
+    items = [f"Read <b>Lesson {L.num}</b> in this book with your teacher."]
+    for b in L.learn:
+        if isinstance(b, ReaderAssign):
+            pages = reader_pages(t, b)
+            items.append(f"Read in your <b>Reader</b>: {b.book.replace(' Reader', '')}, {b.section}" + (f" ({pages})" if pages else "") + ".")
+        elif isinstance(b, Investigate):
+            tag = {"science": "Investigate", "art": "Create"}.get(t.subject, "Activity")
+            items.append(f"Do the <b>{tag}</b> activity: {b.title}.")
+    if L.try_it: items.append(f"Answer the <b>{t.lab['try_'].title()}</b> questions in your notebook.")
+    items.append(f"Complete <b>Workbook Lesson {L.num}</b>.")
+    return items
 
 
 def vocab_panel(t, vocab, title="Words to Know"):
     rows = [[P(f"<b>{w}</b>", t.cellb), P(d, t.cell)] for w, d in vocab]
-    tb = Table(rows, colWidths=[1.45 * inch, W - 1.45 * inch - 26])
+    tb = Table(rows, colWidths=[1.45 * inch, W - 1.45 * inch - 30])
     tb.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0),
-                            ("TOPPADDING", (0, 0), (-1, -1), 2), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
-    return panel([P(title.upper(), t.eyebrow), tb], SAGE_WASH, left_bar=HUNTER)
+                            ("TOPPADDING", (0, 0), (-1, -1), 3), ("BOTTOMPADDING", (0, 0), (-1, -1), 3), ("LINEBELOW", (0, 0), (-1, -2), 0.4, LINE)]))
+    return boxed(t, title.upper(), [tb], SAGE_WASH, HUNTER, WHITE, left_bar=HUNTER)
 
 
 def render_blocks(t, blocks, teacher=False):
@@ -43,16 +193,15 @@ def render_blocks(t, blocks, teacher=False):
             if b.caption: items.append(P(b.caption, ParagraphStyle("cap", parent=t.small, alignment=TA_CENTER)))
             items.append(Spacer(1, 6)); out.append(KeepTogether(items))
         elif isinstance(b, KeyIdea):
-            out.append(Spacer(1, 2)); out.append(panel([P(b.title.upper(), t.eyebrow), P(b.t, t.boxt)], t.wash, left_bar=t.main)); out.append(Spacer(1, 8))
+            out.append(Spacer(1, 2)); out.append(boxed(t, "★ " + b.title.upper(), [P(b.t, ParagraphStyle("ki", parent=t.boxt, fontName="BodyMed"))], t.wash, left_bar=t.main)); out.append(Spacer(1, 8))
         elif isinstance(b, WatchOut):
-            out.append(Spacer(1, 2)); out.append(panel([P("WATCH OUT", ParagraphStyle("wo", parent=t.eyebrow, textColor=FOREST)), P(b.t, t.boxt)],
-                                                       colors.HexColor("#FBF3DC"), left_bar=GOLD)); out.append(Spacer(1, 8))
+            out.append(Spacer(1, 2)); out.append(boxed(t, "! WATCH OUT", [P(b.t, t.boxt)], colors.HexColor("#FBF3DC"), GOLD, INK, left_bar=GOLD)); out.append(Spacer(1, 8))
         elif isinstance(b, Example):
             out.append(Spacer(1, 4)); out.append(example_box(t, b)); out.append(Spacer(1, 8))
         elif isinstance(b, Vocab):
             out.append(vocab_panel(t, b.items)); out.append(Spacer(1, 8))
         elif isinstance(b, Passage):
-            out += [Spacer(1, 4), passage_box(t, b), Spacer(1, 10)]
+            out += [CondPageBreak(2.4 * inch), Spacer(1, 4), passage_box(t, b), Spacer(1, 10)]   # never strand a reading's title at a page bottom
         elif isinstance(b, ReaderAssign):
             out += [Spacer(1, 2), reader_box(t, b), Spacer(1, 8)]
         elif isinstance(b, Beside):
@@ -71,14 +220,14 @@ def render_blocks(t, blocks, teacher=False):
         elif isinstance(b, Watch):
             out += [Spacer(1, 2), watch_box(t, b), Spacer(1, 8)]
         elif isinstance(b, Callout):
-            out += [Spacer(1, 2), panel([P(b.label, ParagraphStyle("co", parent=t.eyebrow, textColor=HUNTER)), P(b.t, t.boxt)], SAGE_WASH, left_bar=HUNTER), Spacer(1, 8)]
+            out += [Spacer(1, 2), boxed(t, b.label.upper(), [P(b.t, t.boxt)], SAGE_WASH, HUNTER, WHITE, left_bar=HUNTER), Spacer(1, 8)]
         elif isinstance(b, Dialogue):
             out += [Spacer(1, 2), dialogue_box(t, b), Spacer(1, 8)]
         elif isinstance(b, Phrases):
             rows = [["Español", "Sounds like", "English"]] + [list(r) for r in b.rows]
             out += [P(b.title, t.h4), table(t, rows, [2.2 * inch, 1.8 * inch, W - 4.0 * inch], font_size=10), Spacer(1, 8)]
         elif isinstance(b, OnTheJob):
-            out += [Spacer(1, 2), panel([P("ON THE JOB", ParagraphStyle("otj", parent=t.eyebrow, textColor=HUNTER)), P(b.t, t.boxt)], SAGE_WASH, left_bar=HUNTER), Spacer(1, 8)]
+            out += [Spacer(1, 2), boxed(t, "ON THE JOB", [P(b.t, t.boxt)], SAGE_WASH, HUNTER, WHITE, left_bar=HUNTER), Spacer(1, 8)]
     return out
 
 
@@ -139,7 +288,7 @@ def watch_box(t, wb):
 def investigate_box(t, iv):
     """Hands-on investigation or activity: question, materials, numbered steps, what to record, safety."""
     tag = {"science": "INVESTIGATE", "art": "CREATE"}.get(t.subject, "ACTIVITY")
-    inner = [P(f"{tag}  ·  {iv.title.upper()}", t.eyebrow), P(iv.question, ParagraphStyle("ivq", parent=t.boxt, fontName="BodySemi"))]
+    inner = [[chip(f"{tag}  ·  {iv.title.upper()}", t.main, t.on_main), Spacer(1, 5)], P(iv.question, ParagraphStyle("ivq", parent=t.boxt, fontName="BodySemi"))]
     if iv.materials: inner.append(P("<b>You need:</b> " + "; ".join(iv.materials) + ".", t.boxt))
     num = ParagraphStyle("ivs", parent=t.boxt, leftIndent=22, bulletIndent=0)
     for i, st in enumerate(iv.steps, 1): inner.append(Paragraph(st, num, bulletText=f"{i}"))
@@ -155,29 +304,31 @@ def investigate_box(t, iv):
 
 
 def passage_box(t, ps):
-    """Reading passage with numbered paragraphs; one row per paragraph so it can run across pages."""
-    num = ParagraphStyle("pn", parent=t.small, alignment=TA_RIGHT, textColor=t.main, fontName="Mono", fontSize=8, leading=17)
-    body = ParagraphStyle("pb", parent=t.body, fontSize=11.5, leading=17.5, spaceAfter=0, firstLineIndent=0)
-    verse = ParagraphStyle("pv", parent=body, leftIndent=18, leading=16)
-    head = [P(ps.genre.upper() if ps.genre else "READ", t.eyebrow),
-            P(ps.title, ParagraphStyle("pt", parent=t.h2, fontSize=17, leading=21, spaceBefore=0, spaceAfter=2))]
-    if ps.source: head.append(P(ps.source, ParagraphStyle("ps", parent=t.small, fontName="BodyMed", spaceAfter=4)))
+    """Reading content set like a page from a book: warm paper, a brown READING tab, a book serif, and paragraph
+    numbers in the margin. One row per paragraph so a long reading can run across pages."""
+    rf = READ_FONT
+    num = ParagraphStyle("pn", parent=t.small, alignment=TA_RIGHT, textColor=BOOK, fontName="Mono", fontSize=8, leading=18.5)
+    body = ParagraphStyle("pb", fontName=rf, fontSize=12, leading=18.5, textColor=READ_INK, spaceAfter=0, firstLineIndent=0)
+    verse = ParagraphStyle("pv", parent=body, leftIndent=18, leading=17, fontName=rf if rf != "Read" else "ReadIt")
+    tab = chip("READING" + (f"  ·  {ps.genre.upper()}" if ps.genre else ""), BOOK, WHITE, 8)
+    head = [tab, Spacer(1, 6), P(ps.title, ParagraphStyle("pt", parent=t.h2, fontSize=18, leading=22, textColor=READ_INK, spaceBefore=0, spaceAfter=2))]
+    if ps.source: head.append(P(ps.source, ParagraphStyle("ps", fontName=rf if rf != "Read" else "ReadIt", fontSize=9.5, leading=13, textColor=BOOK, spaceAfter=6)))
     rows = [["", head]]; n = 0
     for para in ps.paras:
         if para.startswith("<b>") and para.endswith("</b>") and len(para) < 70:
-            rows.append(["", P(para[3:-4], ParagraphStyle("psh", parent=t.h3, fontSize=12.5, spaceBefore=2, spaceAfter=0))])
+            rows.append(["", P(para[3:-4], ParagraphStyle("psh", parent=body, fontName=rf if rf != "Read" else "ReadBold", fontSize=12.5, spaceBefore=2))])
         elif para.startswith(">"):
             rows.append(["", P(para[1:].strip().replace("\\n", "<br/>").replace("\n", "<br/>"), verse)])
         else:
             n += 1
             rows.append([P(str(n) if ps.numbered else "", num), P(stage(para), body)])
-    tb = Table(rows, colWidths=[26, W - 26])
-    tb.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("BACKGROUND", (0, 0), (-1, -1), WHITE),
-                            ("LINEABOVE", (0, 0), (-1, 0), 4, t.main), ("BOX", (0, 0), (-1, -1), 0.8, t.mid),
-                            ("LEFTPADDING", (0, 0), (0, -1), 2), ("RIGHTPADDING", (0, 0), (0, -1), 8),
-                            ("LEFTPADDING", (1, 0), (1, -1), 2), ("RIGHTPADDING", (1, 0), (1, -1), 16),
-                            ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
-                            ("TOPPADDING", (0, 0), (-1, 0), 10), ("BOTTOMPADDING", (0, -1), (-1, -1), 12)]))
+    tb = Table(rows, colWidths=[28, W - 28])
+    tb.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("BACKGROUND", (0, 0), (-1, -1), PAPER),
+                            ("BOX", (0, 0), (-1, -1), 0.8, PAPER_EDGE), ("LINEBEFORE", (0, 0), (0, -1), 3, PAPER_EDGE),
+                            ("LEFTPADDING", (0, 0), (0, -1), 2), ("RIGHTPADDING", (0, 0), (0, -1), 9),
+                            ("LEFTPADDING", (1, 0), (1, -1), 2), ("RIGHTPADDING", (1, 0), (1, -1), 18),
+                            ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+                            ("TOPPADDING", (0, 0), (-1, 0), 12), ("BOTTOMPADDING", (0, -1), (-1, -1), 14)]))
     return tb
 
 
@@ -187,21 +338,24 @@ def stage(text):
 
 
 def reader_box(t, r):
-    lines = [P("READ IN YOUR READER", t.eyebrow), P(f"<b>{r.book}</b> · {r.section}" + (f" · {r.pages}" if r.pages else ""), t.boxt)]
-    if r.focus: lines.append(P(f"<b>As you read:</b> {r.focus}", t.boxt))
-    return panel(lines, IVORY, left_bar=GOLD)
+    """An assignment to read in the Reader (an instruction, so it uses the information style, with the pages)."""
+    pages = r.pages or reader_pages(t, r)
+    st = ParagraphStyle("rb", parent=t.boxt, fontSize=11.5, leading=16)
+    lines = [P(f"<b>{r.book.replace(' Reader', '')}</b>  ·  {r.section}" + (f"  ·  <b>{pages}</b>" if pages else ""), st)]
+    if r.focus: lines.append(P(f"<b>As you read, think about:</b> {r.focus}", st))
+    return boxed(t, "READ IN YOUR READER", lines, colors.HexColor("#FBF3DC"), BOOK, WHITE, left_bar=BOOK)
 
 
 def example_box(t, ex):
-    inner = [P(f"{t.lab['example']}  ·  {ex.title.upper()}", t.eyebrow), P(ex.problem, ParagraphStyle("exq", parent=t.boxt, fontName="BodySemi"))]
+    inner = [chip(f"{t.lab['example']}  ·  {ex.title.upper()}", t.main, t.on_main), Spacer(1, 5), P(ex.problem, ParagraphStyle("exq", parent=t.boxt, fontName="BodySemi"))]
     if ex.fig: inner += [Spacer(1, 3), centered(ex.fig(t), W - 30), Spacer(1, 3)]
     num = ParagraphStyle("st", parent=t.boxt, leftIndent=22, bulletIndent=0)
     for i, s in enumerate(ex.steps, 1):
         inner.append(Paragraph(s, num, bulletText=f"{i}"))
     inner.append(P(f"<b>{t.lab['answer']}:</b> {ex.answer}", ParagraphStyle("exa", parent=t.boxt, textColor=t.dark, spaceBefore=3)))
     # one row per paragraph so a long example can continue on the next page
-    head = [inner[0], inner[1]]
-    rows = [[head]] + [[f] for f in inner[2:]]
+    head = inner[:3]
+    rows = [[head]] + [[f] for f in inner[3:]]
     tb = Table(rows, colWidths=[W])
     tb.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 1, t.main), ("BACKGROUND", (0, 0), (-1, -1), WHITE),
                             ("LINEABOVE", (0, 0), (-1, 0), 4, t.main), ("LEFTPADDING", (0, 0), (-1, -1), 12),
@@ -211,28 +365,37 @@ def example_box(t, ex):
 
 
 def try_it_box(t, L, with_answers=False):
-    inner = [P(t.lab["try_"], t.eyebrow), P(t.lab["try_note"] if not with_answers else "Answers are shown in red.", t.small)]
+    directions = ParagraphStyle("dir", parent=t.boxt, fontName="BodyMed", textColor=t.dark)
+    inner = [chip("✎ " + t.lab["try_"], t.main, t.on_main), Spacer(1, 5),
+             P(("<b>Directions:</b> " + t.lab["try_note"]) if not with_answers else "Answers are shown in color.", directions)]
     for i, pr in enumerate(L.try_it, 1):
         row = [P(f"<b>{i}.</b>  {pr.prompt}", t.boxt)]
         if pr.fig: row += [centered(pr.fig(t), W - 40)]
         if pr.choices: row.append(P("    ".join(f"<b>{chr(65 + k)}.</b> {c}" for k, c in enumerate(pr.choices)), t.boxt))
         if with_answers: row.append(P(f"Answer: {pr.answer}", t.answer))
         inner += row
-    inner.append(P(f"More practice: <b>Workbook, Lesson {L.num}</b>.", t.small))
+    inner.append(P(f"Next: <b>Workbook Lesson {L.num}</b>.", t.small))
     return panel(inner, t.wash, border=t.mid)
 
 
+def summary_box(t, L):
+    return boxed(t, "✓ REMEMBER", [P(L.summary, ParagraphStyle("sm2", parent=t.boxt, fontName="BodyMed"))], SAGE_WASH, HUNTER, WHITE, left_bar=HUNTER)
+
+
 # ================================================================ TEXTBOOK
-def textbook_lesson(t, L, teacher=False):
-    out = lesson_header(t, L)
-    out.append(P(L.i_can, t.ican))
+def textbook_lesson(t, L, U=None, teacher=False):
+    """Lesson banner and title; Today's Goal and Today's Assignment; then numbered steps:
+    1 Get Ready (words to know, warm-up question), 2 Learn, 3 Your Turn, 4 Wrap Up."""
+    out = lesson_header(t, L, U)
+    out += [goal_card(t, L), Spacer(1, 8), checklist(t, "TODAY'S ASSIGNMENT", assignment_items(t, L), IVORY)]
+    out += step(t, 1, "Get Ready")
     if L.vocab: out += [vocab_panel(t, L.vocab), Spacer(1, 8)]
-    out.append(panel([P(t.lab["explore"], t.eyebrow), P(L.launch, t.boxt)], IVORY, border=LINE)); out.append(Spacer(1, 8))
+    out.append(boxed(t, t.lab["explore"], [P(L.launch, ParagraphStyle("gr", parent=t.boxt, fontSize=12, leading=17))], WHITE, border=t.mid))
+    out += step(t, 2, "Learn")
     out += render_blocks(t, L.learn, teacher)
-    out.append(Spacer(1, 4)); out.append(try_it_box(t, L, with_answers=teacher))
+    out += [KeepTogether(step(t, 3, t.lab["try_"].title()) + [try_it_box(t, L, with_answers=teacher)])]
     if L.summary:
-        # keep the summary on the same page as the end of Try It when it fits
-        out += [Spacer(1, 8), panel([P("LESSON SUMMARY", t.eyebrow), P(L.summary, t.boxt)], SAGE_WASH, left_bar=HUNTER)]
+        out += [KeepTogether(step(t, 4, "Wrap Up") + [summary_box(t, L)])]
     return out
 
 
@@ -304,11 +467,15 @@ def front_matter(t, book, doc, kind):
     out = [NextPageTemplate("body"), PageBreak()]
     intro = {
         "textbook": ["How to use this book",
-                     f"Each lesson starts with an <b>I can</b> goal and a <b>{t.lab['explore'].title()}</b> question. Read the lesson with your teacher. "
-                     f"{t.lab['study']} Your practice pages are in your <b>Student Workbook</b>, labeled with the same lesson number."
-                     + (" When a lesson says <b>Read in Your Reader</b>, read that chapter in your Core Knowledge Reader first." if t.subject == "ela" else ""),
-                     ["<b>Key Idea</b> boxes hold the most important rule or fact. Learn these.",
-                      "<b>Watch Out</b> boxes warn you about common mistakes."]
+                     "Every lesson starts on a new page with the same parts, so you always know where to look. "
+                     f"{t.lab['study']} Your practice pages are in your <b>Student Workbook</b>, labeled with the same lesson number.",
+                     ["<b>Today's Goal</b> (the box with the target) says what you will be able to do by the end of the lesson.",
+                      "<b>Today's Assignment</b> is your checklist for the day. Tick each box as you finish it"
+                      + (", including the pages to read in your <b>Grade " + str(getattr(t, "grade", "")) + " Reader</b>." if t.subject == "ela" else "."),
+                      f"The lesson then goes in numbered steps: <b>1 Get Ready</b>, <b>2 Learn</b>, <b>3 {t.lab['try_'].title()}</b>, and <b>4 Wrap Up</b>.",
+                      "Boxes with a <b>colored label</b> are lesson information: <b>Words to Know</b>, <b>Key Idea</b> (the most important rule or fact; learn these), "
+                      "worked examples, and <b>Watch Out</b> warnings about common mistakes.",
+                      "Pages that look like <b>a page from a book</b>, on cream paper with a brown <b>READING</b> tab, are things to read: stories, excerpts, and articles."]
                      + (["<b>Investigate</b> boxes are hands-on experiments. Do them with your teacher and record what you observe."] if t.subject == "science" else [])
                      + (["<b>Activity</b> boxes are hands-on map, source, and timeline work. Do them with your teacher."] if t.subject == "social" else [])
                      + (["<b>Create</b> boxes are studio activities. Keep everything you make in your portfolio folder."] if t.subject == "art" else [])
@@ -343,9 +510,8 @@ def build_textbook(book, path):
     story = [Spacer(1, 1)] + front_matter(t, book, doc, "textbook")
     for U in book.units:
         story += unit_opener(t, U, doc, "textbook") + unit_intro_student(t, U)
-        for i, L in enumerate(U.lessons):
-            # start each lesson on a new page unless the previous one left most of a page empty
-            story += ([PageBreak()] if i == 0 else [CondPageBreak(5.2 * inch), Spacer(1, 18)]) + textbook_lesson(t, L)
+        for L in U.lessons:
+            story += [PageBreak()] + textbook_lesson(t, L, U)       # every lesson starts on a fresh page
         story += study_guide(t, U)
     story += glossary(t, book)
     doc.multiBuild(story)
@@ -426,13 +592,25 @@ def problem_cell(t, pr, num, w, show_answer=False):
     return tb
 
 
-def section_grid(t, sec, start, show_answer=False):
-    head = [P(sec.title, t.h3)]
-    if sec.intro: head.append(P(sec.intro, t.body))
+def section_head(t, title, letter=None):
+    """Workbook section title with a colored part tab: [A] Warm-Up."""
+    tag = chip(f"PART {letter}", t.main, t.on_main, 8) if letter else None
+    h = P(title, ParagraphStyle("sh", parent=t.h3, spaceBefore=0, spaceAfter=0))
+    if not tag: return h
+    tb = Table([[tag, h]], colWidths=[tag._colWidths[0] + 8, W - tag._colWidths[0] - 8])
+    tb.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                            ("TOPPADDING", (0, 0), (-1, -1), 8), ("BOTTOMPADDING", (0, 0), (-1, -1), 4), ("LINEBELOW", (0, 0), (-1, -1), 0.8, t.mid)]))
+    return tb
+
+
+def section_grid(t, sec, start, show_answer=False, letter=None):
+    head = [section_head(t, sec.title, letter), Spacer(1, 4)]
+    if sec.intro: head.append(P(f"<b>Directions:</b> {sec.intro}", ParagraphStyle("sdi", parent=t.body, fontName="BodyMed", textColor=t.dark)))
     out = []
     if getattr(sec, "passage", None) and not show_answer:
-        out += [KeepTogether(head[:1] + [Spacer(1, 2)]), passage_box(t, sec.passage), Spacer(1, 10)]
-        head = head[1:]
+        out += [KeepTogether(head[:2] + [P("<b>First, read this passage.</b> Then answer the questions below it.", ParagraphStyle("rf", parent=t.body, fontName="BodyMed", textColor=t.dark)), Spacer(1, 2)]),
+                passage_box(t, sec.passage), Spacer(1, 10)]
+        head = head[2:]
     n = start; row = []; rows = []
     cols = sec.cols; cw = W / cols
     for pr in sec.problems:
@@ -456,28 +634,53 @@ def section_grid(t, sec, start, show_answer=False):
     return out, n
 
 
-def workbook_lesson(t, L):
-    out = [P(f"UNIT {L.num.split('.')[0]}  ·  LESSON {L.num}  ·  PRACTICE", t.eyebrow),
-           toc_heading(f"Lesson {L.num}: {L.title}", ParagraphStyle("wh", parent=t.h2, spaceBefore=0), 1, running=f"Lesson {L.num} Practice · {L.title}"),
-           name_date(t), Spacer(1, 6), P(L.i_can, ParagraphStyle("ic2", parent=t.ican, fontSize=12, leading=16))]
+LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+
+def workbook_lesson(t, L, U=None):
+    """Practice pages: banner, title, name and date, Today's Goal, a short What To Do list, then lettered parts."""
+    parts = [s.title for s in L.practice]
+    todo = [f"Read <b>Textbook Lesson {L.num}</b> first.",
+            f"Do every part on these pages: " + ", ".join(f"<b>Part {LETTERS[i]}</b> {p}" for i, p in enumerate(parts)) + ".",
+            "Show your thinking. Write final answers on the lines." if t.subject == "math" else "Answer in complete sentences unless a line asks for one word.",
+            "Check your work with your teacher and fix any mistakes."]
+    out = lesson_header(t, L, U, tag="PRACTICE", title_style=ParagraphStyle("wh", parent=t.h2, spaceBefore=0))
+    out[-1] = toc_heading(f"Lesson {L.num}: {L.title}", ParagraphStyle("wh", parent=t.h2, spaceBefore=0), 1, running=f"Lesson {L.num} Practice · {L.title}")
+    out += [name_date(t), Spacer(1, 8), goal_card(t, L, size=13), Spacer(1, 6), checklist(t, "WHAT TO DO", todo, IVORY), Spacer(1, 4)]
     n = 1
-    for sec in L.practice:
-        part, n = section_grid(t, sec, n)
+    for i, sec in enumerate(L.practice):
+        part, n = section_grid(t, sec, n, letter=LETTERS[i])
         out += part
     return out
 
 
+def check_banner(t, C, teacher=False):
+    big = ParagraphStyle("cbn", fontName="BodyBold", fontSize=13, leading=16, textColor=WHITE)
+    sm = ParagraphStyle("cbs", fontName="BodyMed", fontSize=9.5, leading=12, textColor=WHITE)
+    right = ParagraphStyle("cbr", parent=sm, alignment=TA_RIGHT)
+    left = [P(check_tag(C) + ("  ·  ANSWER KEY" if teacher else ""), big)]
+    if C.date: left.append(P(f"Planned for {C.date}", sm))
+    tb = Table([[left, P(f"About {C.minutes} minutes" if C.minutes else "", right)]], colWidths=[W * 0.6, W * 0.4])
+    tb.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), HUNTER), ("ROUNDEDCORNERS", [6, 6, 6, 6]), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                            ("LEFTPADDING", (0, 0), (-1, -1), 12), ("RIGHTPADDING", (0, 0), (-1, -1), 12),
+                            ("TOPPADDING", (0, 0), (-1, -1), 7), ("BOTTOMPADDING", (0, 0), (-1, -1), 8)]))
+    return tb
+
+
 def check_pages(t, C, show_answer=False, teacher=False):
-    tag = check_tag(C)
-    out = [P(f"{tag}" + (f"  ·  {C.date}" if C.date else "") + (f"  ·  ABOUT {C.minutes} MINUTES" if C.minutes else ""), t.eyebrow),
+    out = [check_banner(t, C, teacher), Spacer(1, 8),
            toc_heading(C.title + (" — Answer Key" if teacher else ""), ParagraphStyle("ch", parent=t.h2, spaceBefore=0), 1, running=C.title)]
-    if not teacher: out += [name_date(t), Spacer(1, 6)]
-    if C.kind == "test" and not teacher:
-        total = sum(p.points for s in C.sections for p in s.problems)
-        out.append(P(f"Show your work. This test has {total} points.", t.body))
+    if not teacher:
+        out += [name_date(t), Spacer(1, 8)]
+        todo = ["Work on your own. Don't use your textbook unless your teacher says you may.",
+                "Read each question carefully. Show your thinking." if t.subject == "math" else "Read each passage and question carefully. Answer in complete sentences.",
+                "When you finish, check that every question has an answer."]
+        if C.kind == "test":
+            todo.insert(1, f"This test has <b>{sum(p.points for s in C.sections for p in s.problems)} points</b>.")
+        out += [checklist(t, "DIRECTIONS", todo, IVORY), Spacer(1, 4)]
     n = 1
-    for sec in C.sections:
-        part, n = section_grid(t, sec, n, show_answer)
+    for i, sec in enumerate(C.sections):
+        part, n = section_grid(t, sec, n, show_answer, letter=LETTERS[i] if len(C.sections) > 1 else None)
         out += part
     return out
 
@@ -491,7 +694,7 @@ def build_workbook(book, path):
         story += [vocab_panel(t, U.vocab, "Unit Vocabulary")]
         week_checks = {c.after: c for c in U.checks}
         for L in U.lessons:
-            story += [PageBreak()] + workbook_lesson(t, L)
+            story += [PageBreak()] + workbook_lesson(t, L, U)
             if L.num in week_checks:
                 story += [PageBreak()] + check_pages(t, week_checks[L.num])
         story += [PageBreak()] + check_pages(t, U.review)
@@ -574,11 +777,10 @@ def problems_key(t, sections, title):
     return key_table(t, items, title)
 
 
-def teacher_lesson(t, L):
+def teacher_lesson(t, L, U=None):
     T = L.teacher
-    out = lesson_header(t, L, kind_note=f"{L.date}" if L.date else None)
-    out.append(P(L.i_can, t.ican))
-    out.append(info_table(t, [("Objective", T["objective"]), ("Standard", L.standard + " — " + T.get("standard_text", "")),
+    out = lesson_header(t, L, U, tag="TEACHER PLAN", title_style=ParagraphStyle("th", parent=t.h1, fontSize=24, leading=28))
+    out.append(info_table(t, [("Student goal", f"<b>{L.i_can}</b>"), ("Objective", T["objective"]), ("Standard", L.standard + " — " + T.get("standard_text", "")),
                               ("Date", L.date or "—"), ("Time", T.get("time", "About 50 minutes")),
                               ("Materials", T["materials"]), ("Get ready", T.get("prep", PREP[t.subject]))]))
     out += [Spacer(1, 8), P("Lesson Flow", t.h3), flow_table(t, T["flow"])]
@@ -595,15 +797,15 @@ def teacher_lesson(t, L):
         side.append(dt)
     for s in side: out += [Spacer(1, 8), s]
     # student lesson with answers
-    out += [PageBreak(), P(f"STUDENT LESSON {L.num} · WITH ANSWERS", t.eyebrow)]
+    out += [PageBreak(), chip(f"STUDENT LESSON {L.num}  ·  WITH ANSWERS", HUNTER), Spacer(1, 6)]
     out += textbook_lesson_compact(t, L)
     out += [Spacer(1, 8)] + problems_key(t, L.practice, f"Workbook Answer Key · Lesson {L.num}")
     return out
 
 
 def textbook_lesson_compact(t, L):
-    out = [P(f"Lesson {L.num}: {L.title}", t.h2)]
-    out.append(panel([P(t.lab["explore"], t.eyebrow), P(L.launch, t.boxt)], IVORY, border=LINE)); out.append(Spacer(1, 6))
+    out = [P(f"Lesson {L.num}: {L.title}", t.h2), checklist(t, "STUDENT'S ASSIGNMENT", assignment_items(t, L), IVORY), Spacer(1, 6)]
+    out.append(boxed(t, t.lab["explore"], [P(L.launch, t.boxt)], WHITE, border=t.mid)); out.append(Spacer(1, 6))
     out += render_blocks(t, L.learn, True)
     out.append(try_it_box(t, L, with_answers=True))
     return out
@@ -631,7 +833,7 @@ def build_teacher(book, path):
         story += unit_opener(t, U, doc, "teacher") + unit_overview_teacher(t, U)
         week_checks = {c.after: c for c in U.checks}
         for L in U.lessons:
-            story += [PageBreak()] + teacher_lesson(t, L)
+            story += [PageBreak()] + teacher_lesson(t, L, U)
             if L.num in week_checks:
                 C = week_checks[L.num]
                 story += [PageBreak()] + check_teacher(t, C)
@@ -641,8 +843,7 @@ def build_teacher(book, path):
 
 
 def check_teacher(t, C):
-    tag = check_tag(C)
-    out = [P(tag + (f"  ·  {C.date}" if C.date else ""), t.eyebrow),
+    out = [check_banner(t, C, teacher=True), Spacer(1, 8),
            toc_heading(C.title + " — Answer Key", ParagraphStyle("ch", parent=t.h2, spaceBefore=0), 1, running=C.title + " Key")]
     if C.teacher_note: out.append(P(C.teacher_note, t.body))
     out += problems_key(t, C.sections, "Answers")

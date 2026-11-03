@@ -117,11 +117,20 @@ LM, RM, TM, BM = 1.0 * inch, 0.75 * inch, 0.85 * inch, 0.8 * inch   # wide left 
 W = PAGE_W - LM - RM
 
 
+def complement(c, lightness, saturation):
+    """The color opposite c on the color wheel, at the given lightness and saturation."""
+    import colorsys
+    h, _, _ = colorsys.rgb_to_hls(c.red, c.green, c.blue)
+    return colors.Color(*colorsys.hls_to_rgb((h + 0.5) % 1, lightness, saturation))
+
+
 class Theme:
     def __init__(self, subject):
         s = SUBJECTS[subject]
         self.subject = subject; self.name = s["name"]
         self.main, self.dark, self.wash, self.mid = s["main"], s["dark"], s["wash"], s["mid"]
+        # the complement of the subject color, for the left panel of textbook lesson pages
+        self.comp_wash, self.comp = complement(self.main, 0.935, 0.5), complement(self.main, 0.3, 0.55)
         # accent: color for accent TEXT (eyebrows, answers, page numbers); on_main: text drawn on a main-color fill.
         # Most subjects use the main color and white; the blush Data Science books use blush fills with hunter-green text.
         self.accent = s.get("accent", self.main); self.on_main = s.get("on_main", WHITE)
@@ -530,20 +539,35 @@ class Book:
 KIND_LABEL = {"textbook": "Student Textbook", "workbook": "Student Workbook", "teacher": "Teacher Edition"}
 
 
-# Lesson pages: the lesson runs in a main column, and reminders, definitions, and key ideas sit beside it as tabs in a
-# side rail on the outer edge of the page (see SideNote).
-RAIL_W = 1.85 * inch; RAIL_GAP = 0.22 * inch; MAIN_W = W - RAIL_W - RAIL_GAP
-RAIL_X = LM + MAIN_W + RAIL_GAP
+# Lesson pages in the student textbooks have three panels: the lesson in the wide center panel; reminders (key ideas,
+# watch outs, tips, Remember) in a tinted left panel; and definitions, readings, and extras in a tinted right panel.
+PANEL_W = 1.5 * inch; PANEL_GAP = 0.2 * inch
+PANEL_X = {"left": 0.55 * inch, "right": PAGE_W - 0.3 * inch - PANEL_W}   # the left panel stays clear of the 3-hole punch
+MAIN_X = PANEL_X["left"] + PANEL_W + PANEL_GAP
+MAIN_W = PANEL_X["right"] - PANEL_GAP - MAIN_X
+PANEL_TITLE = {"left": "REMEMBER", "right": "WORDS & MORE"}
+PANEL_TOP = PAGE_H - TM - 22   # notes start below the panel's title
 
 
 class SideNote(Flowable):
-    """A tab in the side rail, placed beside the main-column content that follows it. Takes no room in the main column.
-    Notes never overlap: each starts below the previous one, and a note that won't fit moves to the top of the next page."""
-    def __init__(self, doc, note):
-        super().__init__(); self.doc, self.note = doc, note
+    """A note in the left or right panel, placed beside the center-panel content that follows it. Takes no room in the
+    center panel. Notes never overlap: each starts below the previous one, and a note that won't fit moves to the top of
+    the next page."""
+    def __init__(self, doc, note, side):
+        super().__init__(); self.doc, self.note, self.side = doc, note, side
     def wrap(self, aw, ah): return 0, 0
     def drawOn(self, canv, x, y, _sW=0):
-        self.doc.place_note(canv, self.note, y)
+        self.doc.place_note(canv, self.note, y, self.side)
+
+
+class FlushNotes(Flowable):
+    """Ends a lesson: if panel notes are still waiting for room, the lesson goes on to one more page so they appear
+    with their own lesson instead of beside the next one."""
+    def __init__(self, doc): super().__init__(); self.doc = doc
+    def wrap(self, aw, ah):
+        waiting = any(self.doc.pending.values()) and ah < PAGE_H - TM - BM - 1
+        return 0, (ah + 1 if waiting else 0)
+    def draw(self): pass
 
 
 class Doc(BaseDocTemplate):
@@ -553,7 +577,7 @@ class Doc(BaseDocTemplate):
         self.book, self.kind, self.theme = book, kind, book.theme
         self.running = ""
         frame = Frame(LM, BM, W, PAGE_H - TM - BM, id="f", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
-        main = Frame(LM, BM, MAIN_W, PAGE_H - TM - BM, id="m", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
+        main = Frame(MAIN_X, BM, MAIN_W, PAGE_H - TM - BM, id="m", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
         self.addPageTemplates([PageTemplate(id="cover", frames=[frame], onPage=self.cover_page),
                                PageTemplate(id="body", frames=[frame], onPage=self.body_page, onPageEnd=self.footer),
                                PageTemplate(id="lesson", frames=[main], onPage=self.lesson_page, onPageEnd=self.footer),
@@ -562,22 +586,36 @@ class Doc(BaseDocTemplate):
     def beforeDocument(self):
         self.running = ""   # multiBuild runs several passes; don't carry the last footer into the front matter
         self.toc_log = []   # (level, heading, page) from the final pass; written beside the PDF as <name>.toc.json
-        self.rail_top, self.pending = PAGE_H - TM, []
+        self.panel_top = {"left": PANEL_TOP, "right": PANEL_TOP}
+        self.pending = {"left": [], "right": []}
+        self.carried = []   # pages that got notes which didn't fit beside their content on the page before
 
     def lesson_page(self, c, doc):
         self.body_page(c, doc)
-        self.rail_top = PAGE_H - TM
-        waiting, self.pending = self.pending, []
-        for note in waiting: self.place_note(c, note, PAGE_H - TM)
+        t = self.theme; c.saveState()
+        for side, bg, fg in (("left", t.comp_wash, t.comp), ("right", t.wash, t.dark)):
+            x = PANEL_X[side]
+            x0, x1 = (0, x + PANEL_W + PANEL_GAP / 2) if side == "left" else (x - PANEL_GAP / 2, PAGE_W)
+            c.setFillColor(bg); c.rect(x0, BM - 8, x1 - x0, PAGE_H - 28 - (BM - 8), fill=1, stroke=0)
+            text(c, x, PAGE_H - TM - 8, PANEL_TITLE[side], "BodyBold", 8, fg)
+            c.setStrokeColor(fg); c.setLineWidth(1.2); c.line(x, PAGE_H - TM - 13, x + PANEL_W, PAGE_H - TM - 13)
+        c.restoreState()
+        for side in ("left", "right"):
+            self.panel_top[side] = PANEL_TOP
+            waiting, self.pending[side] = self.pending[side], []
+            self.carried += [doc.page] * len(waiting)
+            for note in waiting: self.place_note(c, note, PANEL_TOP, side)
 
-    def place_note(self, c, note, y):
-        """Draw a side-rail tab whose top lines up with y (or sits below the previous tab)."""
-        _, h = note.wrap(RAIL_W, PAGE_H)
-        top = min(y, self.rail_top)
+    def place_note(self, c, note, y, side):
+        """Draw a panel note whose top lines up with y (or sits below the previous note in that panel)."""
+        _, h = note.wrap(PANEL_W, PAGE_H)
+        top = min(y, self.panel_top[side])
         if top - h < BM:
-            self.pending.append(note); return
-        note.drawOn(c, RAIL_X, top - h)
-        self.rail_top = top - h - 10
+            top = BM + h   # near the page bottom: slide up to stay on the same page as its content, if there is room
+            if top > self.panel_top[side]:
+                self.pending[side].append(note); return
+        note.drawOn(c, PANEL_X[side], top - h)
+        self.panel_top[side] = top - h - 9
 
     def multiBuild(self, story, *a, **k):
         r = super().multiBuild(story, *a, **k)

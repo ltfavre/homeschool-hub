@@ -22,8 +22,8 @@ class Scaled(Flowable):
 
 
 def fit(f, width=None):
-    """A figure or table shrunk, if needed, to fit the column."""
-    width = width or W
+    """A figure or table shrunk, if needed, to fit the column (less a little room for labels drawn past its edge)."""
+    width = (width or W) - 24
     fw, _ = f.wrap(width, PAGE_H)
     return f if fw <= width + 0.5 else Scaled(f, width / fw)
 
@@ -33,54 +33,67 @@ def centered(flow, width=None):
     return _engine.centered(fit(flow, width), width)
 
 
-class RailTab(Flowable):
-    """A side-rail note: a tinted card with a colored index tab on the page's outer edge, labeled sideways."""
-    TAB = 0.3 * inch
-    def __init__(self, label, flowables, color, wash, fg=WHITE):
-        super().__init__(); self.label, self.color, self.wash, self.fg = label, color, wash, fg
-        self.inner = Table([[f] for f in flowables], colWidths=[RAIL_W])
-        self.inner.setStyle(TableStyle([("LEFTPADDING", (0, 0), (-1, -1), 9), ("RIGHTPADDING", (0, 0), (-1, -1), 7),
+class PanelCard(Flowable):
+    """A note in a side panel of a textbook lesson page: a white card with a colored label bar."""
+    BAR = 17
+    def __init__(self, label, flowables, color, fg=WHITE):
+        super().__init__(); self.label, self.color, self.fg = label, color, fg
+        self.inner = Table([[f] for f in flowables], colWidths=[PANEL_W])
+        self.inner.setStyle(TableStyle([("LEFTPADDING", (0, 0), (-1, -1), 7), ("RIGHTPADDING", (0, 0), (-1, -1), 6),
                                         ("TOPPADDING", (0, 0), (-1, -1), 1), ("BOTTOMPADDING", (0, 0), (-1, -1), 1),
-                                        ("TOPPADDING", (0, 0), (-1, 0), 8), ("BOTTOMPADDING", (0, -1), (-1, -1), 8)]))
+                                        ("TOPPADDING", (0, 0), (-1, 0), 6), ("BOTTOMPADDING", (0, -1), (-1, -1), 7)]))
     def wrap(self, aw, ah):
-        _, ih = self.inner.wrap(RAIL_W, ah)
-        self.h = max(ih, stringWidth(self.label, "BodyBold", 7.5) + 24)
-        return RAIL_W + self.TAB, self.h
+        _, ih = self.inner.wrap(PANEL_W, ah)
+        self.h = ih + self.BAR
+        return PANEL_W, self.h
     def draw(self):
         c = self.canv; c.saveState()
-        c.setFillColor(self.wash); c.roundRect(0, 0, RAIL_W + 6, self.h, 5, stroke=0, fill=1)
-        c.setFillColor(self.color); c.roundRect(RAIL_W, 0, self.TAB, self.h, 5, stroke=0, fill=1)
-        c.rect(RAIL_W, 0, 6, self.h, stroke=0, fill=1)
-        c.translate(RAIL_W + self.TAB / 2 + 2.7, self.h / 2); c.rotate(90)
-        text(c, 0, 0, self.label, "BodyBold", 7.5, self.fg, "c")
+        c.setFillColor(WHITE); c.setStrokeColor(self.color); c.setLineWidth(0.7)
+        c.roundRect(0, 0, PANEL_W, self.h, 5, stroke=1, fill=1)
+        c.setFillColor(self.color); c.roundRect(0, self.h - self.BAR, PANEL_W, self.BAR, 5, stroke=0, fill=1)
+        c.rect(0, self.h - self.BAR, PANEL_W, 6, stroke=0, fill=1)
+        size = min(7.5, 7.5 * (PANEL_W - 14) / stringWidth(self.label, "BodyBold", 7.5))
+        text(c, 7, self.h - self.BAR + 6, self.label, "BodyBold", size, self.fg)
         c.restoreState()
-        self.inner.drawOn(self.canv, 0, self.h - self.inner._height)
+        self.inner.drawOn(self.canv, 0, self.h - self.BAR - self.inner._height)
 
 
-RAIL_TEXT = None
-
-
-def rail_styles():
+def panel_styles():
     body = ParagraphStyle("rt", fontName="Body", fontSize=9.5, leading=13, textColor=INK, spaceAfter=2)
     return body, ParagraphStyle("rw", parent=body, fontName="BodySemi"), ParagraphStyle("rd", parent=body, textColor=MUTED, spaceAfter=5)
 
 
-def rail_note(t, b):
-    """The side-rail tab for a reminder, key idea, definition list, or tip, or None if b belongs in the main column."""
-    body, word, defn = rail_styles()
-    if isinstance(b, KeyIdea): return RailTab(b.title.upper(), [P(b.t, ParagraphStyle("rk", parent=body, fontName="BodyMed"))], t.main, t.wash, t.on_main)
-    if isinstance(b, WatchOut): return RailTab("WATCH OUT", [P(b.t, body)], GOLD, colors.HexColor("#FBF3DC"), INK)
-    if isinstance(b, Callout): return RailTab(b.label.upper(), [P(b.t, body)], HUNTER, SAGE_WASH)
-    if isinstance(b, OnTheJob): return RailTab("ON THE JOB", [P(b.t, body)], HUNTER, SAGE_WASH)
-    if isinstance(b, Vocab): return vocab_rail(t, b.items)
+def side_note(t, b):
+    """(side, card) for a block that belongs in a side panel, or None if it belongs in the center panel.
+    Left panel: things to remember (key ideas, watch outs, tips). Right panel: definitions, readings, and extras."""
+    body, word, defn = panel_styles()
+    if isinstance(b, KeyIdea): return "left", PanelCard(b.title.upper(), [P(b.t, ParagraphStyle("rk", parent=body, fontName="BodyMed"))], t.comp, WHITE)
+    if isinstance(b, WatchOut): return "left", PanelCard("WATCH OUT", [P(b.t, body)], GOLD, INK)
+    if isinstance(b, Callout): return "left", PanelCard(b.label.upper(), [P(b.t, body)], t.comp, WHITE)
+    if isinstance(b, Vocab): return "right", vocab_card(t, b.items)
+    if isinstance(b, ReaderAssign): return "right", reader_card(t, b)
+    if isinstance(b, OnTheJob): return "right", PanelCard("ON THE JOB", [P(b.t, body)], t.dark, WHITE)
     return None
 
 
-def vocab_rail(t, vocab, label="WORDS TO KNOW"):
-    body, word, defn = rail_styles()
+def vocab_card(t, vocab, label="WORDS TO KNOW"):
+    body, word, defn = panel_styles()
     items = []
     for w, d in vocab: items += [P(w, word), P(d, defn)]
-    return RailTab(label, items, HUNTER, SAGE_WASH)
+    return PanelCard(label, items, t.main, t.on_main)
+
+
+def reader_card(t, r):
+    body, word, defn = panel_styles()
+    pages = r.pages or reader_pages(t, r)
+    items = [P(f"<b>{r.book.replace(' Reader', '')}</b>", body), P(r.section + (f", {pages}" if pages else ""), body)]
+    if r.focus: items += [Spacer(1, 3), P(f"<b>As you read, think about:</b> {r.focus}", body)]
+    return PanelCard("READ IN YOUR READER", items, BOOK, WHITE)
+
+
+def remember_card(t, L):
+    body, word, defn = panel_styles()
+    return PanelCard("✓ REMEMBER", [P(L.summary, ParagraphStyle("rs", parent=body, fontName="BodyMed"))], t.comp, WHITE)
 
 
 # ================================================================ shared pieces
@@ -330,13 +343,13 @@ def vocab_panel(t, vocab, title="Words to Know"):
 
 
 def render_blocks(t, blocks, teacher=False, rail=False):
-    """Lesson content as flowables. With rail=True (textbook lesson pages), reminders, key ideas, definitions, and tips
-    become side-rail tabs placed beside the main-column block they follow."""
+    """Lesson content as flowables. With rail=True (textbook lesson pages), reminders, key ideas, definitions, readings,
+    and tips become side-panel notes placed beside the center-panel block they follow."""
     out = []; last = 0
     for b in blocks:
-        note = rail_note(t, b) if rail else None
+        note = side_note(t, b) if rail else None
         if note is not None:
-            out.insert(last, SideNote(t.doc, note)); continue
+            out.insert(last, SideNote(t.doc, note[1], note[0])); continue
         last = len(out)
         if isinstance(b, Text): out.append(P(b.t, t.body))
         elif isinstance(b, Heading): out.append(P(b.t, t.h3))
@@ -545,15 +558,16 @@ def textbook_lesson(t, L, U=None, teacher=False):
     1 Get Ready (words to know, warm-up question), 2 Learn, 3 Your Turn, 4 Wrap Up."""
     out = lesson_header(t, L, U)
     rail = getattr(t, "rail", False)
-    if L.vocab and rail: out.append(SideNote(t.doc, vocab_rail(t, L.vocab)))     # beside the goal, at the top of the lesson
+    if L.vocab and rail: out.append(SideNote(t.doc, vocab_card(t, L.vocab), "right"))     # beside the goal, at the top of the lesson
     out += [goal_card(t, L), Spacer(1, 8), checklist(t, "TODAY'S ASSIGNMENT", assignment_items(t, L), IVORY)]
     out += step(t, 1, "Get Ready")
     if L.vocab and not rail: out += [vocab_panel(t, L.vocab), Spacer(1, 8)]
     out.append(boxed(t, t.lab["explore"], [P(L.launch, ParagraphStyle("gr", parent=t.boxt, fontSize=12, leading=17))], WHITE, border=t.mid))
     out += step(t, 2, "Learn")
     out += render_blocks(t, L.learn, teacher, rail=rail)
+    if L.summary and rail: out.append(SideNote(t.doc, remember_card(t, L), "left"))   # beside Your Turn
     out += [KeepTogether(step(t, 3, t.lab["try_"].title()) + [try_it_box(t, L, with_answers=teacher)])]
-    if L.summary:
+    if L.summary and not rail:
         out += [KeepTogether(step(t, 4, "Wrap Up") + [summary_box(t, L)])]
     return out
 
@@ -631,9 +645,15 @@ def front_matter(t, book, doc, kind):
                      ["<b>Today's Goal</b> (the box with the target) says what you will be able to do by the end of the lesson.",
                       "<b>Today's Assignment</b> is your checklist for the day. Tick each box as you finish it"
                       + (", including the pages to read in your <b>Grade " + str(getattr(t, "grade", "")) + " Reader</b>." if t.subject == "ela" else "."),
-                      f"The lesson then goes in numbered steps: <b>1 Get Ready</b>, <b>2 Learn</b>, <b>3 {t.lab['try_'].title()}</b>, and <b>4 Wrap Up</b>.",
-                      "Boxes with a <b>colored label</b> are lesson information: <b>Words to Know</b>, <b>Key Idea</b> (the most important rule or fact; learn these), "
-                      "worked examples, and <b>Watch Out</b> warnings about common mistakes.",
+                      ]
+                     + ([f"Each lesson page has three panels. The wide <b>center panel</b> is the lesson, in numbered steps: <b>1 Get Ready</b>, <b>2 Learn</b>, and <b>3 {t.lab['try_'].title()}</b>.",
+                         "The <b>left panel</b> holds things to <b>remember</b>: <b>Key Ideas</b> (the most important rule or fact; learn these), "
+                         "<b>Watch Out</b> warnings about common mistakes, tips, and a <b>Remember</b> note that sums up the lesson. Each one sits beside the part of the lesson it goes with.",
+                         "The <b>right panel</b> holds <b>Words to Know</b> (definitions), what to <b>read in your Reader</b>, and other extras."] if student_book(t) else
+                        [f"The lesson then goes in numbered steps: <b>1 Get Ready</b>, <b>2 Learn</b>, <b>3 {t.lab['try_'].title()}</b>, and <b>4 Wrap Up</b>.",
+                         "Boxes with a <b>colored label</b> are lesson information: <b>Words to Know</b>, <b>Key Idea</b> (the most important rule or fact; learn these), "
+                         "worked examples, and <b>Watch Out</b> warnings about common mistakes."])
+                     + [
                       "Pages that look like <b>a page from a book</b>, on cream paper with a brown <b>READING</b> tab, are things to read: stories, excerpts, and articles."]
                      + (["<b>Investigate</b> boxes are hands-on experiments. Do them with your teacher and record what you observe."] if t.subject == "science" else [])
                      + (["<b>Activity</b> boxes are hands-on map, source, and timeline work. Do them with your teacher."] if t.subject == "social" else [])
@@ -665,12 +685,12 @@ def front_matter(t, book, doc, kind):
 
 
 def lesson_in_column(t, L, U):
-    """A textbook lesson laid out in the main column, with its side-rail tabs."""
+    """A textbook lesson laid out in the center panel, with its notes in the left and right panels."""
     global W
     full, W = W, MAIN_W
     t.rail = True
     try:
-        return textbook_lesson(t, L, U)
+        return textbook_lesson(t, L, U) + [FlushNotes(t.doc)]
     finally:
         W, t.rail = full, False
 
@@ -681,13 +701,18 @@ def build_textbook(book, path):
     for U in book.units:
         story += unit_opener(t, U, doc, "textbook") + unit_intro_student(t, U)
         for L in U.lessons:
-            # every lesson starts on a fresh page; student books put tips and definitions in side-rail tabs (the parent's
+            # every lesson starts on a fresh page; student books use the three-panel lesson page (the parent's
             # Data Science book keeps full-width pages for its wide code samples)
             story += ([NextPageTemplate("lesson"), PageBreak()] + lesson_in_column(t, L, U)) if student_book(t) else ([PageBreak()] + textbook_lesson(t, L, U))
         story += [NextPageTemplate("body")]
         story += study_guide(t, U)
     story += glossary(t, book)
     doc.multiBuild(story)
+    left = sum(len(v) for v in doc.pending.values())
+    starts = {pg for _, h, pg in doc.toc_log if h.startswith("Lesson ")}
+    into_next = sum(pg in starts for pg in doc.carried)
+    if doc.carried or left:
+        print(f"  {os.path.basename(path)}: {len(doc.carried)} panel notes moved to the next page ({into_next} into the next lesson), {left} left off")
 
 
 def glossary(t, book):

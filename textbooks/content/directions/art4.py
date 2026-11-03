@@ -1,0 +1,23 @@
+"""Directions for Grade 4 Art (see content/directions/__init__.py). Written for a 9- to 10-year-old reader."""
+D = {
+    "S|1.1|Warm-Up": "Write the art word for each description.",
+    "S|1.2|Warm-Up": "Write the kind of line for each description.",
+    "S|1.2|Sketch": "Draw in the boxes. Follow the directions for each one.",
+    "Y|1.3": "Write geometric or organic, or answer the question.",
+    "S|1.3|Warm-Up": "Write shape or form for each description.",
+    "S|1.3|Sort": "Write geometric or organic for each shape.",
+    "S|1.4|Warm-Up": "Write the art word for each description.",
+    "S|1.5|Warm-Up": "Write the color you get when you mix the two colors.",
+    "S|1.5|Practice": "Write primary or secondary, or write the color you get when you mix.",
+    "S|1.5|Create": "Color or paint the color wheel in the box. Follow the directions.",
+    "S|1.6|Warm-Up": "Write the art word for each item.",
+    "S|1.6|Practice": "Write the complement of each color, or fill in the blank.",
+    "S|1.7|Warm-Up": "Write the art word for each description.",
+    "S|1.8|Warm-Up": "Write the art word for each description.",
+    "S|1.8|Create": "Draw your final piece in the box, following the directions.",
+    "C|Sketchbook Check 1: Looking and Line|Show what you know": "Answer each item about line and the elements of art.",
+    "C|Sketchbook Check 2: Shape, Form, and Proportion|Show what you know": "Answer each item.",
+    "C|Sketchbook Check 3: Color and Value|Show what you know": "Write the color or art word for each item.",
+    "C|Unit 1 Review|Words": "Write what each art word means.",
+    "C|Unit 1 Portfolio Review|Part A · Elements of art (1 point each)": "Answer each question about the elements of art.",
+}

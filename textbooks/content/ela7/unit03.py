@@ -417,7 +417,7 @@ UNIT = Unit(3, "Mystery and Grammar", "Mystery structure and characterization, p
      ("W.7.2, W.7.4, W.7.5", "Write informative texts appropriate to task; edit.")],
     [("frame narrative", "A story within a story."), ("antecedent", "The noun a pronoun refers to."), ("passive voice", "The subject receives the action."), ("subjunctive", "The mood for wishes and contrary-to-fact ideas."),
      ("foreshadowing", "Hints about later events.")],
-    ["Unit 2 nouns; Grade 6 pronoun basics."], ["Strange Case of Dr. Jekyll and Mr. Hyde Reader (Chapters 1–4)", "A notebook for clue tracking"],
+    ["Unit 2 nouns; Grade 6 pronoun basics."], ["Strange Case of Dr. Jekyll and Mr. Hyde Reader (Chapters 1–4)", "Paper for clue tracking"],
     LESSONS, CHECKS, REVIEW, TEST,
     real_world="Clear pronouns and consistent verbs matter in every report, email, and essay, and noticing passive voice helps you see when someone is avoiding responsibility.",
     family_note="Ask your student to share their clue tracker and predict the solution, without spoiling the ending for anyone who hasn't read it!",

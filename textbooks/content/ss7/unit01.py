@@ -72,7 +72,7 @@ L2 = Lesson("1.2", "Early Humans: Hunter-Gatherers",
      S("Exit Ticket", [OR("Describe one advantage and one challenge of the hunter-gatherer way of life.", "Advantage: varied diet, freedom to move. Challenge: food could be scarce; constant travel.", lines=2)])],
     tss("Students describe Paleolithic life and migration.", "Analyze connections among events; explain how humans spread.", "Workbook Lesson 1.2",
         "No stores or farms.", "Read the lesson.", ["Discuss needs chart; evidence for early life."], "Check Your Understanding 1–3.",
-        ["Picturing “cavemen” as unintelligent."], ["Picture walk of artifacts."], ["Research the Lascaux cave paintings."], independent="Workbook. Weekly Check Friday."),
+        ["Picturing “cavemen” as unintelligent."], ["Picture walk of artifacts."], ["Research the Lascaux cave paintings."], independent="Workbook. The Weekly Check comes next."),
     summary="Early humans were nomadic hunter-gatherers who spread out of Africa.")
 
 # ================================================================= Week 2 · Agricultural Revolution
@@ -124,7 +124,7 @@ L4 = Lesson("1.4", "From Villages to Civilizations",
      S("Exit Ticket", [OR("Explain the chain from farming to cities.", "Farming → surplus → population growth → specialized jobs and trade → cities and government.", lines=2)])],
     tss("Students identify the features of civilization.", "Analyze connections among events and developments.", "Dried beans, role cards, workbook Lesson 1.4",
         "City vs village.", "Read the lesson.", ["Discuss features chart; flow chart."], "Check Your Understanding 1–3.",
-        ["Thinking “civilized” means “better.”"], ["Features checklist."], ["Research how Çatalhöyük was excavated."], independent="Workbook. Weekly Check Friday."),
+        ["Thinking “civilized” means “better.”"], ["Features checklist."], ["Research how Çatalhöyük was excavated."], independent="Workbook. The Weekly Check comes next."),
     summary="Surplus → population → specialization → cities and government.")
 
 # ================================================================= Week 3 · Mesopotamia
@@ -175,7 +175,7 @@ L6 = Lesson("1.6", "Sumer: City-States, Ziggurats, and Society",
      S("Exit Ticket", [OR("Compare a Sumerian city-state with a modern U.S. city.", "Answers vary; e.g. both have government and jobs; Sumer had kings, its own army, and patron gods.", lines=2)])],
     tss("Students describe Sumerian society.", "Analyze connections; describe government and social structure.", "Blocks or sugar cubes, workbook Lesson 1.6",
         "Town with its own king.", "Read the lesson.", ["Discuss social pyramid; religion and power."], "Check Your Understanding 1–3.",
-        ["Assuming all ancient women had no rights."], ["Social pyramid diagram."], ["Research the Royal Tombs of Ur."], independent="Workbook. Weekly Check Friday."),
+        ["Assuming all ancient women had no rights."], ["Social pyramid diagram."], ["Research the Royal Tombs of Ur."], independent="Workbook. The Weekly Check comes next."),
     summary="Sumer's city-states centered on ziggurats with kings, priests, and social classes.")
 
 # ================================================================= Week 4 · Writing, empires, and law
@@ -226,7 +226,7 @@ L8 = Lesson("1.8", "Empires and the Code of Hammurabi",
     tss("Students analyze the first empires and Hammurabi's Code.", "Examine the origins, purposes, and impact of laws; analyze primary sources.", "Highlighters, workbook Lesson 1.8, Unit 1 Review",
         "Written laws.", ["Read the lesson.", "Read the source excerpt aloud."], ["Model source analysis."], "Check Your Understanding 1–3.",
         ["Judging ancient law only by modern values without context."], ["Source-analysis questions: who, when, why, what's missing?"], ["Write a fair code of five family rules."],
-        independent="Workbook; then the Unit 1 Review.", exit_="Tomorrow (Friday): Unit 1 Test."),
+        independent="Workbook; then the Unit 1 Review.", exit_="Next: Unit 1 Test."),
     summary="Sargon built the first empire; Hammurabi wrote laws for all to see.")
 
 # ================================================================= checks

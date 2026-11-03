@@ -22,7 +22,7 @@ def quiz(title, sections, minutes=15):
     return Check(title, sections, minutes=minutes)
 
 
-def review(title, sections, minutes=30, note="Use this on Thursday evening or Friday morning before the exam."):
+def review(title, sections, minutes=30, note="Use this the evening before or the morning of the exam."):
     return Check(title, sections, kind="review", minutes=minutes, teacher_note=note)
 
 

@@ -505,7 +505,7 @@ class Lesson:
 
 
 class Check:
-    """Friday weekly check or unit test."""
+    """Weekly check, unit review, or unit test."""
     def __init__(self, title, sections, date=None, minutes=20, kind="check", rubric=None, teacher_note=None, after=None):
         self.title, self.sections, self.date, self.minutes, self.kind = title, sections, date, minutes, kind
         self.rubric, self.teacher_note, self.after = rubric, teacher_note, after
@@ -518,7 +518,7 @@ class Unit:
 
 
 class Book:
-    def __init__(self, subject, grade, title, units, year="2026–2027", audience=None, kinds=("textbook", "workbook", "teacher"),
+    def __init__(self, subject, grade, title, units, year="", audience=None, kinds=("textbook", "workbook", "teacher"),
                  medal=None, tagline="A VenvLearning family homeschool curriculum", year_label="School Year"):
         self.subject, self.grade, self.title, self.units, self.year = subject, grade, title, units, year
         self.audience = audience or f"Grade {grade}"; self.kinds = kinds; self.medal = medal or ("GRADE", str(grade))
@@ -636,7 +636,7 @@ class Doc(BaseDocTemplate):
         c.setFillColor(INK if self.kind != "teacher" else GOLD); c.roundRect(LM, PAGE_H * 0.42 + 34, bw, 30, 15, fill=1, stroke=0)
         text(c, LM + bw / 2, PAGE_H * 0.42 + 44.5, lab, "BodyBold", 12, WHITE if self.kind != "teacher" else INK, "c")
         # lower area
-        text(c, LM, PAGE_H * 0.42 - 0.75 * inch, b.year + " " + b.year_label, "BodySemi", 13, HUNTER)
+        if b.year: text(c, LM, PAGE_H * 0.42 - 0.75 * inch, b.year + " " + b.year_label, "BodySemi", 13, HUNTER)
         y = PAGE_H * 0.42 - 1.15 * inch
         for u in b.units:
             text(c, LM, y, f"Unit {u.num}", "MonoSemi", 10, t.accent); text(c, LM + 52, y, u.title, "Body", 11, INK); y -= 18

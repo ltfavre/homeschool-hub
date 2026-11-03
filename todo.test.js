@@ -26,7 +26,7 @@ test('activity text drops parent notes and timing',()=>{
 });
 test('ELA days with a Reader assignment list the Reader part and pages',()=>{
  const ela=todo('2026-11-03','7').find(x=>x.subject==='ela');
- assert.deepEqual(ela.tasks.map(t=>t.text),['Read Textbook Lesson 1.5 (pp. 21–23)','Read in your Reader: A Christmas Carol, Stave One (second section) (pp. 12–20)','Complete Workbook Lesson 1.5 (pp. 23–25)']);
+ assert.deepEqual(ela.tasks.map(t=>t.text),['Read Textbook Lesson 1.5 (pp. 20–22)','Read in your Reader: A Christmas Carol, Stave One (second section) (pp. 12–20)','Complete Workbook Lesson 1.5 (pp. 23–25)']);
  assert.match(ela.tasks[1].link,/^\/downloads\/textbooks\/grade7-ela-reader\.pdf#page=\d+$/);
  const ka=todo('2026-11-03','4').find(x=>x.subject==='ela');assert.equal(ka.tasks[1].text,'Read in your Reader: King Arthur, Chapter 2 (pp. 3–5)');
 });

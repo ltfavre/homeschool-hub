@@ -18,7 +18,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase.pdfmetrics import registerFontFamily, stringWidth
 from reportlab.platypus import (BaseDocTemplate, PageTemplate, Frame, Paragraph, Spacer, Table, TableStyle,
-                                Flowable, KeepTogether, PageBreak, CondPageBreak, NextPageTemplate)
+                                Flowable, KeepTogether, PageBreak, CondPageBreak, NextPageTemplate, ActionFlowable)
 from reportlab.platypus.tableofcontents import TableOfContents
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -547,6 +547,26 @@ MAIN_X = PANEL_X["left"] + PANEL_W + PANEL_GAP
 MAIN_W = PANEL_X["right"] - PANEL_GAP - MAIN_X
 PANEL_TITLE = {"left": "REMEMBER", "right": "WORDS & MORE"}
 PANEL_TOP = PAGE_H - TM - 22   # notes start below the panel's title
+BOTH = frozenset(("left", "right"))
+
+
+def lesson_bounds(sides):
+    """Left and right edges of the center panel on a lesson page showing the given side panels. A page whose notes
+    don't need a panel leaves it off, and the center panel widens into that space."""
+    return (MAIN_X if "left" in sides else LM), (MAIN_X + MAIN_W if "right" in sides else PAGE_W - RM)
+
+
+def lesson_width(sides):
+    x0, x1 = lesson_bounds(sides)
+    return x1 - x0
+
+
+class LessonMark(Flowable):
+    """Marks where a lesson begins (placed just before its page break), so each lesson page knows which lesson and
+    which page of it it is."""
+    def __init__(self, doc, key): super().__init__(); self.doc, self.key = doc, key
+    def wrap(self, aw, ah): return 0, 0
+    def draw(self): self.doc.next_lesson = self.key
 
 
 class SideNote(Flowable):
@@ -577,11 +597,18 @@ class Doc(BaseDocTemplate):
         self.book, self.kind, self.theme = book, kind, book.theme
         self.running = ""
         frame = Frame(LM, BM, W, PAGE_H - TM - BM, id="f", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
-        main = Frame(MAIN_X, BM, MAIN_W, PAGE_H - TM - BM, id="m", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
+        # one lesson-page template per set of side panels; "lesson" (both panels) is the one the story asks for
+        self.lesson_templates = {}
+        for sides in (BOTH, frozenset(("left",)), frozenset(("right",)), frozenset()):
+            x0, x1 = lesson_bounds(sides)
+            main = Frame(x0, BM, x1 - x0, PAGE_H - TM - BM, id="m", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
+            self.lesson_templates[sides] = PageTemplate(id="lesson" if sides == BOTH else "lesson:" + (",".join(sorted(sides)) or "none"),
+                                                        frames=[main], onPage=self.lesson_page, onPageEnd=self.footer)
         self.addPageTemplates([PageTemplate(id="cover", frames=[frame], onPage=self.cover_page),
                                PageTemplate(id="body", frames=[frame], onPage=self.body_page, onPageEnd=self.footer),
-                               PageTemplate(id="lesson", frames=[main], onPage=self.lesson_page, onPageEnd=self.footer),
-                               PageTemplate(id="opener", frames=[frame], onPage=self.opener_page, onPageEnd=self.footer)])
+                               PageTemplate(id="opener", frames=[frame], onPage=self.opener_page, onPageEnd=self.footer)]
+                              + list(self.lesson_templates.values()))
+        self.plan = None   # (lesson, page of lesson) -> side panels that page shows; None = every panel (first pass)
 
     def beforeDocument(self):
         self.running = ""   # multiBuild runs several passes; don't carry the last footer into the front matter
@@ -589,11 +616,29 @@ class Doc(BaseDocTemplate):
         self.panel_top = {"left": PANEL_TOP, "right": PANEL_TOP}
         self.pending = {"left": [], "right": []}
         self.carried = []   # pages that got notes which didn't fit beside their content on the page before
+        self.next_lesson, self.lesson_key, self.lesson_n = None, None, 0
+        self.sides, self.page_key = BOTH, None
+        self.used = {}     # page key -> side panels that got notes this pass
+        self.wanted = {}   # page key -> side panels a note needed but the page didn't show
+
+    def handle_pageBegin(self):
+        """Before a lesson page begins, pick its template from the plan: only the side panels that have notes."""
+        if self.pageTemplate.id.startswith("lesson"):
+            if self.next_lesson is not None:
+                self.lesson_key, self.lesson_n, self.next_lesson = self.next_lesson, 0, None
+            else:
+                self.lesson_n += 1
+            self.page_key = (self.lesson_key, self.lesson_n)
+            self.sides = BOTH if self.plan is None else self.plan.get(self.page_key, frozenset())
+            self.pageTemplate = self.lesson_templates[self.sides]
+        super().handle_pageBegin()
+    _handle_pageBegin = handle_pageBegin
 
     def lesson_page(self, c, doc):
         self.body_page(c, doc)
         t = self.theme; c.saveState()
         for side, bg, fg in (("left", t.comp_wash, t.comp), ("right", t.wash, t.dark)):
+            if side not in self.sides: continue
             x = PANEL_X[side]
             x0, x1 = (0, x + PANEL_W + PANEL_GAP / 2) if side == "left" else (x - PANEL_GAP / 2, PAGE_W)
             c.setFillColor(bg); c.rect(x0, BM - 8, x1 - x0, PAGE_H - 28 - (BM - 8), fill=1, stroke=0)
@@ -608,6 +653,9 @@ class Doc(BaseDocTemplate):
 
     def place_note(self, c, note, y, side):
         """Draw a panel note whose top lines up with y (or sits below the previous note in that panel)."""
+        if side not in self.sides:   # this page has no such panel: wait for the next page, and give this page one next pass
+            self.wanted.setdefault(self.page_key, set()).add(side)
+            self.pending[side].append(note); return
         _, h = note.wrap(PANEL_W, PAGE_H)
         top = min(y, self.panel_top[side])
         if top - h < BM:
@@ -616,8 +664,25 @@ class Doc(BaseDocTemplate):
                 self.pending[side].append(note); return
         note.drawOn(c, PANEL_X[side], top - h)
         self.panel_top[side] = top - h - 9
+        self.used.setdefault(self.page_key, set()).add(side)
+
+    def _allSatisfied(self):
+        """multiBuild lays the book out again until this is true. Lesson pages: after the first pass, keep only the side
+        panels each page used, widening the center panel where a panel is left off; later passes only add back panels
+        a note needed, so the layout settles."""
+        done = super()._allSatisfied()
+        if not self.used: return done
+        if self.plan is None:
+            plan = {k_: frozenset(v) for k_, v in self.used.items()}
+        else:
+            plan = dict(self.plan)
+            for k_, v in self.wanted.items(): plan[k_] = plan.get(k_, frozenset()) | v
+        if plan == self.plan: return done
+        self.plan = plan
+        return False
 
     def multiBuild(self, story, *a, **k):
+        k.setdefault("maxPasses", 20)
         r = super().multiBuild(story, *a, **k)
         import json as _json
         side = self.filename[:-4] + ".toc.json"
@@ -628,6 +693,7 @@ class Doc(BaseDocTemplate):
         c.saveState(); text(c, LM, BM - 30, self.running, "Body", 8, MUTED); c.restoreState()
 
     def afterFlowable(self, f):
+        f = getattr(f, "chosen", f)   # a lesson piece built at several widths (see books.ByWidth)
         if isinstance(f, Paragraph) and getattr(f, "_toc", None) is not None:
             self.notify("TOCEntry", (f._toc[0], f._toc[1], self.page))
             self.toc_log.append((f._toc[0], f._toc[1], self.page))

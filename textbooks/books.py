@@ -684,15 +684,44 @@ def front_matter(t, book, doc, kind):
     return out
 
 
+class ByWidth(Flowable):
+    """One piece of a textbook lesson, built at each width the center panel can have; it lays out and draws the
+    version that matches the page it lands on (narrower beside both side panels, wider where a panel is left off)."""
+    def __init__(self, versions):
+        super().__init__(); self.versions = versions; self.chosen = versions[min(versions)]
+    def _pick(self, aw):
+        self.chosen = self.versions[min(self.versions, key=lambda w: abs(w - aw))]; return self.chosen
+    def wrap(self, aw, ah): return self._pick(aw).wrapOn(self.canv, aw, ah)
+    def split(self, aw, ah): return self._pick(aw).splitOn(self.canv, aw, ah)
+    def drawOn(self, canv, x, y, _sW=0): self.chosen.drawOn(canv, x, y, _sW)
+    def getSpaceBefore(self): return self.chosen.getSpaceBefore()
+    def getSpaceAfter(self): return self.chosen.getSpaceAfter()
+    def getKeepWithNext(self):
+        return self.__dict__["keepWithNext"] if "keepWithNext" in self.__dict__ else self.chosen.getKeepWithNext()
+
+
 def lesson_in_column(t, L, U):
-    """A textbook lesson laid out in the center panel, with its notes in the left and right panels."""
+    """A textbook lesson laid out in the center panel, with its notes in the left and right panels. The lesson is
+    built at every center-panel width (both side panels, one, or none) so each page can leave off a panel it doesn't
+    need."""
     global W
-    full, W = W, MAIN_W
+    full = W
     t.rail = True
+    widths = sorted({lesson_width(s) for s in (BOTH, frozenset(("left",)), frozenset())})
+    builds = []
     try:
-        return textbook_lesson(t, L, U) + [FlushNotes(t.doc)]
+        for w in widths:
+            W = w; builds.append(textbook_lesson(t, L, U))
     finally:
         W, t.rail = full, False
+    if len({len(b) for b in builds}) != 1:   # shouldn't happen; keep the lesson at the narrowest width
+        print(f"  Lesson {L.num}: built differently at different widths; it keeps both panels' width")
+        return builds[0] + [FlushNotes(t.doc)]
+    out = []
+    for parts in zip(*builds):
+        f = parts[0]
+        out.append(f if isinstance(f, (ActionFlowable, SideNote)) else ByWidth(dict(zip(widths, parts))))
+    return out + [FlushNotes(t.doc)]
 
 
 def build_textbook(book, path):
@@ -703,7 +732,7 @@ def build_textbook(book, path):
         for L in U.lessons:
             # every lesson starts on a fresh page; student books use the three-panel lesson page (the parent's
             # Data Science book keeps full-width pages for its wide code samples)
-            story += ([NextPageTemplate("lesson"), PageBreak()] + lesson_in_column(t, L, U)) if student_book(t) else ([PageBreak()] + textbook_lesson(t, L, U))
+            story += ([LessonMark(doc, f"{U.num}|{L.num}"), NextPageTemplate("lesson"), PageBreak()] + lesson_in_column(t, L, U)) if student_book(t) else ([PageBreak()] + textbook_lesson(t, L, U))
         story += [NextPageTemplate("body")]
         story += study_guide(t, U)
     story += glossary(t, book)

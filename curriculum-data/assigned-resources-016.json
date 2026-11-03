@@ -352,9 +352,9 @@
    "reviewed": "2026-10-23",
    "review": "Publisher page opened and contents checked 2026-10-23"
   },
-  "rl7-lamb": {
-   "title": "Tales from Shakespeare (Charles & Mary Lamb) — independent reading",
-   "url": "https://www.gutenberg.org/ebooks/1286",
+  "rl7-littlewomen": {
+   "title": "Little Women (Chapters 1–2) (Louisa May Alcott) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/514",
    "provider": "Project Gutenberg (public domain)",
    "kind": "Ebook · 2026–27 reading list",
    "access": "Free e-book (EPUB, Kindle, web)",
@@ -385,13 +385,13 @@
    "reviewed": "2026-10-23",
    "review": "Publisher page opened and contents checked 2026-10-23"
   },
-  "rl7-caesar": {
-   "title": "Julius Caesar (William Shakespeare) — independent reading",
-   "url": "https://www.gutenberg.org/ebooks/1522",
+  "rl7-lays": {
+   "title": "Lays of Ancient Rome (“Horatius”) (Thomas Babington Macaulay) — independent reading",
+   "url": "https://www.gutenberg.org/ebooks/847",
    "provider": "Project Gutenberg (public domain)",
    "kind": "Ebook · 2026–27 reading list",
    "access": "Free e-book (EPUB, Kindle, web)",
-   "note": "Read with a free audio version (LibriVox) or the Lambs' prose summary first.",
+   "note": "A long narrative poem; read “Horatius” first and the other lays as time allows.",
    "teacher_only": false,
    "reviewed": "2026-10-23",
    "review": "Publisher page opened and contents checked 2026-10-23"
@@ -1073,7 +1073,7 @@
    "ela": {
     "resources": [
      "rl7-wild",
-     "rl7-lamb"
+     "rl7-littlewomen"
     ]
    }
   },
@@ -1081,7 +1081,7 @@
    "ela": {
     "resources": [
      "rl7-wild",
-     "rl7-lamb"
+     "rl7-littlewomen"
     ]
    }
   },
@@ -1089,7 +1089,7 @@
    "ela": {
     "resources": [
      "rl7-wild",
-     "rl7-lamb"
+     "rl7-littlewomen"
     ]
    }
   },
@@ -1097,7 +1097,7 @@
    "ela": {
     "resources": [
      "rl7-wild",
-     "rl7-lamb"
+     "rl7-littlewomen"
     ]
    }
   },
@@ -1139,28 +1139,28 @@
   "7-4-1": {
    "ela": {
     "resources": [
-     "rl7-caesar"
+     "rl7-lays"
     ]
    }
   },
   "7-4-2": {
    "ela": {
     "resources": [
-     "rl7-caesar"
+     "rl7-lays"
     ]
    }
   },
   "7-4-3": {
    "ela": {
     "resources": [
-     "rl7-caesar"
+     "rl7-lays"
     ]
    }
   },
   "7-4-4": {
    "ela": {
     "resources": [
-     "rl7-caesar"
+     "rl7-lays"
     ]
    }
   },

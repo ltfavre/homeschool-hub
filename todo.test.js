@@ -9,7 +9,7 @@ test('a textbook day lists each lesson with unit, textbook pages, and workbook p
  const g=todo('2026-10-28','4'),math=g.find(x=>x.subject==='math');
  assert.equal(math.unit,'Unit 1: Place Value, Rounding, and Whole Numbers');assert.equal(math.title,'Lesson 1.2: Place Value to One Million');
  assert.deepEqual(math.tasks.map(t=>t.text),['Read Textbook Lesson 1.2 (pp. 12–13)','Complete Workbook Lesson 1.2 (pp. 12–13)']);
- assert.deepEqual([...new Set(g.map(x=>x.subject))],['math','ela','science','spanish','art']);
+ assert.deepEqual([...new Set(g.map(x=>x.subject))],['math','ela','science','art']);
  assert.ok(g.filter(x=>x.subject==='art').length===2,'art elective activity and art textbook lesson');
 });
 test('students never get teacher pages or parent-only links, and every task key is unique',()=>{
@@ -26,7 +26,7 @@ test('activity text drops parent notes and timing',()=>{
 });
 test('ELA days with a Reader assignment list the Reader part and pages',()=>{
  const ela=todo('2026-11-03','7').find(x=>x.subject==='ela');
- assert.deepEqual(ela.tasks.map(t=>t.text),['Read Textbook Lesson 1.5 (pp. 16–17)','Read in your Reader: The Tempest, Act 1, Scene 2 (first section) (pp. 62–73)','Complete Workbook Lesson 1.5 (p. 19)']);
+ assert.deepEqual(ela.tasks.map(t=>t.text),['Read Textbook Lesson 1.5 (pp. 16–17)','Read in your Reader: A Christmas Carol, Stave One (second section) (pp. 12–20)','Complete Workbook Lesson 1.5 (pp. 19–20)']);
  assert.match(ela.tasks[1].link,/^\/downloads\/textbooks\/grade7-ela-reader\.pdf#page=\d+$/);
  const ka=todo('2026-11-03','4').find(x=>x.subject==='ela');assert.equal(ka.tasks[1].text,'Read in your Reader: King Arthur, Chapter 2 (pp. 3–5)');
 });

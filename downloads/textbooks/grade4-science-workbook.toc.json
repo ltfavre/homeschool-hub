@@ -2,71 +2,141 @@
 {
 "level": 0,
 "text": "The Human Body",
-"page": 3
-},
-{
-"level": 1,
-"text": "Lesson 1.1: Thinking Like a Scientist",
 "page": 4
 },
 {
 "level": 1,
+"text": "Lesson 1.1: Thinking Like a Scientist",
+"page": 5
+},
+{
+"level": 1,
 "text": "Lesson 1.2: Fair Tests and Evidence",
-"page": 6
+"page": 7
 },
 {
 "level": 1,
 "text": "Weekly Check 1: Thinking Like a Scientist",
-"page": 8
-},
-{
-"level": 1,
-"text": "Lesson 1.3: Cells, Tissues, Organs, and Systems",
 "page": 9
 },
 {
 "level": 1,
+"text": "Lesson 1.3: Cells, Tissues, Organs, and Systems",
+"page": 10
+},
+{
+"level": 1,
 "text": "Lesson 1.4: Body Systems Work Together",
-"page": 11
+"page": 12
 },
 {
 "level": 1,
 "text": "Weekly Check 2: Body Systems",
-"page": 13
-},
-{
-"level": 1,
-"text": "Lesson 1.5: The Digestive System",
 "page": 14
 },
 {
 "level": 1,
+"text": "Lesson 1.5: The Digestive System",
+"page": 15
+},
+{
+"level": 1,
 "text": "Lesson 1.6: The Respiratory System",
-"page": 16
+"page": 17
 },
 {
 "level": 1,
 "text": "Weekly Check 3: Digestion and Breathing",
-"page": 19
-},
-{
-"level": 1,
-"text": "Lesson 1.7: The Heart and Blood Vessels",
 "page": 20
 },
 {
 "level": 1,
+"text": "Lesson 1.7: The Heart and Blood Vessels",
+"page": 21
+},
+{
+"level": 1,
 "text": "Lesson 1.8: Bones, Muscles, and Healthy Choices",
-"page": 22
+"page": 23
 },
 {
 "level": 1,
 "text": "Unit 1 Review",
-"page": 24
+"page": 25
 },
 {
 "level": 1,
 "text": "Unit 1 Test",
-"page": 26
+"page": 27
+},
+{
+"level": 0,
+"text": "Energy, Heat, and Light",
+"page": 30
+},
+{
+"level": 1,
+"text": "Lesson 2.1: What Is Energy?",
+"page": 31
+},
+{
+"level": 1,
+"text": "Lesson 2.2: Heat and Temperature",
+"page": 33
+},
+{
+"level": 1,
+"text": "Weekly Check 1: Energy and Heat",
+"page": 36
+},
+{
+"level": 1,
+"text": "Lesson 2.3: How Heat Moves",
+"page": 37
+},
+{
+"level": 1,
+"text": "Lesson 2.4: Conductors and Insulators",
+"page": 39
+},
+{
+"level": 1,
+"text": "Weekly Check 2: How Heat Moves",
+"page": 42
+},
+{
+"level": 1,
+"text": "Lesson 2.5: Light Travels and How We See",
+"page": 43
+},
+{
+"level": 1,
+"text": "Lesson 2.6: Reflection, Absorption, and Transparency",
+"page": 45
+},
+{
+"level": 1,
+"text": "Weekly Check 3: Light",
+"page": 47
+},
+{
+"level": 1,
+"text": "Lesson 2.7: Refraction and Color",
+"page": 48
+},
+{
+"level": 1,
+"text": "Lesson 2.8: Light Investigation: Claim, Evidence, and Reasoning",
+"page": 50
+},
+{
+"level": 1,
+"text": "Unit 2 Review",
+"page": 53
+},
+{
+"level": 1,
+"text": "Unit 2 Test",
+"page": 55
 }
 ]

@@ -189,7 +189,7 @@
    "kind": "Textbook",
    "access": "Included",
    "teacher": false,
-   "weeks": 5,
+   "weeks": 9,
    "note": "The lesson to read together each day."
   },
   {
@@ -201,7 +201,7 @@
    "kind": "Textbook",
    "access": "Included",
    "teacher": false,
-   "weeks": 5,
+   "weeks": 9,
    "note": "Practice pages, weekly checks, and tests for every lesson."
   },
   {
@@ -213,7 +213,7 @@
    "kind": "Teacher guide",
    "access": "Parent only",
    "teacher": true,
-   "weeks": 5,
+   "weeks": 9,
    "note": "Lesson plans, timing, and answer keys for every workbook page, check, and test."
   },
   {
@@ -225,7 +225,7 @@
    "kind": "Textbook",
    "access": "Included",
    "teacher": false,
-   "weeks": 5,
+   "weeks": 9,
    "note": "The lesson to read together each day."
   },
   {
@@ -237,7 +237,7 @@
    "kind": "Textbook",
    "access": "Included",
    "teacher": false,
-   "weeks": 5,
+   "weeks": 9,
    "note": "Practice pages, weekly checks, and tests for every lesson."
   },
   {
@@ -249,7 +249,7 @@
    "kind": "Teacher guide",
    "access": "Parent only",
    "teacher": true,
-   "weeks": 5,
+   "weeks": 9,
    "note": "Lesson plans, timing, and answer keys for every workbook page, check, and test."
   },
   {
@@ -261,7 +261,7 @@
    "kind": "Textbook",
    "access": "Included",
    "teacher": false,
-   "weeks": 4,
+   "weeks": 8,
    "note": "The lesson to read together each day."
   },
   {
@@ -273,7 +273,7 @@
    "kind": "Textbook",
    "access": "Included",
    "teacher": false,
-   "weeks": 4,
+   "weeks": 8,
    "note": "Practice pages, weekly checks, and tests for every lesson."
   },
   {
@@ -285,7 +285,7 @@
    "kind": "Teacher guide",
    "access": "Parent only",
    "teacher": true,
-   "weeks": 4,
+   "weeks": 8,
    "note": "Lesson plans, timing, and answer keys for every workbook page, check, and test."
   },
   {
@@ -297,7 +297,7 @@
    "kind": "Textbook",
    "access": "Included",
    "teacher": false,
-   "weeks": 4,
+   "weeks": 8,
    "note": "The lesson to read together each day."
   },
   {
@@ -309,7 +309,7 @@
    "kind": "Textbook",
    "access": "Included",
    "teacher": false,
-   "weeks": 4,
+   "weeks": 8,
    "note": "Practice pages, weekly checks, and tests for every lesson."
   },
   {
@@ -321,7 +321,7 @@
    "kind": "Teacher guide",
    "access": "Parent only",
    "teacher": true,
-   "weeks": 4,
+   "weeks": 8,
    "note": "Lesson plans, timing, and answer keys for every workbook page, check, and test."
   },
   {
@@ -333,7 +333,7 @@
    "kind": "Textbook",
    "access": "Included",
    "teacher": false,
-   "weeks": 5,
+   "weeks": 9,
    "note": "The lesson to read together each day."
   },
   {
@@ -345,7 +345,7 @@
    "kind": "Textbook",
    "access": "Included",
    "teacher": false,
-   "weeks": 5,
+   "weeks": 9,
    "note": "Practice pages, weekly checks, and tests for every lesson."
   },
   {
@@ -357,7 +357,7 @@
    "kind": "Teacher guide",
    "access": "Parent only",
    "teacher": true,
-   "weeks": 5,
+   "weeks": 9,
    "note": "Lesson plans, timing, and answer keys for every workbook page, check, and test."
   },
   {
@@ -369,7 +369,7 @@
    "kind": "Textbook",
    "access": "Included",
    "teacher": false,
-   "weeks": 5,
+   "weeks": 9,
    "note": "The lesson to read together each day."
   },
   {
@@ -381,7 +381,7 @@
    "kind": "Textbook",
    "access": "Included",
    "teacher": false,
-   "weeks": 5,
+   "weeks": 9,
    "note": "Practice pages, weekly checks, and tests for every lesson."
   },
   {
@@ -393,7 +393,7 @@
    "kind": "Teacher guide",
    "access": "Parent only",
    "teacher": true,
-   "weeks": 5,
+   "weeks": 9,
    "note": "Lesson plans, timing, and answer keys for every workbook page, check, and test."
   },
   {

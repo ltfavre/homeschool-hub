@@ -43,6 +43,12 @@ if os.path.exists(os.path.join(_WINFONTS, "georgia.ttf")):
 else:
     READ_FONT = "Times-Roman"
 
+# Chinese characters (Grade 4 Art calligraphy): SimSun (Windows, embedding permitted) when installed.
+_CJK = os.path.join(_WINFONTS, "simsun.ttc")
+HAS_CJK = os.path.exists(_CJK)
+if HAS_CJK:
+    pdfmetrics.registerFont(TTFont("CJK", _CJK, subfontIndex=0))
+
 import re as _re
 from reportlab.platypus import Paragraph as _Paragraph
 from fontTools.ttLib import TTFont as _FT
@@ -55,10 +61,19 @@ def _sym(m):
     return ch if ord(ch) in _BODY_CMAP else f'<font name="Sym">{ch}</font>'
 
 
+_HAN = _re.compile("([\u3400-\u9fff]+)")
+
+
+def _glyphs(text):
+    text = _SYM.sub(_sym, text)
+    return _HAN.sub(lambda m: f'<font name="CJK">{m.group(1)}</font>', text) if HAS_CJK else text
+
+
 class Paragraph(_Paragraph):
-    """Paragraph that draws symbols missing from the brand fonts (○ △ ☐ ✓ → ≈) with DejaVu Sans."""
+    """Paragraph that draws symbols missing from the brand fonts (○ △ ☐ ✓ → ≈) with DejaVu Sans, and Chinese
+    characters with SimSun."""
     def __init__(self, text, *a, **k):
-        super().__init__(text if text is None else _SYM.sub(_sym, text), *a, **k)
+        super().__init__(text if text is None else _glyphs(text), *a, **k)
 
 
 # ---------------------------------------------------------------- brand

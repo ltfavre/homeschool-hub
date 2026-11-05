@@ -1,0 +1,33 @@
+"""Lab Sheets for Grade 4 Science."""
+from content.labkit import T, CER, BOX, LN, GRAPH, Take
+
+SHEETS = {
+    "1.1": [T("Observation (what I sensed)", "Inference (what I think it means)", rows=4),
+            LN("Open the bag. What was the object? Was your inference correct?", 2)],
+    "1.2": [T("Towel brand", "Water left in cup (mL)", "Water absorbed (100 − left)", rows=3),
+            CER("Which paper towel absorbs the most water?")],
+    "1.3": [BOX("Sketch your brick model. Label each level: cell, tissue, organ, organ system.", 180)],
+    "1.4": [T("My action", "Systems I used", "Why each system was needed", rows=3, row_h=40)],
+    "1.5": [T("", "Before squeezing", "After squeezing", first=["How the crackers look", "How the crackers feel"], row_h=40)],
+    "1.6": [T("When I counted", "Breaths in 30 seconds", "Breaths per minute (× 2)", first=["At rest", "Right after exercise", "After 3 minutes of rest"]),
+            Take("Graph")],
+    "1.7": [T("When I counted", "Beats in 15 seconds", "Beats per minute (× 4)", first=["At rest", "After running in place", "After 3 minutes of rest"]),
+            LN("Compare with your breathing data from Lesson 1.6. What happened to both during exercise?", 2,
+               "Both went up during exercise and came back down with rest.")],
+    "1.8": [BOX("Sketch your upper arm. Label the muscle that pulls to bend it (biceps) and the one that pulls to straighten it (triceps).", 180)],
+    "2.1": [T("Ramp height", "Trial 1 (cm)", "Trial 2 (cm)", "Trial 3 (cm)", first=["1 book", "2 books", "3 books"], label_w=1.2 * 72,
+              label="Record how far the cup moved each time."),
+            Take("Analyze")],
+    "2.2": [T("Time", "Warm cup (°F)", "Cold cup (°F)", first=["Start", "5 minutes", "10 minutes", "15 minutes", "20 minutes"], label_w=1.3 * 72),
+            LN("Room air temperature (°F):", 0, "Answers vary."), Take("Analyze")],
+    "2.3": [BOX("Draw a side view of your container. Use one color of arrows for warm water and another for cold water. Make a key.", 190)],
+    "2.4": [T("Holder", "Insulator used", "Minutes until melted", first=["Plain cup (control)", "Design 1", "Design 2"]),
+            Take("Design"), LN("Which material was the best insulator? Use your data.", 2)],
+    "2.5": [T("Flashlight position", "Shadow length (cm)", first=["Straight above", "Medium angle", "Low on the side"]),
+            Take("Model", "Analyze")],
+    "2.6": [T("Material", "Prediction", "Result (bright, dim, or no light)", rows=6),
+            LN("Where did the light land when you shone it at the mirror?", 2, "It bounced off (reflected) to a spot on the wall.")],
+    "2.7": [BOX("Color your spectrum in the order you saw the colors.", 110),
+            LN("List the colors in order.", 1, "red, orange, yellow, green, blue, violet (indigo may be seen)")],
+    "2.8": [Take("Model", "Explain")],
+}

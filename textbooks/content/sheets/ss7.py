@@ -1,0 +1,30 @@
+"""Activity Sheets for Grade 7 Social Studies."""
+from content.labkit import T, CER, BOX, LN, GRAPH, Take
+
+SHEETS = {
+    "1.1": [T("Object", "What it suggests", "Questions it raises", rows=5, row_h=34)],
+    "1.2": [T("Item", "Why we need it", rows=8, row_h=20, label="Record your band's final list of 8 items.")],
+    "1.3": [T("Gains", "Losses", rows=5, row_h=22, label="Make your T-chart."),
+            LN("Claim: for an ordinary person, was life better or worse? Give two pieces of evidence.", 4)],
+    "1.4": [T("Round", "Farmers", "Extra beans", "New job added", rows=4),
+            LN("How many non-farmers could your surplus support? What new problems came up?", 3)],
+    "1.5": [BOX("Sketch your irrigation model. Label the river, canals, and fields.", 170),
+            LN("What worked? What would you change?", 2)],
+    "1.6": [BOX("Sketch your ziggurat. Label the temple, stairs, and levels.", 190),
+            LN("Explain your design.", 2)],
+    "1.7": [T("Symbol I invented", "What it means", rows=3, row_h=36, label="Record your symbol key."),
+            LN("Two problems a scribe would face:", 2)],
+    "1.8": [T("Law", "Rating (1 = very unfair, 5 = very fair)", "Why", rows=5, row_h=28),
+            LN("Compare Hammurabi's Code with modern laws.", 4)],
+    "2.1": [BOX("Sketch your flood model before and after the flood. Label the river, the flood, and the silt.", 170),
+            LN("How did flood silt help Egyptian farmers?", 2, "The flood left rich black silt that made the soil fertile for crops.")],
+    "2.2": [BOX("Design your cartouche here.", 170),
+            LN("Why did the Rosetta Stone matter?", 2, "It had the same text in three scripts, so scholars like Champollion could decode hieroglyphics.")],
+    "2.3": [BOX("Draw your trade map. Label Egypt, Kush, the Nile, and the goods that moved each way.", 220)],
+    "2.4": [BOX("Draw your city plan. Include a key.", 220),
+            LN("Compare your plan with Mohenjo-daro.", 2)],
+    "2.6": [BOX("Draw your oracle bone and the question carved on it.", 150),
+            LN("Explain your question and why a Shang king might ask it.", 2)],
+    "2.8": [T("Civilization", "Achievement", "Why it still matters", "Rank", first=["Mesopotamia", "Egypt", "Indus Valley", "China"], row_h=34, label_w=1.1 * 72),
+            LN("Explain your top choice.", 2)],
+}

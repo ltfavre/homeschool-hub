@@ -91,6 +91,19 @@ def reader_card(t, r):
     return PanelCard("READ IN YOUR READER", items, BOOK, WHITE)
 
 
+def look_card(t, L):
+    """Art: the artworks this lesson asks students to look at, and where to find each one."""
+    from content.lookat import LOOK
+    works = LOOK.get(f"{BOOK_KEY.get(t.subject, t.subject)}{getattr(t, 'grade', '')}", {}).get(L.num)
+    if not works: return None
+    body, word, defn = panel_styles()
+    items = []
+    for i, (title, who, when, where) in enumerate(works):
+        if i: items.append(Spacer(1, 4))
+        items += [P(f"<i>{title}</i>", word), P(f"{who}, {when}", body), P(where, defn)]
+    return PanelCard("LOOK AT", items, t.main, t.on_main)
+
+
 def remember_card(t, L):
     body, word, defn = panel_styles()
     return PanelCard("✓ REMEMBER", [P(L.summary, ParagraphStyle("rs", parent=body, fontName="BodyMed"))], t.comp, WHITE)
@@ -310,13 +323,64 @@ def your_turn_section(t, L):
 
 
 def workbook_sections(t, L):
-    """Every part of a workbook lesson, in order: Part A Your Turn (student books), then the practice sections."""
+    """Every part of a workbook lesson, in order. Math and ELA: Part A Your Turn, then the practice sections.
+    Science, social studies, and art follow the lesson: Warm-Up, the activity sheet (when the lesson has a hands-on
+    activity), Your Turn, then the rest of the practice sections."""
     secs = with_directions(t, L.practice, "S", L.num)
-    return ([your_turn_section(t, L)] if L.try_it and student_book(t) else []) + secs
+    yt = [your_turn_section(t, L)] if L.try_it and student_book(t) else []
+    if t.subject not in LAB_NAME: return yt + secs
+    lab, secs = lab_section(t, L, secs)
+    warm = [s for s in secs if _plain(s.title) == "Warm-Up"]
+    return warm + ([lab] if lab else []) + yt + [s for s in secs if s not in warm]
+
+
+LAB_NAME = {"science": "Lab Sheet", "social": "Activity Sheet", "art": "Studio Sheet"}
+LAB_TAG = {"science": "Investigate", "social": "Activity", "art": "Create"}
+
+
+def _plain(x): return _re.sub(r"<[^>]+>", "", x).strip()
+
+
+def activity(L):
+    return next((b for b in L.learn if isinstance(b, Investigate)), None)
+
+
+def lab_section(t, L, secs):
+    """The lesson's hands-on activity as one workbook part: steps to check off, then the recording spaces from
+    content/sheets/<book>.py. Workbook sections the layout names with Take() move onto the sheet."""
+    from content.sheets import sheet_for
+    from content.labkit import Take, BOX
+    iv = activity(L)
+    if not iv: return None, secs
+    spec = sheet_for(f"{BOOK_KEY[t.subject]}{getattr(t, 'grade', '')}", L.num) or [BOX(f"Record {iv.record or 'your results'}", 200)]
+    probs, taken = [], []
+    for el in spec:
+        if isinstance(el, Take):
+            for title in el.titles:
+                sec = next((s for s in secs if _plain(s.title) == title and s not in taken), None)
+                assert sec, f"{L.num}: no workbook section named {title!r} to move onto the sheet"
+                taken.append(sec); probs += sec.problems
+        else:
+            probs.append(el)
+    lab = Section(LAB_NAME[t.subject], probs, "Gather what you need. Do each step and check it off. Record as you go.", cols=1)
+    lab.lab = iv
+    return lab, [s for s in secs if s not in taken]
+
+
+def your_turn_letter(t, L):
+    return next((LETTERS[i] for i, s in enumerate(workbook_sections(t, L)) if s.title == t.lab["try_"].title() and not getattr(s, "lab", None)), "A")
+
+
+def lab_part(t, L):
+    """(letter, name) of the lesson's activity sheet in the workbook, or None."""
+    for i, s in enumerate(workbook_sections(t, L)):
+        if getattr(s, "lab", None): return LETTERS[i], s.title
+    return None
 
 
 def assignment_items(t, L):
     """Today's steps for a lesson, in order: read the lesson, any Reader section, any hands-on activity, Your Turn, the workbook."""
+    if t.subject in LAB_NAME and student_book(t): return lab_assignment_items(t, L)
     items = [f"Read <b>Lesson {L.num}</b> in this book with your teacher."]
     for b in L.learn:
         if isinstance(b, ReaderAssign):
@@ -331,6 +395,32 @@ def assignment_items(t, L):
         if n > 1: items.append(f"Complete the rest of <b>Workbook Lesson {L.num}</b> (Parts B–{LETTERS[n - 1]})." if n > 2 else f"Complete <b>Workbook Lesson {L.num}, Part B</b>.")
     else:
         items.append(f"Complete <b>Workbook Lesson {L.num}</b>.")
+    return items
+
+
+def lab_assignment_items(t, L):
+    """Science, social studies, and art: warm up, read, Your Turn, the activity sheet, then the rest, in workbook order."""
+    secs = workbook_sections(t, L); wb = f"Workbook Lesson {L.num}"
+    items, rest = [], []
+    for i, s in enumerate(secs):
+        part = f"<b>Part {LETTERS[i]}</b>"
+        if i == 0 and _plain(s.title) == "Warm-Up":
+            items.append(f"Do the <b>Warm-Up</b> in <b>{wb}, Part A</b>.")
+        elif getattr(s, "lab", None):
+            items.append(f"Do the <b>{LAB_TAG[t.subject]}</b> activity, {s.lab.title}, on your <b>{s.title}</b> ({wb}, {part}).")
+        elif s.title == t.lab["try_"].title():
+            items.append(f"Answer the <b>{s.title}</b> questions in {wb}, {part}.")
+        else:
+            rest.append(LETTERS[i])
+    read = [f"Read <b>Lesson {L.num}</b> in this book with your teacher."]
+    for b in L.learn:
+        if isinstance(b, ReaderAssign):
+            pages = reader_pages(t, b)
+            read.append(f"Read in your <b>Reader</b>: {b.book.replace(' Reader', '')}, {b.section}" + (f" ({pages})" if pages else "") + ".")
+    at = 1 if items and "<b>Warm-Up</b>" in items[0] else 0
+    items[at:at] = read
+    if rest:
+        items.append(f"Finish {wb}: " + (f"<b>Part {rest[0]}</b>." if len(rest) == 1 else f"<b>Parts {rest[0]}–{rest[-1]}</b>."))
     return items
 
 
@@ -380,7 +470,8 @@ def render_blocks(t, blocks, teacher=False, rail=False):
                                     ("RIGHTPADDING", (1, 0), (1, 0), 0), ("TOPPADDING", (0, 0), (-1, -1), 2)]))
             out += [tb, Spacer(1, 8)]
         elif isinstance(b, Investigate):
-            out += [Spacer(1, 4), investigate_box(t, b), Spacer(1, 8)]
+            lp = lab_part(t, t.cur_lesson) if not teacher and t.subject in LAB_NAME and getattr(t, "cur_lesson", None) else None
+            out += [Spacer(1, 4), activity_preview(t, b, t.cur_lesson, lp) if lp else investigate_box(t, b), Spacer(1, 8)]
         elif isinstance(b, Code):
             out += [Spacer(1, 4)] + code_box(t, b) + [Spacer(1, 8)]
         elif isinstance(b, Watch):
@@ -449,6 +540,51 @@ def watch_box(t, wb):
         inner.append(Paragraph(f"<b>{title}</b> · {src}" + (f" <font color='#5F5B56'>({extra})</font>" if extra else ""), ParagraphStyle("wi", parent=t.boxt, leftIndent=14, bulletIndent=2), bulletText="•"))
     if wb.note: inner.append(P(wb.note, t.small))
     return panel(inner, IVORY, border=LINE, left_bar=t.mid)
+
+
+def activity_preview(t, iv, L, part):
+    """Textbook version of a hands-on activity: what it is and what to gather, pointing to the workbook sheet that
+    holds the steps and the recording space."""
+    inner = [[chip(f"{LAB_TAG[t.subject].upper()}  ·  {iv.title.upper()}", t.main, t.on_main), Spacer(1, 5)],
+             P(iv.question, ParagraphStyle("ivq", parent=t.boxt, fontName="BodySemi"))]
+    if iv.materials: inner.append(P("<b>You need:</b> " + "; ".join(iv.materials) + ".", t.boxt))
+    inner.append(P(f"<b>Do it on your {part[1]}:</b> Workbook Lesson {L.num}, Part {part[0]}. The steps and a place to record your results are all there.",
+                   ParagraphStyle("ivp", parent=t.boxt, textColor=t.dark, spaceBefore=3)))
+    if iv.safety: inner.append(P(f"<b>Safety:</b> {iv.safety}", ParagraphStyle("ivx", parent=t.boxt, textColor=colors.HexColor("#8A5A00"))))
+    return _activity_table(t, [[inner[:2]]] + [[f] for f in inner[2:]])
+
+
+def lab_steps_box(t, iv):
+    """Workbook activity sheet header: the question, what to gather, and steps with a box to check off each one."""
+    def box():
+        b = Table([[""]], colWidths=[11], rowHeights=[11])
+        b.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 0.9, t.dark), ("BACKGROUND", (0, 0), (-1, -1), WHITE)]))
+        return b
+    st = ParagraphStyle("lss", parent=t.boxt)
+    rows = [[[chip(f"{LAB_TAG[t.subject].upper()}  ·  {iv.title.upper()}", t.main, t.on_main), Spacer(1, 5),
+              P(iv.question, ParagraphStyle("lsq", parent=t.boxt, fontName="BodySemi"))], ""]]
+    if iv.materials:
+        rows.append([P("<b>You need:</b> " + "; ".join(iv.materials) + ".", st), ""])
+    for i, step_text in enumerate(iv.steps, 1):
+        rows.append([P(f"<b>{i}.</b> {step_text}", st), box()])
+    if iv.safety: rows.append([P(f"<b>Safety:</b> {iv.safety}", ParagraphStyle("lsx", parent=st, textColor=colors.HexColor("#8A5A00"))), ""])
+    tb = Table(rows, colWidths=[W - 40, 40])
+    spans = [("SPAN", (0, 0), (1, 0))] + ([("SPAN", (0, 1), (1, 1))] if iv.materials else []) + \
+            ([("SPAN", (0, len(rows) - 1), (1, len(rows) - 1))] if iv.safety else [])
+    tb.setStyle(TableStyle(spans + [("BOX", (0, 0), (-1, -1), 1, t.main), ("BACKGROUND", (0, 0), (-1, -1), IVORY),
+                                    ("LINEBEFORE", (0, 0), (0, -1), 5, t.main), ("LEFTPADDING", (0, 0), (-1, -1), 14), ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+                                    ("VALIGN", (0, 0), (-1, -1), "TOP"), ("TOPPADDING", (0, 0), (-1, -1), 3), ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+                                    ("TOPPADDING", (0, 0), (-1, 0), 8), ("BOTTOMPADDING", (0, -1), (-1, -1), 8)]))
+    return tb
+
+
+def _activity_table(t, rows):
+    tb = Table(rows, colWidths=[W])
+    tb.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 1, t.main), ("BACKGROUND", (0, 0), (-1, -1), IVORY),
+                            ("LINEBEFORE", (0, 0), (0, -1), 5, t.main), ("LEFTPADDING", (0, 0), (-1, -1), 14),
+                            ("RIGHTPADDING", (0, 0), (-1, -1), 12), ("TOPPADDING", (0, 0), (-1, -1), 1), ("BOTTOMPADDING", (0, 0), (-1, -1), 1),
+                            ("TOPPADDING", (0, 0), (-1, 0), 8), ("BOTTOMPADDING", (0, -1), (-1, -1), 8)]))
+    return tb
 
 
 def investigate_box(t, iv):
@@ -535,7 +671,7 @@ def try_it_box(t, L, with_answers=False):
     if with_answers: note = "Answers are shown in color."
     elif student_book(t):
         note = (f"<b>Directions:</b> {mc_note(directions_for(t, 'Y', L.num) or 'Answer each question.', L.try_it)} "
-                f"Write your answers in <b>Workbook Lesson {L.num}, Part A</b>. Then check with your teacher.")
+                f"Write your answers in <b>Workbook Lesson {L.num}, Part {your_turn_letter(t, L)}</b>. Then check with your teacher.")
     else: note = "<b>Directions:</b> " + t.lab["try_note"]
     inner = [chip("✎ " + t.lab["try_"], t.main, t.on_main), Spacer(1, 5), P(note, dir_style)]
     for i, pr in enumerate(L.try_it, 1):
@@ -557,6 +693,7 @@ def textbook_lesson(t, L, U=None, teacher=False):
     """Lesson banner and title; Today's Goal and Today's Assignment; then numbered steps:
     1 Get Ready (words to know, warm-up question), 2 Learn, 3 Your Turn, 4 Wrap Up."""
     out = lesson_header(t, L, U)
+    t.cur_lesson = L
     rail = getattr(t, "rail", False)
     if L.vocab and rail: out.append(SideNote(t.doc, vocab_card(t, L.vocab), "right"))     # beside the goal, at the top of the lesson
     out += [goal_card(t, L), Spacer(1, 8), checklist(t, "TODAY'S ASSIGNMENT", assignment_items(t, L), IVORY)]
@@ -564,6 +701,8 @@ def textbook_lesson(t, L, U=None, teacher=False):
     if L.vocab and not rail: out += [vocab_panel(t, L.vocab), Spacer(1, 8)]
     out.append(boxed(t, t.lab["explore"], [P(L.launch, ParagraphStyle("gr", parent=t.boxt, fontSize=12, leading=17))], WHITE, border=t.mid))
     out += step(t, 2, "Learn")
+    look = look_card(t, L) if rail else None
+    if look: out.append(SideNote(t.doc, look, "right"))
     out += render_blocks(t, L.learn, teacher, rail=rail)
     if L.summary and rail: out.append(SideNote(t.doc, remember_card(t, L), "left"))   # beside Your Turn
     out += [KeepTogether(step(t, 3, t.lab["try_"].title()) + [try_it_box(t, L, with_answers=teacher)])]
@@ -655,9 +794,9 @@ def front_matter(t, book, doc, kind):
                          "worked examples, and <b>Watch Out</b> warnings about common mistakes."])
                      + [
                       "Pages that look like <b>a page from a book</b>, on cream paper with a brown <b>READING</b> tab, are things to read: stories, excerpts, and articles."]
-                     + (["<b>Investigate</b> boxes are hands-on experiments. Do them with your teacher and record what you observe."] if t.subject == "science" else [])
-                     + (["<b>Activity</b> boxes are hands-on map, source, and timeline work. Do them with your teacher."] if t.subject == "social" else [])
-                     + (["<b>Create</b> boxes are studio activities. Keep everything you make in your portfolio folder."] if t.subject == "art" else [])
+                     + (["<b>Investigate</b> boxes tell you about each hands-on experiment and what to gather. Do the experiment with your teacher on the <b>Lab Sheet</b> in your workbook: the steps and a place to record your results are on that page."] if t.subject == "science" else [])
+                     + (["<b>Activity</b> boxes tell you about each hands-on map, source, or timeline activity. Do it on the <b>Activity Sheet</b> in your workbook: the steps and a place to record your work are on that page."] if t.subject == "social" else [])
+                     + (["<b>Create</b> boxes tell you about each studio project and what to gather. Do it on the <b>Studio Sheet</b> in your workbook, where the steps and your sketching space are. Keep everything you make in your portfolio folder."] if t.subject == "art" else [])
                      + (["<b>Sounds like</b> columns show how to say each word; the CAPITAL syllable gets the stress. Hear any word at SpanishDict.com.",
                          "<b>Diálogo</b> boxes are conversations. Read them aloud with a partner, then change the details to talk about yourself."] if t.subject == "spanish" else [])
                      + [
@@ -805,6 +944,9 @@ def section_grid(t, sec, start, show_answer=False, letter=None):
     head = [section_head(t, sec.title, letter), Spacer(1, 4)]
     if sec.intro: head.append(P(f"<b>Directions:</b> {sec.intro}", ParagraphStyle("sdi", parent=t.body, fontName="BodyMed", textColor=t.dark)))
     out = []
+    if getattr(sec, "lab", None) and not show_answer:
+        head += [Spacer(1, 4), lab_steps_box(t, sec.lab), Spacer(1, 10)]
+        out.append(CondPageBreak(5.6 * inch))      # start the sheet on a fresh page unless most of a page is left
     if getattr(sec, "passage", None) and not show_answer:
         out += [KeepTogether(head[:2] + [P("<b>First, read this passage.</b> Then answer the questions below it.", ParagraphStyle("rf", parent=t.body, fontName="BodyMed", textColor=t.dark)), Spacer(1, 2)]),
                 passage_box(t, sec.passage), Spacer(1, 10)]
@@ -838,8 +980,13 @@ LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 def workbook_lesson(t, L, U=None):
     """Practice pages: banner, title, name and date, Today's Goal, a short What To Do list, then lettered parts."""
     secs = workbook_sections(t, L); parts = [s.title for s in secs]
-    todo = [f"Read <b>Textbook Lesson {L.num}</b> first.",
-            f"Do every part on these pages: " + ", ".join(f"<b>Part {LETTERS[i]}</b> {p.rstrip('.')}" for i, p in enumerate(parts)) + ".",
+    plist = lambda r: ", ".join(f"<b>Part {LETTERS[i]}</b> {parts[i].rstrip('.')}" for i in r)
+    if t.subject in LAB_NAME and parts and parts[0] == "Warm-Up":
+        todo = ["Start with <b>Part A</b> Warm-Up.", f"Read <b>Textbook Lesson {L.num}</b> with your teacher."]
+        if len(parts) > 1: todo.append("Then do the rest of these pages in order: " + plist(range(1, len(parts))) + ".")
+    else:
+        todo = [f"Read <b>Textbook Lesson {L.num}</b> first.", "Do every part on these pages: " + plist(range(len(parts))) + "."]
+    todo += [
             "Show your thinking. Write final answers on the lines." if t.subject == "math" else "Answer in complete sentences unless a line asks for one word.",
             "Check your work with your teacher and fix any mistakes."]
     out = lesson_header(t, L, U, tag="PRACTICE", title_style=ParagraphStyle("wh", parent=t.h2, spaceBefore=0))
